@@ -26,9 +26,16 @@ header{
 }
 
 header .logo{
-    font-size:1.8rem;
+    font-size:2.2rem;
     font-weight:bold;
-    color:#ff77ff;
+    color:yellow;
+    animation: glowLogo 2s ease-in-out infinite alternate;
+}
+
+@keyframes glowLogo{
+    0%{text-shadow:0 0 4px #fffa66,0 0 8px #fffa66;}
+    50%{text-shadow:0 0 10px #fff233,0 0 20px #fff233;}
+    100%{text-shadow:0 0 6px #fffa66,0 0 12px #fffa66;}
 }
 
 header nav{
@@ -60,7 +67,7 @@ main{
     padding:20px;
 }
 
-/* Paints tab */
+/* Tabs */
 #paints-tab, #info-tab, #emotes-tab{
     display:none;
     animation:fadeIn 0.4s ease-in-out;
@@ -172,13 +179,12 @@ button:hover{opacity:0.85;}
     line-height:1.6;
     color:#ccc;
 }
-
 </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">gato.tv</div>
+    <div class="logo">GATO.TV</div>
     <nav>
         <button class="tab-btn active" data-tab="paints-tab">Paints</button>
         <button class="tab-btn" data-tab="info-tab">Info</button>
@@ -202,8 +208,8 @@ button:hover{opacity:0.85;}
     <!-- INFO -->
     <section id="info-tab">
         <h2>Informacje o wtyczce</h2>
-        <p>Wersja: 1.0.0</p>
-        <p>Gato.tv Premium Nick Painter pozwala nadawać unikalne kolory nickom na Twitchu, w tym animowane gradienty i poświaty.</p>
+        <p>Wersja: v0.1</p>
+        <p>Opis: wkrótce</p>
     </section>
 
     <!-- EMOTES -->
@@ -228,6 +234,54 @@ tabs.forEach(btn=>{
         });
     });
 });
+
+// Sample paints for frontend preview
+const paints = [
+    {name:"Czerwony", type:"color", color:"#ff0000"},
+    {name:"Zielony", type:"color", color:"#00ff00"},
+    {name:"Niebieski", type:"color", color:"#00ccff"},
+    {name:"Tęczowy", type:"gradient", gradient:"linear-gradient(90deg, red, orange, yellow, lime, cyan, blue, violet)"},
+    {name:"Lava", type:"gradient", gradient:"linear-gradient(90deg, #ff0000, #ff8c00)"},
+];
+
+const paintsContainer = document.getElementById("paints-container");
+const preview = document.getElementById("preview");
+const nickInput = document.getElementById("nick-input");
+let selectedPaint = paints[0];
+
+function updatePreview(){
+    let nick = nickInput.value || "Podgląd";
+    if(selectedPaint.type === "color"){
+        preview.textContent = nick;
+        preview.style.color = selectedPaint.color;
+        preview.style.background = "";
+        preview.style.webkitBackgroundClip = "";
+        preview.style.webkitTextFillColor = "";
+        preview.style.textShadow = "";
+    } else if(selectedPaint.type === "gradient"){
+        preview.textContent = nick;
+        preview.style.backgroundImage = selectedPaint.gradient;
+        preview.style.webkitBackgroundClip = "text";
+        preview.style.webkitTextFillColor = "transparent";
+        preview.style.textShadow = "";
+    }
+}
+
+paints.forEach(p => {
+    const btn = document.createElement("button");
+    btn.className = "paint-btn";
+    btn.textContent = p.name;
+    btn.onclick = () => {
+        selectedPaint = p;
+        updatePreview();
+        document.querySelectorAll(".paint-btn").forEach(b=>b.classList.remove("selected"));
+        btn.classList.add("selected");
+    };
+    paintsContainer.appendChild(btn);
+});
+
+nickInput.addEventListener("input", updatePreview);
+updatePreview();
 </script>
 
 </body>
