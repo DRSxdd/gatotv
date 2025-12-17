@@ -5,98 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Premium Nick Painter</title>
 <style>
-body {
-    font-family:'Segoe UI',sans-serif;
-    background:#121212;
-    color:white;
-    margin:0;
-    padding:0;
-}
-.container {
-    max-width:900px;
-    margin:50px auto;
-    background: linear-gradient(145deg,#1f1f1f,#2a2a2a);
-    padding:25px;
-    border-radius:20px;
-    box-shadow:0 8px 32px rgba(0,0,0,0.7);
-}
-h1 { text-align:center; margin-bottom:20px; font-size:2em; color:#ff77ff; }
-label { display:block; margin-top:12px; margin-bottom:6px; font-weight:bold; }
-input[type=text] {
-    width:100%;
-    padding:10px;
-    border-radius:8px;
-    border:none;
-    background:#222;
-    color:white;
-    font-size:16px;
-}
-#preview {
-    margin:20px 0;
-    padding:12px;
-    border-radius:12px;
-    text-align:center;
-    font-size:24px;
-    background:#111;
-    min-height:60px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-#paints-container {
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(100px,1fr));
-    gap:10px;
-    margin-top:10px;
-}
-.paint-btn {
-    padding:10px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:bold;
-    transition:0.2s;
-    color:white;
-}
-.paint-btn.selected {
-    border:2px solid white;
-    transform:translateY(-2px);
-}
-.paint-btn:hover {
-    opacity:0.8;
-}
-button#apply-btn, button#reset-btn {
-    margin-top:10px;
-    padding:10px 20px;
-    border-radius:8px;
-    border:none;
-    font-weight:bold;
-    cursor:pointer;
-    transition:0.2s;
-}
-button#apply-btn { background:linear-gradient(135deg,#9147ff,#7722cc); color:white; }
-button#reset-btn { background:#555; color:white; margin-left:10px; }
-#user-list {
-    margin-top:20px;
-}
-.user-item {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin:5px 0;
-    padding:5px 10px;
-    background:#222;
-    border-radius:6px;
-}
-.user-item button {
-    background:#ff4444;
-    color:white;
-    border:none;
-    padding:4px 8px;
-    border-radius:4px;
-    cursor:pointer;
-}
-.user-item button:hover { opacity:0.8; }
+body{font-family:'Segoe UI',sans-serif;background:#121212;color:white;margin:0;padding:0;}
+.container{max-width:900px;margin:50px auto;padding:25px;border-radius:20px;background:linear-gradient(145deg,#1f1f1f,#2a2a2a);box-shadow:0 8px 32px rgba(0,0,0,0.7);}
+h1{text-align:center;color:#ff77ff;margin-bottom:20px;}
+input[type=text]{width:100%;padding:10px;border-radius:8px;border:none;background:#222;color:white;font-size:16px;}
+#preview{margin:20px 0;padding:12px;border-radius:12px;text-align:center;font-size:24px;background:#111;min-height:60px;display:flex;justify-content:center;align-items:center;}
+#paints-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-top:10px;}
+.paint-btn{padding:10px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;color:white;transition:0.2s;}
+.paint-btn.selected{border:2px solid white;transform:translateY(-2px);}
+.paint-btn:hover{opacity:0.8;}
+button{margin-top:10px;padding:10px 20px;border-radius:8px;border:none;font-weight:bold;cursor:pointer;transition:0.2s;}
+#apply-btn{background:linear-gradient(135deg,#9147ff,#7722cc);color:white;}
+#reset-btn{background:#555;color:white;margin-left:10px;}
+#user-list{margin-top:20px;}
+.user-item{display:flex;justify-content:space-between;align-items:center;margin:5px 0;padding:5px 10px;background:#222;border-radius:6px;}
+.user-item button{background:#ff4444;color:white;border:none;padding:4px 8px;border-radius:4px;cursor:pointer;}
+.user-item button:hover{opacity:0.8;}
 </style>
 </head>
 <body>
@@ -120,8 +44,6 @@ button#reset-btn { background:#555; color:white; margin-left:10px; }
 
 <script>
 const FIREBASE_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app/premium.json";
-
-// Gradienty
 const GRADIENTS = {
     "Tęczowy":"linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet)",
     "Lava":"linear-gradient(90deg,#ff0000,#ff7700,#aa0000)",
@@ -129,8 +51,6 @@ const GRADIENTS = {
     "Sunset":"linear-gradient(90deg,#ff4500,#ffb347)",
     "Ocean":"linear-gradient(90deg,#1e90ff,#00ced1)"
 };
-
-// Painty do wyboru
 const paints = [
     {name:"Czerwony",type:"color",color:"#ff0000"},
     {name:"Zielony",type:"color",color:"#00ff00"},
@@ -145,19 +65,18 @@ const paints = [
     {name:"Split Red/White",type:"split",color:"#ff0000",splitColor:"#ffffff"},
     {name:"Split Blue/Yellow",type:"split",color:"#00ccff",splitColor:"#ffff00"}
 ];
-
 const paintsContainer = document.getElementById("paints-container");
 const preview = document.getElementById("preview");
 const nickInput = document.getElementById("nick-input");
 let selectedPaint = paints[0];
 
-// Podgląd nicku
+// Podgląd
 function updatePreview(){
     const nick = nickInput.value || "Podgląd";
     if(selectedPaint.type==="color"){
         preview.textContent = nick;
         preview.style.color = selectedPaint.color;
-        preview.style.background = "";
+        preview.style.background="";
         preview.style.webkitTextFillColor="";
     } else if(selectedPaint.type==="gradient"){
         preview.textContent = nick;
@@ -174,7 +93,7 @@ function updatePreview(){
     }
 }
 
-// Generowanie przycisków paintów
+// Painty
 paints.forEach(p=>{
     const btn = document.createElement("button");
     btn.className="paint-btn";
@@ -215,10 +134,10 @@ async function renderUsers(){
             div.appendChild(btn);
             userListEl.appendChild(div);
         });
-    } catch(e){ console.error(e);}
+    }catch(e){console.error(e);}
 }
 
-// Nadaj paint do Firebase
+// Nadaj paint
 document.getElementById("apply-btn").onclick = async()=>{
     const nick = nickInput.value.trim();
     if(!nick) return alert("Wpisz nick");
@@ -228,7 +147,7 @@ document.getElementById("apply-btn").onclick = async()=>{
     renderUsers();
 };
 
-// Resetuj nick do domyślnego zielonego
+// Resetuj nick
 document.getElementById("reset-btn").onclick = async()=>{
     const nick = nickInput.value.trim();
     if(!nick) return alert("Wpisz nick");
