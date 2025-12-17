@@ -26,7 +26,6 @@ button{margin-top:10px;padding:10px 20px;border-radius:8px;border:none;font-weig
 <body>
 <div class="container">
 <h1>Premium Nick Painter</h1>
-
 <label>Nick użytkownika:</label>
 <input type="text" id="nick-input" placeholder="Wpisz nick...">
 
@@ -44,7 +43,6 @@ button{margin-top:10px;padding:10px 20px;border-radius:8px;border:none;font-weig
 
 <script>
 const FIREBASE_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app/premium.json";
-
 const GRADIENTS = {
   "Tęczowy":"linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet)",
   "Lava":"linear-gradient(90deg,#ff0000,#ff7700,#aa0000)",
@@ -55,13 +53,9 @@ const GRADIENTS = {
   "Ice":"linear-gradient(90deg,#00ffff,#00bfff)"
 };
 
-// Lista paintów – kolor, gradient, split, animacja liter
 const paints = [
   {name:"Czerwony",type:"color",color:"#ff0000"},
   {name:"Zielony",type:"color",color:"#00ff00"},
-  {name:"Niebieski",type:"color",color:"#00ccff"},
-  {name:"Różowy",type:"color",color:"#ff77ff"},
-  {name:"Żółty",type:"color",color:"#ffff00"},
   {name:"Lava",type:"color",color:"#ff0000",glow:true,glowColor:"#ff7700"},
   {name:"Tęczowy",type:"gradient",gradient:"Tęczowy"},
   {name:"Neon",type:"gradient",gradient:"Neon"},
@@ -72,7 +66,6 @@ const paints = [
   {name:"Split Red/White",type:"split",color:"#ff0000",splitColor:"#ffffff"},
   {name:"Split Blue/Yellow",type:"split",color:"#00ccff",splitColor:"#ffff00"},
   {name:"Rainbow Letters",type:"animated",lettersGradient:["#ff0000","#ff7700","#ffff00","#00ff00","#00ffff","#0000ff","#ff00ff"]},
-  {name:"Glitch",type:"glitch"},
   {name:"Purple Glow",type:"color",color:"#aa00ff",glow:true,glowColor:"#ff77ff"},
   {name:"Cyan Glow",type:"color",color:"#00ffff",glow:true,glowColor:"#00aaee"},
   {name:"Pink Neon",type:"color",color:"#ff00ff",glow:true,glowColor:"#ff00aa"},
@@ -84,7 +77,6 @@ const preview = document.getElementById("preview");
 const nickInput = document.getElementById("nick-input");
 let selectedPaint = paints[0];
 
-// ---------------- PODGLĄD ----------------
 function updatePreview(){
   const nick = nickInput.value || "Podgląd";
   if(selectedPaint.type==="color"){
@@ -107,8 +99,7 @@ function updatePreview(){
     preview.style.webkitTextFillColor="";
     preview.style.textShadow="";
   } else if(selectedPaint.type==="animated"){
-    // Rainbow letters
-    preview.innerHTML = "";
+    preview.innerHTML="";
     for(let i=0;i<nick.length;i++){
       const span = document.createElement("span");
       span.textContent = nick[i];
@@ -121,7 +112,6 @@ function updatePreview(){
   }
 }
 
-// ---------------- INICJACJA PAINTÓW ----------------
 paints.forEach(p=>{
   const btn = document.createElement("button");
   btn.className="paint-btn";
@@ -140,7 +130,7 @@ paints.forEach(p=>{
 nickInput.addEventListener("input",updatePreview);
 updatePreview();
 
-// ---------------- LISTA UŻYTKOWNIKÓW ----------------
+// Lista użytkowników
 const userListEl = document.getElementById("user-list");
 async function renderUsers(){
   try{
@@ -166,27 +156,23 @@ async function renderUsers(){
   }catch(e){console.error(e);}
 }
 
-// ---------------- AKCJE ----------------
+// Apply & Reset
 document.getElementById("apply-btn").onclick = async()=>{
   const nick = nickInput.value.trim();
   if(!nick) return alert("Wpisz nick");
-  const payload = {};
   const paintData = {};
   if(selectedPaint.type==="split"){
-    paintData.type="split";
-    paintData.color = selectedPaint.color;
-    paintData.splitColor = selectedPaint.splitColor;
+    paintData.type="split"; paintData.color=selectedPaint.color; paintData.splitColor=selectedPaint.splitColor;
   } else if(selectedPaint.type==="gradient" || selectedPaint.type==="color"){
-    paintData.type = selectedPaint.type;
-    if(selectedPaint.color) paintData.color = selectedPaint.color;
-    if(selectedPaint.gradient) paintData.gradient = selectedPaint.gradient;
-    if(selectedPaint.glow) paintData.glow = true;
-    if(selectedPaint.glowColor) paintData.glowColor = selectedPaint.glowColor;
+    paintData.type=selectedPaint.type;
+    if(selectedPaint.color) paintData.color=selectedPaint.color;
+    if(selectedPaint.gradient) paintData.gradient=selectedPaint.gradient;
+    if(selectedPaint.glow) paintData.glow=true;
+    if(selectedPaint.glowColor) paintData.glowColor=selectedPaint.glowColor;
   } else if(selectedPaint.type==="animated"){
-    paintData.type="animated";
-    paintData.lettersGradient = selectedPaint.lettersGradient;
+    paintData.type="animated"; paintData.lettersGradient=selectedPaint.lettersGradient;
   }
-  payload[nick] = {paint:paintData,badges:[]};
+  const payload = {}; payload[nick]={paint:paintData,badges:[]};
   await fetch(FIREBASE_URL,{method:"PATCH",body:JSON.stringify(payload)});
   renderUsers();
 };
@@ -194,14 +180,13 @@ document.getElementById("apply-btn").onclick = async()=>{
 document.getElementById("reset-btn").onclick = async()=>{
   const nick = nickInput.value.trim();
   if(!nick) return alert("Wpisz nick");
-  const payload = {};
-  payload[nick] = {paint:{type:"color",color:"#00ff00"},badges:[]};
+  const payload = {}; payload[nick]={paint:{type:"color",color:"#00ff00"},badges:[]};
   await fetch(FIREBASE_URL,{method:"PATCH",body:JSON.stringify(payload)});
-  updatePreview();
-  renderUsers();
+  updatePreview(); renderUsers();
 };
 
 renderUsers();
 </script>
 </body>
 </html>
+
