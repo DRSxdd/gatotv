@@ -121,11 +121,16 @@ button#reset-btn { background:#555; color:white; margin-left:10px; }
 <script>
 const FIREBASE_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app/premium.json";
 
+// Gradienty
 const GRADIENTS = {
     "Tęczowy":"linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet)",
-    "Lava":"linear-gradient(90deg,#ff0000,#ff7700,#aa0000)"
+    "Lava":"linear-gradient(90deg,#ff0000,#ff7700,#aa0000)",
+    "Neon":"linear-gradient(90deg,#ff00ff,#00ffff)",
+    "Sunset":"linear-gradient(90deg,#ff4500,#ffb347)",
+    "Ocean":"linear-gradient(90deg,#1e90ff,#00ced1)"
 };
 
+// Painty do wyboru
 const paints = [
     {name:"Czerwony",type:"color",color:"#ff0000"},
     {name:"Zielony",type:"color",color:"#00ff00"},
@@ -134,6 +139,9 @@ const paints = [
     {name:"Żółty",type:"color",color:"#ffff00"},
     {name:"Tęczowy",type:"gradient",gradient:"Tęczowy"},
     {name:"Lava",type:"gradient",gradient:"Lava"},
+    {name:"Neon",type:"gradient",gradient:"Neon"},
+    {name:"Sunset",type:"gradient",gradient:"Sunset"},
+    {name:"Ocean",type:"gradient",gradient:"Ocean"},
     {name:"Split Red/White",type:"split",color:"#ff0000",splitColor:"#ffffff"},
     {name:"Split Blue/Yellow",type:"split",color:"#00ccff",splitColor:"#ffff00"}
 ];
@@ -143,32 +151,35 @@ const preview = document.getElementById("preview");
 const nickInput = document.getElementById("nick-input");
 let selectedPaint = paints[0];
 
+// Podgląd nicku
 function updatePreview(){
-    let nick = nickInput.value||"Podgląd";
+    const nick = nickInput.value || "Podgląd";
     if(selectedPaint.type==="color"){
         preview.textContent = nick;
         preview.style.color = selectedPaint.color;
         preview.style.background = "";
-        preview.style.textShadow="";
+        preview.style.webkitTextFillColor="";
     } else if(selectedPaint.type==="gradient"){
         preview.textContent = nick;
-        preview.style.backgroundImage = GRADIENTS[selectedPaint.gradient];
+        preview.style.backgroundImage = GRADIENTS[selectedPaint.gradient] || "";
         preview.style.webkitBackgroundClip="text";
         preview.style.webkitTextFillColor="transparent";
-        preview.style.textShadow="";
+        preview.style.color="";
     } else if(selectedPaint.type==="split"){
-        let mid = Math.floor(nick.length/2);
+        const mid = Math.floor(nick.length/2);
         preview.innerHTML = `<span style="color:${selectedPaint.color}">${nick.slice(0,mid)}</span><span style="color:${selectedPaint.splitColor}">${nick.slice(mid)}</span>`;
         preview.style.background="";
-        preview.style.textShadow="";
+        preview.style.webkitTextFillColor="";
+        preview.style.color="";
     }
 }
 
+// Generowanie przycisków paintów
 paints.forEach(p=>{
     const btn = document.createElement("button");
     btn.className="paint-btn";
     btn.textContent = p.name;
-    btn.style.background = p.type==="color" ? p.color : GRADIENTS[p.gradient] || "#555";
+    btn.style.background = p.type==="color" ? p.color : (GRADIENTS[p.gradient] || "#555");
     btn.onclick = ()=>{
         document.querySelectorAll(".paint-btn").forEach(b=>b.classList.remove("selected"));
         btn.classList.add("selected");
@@ -181,18 +192,20 @@ paints.forEach(p=>{
 nickInput.addEventListener("input",updatePreview);
 updatePreview();
 
+// Lista użytkowników
 const userListEl = document.getElementById("user-list");
-
 async function renderUsers(){
     try{
         const res = await fetch(FIREBASE_URL);
         const data = await res.json();
-        userListEl.innerHTML = "";
+        userListEl.innerHTML="";
         if(!data) return;
         Object.keys(data).forEach(nick=>{
             const div = document.createElement("div");
             div.className="user-item";
-            div.textContent = nick;
+            const span = document.createElement("span");
+            span.textContent = nick;
+            div.appendChild(span);
             const btn = document.createElement("button");
             btn.textContent="Usuń";
             btn.onclick = async()=>{
@@ -202,22 +215,24 @@ async function renderUsers(){
             div.appendChild(btn);
             userListEl.appendChild(div);
         });
-    }catch(e){console.error(e);}
+    } catch(e){ console.error(e);}
 }
 
+// Nadaj paint do Firebase
 document.getElementById("apply-btn").onclick = async()=>{
-    let nick = nickInput.value.trim();
+    const nick = nickInput.value.trim();
     if(!nick) return alert("Wpisz nick");
-    let payload = {};
+    const payload = {};
     payload[nick] = {paint:selectedPaint};
     await fetch(FIREBASE_URL,{method:"PATCH",body:JSON.stringify(payload)});
     renderUsers();
 };
 
+// Resetuj nick do domyślnego zielonego
 document.getElementById("reset-btn").onclick = async()=>{
-    let nick = nickInput.value.trim();
+    const nick = nickInput.value.trim();
     if(!nick) return alert("Wpisz nick");
-    let payload = {};
+    const payload = {};
     payload[nick] = {paint:{type:"color",color:"#00ff00"}};
     await fetch(FIREBASE_URL,{method:"PATCH",body:JSON.stringify(payload)});
     updatePreview();
