@@ -1,132 +1,156 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <title>Twitch Nick Colors</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <style>
-    body {
-      background:#0e0e10;
-      color:white;
-      font-family:Segoe UI, sans-serif;
-      display:flex;
-      justify-content:center;
-      padding:40px;
-    }
-
-    .panel {
-      width:420px;
-      background:#18181b;
-      border-radius:14px;
-      padding:20px;
-      box-shadow:0 10px 40px rgba(0,0,0,.6);
-    }
-
-    h2 {
-      text-align:center;
-      margin-bottom:20px;
-    }
-
-    input, select, button {
-      width:100%;
-      margin-bottom:12px;
-      padding:10px;
-      border-radius:8px;
-      border:none;
-      font-size:14px;
-    }
-
-    button {
-      background:#9147ff;
-      color:white;
-      font-weight:bold;
-      cursor:pointer;
-    }
-
-    button:hover {
-      background:#772ce8;
-    }
-
-    .preview {
-      margin-top:15px;
-      text-align:center;
-      font-size:22px;
-      font-weight:bold;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Twitch Premium Paints</title>
+<link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; font-family:'Segoe UI',sans-serif; background:#1a1a1a; color:white; display:flex; flex-direction:column; align-items:center; padding:20px;}
+  h1 { margin-bottom:20px; }
+  .container { background:#2a2a2a; padding:20px; border-radius:16px; box-shadow:0 8px 32px rgba(0,0,0,0.7); max-width:800px; width:100%; }
+  .input-group { margin-bottom:16px; display:flex; flex-direction:column; gap:8px; }
+  input[type=text] { padding:10px; border-radius:8px; border:none; font-size:16px; }
+  .paints { display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:10px; margin-bottom:16px; }
+  .paint-btn { padding:12px; border-radius:8px; border:none; cursor:pointer; font-weight:bold; color:white; text-align:center; transition:0.2s; }
+  .paint-btn:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.5); }
+  .active { box-shadow:0 0 12px #fff inset; }
+  #preview { margin:16px 0; padding:10px; border-radius:8px; font-weight:bold; text-align:center; font-size:20px; min-height:32px; }
+  button { padding:10px 16px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; background:#9147ff; color:white; transition:0.2s; }
+  button:hover { background:#7722cc; }
+  .user-list { margin-top:20px; max-height:200px; overflow-y:auto; border-top:1px solid #444; padding-top:10px; }
+  .user-item { display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #333; }
+  .user-item button { background:#cc2222; padding:4px 8px; font-size:12px; }
+</style>
 </head>
-
 <body>
+<h1>Twitch Premium Paint Selector</h1>
+<div class="container">
+  <div class="input-group">
+    <label for="nick">Twój Nick:</label>
+    <input type="text" id="nick" placeholder="Wpisz nick">
+  </div>
 
-<div class="panel">
-  <h2>🎨 Twitch Nick Paint</h2>
+  <div class="input-group">
+    <label>Wybierz Paint:</label>
+    <div class="paints" id="paints"></div>
+  </div>
 
-  <input id="nick" placeholder="Nick z Twitcha">
+  <div id="preview">Podgląd nicku</div>
 
-  <select id="paint">
-    <option value="green">Zielony (default)</option>
-    <option value="red">Czerwony</option>
-    <option value="pink">Różowy</option>
-    <option value="rainbow">🌈 Tęczowy</option>
-    <option value="split">⬜⬛ Half White/Red</option>
-  </select>
+  <button id="apply">Zastosuj Paint</button>
+  <button id="reset">Resetuj do zielonego</button>
 
-  <button onclick="save()">Zapisz</button>
-
-  <div class="preview" id="preview">Podgląd</div>
+  <div class="user-list" id="user-list"></div>
 </div>
 
 <script>
-const API = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app/premium";
+const FIREBASE_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app/premium.json";
 
-const paintStyles = {
-  green:  { color:"#00ff00" },
-  red:    { color:"#ff0000" },
-  pink:   { color:"#ff69b4" },
-  rainbow:{ gradient:"linear-gradient(90deg,red,orange,yellow,lime,cyan,blue,violet)" },
-  split:  { gradient:"linear-gradient(90deg, white 50%, red 50%)" }
-};
+const PAINTS = [
+  {name:"Czerwony", color:"#ff0000", glow:false, split:false},
+  {name:"Zielony", color:"#00ff00", glow:false, split:false},
+  {name:"Biały", color:"#ffffff", glow:false, split:false},
+  {name:"Różowy", color:"#ff66cc", glow:false, split:false},
+  {name:"Tęczowy", gradient:"linear-gradient(90deg, red, orange, yellow, green, blue, violet)", glow:true, split:false},
+  {name:"Lava", gradient:"linear-gradient(90deg,#ff0000,#ff5500)", glow:true, split:false},
+  {name:"Split Czerwono-Biały", color:"#ff0000", glow:false, split:true, splitColor:"#ffffff"},
+  {name:"Split Zielono-Biały", color:"#00ff00", glow:false, split:true, splitColor:"#ffffff"},
+  {name:"Neon", color:"#00ffff", glow:true, split:false},
+  {name:"Snow", color:"#ffffff", glow:true, split:false},
+  // dodaj kolejne 40+ paintów wg wzoru
+];
+
+// Render przycisków paintów
+const paintsDiv = document.getElementById("paints");
+let selectedPaint = null;
+
+PAINTS.forEach((p,i)=>{
+  const btn = document.createElement("button");
+  btn.className="paint-btn";
+  btn.textContent=p.name;
+  btn.style.background=p.color || p.gradient || "#444";
+  btn.onclick = ()=>{
+    document.querySelectorAll(".paint-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    selectedPaint = p;
+    updatePreview();
+  };
+  paintsDiv.appendChild(btn);
+});
 
 const preview = document.getElementById("preview");
-const paintSelect = document.getElementById("paint");
-
-paintSelect.onchange = () => updatePreview();
+const nickInput = document.getElementById("nick");
 
 function updatePreview(){
-  const p = paintStyles[paintSelect.value];
-  preview.style = "";
-  preview.textContent = document.getElementById("nick").value || "Podgląd";
+  const n = nickInput.value || "Podgląd";
+  preview.textContent=n;
+  if(!selectedPaint) return;
 
-  if(p.gradient){
-    preview.style.background = p.gradient;
-    preview.style.webkitBackgroundClip = "text";
-    preview.style.webkitTextFillColor = "transparent";
+  if(selectedPaint.split){
+    const mid = Math.ceil(n.length/2);
+    preview.innerHTML = `<span style="color:${selectedPaint.color}">${n.slice(0,mid)}</span><span style="color:${selectedPaint.splitColor}">${n.slice(mid)}</span>`;
+  } else if(selectedPaint.gradient){
+    preview.style.background=selectedPaint.gradient;
+    preview.style.webkitBackgroundClip="text";
+    preview.style.webkitTextFillColor="transparent";
+    preview.style.animation=selectedPaint.glow ? "rainbowMove 5s linear infinite,rainbowGlow 2.5s linear infinite" : "";
+    preview.style.textShadow=selectedPaint.glow ? "0 0 6px #fff,0 0 12px #fff" : "";
   } else {
-    preview.style.color = p.color;
+    preview.style.background="";
+    preview.style.color=selectedPaint.color;
+    preview.style.webkitBackgroundClip="";
+    preview.style.webkitTextFillColor="";
+    preview.style.textShadow=selectedPaint.glow ? "0 0 6px #fff,0 0 12px #fff" : "";
+    preview.style.animation="";
   }
 }
 
-function save(){
-  const nick = document.getElementById("nick").value.trim();
-  if(!nick) return alert("Podaj nick");
+nickInput.oninput = updatePreview;
 
+// Apply
+document.getElementById("apply").onclick = async ()=>{
+  if(!nickInput.value || !selectedPaint) return;
   const data = {
-    nick,
-    paint: paintSelect.value
+    nick: nickInput.value,
+    paint: selectedPaint
   };
+  await fetch(FIREBASE_URL, {method:"PATCH", body:JSON.stringify(data)});
+};
 
-  fetch(`${API}/${nick.toLowerCase()}.json`, {
-    method:"PUT",
-    body:JSON.stringify(data)
-  });
+// Reset
+document.getElementById("reset").onclick = async ()=>{
+  nickInput.value=""; selectedPaint=null;
+  preview.textContent="Podgląd nicku";
+  preview.style.background=""; preview.style.color="#00ff00";
+  preview.style.webkitBackgroundClip=""; preview.style.webkitTextFillColor="";
+  preview.style.textShadow=""; preview.style.animation="";
+  await fetch(FIREBASE_URL, {method:"PATCH", body:JSON.stringify({nick:"", paint:null})});
+  document.querySelectorAll(".paint-btn").forEach(b=>b.classList.remove("active"));
+};
 
-  alert("Zapisano");
+// Lista użytkowników
+async function updateUserList(){
+  const res = await fetch(FIREBASE_URL);
+  const data = await res.json();
+  const listDiv = document.getElementById("user-list");
+  listDiv.innerHTML="";
+  if(!data || !data.nick) return;
+  const div = document.createElement("div");
+  div.className="user-item";
+  div.innerHTML=`<span>${data.nick}</span> <button onclick="deleteUser()">Usuń</button>`;
+  listDiv.appendChild(div);
 }
 
-updatePreview();
+async function deleteUser(){
+  await fetch(FIREBASE_URL, {method:"PATCH", body:JSON.stringify({nick:"", paint:null})});
+  updateUserList();
+}
+
+setInterval(updateUserList,2000);
 </script>
 
 </body>
 </html>
+
 
