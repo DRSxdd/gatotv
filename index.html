@@ -15,7 +15,7 @@
     max-width: 900px;
     margin: 40px auto;
     padding: 20px;
-    background: rgba(30,30,30,0.9);
+    background: rgba(30,30,30,0.95);
     border-radius: 16px;
     box-shadow: 0 0 24px rgba(0,0,0,0.6);
   }
@@ -50,6 +50,26 @@
     min-height:50px;
     display:flex; justify-content:center; align-items:center;
   }
+  .preview span.animated {
+    display:inline-block;
+    animation: rainbowMove 3s linear infinite;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .preview span.glitch {
+    position: relative;
+    animation: glitch 1s infinite;
+  }
+  @keyframes rainbowMove { 0%{background-position:0% 50%}100%{background-position:100% 50%} }
+  @keyframes glitch {
+    0%{left:0; top:0;}
+    20%{left:-2px; top:2px;}
+    40%{left:2px; top:-2px;}
+    60%{left:-1px; top:1px;}
+    80%{left:1px; top:-1px;}
+    100%{left:0; top:0;}
+  }
   button {
     margin-top:12px;
     padding:10px 20px;
@@ -67,29 +87,31 @@
     display:flex; justify-content:space-between; align-items:center;
     padding:8px; background:#222; margin-bottom:6px; border-radius:6px;
   }
-  .user-item button { background:#ff4444; color:white; font-size:14px; padding:4px 8px; }
+  .user-item button { background:#ff4444; color:white; font-size:14px; padding:4px 8px; border:none; border-radius:4px; cursor:pointer; }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>Twitch Premium Nick Painter</h1>
+
   <label for="nick-input">Nick:</label>
   <input type="text" id="nick-input" placeholder="Wpisz nick">
-  
+
   <label>Wybierz paint:</label>
   <div class="paint-options" id="paint-options"></div>
-  
+
   <label>Podgląd nicku:</label>
-  <div class="preview" id="preview">Twój nick tutaj</div>
-  
+  <div class="preview" id="preview"><span>Twój nick tutaj</span></div>
+
   <div>
     <button id="apply">Nadaj nick</button>
     <button id="reset">Resetuj nick</button>
   </div>
-  
+
   <div class="user-list" id="user-list"></div>
 </div>
 
 <script src="content.js"></script>
 </body>
 </html>
+
