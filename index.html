@@ -5,22 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Premium Nick Painter</title>
 <style>
-body{font-family:'Segoe UI',sans-serif;background:#121212;color:white;margin:0;padding:0;}
-.container{max-width:1000px;margin:50px auto;padding:25px;border-radius:20px;background:linear-gradient(145deg,#1f1f1f,#2a2a2a);box-shadow:0 8px 32px rgba(0,0,0,0.7);}
+body{font-family:'Segoe UI',sans-serif;background:#111;color:white;margin:0;padding:0;}
+.container{max-width:1000px;margin:50px auto;padding:30px;border-radius:20px;background:linear-gradient(145deg,#1c1c1c,#2a2a2a);box-shadow:0 10px 40px rgba(0,0,0,0.7);}
 h1{text-align:center;color:#ff77ff;margin-bottom:20px;}
-input[type=text]{width:100%;padding:10px;border-radius:8px;border:none;background:#222;color:white;font-size:16px;}
-#preview{margin:20px 0;padding:12px;border-radius:12px;text-align:center;font-size:24px;background:#111;min-height:60px;display:flex;justify-content:center;align-items:center;}
-#paints-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-top:10px;}
-.paint-btn{padding:10px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;color:white;transition:0.2s;}
+input[type=text]{width:100%;padding:12px;border-radius:10px;border:none;background:#222;color:white;font-size:16px;}
+#preview{margin:20px 0;padding:15px;border-radius:15px;text-align:center;font-size:26px;background:#111;min-height:60px;display:flex;justify-content:center;align-items:center;box-shadow:0 0 10px rgba(255,255,255,0.1);}
+#paints-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:15px;}
+.paint-btn{padding:10px;border-radius:10px;font-weight:bold;cursor:pointer;color:white;text-align:center;transition:0.2s;user-select:none;}
 .paint-btn.selected{border:2px solid white;transform:translateY(-2px);}
-.paint-btn:hover{opacity:0.8;}
-button{margin-top:10px;padding:10px 20px;border-radius:8px;border:none;font-weight:bold;cursor:pointer;transition:0.2s;}
+.paint-btn:hover{opacity:0.85;}
+button{margin-top:15px;padding:12px 25px;border-radius:10px;border:none;font-weight:bold;cursor:pointer;transition:0.2s;}
 #apply-btn{background:linear-gradient(135deg,#9147ff,#7722cc);color:white;}
 #reset-btn{background:#555;color:white;margin-left:10px;}
-#user-list{margin-top:20px;}
-.user-item{display:flex;justify-content:space-between;align-items:center;margin:5px 0;padding:5px 10px;background:#222;border-radius:6px;}
-.user-item button{background:#ff4444;color:white;border:none;padding:4px 8px;border-radius:4px;cursor:pointer;}
-.user-item button:hover{opacity:0.8;}
+#user-list{margin-top:25px;}
+.user-item{display:flex;justify-content:space-between;align-items:center;margin:6px 0;padding:6px 12px;background:#222;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,0.3);}
+.user-item button{background:#ff4444;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;}
+.user-item button:hover{opacity:0.85;}
 </style>
 </head>
 <body>
@@ -28,7 +28,6 @@ button{margin-top:10px;padding:10px 20px;border-radius:8px;border:none;font-weig
 <h1>Premium Nick Painter</h1>
 <label>Nick użytkownika:</label>
 <input type="text" id="nick-input" placeholder="Wpisz nick...">
-
 <div id="preview">Podgląd nicku</div>
 
 <h3>Wybierz paint:</h3>
@@ -43,6 +42,7 @@ button{margin-top:10px;padding:10px 20px;border-radius:8px;border:none;font-weig
 
 <script>
 const FIREBASE_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app/premium.json";
+
 const GRADIENTS = {
   "Tęczowy":"linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet)",
   "Lava":"linear-gradient(90deg,#ff0000,#ff7700,#aa0000)",
@@ -53,6 +53,7 @@ const GRADIENTS = {
   "Ice":"linear-gradient(90deg,#00ffff,#00bfff)"
 };
 
+// ======= Painty =======
 const paints = [
   {name:"Czerwony",type:"color",color:"#ff0000"},
   {name:"Zielony",type:"color",color:"#00ff00"},
@@ -113,9 +114,9 @@ function updatePreview(){
 }
 
 paints.forEach(p=>{
-  const btn = document.createElement("button");
+  const btn = document.createElement("div");
   btn.className="paint-btn";
-  btn.textContent = p.name;
+  btn.textContent=p.name;
   if(p.type==="color") btn.style.background = p.color;
   else if(p.type==="gradient") btn.style.background = GRADIENTS[p.gradient] || "#555";
   btn.onclick = ()=>{
@@ -189,4 +190,3 @@ renderUsers();
 </script>
 </body>
 </html>
-
