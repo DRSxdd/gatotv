@@ -6,7 +6,7 @@
 <title>Premium Nick Painter</title>
 <style>
 body{font-family:'Segoe UI',sans-serif;background:#121212;color:white;margin:0;padding:0;}
-.container{max-width:900px;margin:50px auto;padding:25px;border-radius:20px;background:linear-gradient(145deg,#1f1f1f,#2a2a2a);box-shadow:0 8px 32px rgba(0,0,0,0.7);}
+.container{max-width:1000px;margin:50px auto;padding:25px;border-radius:20px;background:linear-gradient(145deg,#1f1f1f,#2a2a2a);box-shadow:0 8px 32px rgba(0,0,0,0.7);}
 h1{text-align:center;color:#ff77ff;margin-bottom:20px;}
 input[type=text]{width:100%;padding:10px;border-radius:8px;border:none;background:#222;color:white;font-size:16px;}
 #preview{margin:20px 0;padding:12px;border-radius:12px;text-align:center;font-size:24px;background:#111;min-height:60px;display:flex;justify-content:center;align-items:center;}
@@ -44,130 +44,161 @@ button{margin-top:10px;padding:10px 20px;border-radius:8px;border:none;font-weig
 
 <script>
 const FIREBASE_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app/premium.json";
+
 const GRADIENTS = {
-    "Tęczowy":"linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet)",
-    "Lava":"linear-gradient(90deg,#ff0000,#ff7700,#aa0000)",
-    "Neon":"linear-gradient(90deg,#ff00ff,#00ffff)",
-    "Sunset":"linear-gradient(90deg,#ff4500,#ffb347)",
-    "Ocean":"linear-gradient(90deg,#1e90ff,#00ced1)"
+  "Tęczowy":"linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet)",
+  "Lava":"linear-gradient(90deg,#ff0000,#ff7700,#aa0000)",
+  "Neon":"linear-gradient(90deg,#ff00ff,#00ffff)",
+  "Sunset":"linear-gradient(90deg,#ff4500,#ffb347)",
+  "Ocean":"linear-gradient(90deg,#1e90ff,#00ced1)",
+  "Fire":"linear-gradient(90deg,#ff0000,#ffae00)",
+  "Ice":"linear-gradient(90deg,#00ffff,#00bfff)"
 };
+
+// Lista paintów – kolor, gradient, split, animacja liter
 const paints = [
-    {name:"Czerwony",type:"color",color:"#ff0000"},
-    {name:"Zielony",type:"color",color:"#00ff00"},
-    {name:"Niebieski",type:"color",color:"#00ccff"},
-    {name:"Różowy",type:"color",color:"#ff77ff"},
-    {name:"Żółty",type:"color",color:"#ffff00"},
-    {name:"Tęczowy",type:"gradient",gradient:"Tęczowy"},
-    {name:"Lava",type:"gradient",gradient:"Lava"},
-    {name:"Neon",type:"gradient",gradient:"Neon"},
-    {name:"Sunset",type:"gradient",gradient:"Sunset"},
-    {name:"Ocean",type:"gradient",gradient:"Ocean"},
-    {name:"Split Red/White",type:"split",color:"#ff0000",splitColor:"#ffffff"},
-    {name:"Split Blue/Yellow",type:"split",color:"#00ccff",splitColor:"#ffff00"}
+  {name:"Czerwony",type:"color",color:"#ff0000"},
+  {name:"Zielony",type:"color",color:"#00ff00"},
+  {name:"Niebieski",type:"color",color:"#00ccff"},
+  {name:"Różowy",type:"color",color:"#ff77ff"},
+  {name:"Żółty",type:"color",color:"#ffff00"},
+  {name:"Lava",type:"color",color:"#ff0000",glow:true,glowColor:"#ff7700"},
+  {name:"Tęczowy",type:"gradient",gradient:"Tęczowy"},
+  {name:"Neon",type:"gradient",gradient:"Neon"},
+  {name:"Sunset",type:"gradient",gradient:"Sunset"},
+  {name:"Ocean",type:"gradient",gradient:"Ocean"},
+  {name:"Fire",type:"gradient",gradient:"Fire",glow:true,glowColor:"#ffae00"},
+  {name:"Ice",type:"gradient",gradient:"Ice",glow:true,glowColor:"#00bfff"},
+  {name:"Split Red/White",type:"split",color:"#ff0000",splitColor:"#ffffff"},
+  {name:"Split Blue/Yellow",type:"split",color:"#00ccff",splitColor:"#ffff00"},
+  {name:"Rainbow Letters",type:"animated",lettersGradient:["#ff0000","#ff7700","#ffff00","#00ff00","#00ffff","#0000ff","#ff00ff"]},
+  {name:"Glitch",type:"glitch"},
+  {name:"Purple Glow",type:"color",color:"#aa00ff",glow:true,glowColor:"#ff77ff"},
+  {name:"Cyan Glow",type:"color",color:"#00ffff",glow:true,glowColor:"#00aaee"},
+  {name:"Pink Neon",type:"color",color:"#ff00ff",glow:true,glowColor:"#ff00aa"},
+  {name:"Sun Glow",type:"gradient",gradient:"Sunset",glow:true,glowColor:"#ffb347"}
 ];
+
 const paintsContainer = document.getElementById("paints-container");
 const preview = document.getElementById("preview");
 const nickInput = document.getElementById("nick-input");
 let selectedPaint = paints[0];
 
-// Podgląd
+// ---------------- PODGLĄD ----------------
 function updatePreview(){
-    const nick = nickInput.value || "Podgląd";
-    if(selectedPaint.type==="color"){
-        preview.textContent = nick;
-        preview.style.color = selectedPaint.color;
-        preview.style.background="";
-        preview.style.webkitTextFillColor="";
-    } else if(selectedPaint.type==="gradient"){
-        preview.textContent = nick;
-        preview.style.backgroundImage = GRADIENTS[selectedPaint.gradient] || "";
-        preview.style.webkitBackgroundClip="text";
-        preview.style.webkitTextFillColor="transparent";
-        preview.style.color="";
-    } else if(selectedPaint.type==="split"){
-        const mid = Math.floor(nick.length/2);
-        preview.innerHTML = `<span style="color:${selectedPaint.color}">${nick.slice(0,mid)}</span><span style="color:${selectedPaint.splitColor}">${nick.slice(mid)}</span>`;
-        preview.style.background="";
-        preview.style.webkitTextFillColor="";
-        preview.style.color="";
+  const nick = nickInput.value || "Podgląd";
+  if(selectedPaint.type==="color"){
+    preview.textContent = nick;
+    preview.style.color = selectedPaint.color;
+    preview.style.background="";
+    preview.style.webkitTextFillColor="";
+    preview.style.textShadow = selectedPaint.glow ? `0 0 6px ${selectedPaint.glowColor},0 0 12px ${selectedPaint.glowColor}` : "";
+  } else if(selectedPaint.type==="gradient"){
+    preview.textContent = nick;
+    preview.style.backgroundImage = GRADIENTS[selectedPaint.gradient] || "";
+    preview.style.webkitBackgroundClip="text";
+    preview.style.webkitTextFillColor="transparent";
+    preview.style.color="";
+    preview.style.textShadow = selectedPaint.glow ? `0 0 6px ${selectedPaint.glowColor},0 0 12px ${selectedPaint.glowColor}` : "";
+  } else if(selectedPaint.type==="split"){
+    const mid = Math.floor(nick.length/2);
+    preview.innerHTML = `<span style="color:${selectedPaint.color}">${nick.slice(0,mid)}</span><span style="color:${selectedPaint.splitColor}">${nick.slice(mid)}</span>`;
+    preview.style.background="";
+    preview.style.webkitTextFillColor="";
+    preview.style.textShadow="";
+  } else if(selectedPaint.type==="animated"){
+    // Rainbow letters
+    preview.innerHTML = "";
+    for(let i=0;i<nick.length;i++){
+      const span = document.createElement("span");
+      span.textContent = nick[i];
+      span.style.color = selectedPaint.lettersGradient[i%selectedPaint.lettersGradient.length];
+      preview.appendChild(span);
     }
+    preview.style.background="";
+    preview.style.webkitTextFillColor="";
+    preview.style.textShadow="";
+  }
 }
 
-// Painty
+// ---------------- INICJACJA PAINTÓW ----------------
 paints.forEach(p=>{
-    const btn = document.createElement("button");
-    btn.className="paint-btn";
-    btn.textContent = p.name;
-    btn.style.background = p.type==="color" ? p.color : (GRADIENTS[p.gradient] || "#555");
-    btn.onclick = ()=>{
-        document.querySelectorAll(".paint-btn").forEach(b=>b.classList.remove("selected"));
-        btn.classList.add("selected");
-        selectedPaint = p;
-        updatePreview();
-    };
-    paintsContainer.appendChild(btn);
+  const btn = document.createElement("button");
+  btn.className="paint-btn";
+  btn.textContent = p.name;
+  if(p.type==="color") btn.style.background = p.color;
+  else if(p.type==="gradient") btn.style.background = GRADIENTS[p.gradient] || "#555";
+  btn.onclick = ()=>{
+    document.querySelectorAll(".paint-btn").forEach(b=>b.classList.remove("selected"));
+    btn.classList.add("selected");
+    selectedPaint = p;
+    updatePreview();
+  };
+  paintsContainer.appendChild(btn);
 });
 
 nickInput.addEventListener("input",updatePreview);
 updatePreview();
 
-// Lista użytkowników
+// ---------------- LISTA UŻYTKOWNIKÓW ----------------
 const userListEl = document.getElementById("user-list");
 async function renderUsers(){
-    try{
-        const res = await fetch(FIREBASE_URL);
-        const data = await res.json();
-        userListEl.innerHTML="";
-        if(!data) return;
-        Object.keys(data).forEach(nick=>{
-            const div = document.createElement("div");
-            div.className="user-item";
-            const span = document.createElement("span");
-            span.textContent = nick;
-            div.appendChild(span);
-            const btn = document.createElement("button");
-            btn.textContent="Usuń";
-            btn.onclick = async()=>{
-                await fetch(`${FIREBASE_URL}/${nick}.json`,{method:"DELETE"});
-                renderUsers();
-            };
-            div.appendChild(btn);
-            userListEl.appendChild(div);
-        });
-    }catch(e){console.error(e);}
+  try{
+    const res = await fetch(FIREBASE_URL);
+    const data = await res.json();
+    userListEl.innerHTML="";
+    if(!data) return;
+    Object.keys(data).forEach(nick=>{
+      const div = document.createElement("div");
+      div.className="user-item";
+      const span = document.createElement("span");
+      span.textContent = nick;
+      div.appendChild(span);
+      const btn = document.createElement("button");
+      btn.textContent="Usuń";
+      btn.onclick = async()=>{
+        await fetch(`${FIREBASE_URL}/${nick}.json`,{method:"DELETE"});
+        renderUsers();
+      };
+      div.appendChild(btn);
+      userListEl.appendChild(div);
+    });
+  }catch(e){console.error(e);}
 }
 
-// Nadaj paint
+// ---------------- AKCJE ----------------
 document.getElementById("apply-btn").onclick = async()=>{
-    const nick = nickInput.value.trim();
-    if(!nick) return alert("Wpisz nick");
-    const payload = {};
-    const paintData = {};
-    if(selectedPaint.type==="split"){
-        paintData.type="split";
-        paintData.color=selectedPaint.color;
-        paintData.splitColor=selectedPaint.splitColor;
-    } else if(selectedPaint.type==="gradient"){
-        paintData.type="gradient";
-        paintData.gradient=selectedPaint.gradient;
-    } else {
-        paintData.type="color";
-        paintData.color=selectedPaint.color;
-    }
-    payload[nick] = {paint:paintData, badges:[]};
-    await fetch(FIREBASE_URL,{method:"PATCH",body:JSON.stringify(payload)});
-    renderUsers();
+  const nick = nickInput.value.trim();
+  if(!nick) return alert("Wpisz nick");
+  const payload = {};
+  const paintData = {};
+  if(selectedPaint.type==="split"){
+    paintData.type="split";
+    paintData.color = selectedPaint.color;
+    paintData.splitColor = selectedPaint.splitColor;
+  } else if(selectedPaint.type==="gradient" || selectedPaint.type==="color"){
+    paintData.type = selectedPaint.type;
+    if(selectedPaint.color) paintData.color = selectedPaint.color;
+    if(selectedPaint.gradient) paintData.gradient = selectedPaint.gradient;
+    if(selectedPaint.glow) paintData.glow = true;
+    if(selectedPaint.glowColor) paintData.glowColor = selectedPaint.glowColor;
+  } else if(selectedPaint.type==="animated"){
+    paintData.type="animated";
+    paintData.lettersGradient = selectedPaint.lettersGradient;
+  }
+  payload[nick] = {paint:paintData,badges:[]};
+  await fetch(FIREBASE_URL,{method:"PATCH",body:JSON.stringify(payload)});
+  renderUsers();
 };
 
-// Reset
 document.getElementById("reset-btn").onclick = async()=>{
-    const nick = nickInput.value.trim();
-    if(!nick) return alert("Wpisz nick");
-    const payload = {};
-    payload[nick] = {paint:{type:"color",color:"#00ff00"}, badges:[]};
-    await fetch(FIREBASE_URL,{method:"PATCH",body:JSON.stringify(payload)});
-    updatePreview();
-    renderUsers();
+  const nick = nickInput.value.trim();
+  if(!nick) return alert("Wpisz nick");
+  const payload = {};
+  payload[nick] = {paint:{type:"color",color:"#00ff00"},badges:[]};
+  await fetch(FIREBASE_URL,{method:"PATCH",body:JSON.stringify(payload)});
+  updatePreview();
+  renderUsers();
 };
 
 renderUsers();
