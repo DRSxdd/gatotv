@@ -2,108 +2,197 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Premium Nick Colors</title>
+<title>Twitch Premium Nick Painter</title>
 <style>
-body{font-family:'Segoe UI',sans-serif;background:#1a1a1a;color:white;margin:0;padding:0;}
-.container{max-width:800px;margin:50px auto;background:#2a2a2a;padding:20px;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.6);}
-h1{text-align:center;}
-#preview{margin:20px 0;padding:10px;border-radius:8px;text-align:center;font-size:20px;background:#111;}
-.paint-btn{padding:8px 12px;margin:5px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;}
-.paint-btn:hover{opacity:0.8;}
-#user-list{margin-top:20px;}
-.user-item{display:flex;justify-content:space-between;align-items:center;margin:5px 0;padding:5px 10px;background:#333;border-radius:6px;}
-.user-item button{background:#ff4444;color:white;border:none;padding:4px 8px;border-radius:4px;cursor:pointer;}
-.user-item button:hover{opacity:0.8;}
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(120deg, #1c1c1c, #2a2a2a);
+    color: #fff;
+  }
+  .container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: #222;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+  }
+  h1 { text-align: center; margin-bottom: 20px; }
+  label { display:block; margin:10px 0 5px; }
+  input[type=text] {
+    width: 100%; padding: 8px 12px; border-radius: 8px; border:none; font-size:16px;
+  }
+  .paint-grid {
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(100px,1fr)); gap:10px; margin-top:15px;
+  }
+  .paint-btn {
+    padding:8px; border:none; border-radius:8px; cursor:pointer; color:#fff; font-weight:bold; text-align:center;
+    transition:0.2s; font-size:14px;
+  }
+  .paint-btn:hover { transform: scale(1.05); box-shadow:0 0 10px rgba(255,255,255,0.5);}
+  #preview { text-align:center; font-size:24px; margin:15px 0; padding:10px; border-radius:12px; background:#111; }
+  button#apply, button#reset { margin-top:15px; padding:10px 20px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; transition:0.2s; }
+  button#apply { background:#9147ff; color:white; }
+  button#apply:hover { background:#7722cc; }
+  button#reset { background:#ff4444; color:white; margin-left:10px;}
+  button#reset:hover { background:#cc2222; }
+  .user-list { margin-top:20px; max-height:200px; overflow:auto; background:#1b1b1b; border-radius:8px; padding:10px; }
+  .user-item { display:flex; justify-content:space-between; align-items:center; padding:4px 6px; border-bottom:1px solid #333; }
+  .user-item button { background:#cc2222; border:none; border-radius:6px; padding:2px 6px; cursor:pointer; font-size:12px; color:white; }
+  .user-item button:hover { background:#ff4444; }
 </style>
 </head>
 <body>
 <div class="container">
-<h1>Premium Nick Colors</h1>
-<label>Nick:</label>
-<input type="text" id="nick-input" placeholder="Wpisz nick..." style="width:100%;padding:8px;margin-top:4px;border-radius:6px;border:none;">
-<div id="preview">Podgląd nicku</div>
+  <h1>Twitch Premium Nick Painter</h1>
+  <label>Nick:</label>
+  <input type="text" id="nick-input" placeholder="Wpisz nick">
 
-<h3>Wybierz paint:</h3>
-<div id="paints-container"></div>
+  <div id="preview">Podgląd nicku</div>
 
-<button id="apply-btn" style="margin-top:10px;padding:10px 20px;border-radius:8px;border:none;background:linear-gradient(135deg,#9147ff,#7722cc);color:white;font-weight:bold;cursor:pointer;">Nadaj paint</button>
-<button id="reset-btn" style="margin-top:10px;padding:10px 20px;border-radius:8px;border:none;background:#555;color:white;font-weight:bold;cursor:pointer;">Resetuj nick</button>
+  <label>Wybierz paint:</label>
+  <div class="paint-grid" id="paint-grid"></div>
 
-<h3>Użytkownicy:</h3>
-<div id="user-list"></div>
+  <button id="apply">Nadaj nick</button>
+  <button id="reset">Resetuj nick</button>
+
+  <h3>Lista użytkowników:</h3>
+  <div class="user-list" id="user-list"></div>
 </div>
 
 <script>
 const FIREBASE_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app/premium.json";
 
-const paints = [
-    {name:"Czerwony",type:"color",color:"#ff0000"},
-    {name:"Zielony",type:"color",color:"#00ff00"},
-    {name:"Niebieski",type:"color",color:"#00ccff"},
-    {name:"Różowy",type:"color",color:"#ff77ff"},
-    {name:"Żółty",type:"color",color:"#ffff00"},
-    {name:"Tęczowy",type:"gradient",gradient:"Tęczowy"},
-    {name:"Lava",type:"gradient",gradient:"Lava"},
-    {name:"Split Red/White",type:"split",color:"#ff0000",splitColor:"#ffffff"},
-    {name:"Split Blue/Yellow",type:"split",color:"#00ccff",splitColor:"#ffff00"},
-    // dodaj kolejne aż 50...
+// Lista paintów
+const PAINTS = [
+  {name:"Zielony", type:"color", value:"#00ff00", glow:null},
+  {name:"Czerwony", type:"color", value:"#ff0000", glow:null},
+  {name:"Różowy", type:"color", value:"#ff77ff", glow:null},
+  {name:"Niebieski", type:"color", value:"#00aaff", glow:null},
+  {name:"Lawa", type:"gradient", value:"linear-gradient(90deg, #ff0000, #ff6600)", glow:"#ff6600"},
+  {name:"Śniegowy", type:"gradient", value:"linear-gradient(90deg,#00ccff,#66ffff)", glow:"#00ccff"},
+  {name:"Split Czerwono-Biały", type:"split", value:["#ff0000","#ffffff"], glow:null},
+  {name:"Tęcza Animowana", type:"rainbow", glow:null},
+  {name:"Specjalny", type:"rainbow-glow", glow:"#ff00ff"},
+  {name:"Fioletowy", type:"color", value:"#aa00ff", glow:null},
+  {name:"Pomarańczowy", type:"color", value:"#ff8800", glow:null},
+  {name:"Żółty", type:"color", value:"#ffff00", glow:null},
+  {name:"Cyan", type:"color", value:"#00ffff", glow:null},
+  {name:"Biało-Niebieski", type:"split", value:["#ffffff","#00aaff"], glow:null},
+  {name:"Zielono-Żółty", type:"split", value:["#00ff00","#ffff00"], glow:null},
+  {name:"Glitch", type:"rainbow-chars", glow:null},
+  {name:"Animowane litery", type:"animated", glow:null},
+  {name:"Biały", type:"color", value:"#ffffff", glow:null},
+  {name:"Czarny", type:"color", value:"#000000", glow:null},
+  {name:"Granat", type:"color", value:"#0000aa", glow:null},
+  {name:"Miętowy", type:"color", value:"#77ffcc", glow:null},
+  {name:"Pomarańczowa Poświata", type:"color", value:"#ffaa33", glow:"#ffcc33"},
+  {name:"Lawenda", type:"gradient", value:"linear-gradient(90deg,#aa77ff,#ff77ff)", glow:"#ff77ff"},
+  {name:"Ciemna Lawa", type:"gradient", value:"linear-gradient(90deg,#990000,#ff3300)", glow:"#ff3300"},
+  {name:"Różowo-Niebieski", type:"gradient", value:"linear-gradient(90deg,#ff77ff,#77ccff)", glow:"#ff77ff"},
+  {name:"Biało-Fioletowy", type:"split", value:["#ffffff","#aa00ff"], glow:null},
+  {name:"Zielono-Fioletowy", type:"split", value:["#00ff00","#aa00ff"], glow:null},
+  {name:"Fioletowo-Niebieski", type:"gradient", value:"linear-gradient(90deg,#aa00ff,#00aaff)", glow:"#00aaff"},
+  {name:"Czerwono-Fioletowy", type:"gradient", value:"linear-gradient(90deg,#ff0000,#aa00ff)", glow:"#ff0000"},
+  {name:"Tęcza Poświata", type:"rainbow-glow", glow:"#ffff00"}
 ];
 
-const paintsContainer = document.getElementById("paints-container");
-const preview = document.getElementById("preview");
-const nickInput = document.getElementById("nick-input");
-let selectedPaint = paints[0];
+// Generowanie przycisków paint
+const paintGrid = document.getElementById("paint-grid");
+let selectedPaint = null;
 
-function updatePreview(){
-    let nick = nickInput.value||"Podgląd";
-    if(selectedPaint.type==="color"){
-        preview.textContent = nick;
-        preview.style.color = selectedPaint.color;
-        preview.style.background = "";
-        preview.style.textShadow="";
-    } else if(selectedPaint.type==="gradient"){
-        preview.textContent = nick;
-        preview.style.backgroundImage = GRADIENTS[selectedPaint.gradient];
-        preview.style.webkitBackgroundClip="text";
-        preview.style.webkitTextFillColor="transparent";
-        preview.style.textShadow="";
-    } else if(selectedPaint.type==="split"){
-        let mid = Math.floor(nick.length/2);
-        preview.innerHTML = `<span style="color:${selectedPaint.color}">${nick.slice(0,mid)}</span><span style="color:${selectedPaint.splitColor}">${nick.slice(mid)}</span>`;
-        preview.style.background="";
-        preview.style.textShadow="";
-    }
-}
-
-paints.forEach(p=>{
-    const btn = document.createElement("button");
-    btn.className="paint-btn";
-    btn.textContent=p.name;
-    btn.onclick = ()=>{
-        selectedPaint = p;
-        updatePreview();
-    };
-    paintsContainer.appendChild(btn);
+PAINTS.forEach((p,i)=>{
+  const btn = document.createElement("button");
+  btn.className="paint-btn";
+  btn.innerText=p.name;
+  if(p.type==="color") btn.style.background=p.value;
+  else if(p.type==="gradient") btn.style.background=p.value;
+  else if(p.type.includes("rainbow")) btn.style.background="linear-gradient(90deg, red,orange,yellow,green,blue,violet)";
+  else if(p.type==="split") btn.style.background=p.value[0];
+  btn.onclick=()=>{
+    selectedPaint = p;
+    renderPreview();
+  };
+  paintGrid.appendChild(btn);
 });
 
-nickInput.addEventListener("input",updatePreview);
-updatePreview();
+// Podgląd nicku
+const preview = document.getElementById("preview");
+const nickInput = document.getElementById("nick-input");
 
-document.getElementById("apply-btn").onclick = async()=>{
-    let nick = nickInput.value.trim();
-    if(!nick) return alert("Wpisz nick");
-    let payload = {nick:nick, paint:selectedPaint, badges:[]};
-    await fetch(FIREBASE_URL,{method:"PUT",body:JSON.stringify(payload)});
+function renderPreview(){
+  const nick = nickInput.value || "Podgląd nicku";
+  if(!selectedPaint) { preview.textContent = nick; preview.style.background="none"; preview.style.color="#00ff00"; preview.style.textShadow=""; preview.style.backgroundImage=""; return;}
+  preview.textContent = nick;
+
+  if(selectedPaint.type==="color"){
+    preview.style.color = selectedPaint.value;
+    preview.style.backgroundImage="";
+    preview.style.textShadow = selectedPaint.glow ? `0 0 6px ${selectedPaint.glow}` : "";
+  } else if(selectedPaint.type==="gradient"){
+    preview.style.backgroundImage = selectedPaint.value;
+    preview.style.webkitBackgroundClip="text";
+    preview.style.webkitTextFillColor="transparent";
+    preview.style.textShadow = selectedPaint.glow ? `0 0 6px ${selectedPaint.glow}` : "";
+  } else if(selectedPaint.type==="split"){
+    // Połowa-połowa
+    const mid = Math.floor(nick.length/2);
+    const first = nick.substring(0,mid);
+    const second = nick.substring(mid);
+    preview.innerHTML = `<span style="color:${selectedPaint.value[0]}">${first}</span><span style="color:${selectedPaint.value[1]}">${second}</span>`;
+    preview.style.backgroundImage="";
+    preview.style.textShadow="";
+  } else if(selectedPaint.type==="rainbow" || selectedPaint.type==="rainbow-glow"){
+    preview.style.backgroundImage="linear-gradient(90deg, red,orange,yellow,green,blue,violet)";
+    preview.style.webkitBackgroundClip="text";
+    preview.style.webkitTextFillColor="transparent";
+    if(selectedPaint.type==="rainbow-glow") preview.style.textShadow=`0 0 6px ${selectedPaint.glow}`;
+  }
+}
+
+// Apply / Reset
+document.getElementById("apply").onclick=async()=>{
+  const nick = nickInput.value.trim();
+  if(!nick || !selectedPaint) return alert("Wpisz nick i wybierz paint!");
+  const payload = {
+    nick: nick,
+    paint: selectedPaint
+  };
+  await fetch(FIREBASE_URL, {method:"PUT", body:JSON.stringify(payload)});
+  loadUserList();
 };
 
-document.getElementById("reset-btn").onclick = async()=>{
-    let nick = nickInput.value.trim();
-    if(!nick) return alert("Wpisz nick");
-    let payload = {nick:nick, paint:{type:"color",color:"#00ff00",glow:false,glowColor:"#ffffff"}, badges:[]};
-    await fetch(FIREBASE_URL,{method:"PUT",body:JSON.stringify(payload)});
-    updatePreview();
+document.getElementById("reset").onclick=async()=>{
+  const nick = nickInput.value.trim();
+  if(!nick) return;
+  const payload = {nick:nick, paint:null};
+  await fetch(FIREBASE_URL, {method:"PUT", body:JSON.stringify(payload)});
+  renderPreview();
+  loadUserList();
 };
+
+// Lista użytkowników
+const userList = document.getElementById("user-list");
+async function loadUserList(){
+  const res = await fetch(FIREBASE_URL);
+  const data = await res.json();
+  userList.innerHTML="";
+  if(!data || !data.nick) return;
+  const item = document.createElement("div");
+  item.className="user-item";
+  item.innerHTML=`<span>${data.nick}</span><button>Usuń</button>`;
+  item.querySelector("button").onclick=async()=>{
+    await fetch(FIREBASE_URL, {method:"DELETE"});
+    loadUserList();
+    renderPreview();
+  };
+  userList.appendChild(item);
+}
+
+nickInput.oninput=renderPreview;
+loadUserList();
+
 </script>
 </body>
 </html>
