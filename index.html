@@ -5,35 +5,49 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Twitch Premium Painter Admin</title>
 <style>
-body {
+  body {
     margin:0;
     padding:0;
     font-family:'Segoe UI',sans-serif;
-    background:linear-gradient(135deg,#1b1b1b,#0d0d0d);
+    background: linear-gradient(135deg,#1b1b1b,#0d0d0d);
     color:#fff;
-}
-.container {
-    max-width:1100px;
+  }
+  .container {
+    max-width:1000px;
     margin:40px auto;
     padding:20px;
-    background:rgba(30,30,30,0.95);
+    background: rgba(30,30,30,0.95);
     border-radius:16px;
     box-shadow:0 0 24px rgba(0,0,0,0.6);
-}
-h1 { text-align:center; margin-bottom:20px; font-size:2em; }
-label { display:block; margin-top:12px; margin-bottom:6px; font-weight:bold; }
-input[type=text] {
-    width:100%; padding:10px; border-radius:8px; border:none;
-    background:#1f1f1f; color:white; font-size:16px;
-}
-.paint-options {
+  }
+  h1 {
+    text-align:center;
+    margin-bottom:20px;
+    font-size:2em;
+  }
+  label {
+    display:block;
+    margin-top:12px;
+    margin-bottom:6px;
+    font-weight:bold;
+  }
+  input[type=text] {
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    background:#1f1f1f;
+    color:white;
+    font-size:16px;
+  }
+  .paint-options {
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
     gap:10px;
     margin-top:10px;
-}
-.paint-option {
-    padding:10px;
+  }
+  .paint-option {
+    padding:12px;
     border-radius:8px;
     text-align:center;
     cursor:pointer;
@@ -42,9 +56,16 @@ input[type=text] {
     transition:0.2s;
     border:2px solid transparent;
     color:#fff;
-}
-.paint-option:hover { transform:translateY(-2px); border:2px solid #fff; }
-.preview {
+  }
+  .paint-option.selected {
+    border:2px solid #fff;
+    transform:translateY(-2px);
+  }
+  .paint-option:hover {
+    transform:translateY(-2px);
+    border:2px solid #aaa;
+  }
+  .preview {
     margin-top:20px;
     padding:12px;
     text-align:center;
@@ -53,28 +74,31 @@ input[type=text] {
     background:#111;
     min-height:50px;
     display:flex; justify-content:center; align-items:center;
-}
-.preview span.animated {
+  }
+  .preview span.animated {
     display:inline-block;
     animation: rainbowMove 3s linear infinite;
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-}
-.preview span.glitch {
+  }
+  .preview span.glitch {
     position: relative;
     animation: glitch 1s infinite;
-}
-@keyframes rainbowMove { 0%{background-position:0% 50%} 100%{background-position:100% 50%} }
-@keyframes glitch {
-    0%{left:0;top:0;}
-    20%{left:-2px;top:2px;}
-    40%{left:2px;top:-2px;}
-    60%{left:-1px;top:1px;}
-    80%{left:1px;top:-1px;}
-    100%{left:0;top:0;}
-}
-button {
+  }
+  @keyframes rainbowMove {
+    0%{background-position:0% 50%}
+    100%{background-position:100% 50%}
+  }
+  @keyframes glitch {
+    0%{left:0; top:0;}
+    20%{left:-2px; top:2px;}
+    40%{left:2px; top:-2px;}
+    60%{left:-1px; top:1px;}
+    80%{left:1px; top:-1px;}
+    100%{left:0; top:0;}
+  }
+  button {
     margin-top:12px;
     padding:10px 20px;
     font-size:16px;
@@ -83,36 +107,38 @@ button {
     cursor:pointer;
     font-weight:bold;
     transition:0.2s;
-}
-button#apply { background:#6a0dad; color:white; }
-button#reset { background:#cc2222; color:white; margin-left:10px; }
-.user-list { margin-top:20px; }
-.user-item {
+  }
+  button#apply { background:#6a0dad; color:white; }
+  button#reset { background:#cc2222; color:white; margin-left:10px; }
+  .user-list { margin-top:20px; }
+  .user-item {
     display:flex; justify-content:space-between; align-items:center;
     padding:8px; background:#222; margin-bottom:6px; border-radius:6px;
-}
-.user-item button { background:#ff4444; color:white; font-size:14px; padding:4px 8px; border:none; border-radius:4px; cursor:pointer; }
+  }
+  .user-item button { background:#ff4444; color:white; font-size:14px; padding:4px 8px; border:none; border-radius:4px; cursor:pointer; }
 </style>
 </head>
 <body>
 <div class="container">
-    <h1>Twitch Premium Painter Admin</h1>
-    <label for="nick-input">Nick:</label>
-    <input type="text" id="nick-input" placeholder="Wpisz nick">
+  <h1>Twitch Premium Nick Painter</h1>
 
-    <label>Wybierz paint:</label>
-    <div class="paint-options" id="paint-options"></div>
+  <label for="nick-input">Nick:</label>
+  <input type="text" id="nick-input" placeholder="Wpisz nick">
 
-    <label>Podgląd nicku:</label>
-    <div class="preview" id="preview"><span>Twój nick tutaj</span></div>
+  <label>Wybierz paint:</label>
+  <div class="paint-options" id="paint-options"></div>
 
-    <div>
-        <button id="apply">Nadaj nick</button>
-        <button id="reset">Resetuj nick</button>
-    </div>
+  <label>Podgląd nicku:</label>
+  <div class="preview" id="preview"><span>Twój nick tutaj</span></div>
 
-    <div class="user-list" id="user-list"></div>
+  <div>
+    <button id="apply">Nadaj nick</button>
+    <button id="reset">Resetuj nick</button>
+  </div>
+
+  <div class="user-list" id="user-list"></div>
 </div>
+
 <script src="content.js"></script>
 </body>
 </html>
