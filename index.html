@@ -11,45 +11,57 @@
     background: linear-gradient(135deg,#1b1b1b,#0d0d0d);
     color: #fff;
   }
+
   .container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 40px auto;
     padding: 20px;
     background: rgba(30,30,30,0.95);
     border-radius: 16px;
     box-shadow: 0 0 24px rgba(0,0,0,0.6);
   }
-  h1 { text-align:center; margin-bottom:20px; }
+
+  h1 { text-align:center; margin-bottom:20px; font-size:2em; }
+
   label { display:block; margin-top:12px; margin-bottom:6px; font-weight:bold; }
+
   input[type=text] {
     width: 100%; padding:10px; border-radius:8px; border:none;
     background:#1f1f1f; color:white; font-size:16px;
   }
+
   .paint-options {
-    display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap:10px;
+    margin-top:10px;
   }
+
   .paint-option {
-    flex: 1 1 120px;
-    padding: 8px;
+    padding:10px;
     border-radius:8px;
     text-align:center;
     cursor:pointer;
     font-weight:bold;
     user-select:none;
-    transition: 0.2s;
+    transition:0.2s;
     border:2px solid transparent;
+    color:#fff;
   }
+
   .paint-option:hover { transform:translateY(-2px); border:2px solid #fff; }
+
   .preview {
     margin-top:20px;
     padding:12px;
     text-align:center;
-    font-size:24px;
+    font-size:28px;
     border-radius:8px;
     background:#111;
     min-height:50px;
     display:flex; justify-content:center; align-items:center;
   }
+
   .preview span.animated {
     display:inline-block;
     animation: rainbowMove 3s linear infinite;
@@ -57,11 +69,17 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+
   .preview span.glitch {
     position: relative;
     animation: glitch 1s infinite;
   }
-  @keyframes rainbowMove { 0%{background-position:0% 50%}100%{background-position:100% 50%} }
+
+  @keyframes rainbowMove {
+    0%{background-position:0% 50%}
+    100%{background-position:100% 50%}
+  }
+
   @keyframes glitch {
     0%{left:0; top:0;}
     20%{left:-2px; top:2px;}
@@ -70,6 +88,7 @@
     80%{left:1px; top:-1px;}
     100%{left:0; top:0;}
   }
+
   button {
     margin-top:12px;
     padding:10px 20px;
@@ -80,14 +99,18 @@
     font-weight:bold;
     transition:0.2s;
   }
+
   button#apply { background:#6a0dad; color:white; }
   button#reset { background:#cc2222; color:white; margin-left:10px; }
+
   .user-list { margin-top:20px; }
   .user-item {
     display:flex; justify-content:space-between; align-items:center;
     padding:8px; background:#222; margin-bottom:6px; border-radius:6px;
   }
+
   .user-item button { background:#ff4444; color:white; font-size:14px; padding:4px 8px; border:none; border-radius:4px; cursor:pointer; }
+
 </style>
 </head>
 <body>
@@ -114,4 +137,3 @@
 <script src="content.js"></script>
 </body>
 </html>
-
