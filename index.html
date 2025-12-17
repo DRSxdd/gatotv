@@ -142,17 +142,29 @@ document.getElementById("apply-btn").onclick = async()=>{
     const nick = nickInput.value.trim();
     if(!nick) return alert("Wpisz nick");
     const payload = {};
-    payload[nick] = {paint:selectedPaint};
+    const paintData = {};
+    if(selectedPaint.type==="split"){
+        paintData.type="split";
+        paintData.color=selectedPaint.color;
+        paintData.splitColor=selectedPaint.splitColor;
+    } else if(selectedPaint.type==="gradient"){
+        paintData.type="gradient";
+        paintData.gradient=selectedPaint.gradient;
+    } else {
+        paintData.type="color";
+        paintData.color=selectedPaint.color;
+    }
+    payload[nick] = {paint:paintData, badges:[]};
     await fetch(FIREBASE_URL,{method:"PATCH",body:JSON.stringify(payload)});
     renderUsers();
 };
 
-// Resetuj nick
+// Reset
 document.getElementById("reset-btn").onclick = async()=>{
     const nick = nickInput.value.trim();
     if(!nick) return alert("Wpisz nick");
     const payload = {};
-    payload[nick] = {paint:{type:"color",color:"#00ff00"}};
+    payload[nick] = {paint:{type:"color",color:"#00ff00"}, badges:[]};
     await fetch(FIREBASE_URL,{method:"PATCH",body:JSON.stringify(payload)});
     updatePreview();
     renderUsers();
