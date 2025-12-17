@@ -1,1 +1,132 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Twitch Nick Colors</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      background:#0e0e10;
+      color:white;
+      font-family:Segoe UI, sans-serif;
+      display:flex;
+      justify-content:center;
+      padding:40px;
+    }
+
+    .panel {
+      width:420px;
+      background:#18181b;
+      border-radius:14px;
+      padding:20px;
+      box-shadow:0 10px 40px rgba(0,0,0,.6);
+    }
+
+    h2 {
+      text-align:center;
+      margin-bottom:20px;
+    }
+
+    input, select, button {
+      width:100%;
+      margin-bottom:12px;
+      padding:10px;
+      border-radius:8px;
+      border:none;
+      font-size:14px;
+    }
+
+    button {
+      background:#9147ff;
+      color:white;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    button:hover {
+      background:#772ce8;
+    }
+
+    .preview {
+      margin-top:15px;
+      text-align:center;
+      font-size:22px;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="panel">
+  <h2>🎨 Twitch Nick Paint</h2>
+
+  <input id="nick" placeholder="Nick z Twitcha">
+
+  <select id="paint">
+    <option value="green">Zielony (default)</option>
+    <option value="red">Czerwony</option>
+    <option value="pink">Różowy</option>
+    <option value="rainbow">🌈 Tęczowy</option>
+    <option value="split">⬜⬛ Half White/Red</option>
+  </select>
+
+  <button onclick="save()">Zapisz</button>
+
+  <div class="preview" id="preview">Podgląd</div>
+</div>
+
+<script>
+const API = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app/premium";
+
+const paintStyles = {
+  green:  { color:"#00ff00" },
+  red:    { color:"#ff0000" },
+  pink:   { color:"#ff69b4" },
+  rainbow:{ gradient:"linear-gradient(90deg,red,orange,yellow,lime,cyan,blue,violet)" },
+  split:  { gradient:"linear-gradient(90deg, white 50%, red 50%)" }
+};
+
+const preview = document.getElementById("preview");
+const paintSelect = document.getElementById("paint");
+
+paintSelect.onchange = () => updatePreview();
+
+function updatePreview(){
+  const p = paintStyles[paintSelect.value];
+  preview.style = "";
+  preview.textContent = document.getElementById("nick").value || "Podgląd";
+
+  if(p.gradient){
+    preview.style.background = p.gradient;
+    preview.style.webkitBackgroundClip = "text";
+    preview.style.webkitTextFillColor = "transparent";
+  } else {
+    preview.style.color = p.color;
+  }
+}
+
+function save(){
+  const nick = document.getElementById("nick").value.trim();
+  if(!nick) return alert("Podaj nick");
+
+  const data = {
+    nick,
+    paint: paintSelect.value
+  };
+
+  fetch(`${API}/${nick.toLowerCase()}.json`, {
+    method:"PUT",
+    body:JSON.stringify(data)
+  });
+
+  alert("Zapisano");
+}
+
+updatePreview();
+</script>
+
+</body>
+</html>
 
