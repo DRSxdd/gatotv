@@ -5,29 +5,142 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Premium Nick Painter</title>
 <style>
-body{font-family:'Segoe UI',sans-serif;background:#111;color:white;margin:0;padding:0;}
-.container{max-width:1000px;margin:50px auto;padding:30px;border-radius:20px;background:linear-gradient(145deg,#1c1c1c,#2a2a2a);box-shadow:0 10px 40px rgba(0,0,0,0.7);}
-h1{text-align:center;color:#ff77ff;margin-bottom:20px;}
-input[type=text]{width:100%;padding:12px;border-radius:10px;border:none;background:#222;color:white;font-size:16px;}
-#preview{margin:20px 0;padding:15px;border-radius:15px;text-align:center;font-size:26px;background:#111;min-height:60px;display:flex;justify-content:center;align-items:center;box-shadow:0 0 10px rgba(255,255,255,0.1);}
-#paints-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:15px;}
-.paint-btn{padding:10px;border-radius:10px;font-weight:bold;cursor:pointer;color:white;text-align:center;transition:0.2s;user-select:none;}
-.paint-btn.selected{border:2px solid white;transform:translateY(-2px);}
-.paint-btn:hover{opacity:0.85;}
-button{margin-top:15px;padding:12px 25px;border-radius:10px;border:none;font-weight:bold;cursor:pointer;transition:0.2s;}
-#apply-btn{background:linear-gradient(135deg,#9147ff,#7722cc);color:white;}
-#reset-btn{background:#555;color:white;margin-left:10px;}
-#user-list{margin-top:25px;}
-.user-item{display:flex;justify-content:space-between;align-items:center;margin:6px 0;padding:6px 12px;background:#222;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,0.3);}
-.user-item button{background:#ff4444;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;}
-.user-item button:hover{opacity:0.85;}
+/* ===================== RESET ===================== */
+* {margin:0; padding:0; box-sizing:border-box;}
+body {font-family:'Segoe UI',sans-serif; background:#0d0d0d; color:white;}
+
+/* ===================== KONTAINER ===================== */
+.container {
+    max-width:1000px;
+    margin:50px auto;
+    padding:30px;
+    border-radius:20px;
+    background: linear-gradient(145deg,#1a1a1a,#2b2b2b);
+    box-shadow:0 10px 40px rgba(0,0,0,0.8);
+}
+
+/* ===================== HEADER ===================== */
+h1 {
+    text-align:center;
+    font-size:2.5rem;
+    color:#ff77ff;
+    margin-bottom:25px;
+}
+
+/* ===================== INPUT ===================== */
+input[type=text] {
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:none;
+    background:#222;
+    color:white;
+    font-size:16px;
+    margin-bottom:20px;
+}
+
+/* ===================== PODGLĄD ===================== */
+#preview {
+    margin:20px 0;
+    padding:15px;
+    border-radius:15px;
+    text-align:center;
+    font-size:28px;
+    min-height:70px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: #111;
+    box-shadow: 0 0 20px rgba(255,255,255,0.05);
+    transition: all 0.3s ease;
+}
+
+/* ===================== PAINTY ===================== */
+#paints-container {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    gap:14px;
+    margin-top:15px;
+}
+
+.paint-btn {
+    padding:12px;
+    border-radius:12px;
+    font-weight:bold;
+    cursor:pointer;
+    color:white;
+    text-align:center;
+    transition:0.3s;
+    user-select:none;
+    position:relative;
+    height:50px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:0.9rem;
+    box-shadow:0 3px 6px rgba(0,0,0,0.4);
+}
+
+.paint-btn.selected {
+    border:3px solid white;
+    transform:translateY(-3px);
+}
+
+.paint-btn:hover {
+    opacity:0.9;
+}
+
+/* ===================== BUTTONS ===================== */
+button {
+    margin-top:15px;
+    padding:14px 28px;
+    border-radius:12px;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+#apply-btn { background:linear-gradient(135deg,#9147ff,#7722cc); color:white; }
+#reset-btn { background:#555; color:white; margin-left:10px; }
+button:hover { opacity:0.85; }
+
+/* ===================== USER LIST ===================== */
+#user-list { margin-top:25px; }
+.user-item {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:6px 0;
+    padding:6px 12px;
+    background:#222;
+    border-radius:10px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.3);
+}
+.user-item button { background:#ff4444; color:white; border:none; padding:5px 10px; border-radius:6px; cursor:pointer; }
+.user-item button:hover { opacity:0.85; }
+
+/* ===================== ANIMACJE ===================== */
+@keyframes rainbowShift {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
+@keyframes glowPulse {
+    0%,100%{text-shadow:0 0 6px #ff00ff,0 0 12px #ff77ff}
+    50%{text-shadow:0 0 10px #ff77ff,0 0 20px #ff00ff}
+}
 </style>
 </head>
 <body>
+
 <div class="container">
 <h1>Premium Nick Painter</h1>
+
 <label>Nick użytkownika:</label>
 <input type="text" id="nick-input" placeholder="Wpisz nick...">
+
 <div id="preview">Podgląd nicku</div>
 
 <h3>Wybierz paint:</h3>
@@ -38,7 +151,6 @@ button{margin-top:15px;padding:12px 25px;border-radius:10px;border:none;font-wei
 
 <h3>Użytkownicy:</h3>
 <div id="user-list"></div>
-</div>
 
 <script>
 const FIREBASE_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app/premium.json";
@@ -59,7 +171,7 @@ const paints = [
   {name:"Zielony",type:"color",color:"#00ff00"},
   {name:"Lava",type:"color",color:"#ff0000",glow:true,glowColor:"#ff7700"},
   {name:"Tęczowy",type:"gradient",gradient:"Tęczowy"},
-  {name:"Neon",type:"gradient",gradient:"Neon"},
+  {name:"Neon",type:"gradient",gradient:"Neon",glow:true,glowColor:"#ff00ff"},
   {name:"Sunset",type:"gradient",gradient:"Sunset"},
   {name:"Ocean",type:"gradient",gradient:"Ocean"},
   {name:"Fire",type:"gradient",gradient:"Fire",glow:true,glowColor:"#ffae00"},
@@ -70,7 +182,8 @@ const paints = [
   {name:"Purple Glow",type:"color",color:"#aa00ff",glow:true,glowColor:"#ff77ff"},
   {name:"Cyan Glow",type:"color",color:"#00ffff",glow:true,glowColor:"#00aaee"},
   {name:"Pink Neon",type:"color",color:"#ff00ff",glow:true,glowColor:"#ff00aa"},
-  {name:"Sun Glow",type:"gradient",gradient:"Sunset",glow:true,glowColor:"#ffb347"}
+  {name:"Sun Glow",type:"gradient",gradient:"Sunset",glow:true,glowColor:"#ffb347"},
+  {name:"Rainbow Animate",type:"animated",lettersGradient:["#ff0000","#ff7700","#ffff00","#00ff00","#00ffff","#0000ff","#ff00ff"],animated:true}
 ];
 
 const paintsContainer = document.getElementById("paints-container");
@@ -86,6 +199,7 @@ function updatePreview(){
     preview.style.background="";
     preview.style.webkitTextFillColor="";
     preview.style.textShadow = selectedPaint.glow ? `0 0 6px ${selectedPaint.glowColor},0 0 12px ${selectedPaint.glowColor}` : "";
+    preview.style.animation="";
   } else if(selectedPaint.type==="gradient"){
     preview.textContent = nick;
     preview.style.backgroundImage = GRADIENTS[selectedPaint.gradient] || "";
@@ -93,12 +207,15 @@ function updatePreview(){
     preview.style.webkitTextFillColor="transparent";
     preview.style.color="";
     preview.style.textShadow = selectedPaint.glow ? `0 0 6px ${selectedPaint.glowColor},0 0 12px ${selectedPaint.glowColor}` : "";
+    if(selectedPaint.animated) preview.style.animation="rainbowShift 4s linear infinite";
+    else preview.style.animation="";
   } else if(selectedPaint.type==="split"){
     const mid = Math.floor(nick.length/2);
     preview.innerHTML = `<span style="color:${selectedPaint.color}">${nick.slice(0,mid)}</span><span style="color:${selectedPaint.splitColor}">${nick.slice(mid)}</span>`;
     preview.style.background="";
     preview.style.webkitTextFillColor="";
     preview.style.textShadow="";
+    preview.style.animation="";
   } else if(selectedPaint.type==="animated"){
     preview.innerHTML="";
     for(let i=0;i<nick.length;i++){
@@ -109,7 +226,8 @@ function updatePreview(){
     }
     preview.style.background="";
     preview.style.webkitTextFillColor="";
-    preview.style.textShadow="";
+    preview.style.textShadow="0 0 3px #fff";
+    preview.style.animation="rainbowShift 5s linear infinite";
   }
 }
 
@@ -170,6 +288,7 @@ document.getElementById("apply-btn").onclick = async()=>{
     if(selectedPaint.gradient) paintData.gradient=selectedPaint.gradient;
     if(selectedPaint.glow) paintData.glow=true;
     if(selectedPaint.glowColor) paintData.glowColor=selectedPaint.glowColor;
+    if(selectedPaint.animated) paintData.animated=true;
   } else if(selectedPaint.type==="animated"){
     paintData.type="animated"; paintData.lettersGradient=selectedPaint.lettersGradient;
   }
