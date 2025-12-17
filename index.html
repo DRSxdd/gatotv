@@ -5,34 +5,117 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Premium Nick Painter</title>
 <style>
-body{margin:0;padding:0;font-family:'Segoe UI',sans-serif;background:#0d0d0d;color:white;}
-.container{max-width:1000px;margin:50px auto;padding:30px;border-radius:20px;background: linear-gradient(145deg,#1a1a1a,#2b2b2b);box-shadow:0 10px 40px rgba(0,0,0,0.8);}
-h1{text-align:center;font-size:2.5rem;color:#ff77ff;margin-bottom:25px;}
-input[type=text]{width:100%;padding:14px;border-radius:12px;border:none;background:#222;color:white;font-size:16px;margin-bottom:20px;}
-#preview{margin:20px 0;padding:15px;border-radius:15px;text-align:center;font-size:28px;min-height:70px;display:flex;justify-content:center;align-items:center;background: #111;box-shadow: 0 0 20px rgba(255,255,255,0.05);transition: all 0.3s ease;}
-#paints-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px;margin-top:15px;}
-.paint-btn{padding:12px;border-radius:12px;font-weight:bold;cursor:pointer;color:white;text-align:center;transition:0.3s;user-select:none;position:relative;height:50px;display:flex;justify-content:center;align-items:center;font-size:0.9rem;box-shadow:0 3px 6px rgba(0,0,0,0.4);}
-.paint-btn.selected{border:3px solid white;transform:translateY(-3px);}
-.paint-btn:hover{opacity:0.9;}
-button{margin-top:15px;padding:14px 28px;border-radius:12px;border:none;font-weight:bold;cursor:pointer;transition:0.3s;}
-#apply-btn{background:linear-gradient(135deg,#9147ff,#7722cc);color:white;}
-#reset-btn{background:#555;color:white;margin-left:10px;}
-button:hover{opacity:0.85;}
-#user-list{margin-top:25px;}
-.user-item{display:flex;justify-content:space-between;align-items:center;margin:6px 0;padding:6px 12px;background:#222;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.3);}
-.user-item button{background:#ff4444;color:white;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;}
-.user-item button:hover{opacity:0.85;}
+body {
+    margin:0; padding:0;
+    font-family:'Segoe UI',sans-serif;
+    background: linear-gradient(145deg,#0d0d0d,#1a1a1a);
+    color:white;
+}
+.container {
+    max-width:1000px;
+    margin:40px auto;
+    padding:30px;
+    border-radius:20px;
+    background: linear-gradient(145deg,#1a1a1a,#2b2b2b);
+    box-shadow:0 10px 40px rgba(0,0,0,0.8);
+}
+h1 {
+    text-align:center;
+    font-size:2.5rem;
+    color:#ff77ff;
+    margin-bottom:25px;
+}
+input[type=text] {
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:none;
+    background:#222;
+    color:white;
+    font-size:16px;
+    margin-bottom:20px;
+}
+#preview {
+    margin:20px 0;
+    padding:15px;
+    border-radius:15px;
+    text-align:center;
+    font-size:28px;
+    min-height:70px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: #111;
+    box-shadow: 0 0 20px rgba(255,255,255,0.05);
+    transition: all 0.3s ease;
+}
+#paints-container {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    gap:14px;
+    margin-top:15px;
+}
+.paint-btn {
+    padding:12px;
+    border-radius:12px;
+    font-weight:bold;
+    cursor:pointer;
+    color:white;
+    text-align:center;
+    transition:0.3s;
+    user-select:none;
+    position:relative;
+    height:50px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:0.9rem;
+    box-shadow:0 3px 6px rgba(0,0,0,0.4);
+}
+.paint-btn.selected { border:3px solid white; transform:translateY(-3px); }
+.paint-btn:hover { opacity:0.9; }
+button {
+    margin-top:15px;
+    padding:14px 28px;
+    border-radius:12px;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+#apply-btn { background:linear-gradient(135deg,#9147ff,#7722cc); color:white; }
+#reset-btn { background:#555; color:white; margin-left:10px; }
+button:hover { opacity:0.85; }
+#user-list {
+    margin-top:25px;
+}
+.user-item {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:6px 0;
+    padding:6px 12px;
+    background:#222;
+    border-radius:10px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.3);
+}
+.user-item button {
+    background:#ff4444;
+    color:white;
+    border:none;
+    padding:5px 10px;
+    border-radius:6px;
+    cursor:pointer;
+}
+.user-item button:hover { opacity:0.85; }
 
-/* ===== Animacje ===== */
-@keyframes rainbowShift {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-@keyframes glowPulse {0%,100%{text-shadow:0 0 6px #ff00ff,0 0 12px #ff77ff}50%{text-shadow:0 0 10px #ff77ff,0 0 20px #ff00ff}}
-@keyframes moveLeftRight1 {0%{background-position:0%}100%{background-position:200%}}
-@keyframes moveLeftRight2 {0%{background-position:200%}100%{background-position:0%}}
-@keyframes moveLeftRight3 {0%{background-position:-100%}100%{background-position:100%}}
+/* Animacje */
+@keyframes moveLeftRight1 { 0%{background-position:0%} 100%{background-position:200%} }
+@keyframes moveLeftRight2 { 0%{background-position:200%} 100%{background-position:0%} }
+@keyframes moveLeftRight3 { 0%{background-position:-100%} 100%{background-position:100%} }
 </style>
 </head>
 <body>
-
 <div class="container">
 <h1>Premium Nick Painter</h1>
 <label>Nick użytkownika:</label>
@@ -51,17 +134,18 @@ button:hover{opacity:0.85;}
 <script>
 const FIREBASE_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app/premium.json";
 
+// Gradienty i animacje
 const GRADIENTS = {
-  "Tęczowy":"linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet)",
-  "Lava":"linear-gradient(90deg,#ff0000,#ff7700,#aa0000)",
-  "Neon":"linear-gradient(90deg,#ff00ff,#00ffff)",
-  "Sunset":"linear-gradient(90deg,#ff4500,#ffb347)",
-  "Ocean":"linear-gradient(90deg,#1e90ff,#00ced1)",
-  "Fire":"linear-gradient(90deg,#ff0000,#ffae00)",
-  "Ice":"linear-gradient(90deg,#00ffff,#00bfff)"
+    "Tęczowy":"linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet)",
+    "Lava":"linear-gradient(90deg,#ff0000,#ff7700,#aa0000)",
+    "Neon":"linear-gradient(90deg,#ff00ff,#00ffff)",
+    "Sunset":"linear-gradient(90deg,#ff4500,#ffb347)",
+    "Ocean":"linear-gradient(90deg,#1e90ff,#00ced1)",
+    "Fire":"linear-gradient(90deg,#ff0000,#ffae00)",
+    "Ice":"linear-gradient(90deg,#00ffff,#00bfff)"
 };
 
-// ===== Painty =====
+// ===== Wszystkie painty, w tym 3 nowe animowane =====
 const paints = [
   {name:"Czerwony",type:"color",color:"#ff0000"},
   {name:"Zielony",type:"color",color:"#00ff00"},
@@ -110,6 +194,7 @@ function updatePreview(){
   }
 }
 
+// ===== Dodanie przycisków paintów =====
 paints.forEach(p=>{
   const btn = document.createElement("div");
   btn.className="paint-btn";
@@ -128,7 +213,7 @@ paints.forEach(p=>{
 nickInput.addEventListener("input",updatePreview);
 updatePreview();
 
-// ===== User list =====
+// ===== Lista użytkowników =====
 const userListEl = document.getElementById("user-list");
 async function renderUsers(){
   try{
@@ -182,5 +267,6 @@ document.getElementById("reset-btn").onclick = async()=>{
 
 renderUsers();
 </script>
+</div>
 </body>
 </html>
