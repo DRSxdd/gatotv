@@ -6,7 +6,7 @@
 <title>gato.tv panel</title>
 
 <style>
-*{box-sizing:border-box}
+*{box-sizing:border-box;}
 body{
   margin:0;
   font-family:Inter,Segoe UI,sans-serif;
@@ -45,7 +45,6 @@ nav button{
 nav button.active,
 nav button:hover{color:white}
 
-/* LAYOUT */
 .container{
   max-width:1000px;
   margin:40px auto;
@@ -75,13 +74,11 @@ nav button:hover{color:white}
   border:2px solid transparent;
 }
 .paint.active{border-color:#ffcc00}
-
 .preview{
   font-size:22px;
   margin:16px 0;
   text-align:center;
 }
-
 input{
   width:100%;
   padding:12px;
@@ -90,7 +87,6 @@ input{
   background:#0e0e16;
   color:white;
 }
-
 button.primary{
   padding:12px 20px;
   border-radius:10px;
@@ -138,7 +134,7 @@ button.primary{
 <body>
 
 <header>
-  <div class="logo">GATO</div>
+  <div class="logo">GATO.TV</div>
   <nav>
     <button class="active" data-tab="paints">Paints</button>
     <button data-tab="emotes">Emotes</button>
@@ -159,25 +155,18 @@ button.primary{
 
   <br>
   <button class="primary" id="applyPaint">Nadaj paint</button>
-
-  <hr style="margin:28px 0;opacity:.2">
-
-  <h3>Badge</h3>
-  <p>Specjalna odznaka (nie wpływa na paint)</p>
-
-  <button class="primary" id="applyBadge">
-    Nadaj badge Beta Tester
-  </button>
 </div>
 
 <!-- EMOTES -->
 <div class="panel" id="emotes">
   <h1>Global Emotes</h1>
+
   <div class="form">
-    <input id="emoteName" placeholder="Nazwa emote">
-    <input id="emoteUrl" placeholder="Link do obrazka">
+    <input id="emoteName" placeholder="Nazwa (np. xdd)">
+    <input id="emoteUrl" placeholder="Link do PNG / GIF">
     <button class="primary" id="addEmote">Dodaj</button>
   </div>
+
   <div class="emote-list" id="emoteList"></div>
 </div>
 
@@ -189,10 +178,10 @@ button.primary{
 
 </div>
 
-<script src="content.js"></script>
-
 <script>
 const API="https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
+
+/* ================= PAINTS ================= */
 
 const paints=[
  {label:"Red",paint:{type:"color",color:"#ff3333"}},
@@ -208,35 +197,27 @@ const paints=[
 ];
 
 let selected = paints[0].paint;
-
 const grid = document.getElementById("paintGrid");
 const preview = document.getElementById("preview");
 
 function renderPreview(){
-  const t = document.getElementById("nick").value || "Podgląd";
-  preview.innerHTML = t;
-  preview.style = "";
-
-  if(selected.type==="color"){
-    preview.style.color = selected.color;
-  }
-
+  const t=document.getElementById("nick").value||"Podgląd";
+  preview.innerHTML=t;
+  preview.style="";
+  if(selected.type==="color") preview.style.color=selected.color;
   if(selected.type==="gradient"){
-    preview.style.background = selected.gradient;
+    preview.style.background=selected.gradient;
     preview.style.webkitBackgroundClip="text";
     preview.style.webkitTextFillColor="transparent";
   }
-
   if(selected.type==="split"){
     const m=Math.floor(t.length/2);
-    preview.innerHTML =
+    preview.innerHTML=
       `<span style="color:${selected.color}">${t.slice(0,m)}</span>`+
       `<span style="color:${selected.splitColor}">${t.slice(m)}</span>`;
   }
-
-  if(selected.glow){
-    preview.style.textShadow = `0 0 6px ${selected.glowColor}`;
-  }
+  if(selected.glow)
+    preview.style.textShadow=`0 0 6px ${selected.glowColor}`;
 }
 
 paints.forEach(p=>{
@@ -253,39 +234,59 @@ paints.forEach(p=>{
 });
 grid.firstChild.classList.add("active");
 
-document.getElementById("nick").oninput = renderPreview;
+document.getElementById("nick").oninput=renderPreview;
 
-document.getElementById("applyPaint").onclick = async()=>{
+document.getElementById("applyPaint").onclick=async()=>{
   const nick=document.getElementById("nick").value.trim().toLowerCase();
   if(!nick) return alert("Podaj nick");
-
-  await fetch(`${API}/premium/${nick}.json`,{
+  await fetch(API+"/premium.json",{
     method:"PATCH",
-    body:JSON.stringify({ paint:selected })
+    body:JSON.stringify({[nick]:{paint:selected}})
   });
 };
 
-/* BADGE */
-document.getElementById("applyBadge").onclick = async()=>{
-  const nick=document.getElementById("nick").value.trim().toLowerCase();
-  if(!nick) return alert("Podaj nick");
+/* ================= EMOTES (NAPRAWIONE) ================= */
 
-  const current =
-    await fetch(`${API}/premium/${nick}.json`).then(r=>r.json()) || {};
+const emoteName=document.getElementById("emoteName");
+const emoteUrl=document.getElementById("emoteUrl");
+const emoteList=document.getElementById("emoteList");
 
-  current.badge="beta";
+async function loadEmotes(){
+  emoteList.innerHTML="";
+  const r=await fetch(API+"/emotes.json");
+  const data=await r.json()||{};
+  Object.entries(data).forEach(([name,val])=>{
+    const d=document.createElement("div");
+    d.className="emote";
+    d.innerHTML=`
+      <img src="${val.url}">
+      <div><b>${name}</b></div>
+      <button class="delete">Usuń</button>
+    `;
+    d.querySelector(".delete").onclick=async()=>{
+      await fetch(API+"/emotes/"+name+".json",{method:"DELETE"});
+      loadEmotes();
+    };
+    emoteList.appendChild(d);
+  });
+}
 
-  await fetch(`${API}/premium/${nick}.json`,{
+document.getElementById("addEmote").onclick=async()=>{
+  const name=emoteName.value.trim().toLowerCase();
+  const url=emoteUrl.value.trim();
+  if(!name||!url) return alert("Podaj nazwę i link");
+  await fetch(API+"/emotes/"+name+".json",{
     method:"PUT",
-    body:JSON.stringify(current)
+    body:JSON.stringify({url})
   });
-
-  alert("Nadano badge Beta Tester");
+  emoteName.value="";
+  emoteUrl.value="";
+  loadEmotes();
 };
 
-renderPreview();
+loadEmotes();
 
-/* TABS */
+/* ================= TABS ================= */
 document.querySelectorAll("nav button").forEach(b=>{
   b.onclick=()=>{
     document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
@@ -298,3 +299,4 @@ document.querySelectorAll("nav button").forEach(b=>{
 
 </body>
 </html>
+
