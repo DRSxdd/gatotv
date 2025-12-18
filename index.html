@@ -26,6 +26,7 @@
         background: radial-gradient(circle at top, #172554, var(--bg));
         color: var(--text);
         min-height: 100vh;
+        padding-bottom: 50px;
     }
     
     /* ===== HEADER ===== */
@@ -106,11 +107,11 @@
         border-radius: 16px;
         border: 1px solid var(--border);
         box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        align-items: center;
+        align-items: flex-start; /* Changed for file upload alignment */
         flex-wrap: wrap;
     }
 
-    .form-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 150px; }
+    .form-group { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 150px; }
     .form-group label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
 
     input, select {
@@ -119,13 +120,54 @@
         border: 1px solid var(--border);
         color: white;
         border-radius: 10px;
-        font-size: 15px;
+        font-size: 14px;
         outline: none;
         width: 100%;
         font-family: inherit;
         transition: 0.2s;
     }
     input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
+
+    /* Custom File Input */
+    .file-upload-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+    }
+    .file-upload-btn {
+        border: 1px dashed var(--border);
+        color: var(--text-muted);
+        background: #0f172a;
+        padding: 12px;
+        border-radius: 10px;
+        text-align: center;
+        cursor: pointer;
+        font-size: 13px;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    .file-upload-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .file-upload-wrapper input[type=file] {
+        font-size: 100px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        cursor: pointer;
+        height: 100%;
+    }
+    
+    #filePreview {
+        margin-top: 10px;
+        max-height: 40px;
+        display: none;
+        border-radius: 4px;
+        border: 1px solid var(--accent);
+    }
 
     button.btn-primary {
         padding: 14px 28px;
@@ -139,8 +181,8 @@
         text-transform: uppercase;
         letter-spacing: 1px;
         transition: transform 0.2s, box-shadow 0.2s;
-        height: 100%;
-        margin-top: auto;
+        height: 48px; /* Fixed height to match inputs */
+        margin-top: 23px; /* Align with labels */
     }
     button.btn-primary:hover { 
         transform: translateY(-2px); 
@@ -165,15 +207,12 @@
         transition: 0.2s;
         position: relative;
     }
-    
     .preset-card:hover { border-color: var(--text-muted); transform: translateY(-2px); }
-    
     .preset-card.selected {
         border-color: var(--accent);
         background: rgba(56, 189, 248, 0.1);
         box-shadow: 0 0 0 2px var(--accent);
     }
-
     .preset-preview {
         font-size: 18px;
         font-weight: 800;
@@ -184,7 +223,6 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-
     .preset-name {
         font-size: 11px;
         text-transform: uppercase;
@@ -264,32 +302,49 @@
     <!-- ================== EMOTES ================== -->
     <div id="emotes" class="panel">
         <h2>Emotki</h2>
-        <p class="desc">Dodaj emotki globalne lub przypisane do konkretnego kanału.</p>
+        <p class="desc">Dodaj emotki globalne lub przypisane do konkretnego kanału. Możesz wgrać plik lub wkleić link.</p>
         
         <div class="input-row">
-            <div class="form-group">
+            <div class="form-group" style="flex:1;">
                 <label>Nazwa (kod)</label>
                 <input id="emoName" placeholder="np. xdd">
             </div>
-            <div class="form-group" style="flex:2">
-                <label>Link do obrazka</label>
-                <input id="emoUrl" placeholder="https://...">
+
+            <!-- SEKCJA UPLOADU -->
+            <div class="form-group" style="flex:2;">
+                <label>Obrazek (Plik lub URL)</label>
+                
+                <!-- File Input -->
+                <div class="file-upload-wrapper">
+                    <div class="file-upload-btn" id="fileBtnText">
+                        <span>📂 Wybierz plik z komputera</span>
+                    </div>
+                    <input type="file" id="emoFile" accept="image/*" onchange="previewFile()">
+                </div>
+                <img id="filePreview" src="" alt="Podgląd">
+
+                <!-- URL Input (jako alternatywa) -->
+                <input id="emoUrl" placeholder="lub wklej link (https://...)" style="margin-top:5px;">
             </div>
-            <div class="form-group">
+
+            <div class="form-group" style="flex:1;">
                 <label>Autor</label>
                 <input id="emoAuthor" placeholder="Nick autora">
             </div>
-            <div class="form-group">
+            
+            <div class="form-group" style="flex:1;">
                 <label>Zasięg</label>
                 <select id="emoScope" onchange="toggleChannelInput()">
-                    <option value="global">Globalny (wszędzie)</option>
+                    <option value="global">Globalny</option>
                     <option value="channel">Tylko Kanał</option>
                 </select>
             </div>
-            <div class="form-group" id="channelInputGroup" style="display:none">
+            
+            <div class="form-group" id="channelInputGroup" style="display:none; flex:1;">
                 <label>Nazwa Kanału</label>
                 <input id="emoChannel" placeholder="np. xayoo_">
             </div>
+            
             <button class="btn-primary" onclick="addEmote()">Dodaj</button>
         </div>
         <div id="listEmotes" class="list-container">Loading...</div>
@@ -319,11 +374,51 @@
 <script>
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
 
+// ================== HELPERS ==================
+// Konwersja pliku na Base64 (tekst)
+const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+});
+
+function previewFile() {
+    const file = document.getElementById('emoFile').files[0];
+    const preview = document.getElementById('filePreview');
+    const text = document.getElementById('fileBtnText');
+    const urlInput = document.getElementById('emoUrl');
+
+    if (file) {
+        text.innerHTML = `✅ Wybrano: ${file.name}`;
+        text.style.borderColor = "var(--success)";
+        text.style.color = "var(--success)";
+        
+        // Disable URL input to avoid confusion
+        urlInput.disabled = true;
+        urlInput.placeholder = "Używany jest plik lokalny";
+        urlInput.value = "";
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+    } else {
+        text.innerHTML = `📂 Wybierz plik z komputera`;
+        text.style.borderColor = "";
+        text.style.color = "";
+        preview.style.display = 'none';
+        urlInput.disabled = false;
+        urlInput.placeholder = "lub wklej link (https://...)";
+    }
+}
+
 // ================== PRESETS LIBRARY ==================
 const PRESETS = [
     // Special
     { name: "Rainbow", type: "animated-rainbow", previewStyle: "background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta); -webkit-background-clip: text; color: transparent;" },
-    
     // Glows
     { name: "Lava", type: "glow", value: "#ff3300", shadow: "#ffaa00", previewStyle: "color: #ff3300; text-shadow: 0 0 10px #ffaa00;" },
     { name: "Toxic", type: "glow", value: "#ccff00", shadow: "#00ff00", previewStyle: "color: #ccff00; text-shadow: 0 0 10px #00ff00;" },
@@ -333,7 +428,6 @@ const PRESETS = [
     { name: "Ghost", type: "glow", value: "#ffffff", shadow: "#ffffff", previewStyle: "color: #fff; text-shadow: 0 0 10px #fff;" },
     { name: "Vampire", type: "glow", value: "#ff0000", shadow: "#880000", previewStyle: "color: #ff0000; text-shadow: 0 0 10px #880000;" },
     { name: "Matrix", type: "glow", value: "#00ff00", shadow: "#003300", previewStyle: "color: #00ff00; text-shadow: 0 0 8px #00ff00; font-family: monospace;" },
-    
     // Gradients
     { name: "Sunset", type: "gradient", value: "linear-gradient(to right, #f59e0b, #ef4444)", previewStyle: "background: linear-gradient(to right, #f59e0b, #ef4444); -webkit-background-clip: text; color: transparent;" },
     { name: "Ocean", type: "gradient", value: "linear-gradient(to right, #06b6d4, #3b82f6)", previewStyle: "background: linear-gradient(to right, #06b6d4, #3b82f6); -webkit-background-clip: text; color: transparent;" },
@@ -343,7 +437,6 @@ const PRESETS = [
     { name: "Barbie", type: "gradient", value: "linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)", previewStyle: "background: linear-gradient(45deg, #ff9a9e, #fecfef); -webkit-background-clip: text; color: transparent;" },
     { name: "Joker", type: "gradient", value: "linear-gradient(to right, #6a11cb 0%, #2575fc 100%)", previewStyle: "background: linear-gradient(to right, #6a11cb, #2575fc); -webkit-background-clip: text; color: transparent;" },
     { name: "Police", type: "gradient", value: "linear-gradient(90deg, #0000ff, #ff0000)", previewStyle: "background: linear-gradient(90deg, #0000ff, #ff0000); -webkit-background-clip: text; color: transparent;" },
-    
     // Solid
     { name: "Deep Void", type: "color", value: "#6366f1", previewStyle: "color: #6366f1" },
     { name: "Hot Red", type: "color", value: "#ff0000", previewStyle: "color: #ff0000" },
@@ -361,7 +454,6 @@ let selectedPresetIndex = null;
 function renderPresets() {
     const grid = document.getElementById("presetGrid");
     grid.innerHTML = "";
-    
     PRESETS.forEach((preset, index) => {
         const card = document.createElement("div");
         card.className = "preset-card";
@@ -406,12 +498,24 @@ async function applyPreset() {
 
 async function addEmote() {
     const name = document.getElementById('emoName').value.trim();
-    const url = document.getElementById('emoUrl').value.trim();
+    let url = document.getElementById('emoUrl').value.trim();
     const author = document.getElementById('emoAuthor').value.trim();
     const scope = document.getElementById('emoScope').value;
     let channel = document.getElementById('emoChannel').value.trim().toLowerCase();
+    
+    // FILE HANDLING
+    const fileInput = document.getElementById('emoFile');
+    
+    if (fileInput.files.length > 0) {
+        // Jeśli plik jest wybrany, konwertujemy go na Base64
+        try {
+            url = await toBase64(fileInput.files[0]);
+        } catch(e) {
+            return alert("Błąd przetwarzania pliku!");
+        }
+    }
 
-    if(!name || !url) return alert("Nazwa i URL są wymagane!");
+    if(!name || !url) return alert("Nazwa i Obrazek są wymagane!");
     if(scope === 'channel' && !channel) return alert("Podaj nazwę kanału!");
 
     const payload = { url, author, scope };
@@ -419,11 +523,16 @@ async function addEmote() {
 
     await api(`emotes/${name}`, "PUT", payload);
     
-    // Clear inputs
+    // Clear all
     document.getElementById('emoName').value = "";
     document.getElementById('emoUrl').value = "";
     document.getElementById('emoAuthor').value = "";
     document.getElementById('emoChannel').value = "";
+    
+    // Reset file input
+    fileInput.value = "";
+    previewFile(); // to reset UI
+    
     loadAll();
 }
 
@@ -491,7 +600,7 @@ async function loadAll() {
         return `
         <div class="list-item">
             <div class="item-details">
-                <img src="${e.url}" style="height:28px;">
+                <img src="${e.url}" style="height:28px; max-width: 50px;">
                 <div style="display:flex; flex-direction:column;">
                     <span style="font-weight:bold;">${k} ${authorInfo}</span>
                     <div style="margin-top:2px;">${scopeTag}</div>
