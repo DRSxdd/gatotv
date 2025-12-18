@@ -11,6 +11,8 @@
         --panel: #1e293b;    
         --accent: #38bdf8;   
         --accent-glow: rgba(56, 189, 248, 0.5);
+        --yellow: #facc15;   /* Nowy kolor dla Download */
+        --yellow-glow: rgba(250, 204, 21, 0.5);
         --text: #f1f5f9;     
         --text-muted: #94a3b8;
         --border: #334155;
@@ -79,6 +81,21 @@
         box-shadow: 0 0 15px var(--accent-glow);
     }
 
+    /* Styl dla przycisku DOWNLOAD (Żółty) */
+    nav button.btn-yellow {
+        color: var(--yellow);
+        border: 1px solid rgba(250, 204, 21, 0.1);
+    }
+    nav button.btn-yellow:hover {
+        background: rgba(250, 204, 21, 0.1);
+    }
+    nav button.btn-yellow.active {
+        background: var(--yellow);
+        color: #000;
+        box-shadow: 0 0 20px var(--yellow-glow);
+        border-color: var(--yellow);
+    }
+
     /* ===== CONTENT ===== */
     .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
     
@@ -107,7 +124,7 @@
         border-radius: 16px;
         border: 1px solid var(--border);
         box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        align-items: flex-start; /* Changed for file upload alignment */
+        align-items: flex-start; 
         flex-wrap: wrap;
     }
 
@@ -181,13 +198,80 @@
         text-transform: uppercase;
         letter-spacing: 1px;
         transition: transform 0.2s, box-shadow 0.2s;
-        height: 48px; /* Fixed height to match inputs */
-        margin-top: 23px; /* Align with labels */
+        height: 48px; 
+        margin-top: 23px;
     }
     button.btn-primary:hover { 
         transform: translateY(-2px); 
         box-shadow: 0 10px 25px var(--accent-glow); 
     }
+
+    /* ===== DOWNLOAD CARD STYLES ===== */
+    .download-hero {
+        background: linear-gradient(135deg, rgba(250, 204, 21, 0.1), rgba(0,0,0,0));
+        border: 1px solid var(--yellow);
+        border-radius: 20px;
+        padding: 60px 40px;
+        text-align: center;
+        box-shadow: 0 0 50px rgba(250, 204, 21, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .download-hero h1 {
+        font-size: 48px;
+        margin: 0 0 15px 0;
+        background: linear-gradient(90deg, #fff, var(--yellow));
+        -webkit-background-clip: text;
+        color: transparent;
+        font-weight: 900;
+    }
+
+    .download-hero p {
+        font-size: 18px;
+        color: var(--text-muted);
+        max-width: 600px;
+        margin: 0 auto 40px auto;
+        line-height: 1.6;
+    }
+
+    .btn-download-big {
+        background: var(--yellow);
+        color: #000;
+        font-size: 20px;
+        font-weight: 900;
+        padding: 20px 60px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        box-shadow: 0 10px 40px var(--yellow-glow);
+        transition: 0.3s;
+    }
+
+    .btn-download-big:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 60px var(--yellow-glow);
+        background: #fde047;
+    }
+
+    .features-list {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 50px;
+        flex-wrap: wrap;
+    }
+    
+    .feature {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        color: #fff;
+    }
+    .feature span { color: var(--yellow); }
 
     /* ===== PRESET GRID ===== */
     .preset-grid {
@@ -274,6 +358,8 @@
         <button class="active" onclick="switchTab('paints')">Paints</button>
         <button onclick="switchTab('emotes')">Emotes</button>
         <button onclick="switchTab('badges')">Odznaki</button>
+        <!-- NOWY PRZYCISK DOWNLOAD -->
+        <button class="btn-yellow" onclick="switchTab('download')">DOWNLOAD</button>
     </nav>
 </header>
 
@@ -369,13 +455,29 @@
         <div id="listBadges" class="list-container">Loading...</div>
     </div>
 
+    <!-- ================== DOWNLOAD TAB (NEW) ================== -->
+    <div id="download" class="panel">
+        <div class="download-hero">
+            <h1>Zainstaluj Gato.TV</h1>
+            <p>Najlepsza wtyczka do Twitcha. Odkryj nowy wymiar czatowania dzięki unikalnym emotkom, kolorowym nickom i odznakom.</p>
+            
+            <button class="btn-download-big">POBIERZ WTYCZKĘ (v1.0)</button>
+
+            <div class="features-list">
+                <div class="feature"><span>★</span> Custom Emotes</div>
+                <div class="feature"><span>★</span> RGB Nicknames</div>
+                <div class="feature"><span>★</span> Exclusive Badges</div>
+                <div class="feature"><span>★</span> Zero Lag</div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
 
 // ================== HELPERS ==================
-// Konwersja pliku na Base64 (tekst)
 const toBase64 = file => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -393,12 +495,9 @@ function previewFile() {
         text.innerHTML = `✅ Wybrano: ${file.name}`;
         text.style.borderColor = "var(--success)";
         text.style.color = "var(--success)";
-        
-        // Disable URL input to avoid confusion
         urlInput.disabled = true;
         urlInput.placeholder = "Używany jest plik lokalny";
         urlInput.value = "";
-
         const reader = new FileReader();
         reader.onload = function(e) {
             preview.src = e.target.result;
@@ -417,9 +516,7 @@ function previewFile() {
 
 // ================== PRESETS LIBRARY ==================
 const PRESETS = [
-    // Special
     { name: "Rainbow", type: "animated-rainbow", previewStyle: "background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta); -webkit-background-clip: text; color: transparent;" },
-    // Glows
     { name: "Lava", type: "glow", value: "#ff3300", shadow: "#ffaa00", previewStyle: "color: #ff3300; text-shadow: 0 0 10px #ffaa00;" },
     { name: "Toxic", type: "glow", value: "#ccff00", shadow: "#00ff00", previewStyle: "color: #ccff00; text-shadow: 0 0 10px #00ff00;" },
     { name: "Ice", type: "glow", value: "#e0f2fe", shadow: "#0ea5e9", previewStyle: "color: #e0f2fe; text-shadow: 0 0 10px #0ea5e9;" },
@@ -428,7 +525,6 @@ const PRESETS = [
     { name: "Ghost", type: "glow", value: "#ffffff", shadow: "#ffffff", previewStyle: "color: #fff; text-shadow: 0 0 10px #fff;" },
     { name: "Vampire", type: "glow", value: "#ff0000", shadow: "#880000", previewStyle: "color: #ff0000; text-shadow: 0 0 10px #880000;" },
     { name: "Matrix", type: "glow", value: "#00ff00", shadow: "#003300", previewStyle: "color: #00ff00; text-shadow: 0 0 8px #00ff00; font-family: monospace;" },
-    // Gradients
     { name: "Sunset", type: "gradient", value: "linear-gradient(to right, #f59e0b, #ef4444)", previewStyle: "background: linear-gradient(to right, #f59e0b, #ef4444); -webkit-background-clip: text; color: transparent;" },
     { name: "Ocean", type: "gradient", value: "linear-gradient(to right, #06b6d4, #3b82f6)", previewStyle: "background: linear-gradient(to right, #06b6d4, #3b82f6); -webkit-background-clip: text; color: transparent;" },
     { name: "Berry", type: "gradient", value: "linear-gradient(to right, #ec4899, #8b5cf6)", previewStyle: "background: linear-gradient(to right, #ec4899, #8b5cf6); -webkit-background-clip: text; color: transparent;" },
@@ -437,7 +533,6 @@ const PRESETS = [
     { name: "Barbie", type: "gradient", value: "linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)", previewStyle: "background: linear-gradient(45deg, #ff9a9e, #fecfef); -webkit-background-clip: text; color: transparent;" },
     { name: "Joker", type: "gradient", value: "linear-gradient(to right, #6a11cb 0%, #2575fc 100%)", previewStyle: "background: linear-gradient(to right, #6a11cb, #2575fc); -webkit-background-clip: text; color: transparent;" },
     { name: "Police", type: "gradient", value: "linear-gradient(90deg, #0000ff, #ff0000)", previewStyle: "background: linear-gradient(90deg, #0000ff, #ff0000); -webkit-background-clip: text; color: transparent;" },
-    // Solid
     { name: "Deep Void", type: "color", value: "#6366f1", previewStyle: "color: #6366f1" },
     { name: "Hot Red", type: "color", value: "#ff0000", previewStyle: "color: #ff0000" },
     { name: "Lime", type: "color", value: "#84cc16", previewStyle: "color: #84cc16" },
@@ -505,9 +600,7 @@ async function addEmote() {
     
     // FILE HANDLING
     const fileInput = document.getElementById('emoFile');
-    
     if (fileInput.files.length > 0) {
-        // Jeśli plik jest wybrany, konwertujemy go na Base64
         try {
             url = await toBase64(fileInput.files[0]);
         } catch(e) {
@@ -522,17 +615,12 @@ async function addEmote() {
     if(scope === 'channel') payload.channel = channel;
 
     await api(`emotes/${name}`, "PUT", payload);
-    
-    // Clear all
     document.getElementById('emoName').value = "";
     document.getElementById('emoUrl').value = "";
     document.getElementById('emoAuthor').value = "";
     document.getElementById('emoChannel').value = "";
-    
-    // Reset file input
     fileInput.value = "";
-    previewFile(); // to reset UI
-    
+    previewFile(); 
     loadAll();
 }
 
@@ -627,7 +715,12 @@ function switchTab(id) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    event.target.classList.add('active');
+    
+    // Obsługa kliknięcia w menu
+    // Jeśli wywołanie pochodzi z onclick, `event.target` ustawi klasę active
+    if (event && event.target && event.target.tagName === 'BUTTON') {
+        event.target.classList.add('active');
+    }
 }
 
 // INIT
