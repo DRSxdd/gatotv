@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>gato.tv panel</title>
 <style>
-*{box-sizing:border-box}
+*{box-sizing:border-box;}
 body{margin:0;font-family:Inter,Segoe UI,sans-serif;background:linear-gradient(135deg,#0e0e13,#15151d);color:white;}
 header{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:#0a0a10;}
 .logo{font-size:36px;font-weight:900;letter-spacing:2px;animation:logoGlow 3s infinite alternate;}
@@ -14,21 +14,14 @@ nav button{background:none;border:none;color:#aaa;font-size:16px;font-weight:700
 nav button.active,nav button:hover{color:white}
 .container{max-width:1000px;margin:40px auto;padding:24px;}
 .panel{display:none;background:#14141c;padding:24px;border-radius:16px;}
-.panel.active{display:block}
-/* PAINTS */
-.paint-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-top:20px;}
-.paint{padding:14px;border-radius:12px;cursor:pointer;text-align:center;background:#0f0f17;border:2px solid transparent;}
+.panel.active{display:block;}
+.paint-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:20px;}
+.paint{padding:12px;border-radius:12px;cursor:pointer;text-align:center;background:#0f0f17;border:2px solid transparent;}
 .paint.active{border-color:#ffcc00}
 .preview{font-size:22px;margin:16px 0;text-align:center;}
 label{display:flex;align-items:center;gap:8px;margin-top:12px;font-weight:bold;}
-/* EMOTES */
-.form{display:grid;grid-template-columns:1fr 2fr auto;gap:12px;}
-input{padding:12px;border-radius:10px;border:none;background:#0e0e16;color:white;}
-button.primary{padding:12px 20px;border-radius:10px;border:none;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#ffcc00,#ff9900);color:black;}
-.emote-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-top:20px;}
-.emote{background:#0e0e16;border-radius:12px;padding:12px;text-align:center;position:relative;}
-.emote img{width:48px;height:48px}
-.delete{position:absolute;top:6px;right:6px;background:#ff4444;color:white;border:none;border-radius:6px;padding:4px 8px;cursor:pointer;}
+input[type=text]{width:100%;padding:8px;border-radius:6px;border:none;background:#0e0e16;color:white;}
+button.primary{padding:10px 16px;border-radius:8px;border:none;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#ffcc00,#ff9900);color:black;}
 </style>
 </head>
 <body>
@@ -44,32 +37,25 @@ button.primary{padding:12px 20px;border-radius:10px;border:none;font-weight:800;
 
 <div class="container">
 
-<!-- PAINTS -->
 <div class="panel active" id="paints">
   <h1>Paints</h1>
-  <input id="nick" placeholder="Nick z Twitcha">
+  <input id="nick" type="text" placeholder="Nick z Twitcha">
   <div class="preview" id="preview">Podgląd nicku</div>
+
   <div class="paint-grid" id="paintGrid"></div>
 
   <h3>Badge</h3>
   <label><input type="checkbox" id="badgeCheckbox"> Beta Tester</label>
 
-  <br><br>
+  <br>
   <button class="primary" id="applyPaint">Nadaj paint</button>
 </div>
 
-<!-- EMOTES -->
 <div class="panel" id="emotes">
-  <h1>Global Emotes</h1>
-  <div class="form">
-    <input id="emoteName" placeholder="Nazwa emote">
-    <input id="emoteUrl" placeholder="Link do obrazka">
-    <button class="primary" id="addEmote">Dodaj</button>
-  </div>
-  <div class="emote-list" id="emoteList"></div>
+  <h1>Emotes</h1>
+  <p>Zakładka w budowie.</p>
 </div>
 
-<!-- INFO -->
 <div class="panel" id="info">
   <h1>Info</h1>
   <p><b>Wersja:</b> v0.1</p>
@@ -80,7 +66,6 @@ button.primary{padding:12px 20px;border-radius:10px;border:none;font-weight:800;
 
 <script src="content.js"></script>
 <script>
-// NAV
 document.querySelectorAll("nav button").forEach(b=>{
   b.onclick=()=>{
     document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
