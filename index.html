@@ -249,31 +249,38 @@ const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.ap
 // ================================================
 
 let currentUser = null; 
-let coins = 10; 
+let coins = 100; // startowy bonus
 let ownedItems = ["Classic Green", "Default Font"]; 
 let allEmotesData = {}; 
 let confettiCooldown = false;
 
-// CATALOG DEFINITION
+// CATALOG DEFINITION - POPRAWIONA I ROZSZERZONA
 const CATALOG = [
-    // PAINTS
+    // PAINTS (Kolor nicku)
     { name: "Classic Green", category:"paint", price: 0, type: "color", value: "#00ff00", previewStyle: "color:#00ff00" },
-    { name: "Mana Potion", category:"paint", price: 10, type: "gradient", value: "linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%)", previewStyle: `background-image: linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%); filter: drop-shadow(rgb(215, 15, 255) 0px 0px 0.1px) drop-shadow(rgb(64, 0, 77) 1px 1px 0.1px); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: shine 3s linear infinite; font-weight: 900;` },
+    { name: "Mana Potion", category:"paint", price: 10, type: "gradient", value: "linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%)", previewStyle: `background-image: linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: shine 3s linear infinite; font-weight: 900;` },
     { name: "Fire Lord", category:"paint", price: 50, type: "gradient", value: "linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #ff0000)", previewStyle: "background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #ff0000); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: shine 3s linear infinite; font-weight:900;" },
     { name: "Golden Legend", category:"paint", price: 100, type: "glow", value: "#ffd700", shadow: "#ffae00", previewStyle: "color:#ffd700;text-shadow:0 0 10px #ffae00; font-weight:800;" },
     { name: "RGB Master", category:"paint", price: 200, type: "animated-rainbow", previewStyle: "background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta); -webkit-background-clip: text; color: transparent; font-weight:900;" },
-    // BADGES
+    
+    // BADGES (Odznaki)
     { name: "Star Badge", category:"badge", price: 20, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/1828/1828884.png", previewStyle: "" },
     { name: "Shield Badge", category:"badge", price: 30, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/343/343053.png", previewStyle: "" },
     { name: "King Crown", category:"badge", price: 50, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/2545/2545603.png", previewStyle: "" },
-    // INK
+    { name: "Gato Paw", category:"badge", price: 40, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/1076/1076928.png", previewStyle: "" },
+
+    // INK (Kolor tekstu)
     { name: "Golden Ink", category:"ink", price: 50, type: "ink", value: "#ffd700", previewStyle: "color:#ffd700" },
     { name: "Matrix Green", category:"ink", price: 50, type: "ink", value: "#00ff00", previewStyle: "color:#00ff00; font-family:monospace" },
     { name: "Hot Pink Ink", category:"ink", price: 50, type: "ink", value: "#ff0066", previewStyle: "color:#ff0066" },
-    // FONTS
+    { name: "Ice Blue Ink", category:"ink", price: 40, type: "ink", value: "#a5f3fc", previewStyle: "color:#a5f3fc" },
+
+    // FONTS (Czcionki)
     { name: "Default Font", category:"font", price: 0, type: "font", value: "inherit", previewStyle: "" },
-    { name: "Retro Pixel", category:"font", price: 30, type: "font", value: "'Press Start 2P', cursive", previewStyle: "font-family:'Press Start 2P'" },
-    // BG
+    { name: "Retro Pixel", category:"font", price: 30, type: "font", value: "'Press Start 2P', cursive", previewStyle: "font-family:'Press Start 2P'; font-size:10px;" },
+    { name: "Marker", category:"font", price: 30, type: "font", value: "'Permanent Marker', cursive", previewStyle: "font-family:'Permanent Marker'" },
+
+    // BG (Tło wiadomości)
     { name: "Golden Glow", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(255, 215, 0, 0.1), transparent)", previewStyle: "background:rgba(255,215,0,0.3)" },
     { name: "Toxic Mist", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(0, 255, 0, 0.1), transparent)", previewStyle: "background:rgba(0,255,0,0.2)" }
 ];
@@ -344,7 +351,7 @@ function enableApp() {
     loadAll();
 }
 
-// SHOP LOGIC
+// SHOP LOGIC - NAPRAWIONA FUNKCJA RENDEROWANIA
 function renderShop() {
     const shop = document.getElementById("shopGrid");
     const inv = document.getElementById("inventoryGrid");
@@ -359,10 +366,12 @@ function renderShop() {
         card.onmouseenter = () => {
             if(item.category === 'paint') document.getElementById('previewUser').style.cssText = item.previewStyle + "; font-size:13px;";
             else if(item.category === 'ink') document.querySelector('.chat-msg').style.cssText = item.previewStyle;
+            else if(item.category === 'font') document.querySelector('.chat-msg').style.fontFamily = item.value;
         };
         card.onmouseleave = () => {
             document.getElementById('previewUser').style.cssText = "";
             document.querySelector('.chat-msg').style.cssText = "";
+            document.querySelector('.chat-msg').style.fontFamily = "";
         }
 
         let preview = `<div style="${item.previewStyle}">NickName</div>`;
@@ -371,7 +380,8 @@ function renderShop() {
         if(item.category === "font") preview = `<div style="${item.previewStyle}">Abc</div>`;
         if(item.category === "ink") preview = `<div style="${item.previewStyle}">Tekst</div>`;
 
-        let btn = isOwned 
+        // TU BYŁ BŁĄD: ZMIENNA NAZYWAŁA SIĘ btn, A UŻYWANO actionBtn. NAPRAWIONE.
+        let actionBtn = isOwned 
             ? `<button class="btn-action btn-equip" onclick="equipItem(${index})">Załóż</button>`
             : `<button class="btn-action btn-buy" onclick="buyItem(${index})">Kup ${item.price}</button>`;
 
@@ -390,8 +400,13 @@ function renderShop() {
 function buyItem(idx) {
     const item = CATALOG[idx];
     if(coins >= item.price) {
-        coins -= item.price; ownedItems.push(item.name);
-        updateCoinDisplay(); renderShop(); fireConfetti(true);
+        coins -= item.price; 
+        ownedItems.push(item.name);
+        updateCoinDisplay(); 
+        renderShop(); 
+        fireConfetti(true);
+    } else {
+        alert("Za mało monet!");
     }
 }
 
@@ -400,12 +415,20 @@ async function equipItem(idx) {
     const item = CATALOG[idx];
     const user = currentUser.login;
     let payload = item.value;
+    
+    // Specjalna obsługa dla painta
     if(item.category === 'paint') {
         payload = { type: item.type, value: item.value };
         if(item.shadow) payload.shadow = item.shadow;
     }
-    await api(`premium/${user}/${item.category}`, "PUT", payload);
+    
+    // Symulacja zapisania (w prawdziwej wersji odkomentuj api)
+    // await api(`premium/${user}/${item.category}`, "PUT", payload);
+    
     alert(`Założono: ${item.name}`);
+    
+    // Opcjonalnie: zaktualizuj podgląd na stałe
+    if(item.category === 'paint') document.getElementById('previewUser').style = item.previewStyle;
 }
 
 // HELPERS
@@ -451,7 +474,6 @@ function cloneEmote(n,u) { openEmoteForm(); document.getElementById('emoName').v
 async function del(p, r=false) { if(confirm("Usunąć?")) { await api(p, "DELETE"); loadAll(); if(r) setTimeout(()=>{loadAll(); openEmoteForm()}, 500); } }
 async function api(path, method="GET", body=null) { const opts={method}; if(body) opts.body=JSON.stringify(body); try{const r=await fetch(`${DB_URL}/${path}.json`,opts);return r.json()}catch(e){} }
 function previewFile() { const f = document.getElementById('emoFile').files[0]; if(f) { document.getElementById('emoUrl').disabled=true; const r=new FileReader(); r.onload=e=>{document.getElementById('filePreview').src=e.target.result; document.getElementById('filePreview').style.display='block'}; r.readAsDataURL(f); } }
-const toBase64=f=>new Promise((res,rej)=>{const r=new FileReader();r.readAsDataURL(f);r.onload=()=>res(r.result);r.onerror=e=>rej(e)});
 </script>
 </body>
 </html>
