@@ -95,6 +95,29 @@ button.primary{
   cursor:pointer;
   background:linear-gradient(135deg,#ffcc00,#ff9900);
   color:black;
+  margin-top:10px;
+}
+
+/* BADGE */
+.badge-box{
+  margin-top:20px;
+  padding:14px;
+  border-radius:12px;
+  background:#0f0f17;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.badge-preview{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.badge-square{
+  width:14px;
+  height:14px;
+  background:#ffcc00;
+  border-radius:3px;
 }
 
 /* EMOTES */
@@ -153,8 +176,16 @@ button.primary{
 
   <div class="paint-grid" id="paintGrid"></div>
 
-  <br>
   <button class="primary" id="applyPaint">Nadaj paint</button>
+
+  <!-- BADGE -->
+  <div class="badge-box">
+    <div class="badge-preview">
+      <div class="badge-square"></div>
+      <b>Beta Tester</b>
+    </div>
+    <button class="primary" id="applyBadge">Nadaj badge</button>
+  </div>
 </div>
 
 <!-- EMOTES -->
@@ -245,7 +276,20 @@ document.getElementById("applyPaint").onclick=async()=>{
   });
 };
 
-/* ================= EMOTES (NAPRAWIONE) ================= */
+/* ================= BADGE ================= */
+
+document.getElementById("applyBadge").onclick=async()=>{
+  const nick=document.getElementById("nick").value.trim().toLowerCase();
+  if(!nick) return alert("Podaj nick");
+  await fetch(API+"/premium.json",{
+    method:"PATCH",
+    body:JSON.stringify({
+      [nick]:{badge:"beta"}
+    })
+  });
+};
+
+/* ================= EMOTES ================= */
 
 const emoteName=document.getElementById("emoteName");
 const emoteUrl=document.getElementById("emoteUrl");
@@ -270,6 +314,7 @@ async function loadEmotes(){
     emoteList.appendChild(d);
   });
 }
+loadEmotes();
 
 document.getElementById("addEmote").onclick=async()=>{
   const name=emoteName.value.trim().toLowerCase();
@@ -284,8 +329,6 @@ document.getElementById("addEmote").onclick=async()=>{
   loadEmotes();
 };
 
-loadEmotes();
-
 /* ================= TABS ================= */
 document.querySelectorAll("nav button").forEach(b=>{
   b.onclick=()=>{
@@ -299,4 +342,3 @@ document.querySelectorAll("nav button").forEach(b=>{
 
 </body>
 </html>
-
