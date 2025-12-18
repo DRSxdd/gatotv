@@ -254,7 +254,7 @@ let ownedItems = ["Classic Green", "Default Font"];
 let allEmotesData = {}; 
 let confettiCooldown = false;
 
-// CATALOG DEFINITION - POPRAWIONA I ROZSZERZONA
+// CATALOG DEFINITION
 const CATALOG = [
     // PAINTS (Kolor nicku)
     { name: "Classic Green", category:"paint", price: 0, type: "color", value: "#00ff00", previewStyle: "color:#00ff00" },
@@ -351,7 +351,7 @@ function enableApp() {
     loadAll();
 }
 
-// SHOP LOGIC - NAPRAWIONA FUNKCJA RENDEROWANIA
+// SHOP LOGIC
 function renderShop() {
     const shop = document.getElementById("shopGrid");
     const inv = document.getElementById("inventoryGrid");
@@ -380,7 +380,6 @@ function renderShop() {
         if(item.category === "font") preview = `<div style="${item.previewStyle}">Abc</div>`;
         if(item.category === "ink") preview = `<div style="${item.previewStyle}">Tekst</div>`;
 
-        // TU BYŁ BŁĄD: ZMIENNA NAZYWAŁA SIĘ btn, A UŻYWANO actionBtn. NAPRAWIONE.
         let actionBtn = isOwned 
             ? `<button class="btn-action btn-equip" onclick="equipItem(${index})">Załóż</button>`
             : `<button class="btn-action btn-buy" onclick="buyItem(${index})">Kup ${item.price}</button>`;
@@ -413,22 +412,26 @@ function buyItem(idx) {
 async function equipItem(idx) {
     if(!currentUser) return;
     const item = CATALOG[idx];
-    const user = currentUser.login;
+    const user = currentUser.login.toLowerCase(); // Ważne: lowercase dla spójności z content.js
     let payload = item.value;
     
-    // Specjalna obsługa dla painta
+    // Specjalna struktura dla Paint, aby pasowała do content.js (type, value)
     if(item.category === 'paint') {
         payload = { type: item.type, value: item.value };
         if(item.shadow) payload.shadow = item.shadow;
     }
     
-    // Symulacja zapisania (w prawdziwej wersji odkomentuj api)
-    // await api(`premium/${user}/${item.category}`, "PUT", payload);
-    
-    alert(`Założono: ${item.name}`);
-    
-    // Opcjonalnie: zaktualizuj podgląd na stałe
-    if(item.category === 'paint') document.getElementById('previewUser').style = item.previewStyle;
+    // WYSYŁANIE DO API (teraz odblokowane)
+    try {
+        await api(`premium/${user}/${item.category}`, "PUT", payload);
+        alert(`Założono: ${item.name} (Zapisano w bazie)`);
+        
+        // Zaktualizuj podgląd na stałe (opcjonalnie)
+        if(item.category === 'paint') document.getElementById('previewUser').style = item.previewStyle;
+    } catch(e) {
+        alert("Błąd połączenia z bazą!");
+        console.error(e);
+    }
 }
 
 // HELPERS
@@ -467,12 +470,26 @@ function renderMyEmotes() {
 async function addEmote() {
     const name=document.getElementById('emoName').value.trim(); const url=document.getElementById('emoUrl').value.trim();
     if(!name||!url) return alert("Brakuje danych");
+    
+    // Zapisywanie emotki do bazy
     await api(`emotes/${name}`, "PUT", { url, author: currentUser.display_name, scope:'channel', channel:currentUser.login });
+    
     closeEmoteForm();
 }
 function cloneEmote(n,u) { openEmoteForm(); document.getElementById('emoName').value=n; document.getElementById('emoUrl').value=u; }
 async function del(p, r=false) { if(confirm("Usunąć?")) { await api(p, "DELETE"); loadAll(); if(r) setTimeout(()=>{loadAll(); openEmoteForm()}, 500); } }
-async function api(path, method="GET", body=null) { const opts={method}; if(body) opts.body=JSON.stringify(body); try{const r=await fetch(`${DB_URL}/${path}.json`,opts);return r.json()}catch(e){} }
+
+// === API CALL HELPER ===
+async function api(path, method="GET", body=null) { 
+    const opts = { method }; 
+    if(body) opts.body = JSON.stringify(body); 
+    
+    // Wywołanie do Firebase REST API
+    const res = await fetch(`${DB_URL}/${path}.json`, opts);
+    if (!res.ok) throw new Error("API Error");
+    return res.json(); 
+}
+
 function previewFile() { const f = document.getElementById('emoFile').files[0]; if(f) { document.getElementById('emoUrl').disabled=true; const r=new FileReader(); r.onload=e=>{document.getElementById('filePreview').src=e.target.result; document.getElementById('filePreview').style.display='block'}; r.readAsDataURL(f); } }
 </script>
 </body>
