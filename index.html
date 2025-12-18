@@ -96,7 +96,7 @@
     .category-badge { position: absolute; top:8px; left:8px; padding:2px 6px; border-radius:4px; font-size:9px; font-weight:bold; text-transform:uppercase; color:white; z-index: 2; }
     .cat-paint { background: #38bdf8; } .cat-badge { background: #9146ff; } .cat-ink { background: #f43f5e; } .cat-font { background: #10b981; } .cat-bg { background: #f59e0b; }
 
-    /* EMOTES */
+    /* EMOTES (GRID 5 Columns = 10x5 feel) */
     .input-row { display: flex; gap: 15px; margin-bottom: 30px; background: var(--panel); padding: 20px; border-radius: 12px; border: 1px solid var(--border); align-items: flex-end; flex-wrap: wrap; }
     .form-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 150px; }
     label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
@@ -108,26 +108,37 @@
     .file-upload-btn { border: 1px dashed var(--border); color: var(--text-muted); background: #0f172a; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 10px; }
     .file-upload-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%; }
     #filePreview { margin-top: 10px; max-height: 40px; display: none; border-radius: 4px; border: 1px solid var(--accent); }
-    .emotes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin-top: 20px; }
-    .emote-card { background: #131c2e; border: 1px solid var(--border); border-radius: 10px; padding: 15px; text-align: center; position: relative; transition: 0.2s; min-height: 120px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; }
+    
+    /* SIATKA EMOTEK */
+    .emotes-grid { 
+        display: grid; 
+        grid-template-columns: repeat(5, 1fr); /* 5 Kolumn */
+        gap: 15px; 
+        margin-top: 20px; 
+    }
+    .emote-card { background: #131c2e; border: 1px solid var(--border); border-radius: 10px; padding: 10px; text-align: center; position: relative; transition: 0.2s; display:flex; flex-direction:column; align-items:center; justify-content:center; height: 100px; }
     .emote-card:hover { transform: translateY(-2px); border-color: var(--accent); }
-    .emote-img { height: 40px; object-fit: contain; margin-bottom: 10px; }
-    .emote-name { font-weight: 700; font-size: 13px; color: white; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .channel-tag { color: var(--accent); font-weight: 700; text-transform: uppercase; background: rgba(56, 189, 248, 0.1); padding: 2px 4px; border-radius: 4px; margin-top: 2px; display: inline-block; font-size: 10px; }
-    .action-overlay { position: absolute; top: 6px; width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; opacity: 0; transition: 0.2s; font-size: 12px; color: white; z-index: 2; }
+    .emote-img { height: 40px; object-fit: contain; margin-bottom: 5px; }
+    .emote-name { font-weight: 700; font-size: 11px; color: white; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; }
+    .channel-tag { color: var(--accent); font-weight: 700; text-transform: uppercase; background: rgba(56, 189, 248, 0.1); padding: 1px 3px; border-radius: 4px; font-size: 9px; }
+    .action-overlay { position: absolute; top: 4px; width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; opacity: 0; transition: 0.2s; font-size: 10px; color: white; z-index: 2; }
     .emote-card:hover .action-overlay { opacity: 1; }
-    .del-btn { right: 6px; background: var(--danger); }
-    .edit-btn { right: 32px; background: var(--yellow); color: black; } 
-    .add-btn { right: 6px; background: var(--success); color: #000; }
+    .del-btn { right: 4px; background: var(--danger); }
+    .edit-btn { right: 28px; background: var(--yellow); color: black; } 
+    .add-btn { right: 4px; background: var(--success); color: #000; }
 
-    /* INFO TAB - CLEAN */
-    .info-box { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 40px; text-align: center; }
-    .info-box h1 { font-size: 36px; margin-bottom: 10px; color: white; }
-    .info-box p { color: var(--text-muted); margin-bottom: 30px; }
-    .info-list { text-align: left; max-width: 400px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
-    .info-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; color: white; font-weight: 600; }
+    /* INFO (WIZYTÓWKA) */
+    .info-card-container { display:flex; justify-content:center; align-items:center; min-height:300px; }
+    .viz-card { background: #0f172a; border: 1px solid var(--border); border-radius: 16px; padding: 40px; text-align: center; width: 350px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
+    .viz-card::before { content:''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--accent); }
+    .viz-avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--bg); margin-top: -20px; box-shadow: 0 0 20px rgba(56,189,248,0.3); }
+    .viz-title { font-size: 24px; font-weight: 900; color: white; margin: 15px 0 5px; }
+    .viz-role { color: var(--text-muted); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; }
+    .viz-stats { display: flex; justify-content: space-between; margin: 30px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 15px 0; }
+    .viz-stat div { font-size: 18px; font-weight: 700; color: white; }
+    .viz-stat span { font-size: 10px; color: #64748b; text-transform: uppercase; }
 
-    /* DOWNLOAD TAB - HERO STYLE */
+    /* DOWNLOAD (HERO - POWRÓT) */
     .hero-card { background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(0,0,0,0)); border: 1px solid var(--border); border-radius: 20px; padding: 60px 40px; text-align: center; }
     .download-style { border-color: rgba(250, 204, 21, 0.3); box-shadow: 0 0 50px rgba(250, 204, 21, 0.05); }
     .btn-download-big { background: var(--yellow); color: #000; font-size: 18px; font-weight: 900; padding: 15px 40px; border: none; border-radius: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin-top: 20px; transition: 0.2s; }
@@ -215,21 +226,24 @@
         </div>
     </div>
 
-    <!-- INFO (CLEAN STYLE) -->
+    <!-- INFO (WIZYTÓWKA) -->
     <div id="info" class="panel">
-        <div class="info-box">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Gato" style="width:100px; border-radius:50%; margin-bottom:20px;">
-            <h1>Gato.TV</h1>
-            <p>Najlepszy dodatek do czatu Twitch</p>
-            <div class="info-list">
-                <div class="info-item"><span>Wersja</span> <span>1.0</span></div>
-                <div class="info-item"><span>Autor</span> <span>GatoJestemFormaOstateczna</span></div>
-                <div class="info-item"><span>Cena</span> <span>Darmowe</span></div>
+        <div class="info-card-container">
+            <div class="viz-card">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Gato" class="viz-avatar">
+                <div class="viz-title">Gato.TV</div>
+                <div class="viz-role">Twitch Enhancement</div>
+                <div class="viz-stats">
+                    <div class="viz-stat"><div>v1.0</div><span>Wersja</span></div>
+                    <div class="viz-stat"><div>BETA</div><span>Status</span></div>
+                    <div class="viz-stat"><div>FREE</div><span>Licencja</span></div>
+                </div>
+                <button class="btn-action btn-buy" style="width:auto; padding:10px 30px;">Github</button>
             </div>
         </div>
     </div>
     
-    <!-- DOWNLOAD (HERO STYLE) -->
+    <!-- DOWNLOAD (HERO) -->
     <div id="download" class="panel">
         <div class="hero-card download-style">
             <h1>Zainstaluj</h1>
@@ -246,13 +260,13 @@ const REDIRECT_URI = 'https://drsxdd.github.io/gatotv/';
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
 
 let currentUser = null; 
-let coins = 100; // 1. Start with 100
-let ownedItems = []; // 3. Start empty
+let coins = 100; // 1. Start 100
+let ownedItems = []; // 3. Start Pusty
 let activeItems = { paint: "", badge: "", ink: "", font: "", bg: "" }; 
 let allEmotesData = {}; 
 let confettiCooldown = false;
 
-// 4. LIMITOWANY SKLEP (Ceny = 5)
+// 4. SKLEP LIMITOWANY (Ceny = 5)
 const CATALOG = [
     { name: "Neon Cyber", category:"paint", price: 5, type: "gradient", value: "linear-gradient(90deg, #ff00cc, #333399)", previewStyle: "background: linear-gradient(90deg, #ff00cc, #333399); -webkit-background-clip: text; color: transparent; font-weight:900;" },
     { name: "Star Badge", category:"badge", price: 5, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/1828/1828884.png", previewStyle: "" },
@@ -315,7 +329,7 @@ function renderShop() {
         card.onmouseenter = () => { if(item.category==='paint') document.getElementById('previewUser').style.cssText=item.previewStyle; };
         card.onmouseleave = () => { document.getElementById('previewUser').style.cssText=""; };
 
-        // 5. LEPSZY PODGLĄD DLA INK
+        // 5. PODGLĄD INK: ABC
         let previewText = "NickName";
         if(item.category === "ink") previewText = "ABC";
 
@@ -375,7 +389,7 @@ function switchPaintSubTab(tab) { document.getElementById('viewInventory').style
 function togglePreviewTheme() { document.getElementById('chatPreviewBox').classList.toggle('light'); }
 function fireConfetti(shopMode){ if(!shopMode && confettiCooldown) return; if(!shopMode) { confettiCooldown = true; setTimeout(()=>confettiCooldown=false, 10000); } confetti({particleCount:100, spread:70, origin: {x:0.5, y:0.5}, colors: ['#facc15', '#ffffff']}); }
 
-// EMOTE LOGIC
+// EMOTE LOGIC FIXED
 function openEmoteForm(isNew = false) { 
     if(!currentUser) { alert("Musisz być zalogowany!"); return; } 
     document.getElementById('emoChannel').value = currentUser.login; 
@@ -413,16 +427,15 @@ function cloneEmote(n,u) { openEmoteForm(true); document.getElementById('emoName
 async function del(p, r=false) { if(confirm("Usunąć?")) { await api(p, "DELETE"); loadAll(); if(r) setTimeout(()=>{loadAll(); renderMyEmotes()}, 500); } }
 async function api(path, method="GET", body=null) { const opts = { method }; if(body) opts.body = JSON.stringify(body); const res = await fetch(`${DB_URL}/${path}.json`, opts); if (!res.ok) throw new Error("API Error"); return res.json(); }
 
-// 6. FIX DLA EMOTEK Z PLIKU
+// 6. FIX DLA EMOTEK Z PLIKU (BASE64)
 function previewFile() { 
     const f = document.getElementById('emoFile').files[0]; 
     if(f) { 
-        // Wypełniamy pole URL, żeby addEmote mogło go użyć
         const r=new FileReader(); 
         r.onload=e=>{
             document.getElementById('filePreview').src=e.target.result; 
             document.getElementById('filePreview').style.display='block';
-            document.getElementById('emoUrl').value = e.target.result; // WAŻNE: Wpisanie base64 do inputa
+            document.getElementById('emoUrl').value = e.target.result; // WPISUJE DANE DO POLA, ABY MOŻNA BYŁO DODAĆ
             document.getElementById('emoUrl').disabled = true;
         }; 
         r.readAsDataURL(f); 
