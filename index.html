@@ -25,7 +25,6 @@
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top, #172554, var(--bg)); color: var(--text); min-height: 100vh; padding-bottom: 50px; }
     
-    /* HEADER */
     header { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.3); }
     .header-left { display: flex; align-items: center; gap: 25px; }
     .logo { font-size: 28px; font-weight: 900; color: var(--accent); letter-spacing: -1px; text-transform: uppercase; text-shadow: 0 0 20px var(--accent-glow); cursor: pointer; display: flex; align-items: center; gap: 8px; }
@@ -86,15 +85,13 @@
     .card-info { background: #131c2e; padding: 12px; border-radius: 0 0 8px 8px; display: flex; flex-direction: column; gap: 8px; flex: 1; justify-content: flex-end; }
     .preset-name { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; display: block; }
     .preset-price { font-size: 11px; color: var(--yellow); font-weight: 700; }
-    
     .btn-action { width: 100%; padding: 8px; border-radius: 6px; border: none; font-weight: 700; cursor: pointer; font-size: 11px; text-transform: uppercase; transition: 0.2s; }
     .btn-buy { background: var(--yellow); color: #000; }
     .btn-buy:hover { background: #fde047; }
     .btn-equip { background: var(--success); color: #fff; }
     .btn-equip:hover { background: #16a34a; }
-    .btn-unequip { background: #ef4444; color: #fff; } /* Nowy styl ZDEJMIJ */
+    .btn-unequip { background: #ef4444; color: #fff; }
     .btn-unequip:hover { background: #dc2626; }
-
     .badge-preview-img { width: 42px; height: 42px; object-fit: contain; }
     .category-badge { position: absolute; top:8px; left:8px; padding:2px 6px; border-radius:4px; font-size:9px; font-weight:bold; text-transform:uppercase; color:white; z-index: 2; }
     .cat-paint { background: #38bdf8; } .cat-badge { background: #9146ff; } .cat-ink { background: #f43f5e; } .cat-font { background: #10b981; } .cat-bg { background: #f59e0b; }
@@ -123,34 +120,36 @@
     .edit-btn { right: 32px; background: var(--yellow); color: black; } 
     .add-btn { right: 6px; background: var(--success); color: #000; }
 
-    /* REDESIGNED INFO TAB */
-    .info-container { display: flex; flex-direction: column; gap: 20px; }
-    .info-header { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--border); border-radius: 20px; padding: 40px; display: flex; align-items: center; gap: 30px; position: relative; overflow: hidden; }
-    .info-header::after { content: ''; position: absolute; right: -50px; top: -50px; width: 200px; height: 200px; background: var(--accent); opacity: 0.1; filter: blur(50px); border-radius: 50%; }
-    .info-avatar-big { width: 100px; height: 100px; border-radius: 20px; border: 4px solid var(--panel); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-    .info-text h1 { margin: 0; font-size: 32px; color: white; }
-    .info-text p { margin: 5px 0 0 0; color: var(--text-muted); font-size: 16px; }
-    
-    .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-    .info-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: center; display: flex; flex-direction: column; justify-content: center; min-height: 120px; transition: 0.2s; }
-    .info-card:hover { border-color: var(--accent); transform: translateY(-3px); }
-    .info-card h3 { font-size: 28px; color: var(--yellow); margin: 0; }
-    .info-card span { font-size: 12px; text-transform: uppercase; color: var(--text-muted); margin-top: 5px; font-weight: 700; letter-spacing: 1px; }
-
-    .info-footer { text-align: center; margin-top: 20px; color: #64748b; font-size: 12px; }
-    .info-footer a { color: var(--accent); text-decoration: none; }
+    /* NEW INFO CARD DESIGN */
+    .info-card-container { display:flex; flex-direction:column; align-items:center; gap:20px; }
+    .id-card { 
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95)); 
+        border: 1px solid var(--border); 
+        border-radius: 20px; 
+        padding: 40px; 
+        width: 100%; 
+        max-width: 500px;
+        text-align: center;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        position: relative;
+        overflow: hidden;
+    }
+    .id-card::before { content:''; position:absolute; top:-50px; left:-50px; width:150px; height:150px; background:var(--accent); filter:blur(80px); opacity:0.2; }
+    .id-card img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--panel); box-shadow: 0 0 20px var(--accent-glow); margin-bottom: 15px; }
+    .id-name { font-size: 24px; font-weight: 900; color: white; margin-bottom: 5px; }
+    .id-role { color: var(--accent); font-weight: 700; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 25px; }
+    .id-stats { display: flex; justify-content: space-around; width: 100%; margin-bottom: 25px; padding: 20px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .id-stat h4 { font-size: 20px; color: white; margin: 0; }
+    .id-stat span { font-size: 11px; color: var(--text-muted); text-transform: uppercase; }
+    .id-links { display: flex; gap: 10px; justify-content: center; }
+    .id-btn { background: #334155; color: white; padding: 8px 20px; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; transition: 0.2s; }
+    .id-btn:hover { background: var(--accent); color: black; }
 
     /* DOWNLOAD TAB */
     .dl-wrapper { display: flex; align-items: center; gap: 40px; background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 50px; overflow: hidden; position: relative; }
     .dl-content { flex: 1; z-index: 2; }
     .dl-content h1 { font-size: 42px; margin: 0 0 10px 0; background: linear-gradient(90deg, #fff, #94a3b8); -webkit-background-clip: text; color: transparent; line-height: 1.1; }
     .dl-content p { color: var(--text-muted); font-size: 16px; margin-bottom: 30px; line-height: 1.6; }
-    .dl-features { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
-    .dl-feat { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; color: #e2e8f0; }
-    .dl-feat svg { color: var(--success); }
-    .dl-visual { flex: 0.8; display: flex; justify-content: center; align-items: center; position: relative; }
-    .dl-visual img { width: 100%; max-width: 250px; filter: drop-shadow(0 0 50px rgba(56,189,248,0.2)); transform: rotate(-5deg); transition: 0.5s; }
-    .dl-wrapper:hover .dl-visual img { transform: rotate(0deg) scale(1.05); }
     .btn-download-glow { background: linear-gradient(90deg, var(--yellow), #f59e0b); color: #000; font-size: 16px; font-weight: 900; padding: 16px 40px; border: none; border-radius: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 30px rgba(250, 204, 21, 0.3); transition: 0.2s; display: inline-flex; align-items: center; gap: 10px; }
     .btn-download-glow:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(250, 204, 21, 0.5); }
 </style>
@@ -236,23 +235,21 @@
         </div>
     </div>
 
-    <!-- INFO (REDESIGNED) -->
+    <!-- INFO (NEW CARD STYLE) -->
     <div id="info" class="panel">
-        <div class="info-container">
-            <div class="info-header">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Gato" class="info-avatar-big" alt="Avatar">
-                <div class="info-text">
-                    <h1>Gato.TV</h1>
-                    <p>Ultimate Twitch Chat Enhancer v1.0</p>
+        <div class="info-card-container">
+            <div class="id-card">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Gato" alt="Avatar">
+                <div class="id-name">Gato.TV</div>
+                <div class="id-role">DEVELOPER</div>
+                <div class="id-stats">
+                    <div class="id-stat"><h4>1.0</h4><span>Version</span></div>
+                    <div class="id-stat"><h4>BETA</h4><span>Status</span></div>
                 </div>
-            </div>
-            <div class="info-grid">
-                <div class="info-card"><h3>200+</h3><span>Użytkowników</span></div>
-                <div class="info-card"><h3>100%</h3><span>Za darmo</span></div>
-                <div class="info-card"><h3>BETA</h3><span>Status</span></div>
-            </div>
-            <div class="info-footer">
-                Stworzone z ❤️ przez <a href="#">GatoJestemFormaOstateczna</a> &bull; 2025
+                <div class="id-links">
+                    <a href="#" class="id-btn">GitHub</a>
+                    <a href="#" class="id-btn">Discord</a>
+                </div>
             </div>
         </div>
     </div>
@@ -264,12 +261,6 @@
                 <div style="display:inline-block; padding:5px 10px; background:rgba(250,204,21,0.2); color:var(--yellow); border-radius:50px; font-size:12px; font-weight:700; margin-bottom:15px;">NOWOŚĆ: Wersja 1.0</div>
                 <h1>Ulepsz swój czat<br>z Gato.TV</h1>
                 <p>Odkryj nowy wymiar interakcji na Twitchu.</p>
-                <div class="dl-features">
-                    <div class="dl-feat">✅ Customowe Nicki</div>
-                    <div class="dl-feat">✅ Globalne Emotki</div>
-                    <div class="dl-feat">✅ Widoczne dla wszystkich</div>
-                    <div class="dl-feat">✅ 100% Darmowe</div>
-                </div>
                 <button class="btn-download-glow" onclick="fireConfetti()"><span>POBIERZ ROZSZERZENIE</span></button>
             </div>
             <div class="dl-visual"><img src="https://cdn-icons-png.flaticon.com/512/5968/5968819.png"></div>
@@ -290,46 +281,31 @@ let activeItems = { paint: "Classic Green", badge: "", ink: "", font: "Default F
 let allEmotesData = {}; 
 let confettiCooldown = false;
 
-// ==================== KATALOG (WIĘCEJ RAMEK + ZDEJMOWANIE) ====================
+// ==================== KATALOG (ZREDUKOWANY DO 3 + DOMYŚLNE) ====================
 const CATALOG = [
-    // 1. ZIELONY DEFAULT (NIEZDEJMOWALNY, BO TO PODSTAWA)
+    // 1. DOMYŚLNE
     { name: "Classic Green", category:"paint", price: 0, type: "color", value: "#00ff00", previewStyle: "color:#00ff00" },
+    { name: "Default Font", category:"font", price: 0, type: "font", value: "inherit", previewStyle: "" },
 
-    // PAINTY
-    { name: "Ocean Depth", category:"paint", price: 20, type: "gradient", value: "linear-gradient(90deg, #00c6ff, #0072ff)", previewStyle: "background: linear-gradient(90deg, #00c6ff, #0072ff); -webkit-background-clip: text; color: transparent; font-weight:900;" },
-    { name: "Magma Soul", category:"paint", price: 30, type: "gradient", value: "linear-gradient(45deg, #f12711, #f5af19)", previewStyle: "background: linear-gradient(45deg, #f12711, #f5af19); -webkit-background-clip: text; color: transparent; font-weight:900;" },
-    { name: "Neon Cyber", category:"paint", price: 30, type: "gradient", value: "linear-gradient(90deg, #ff00cc, #333399)", previewStyle: "background: linear-gradient(90deg, #ff00cc, #333399); -webkit-background-clip: text; color: transparent; font-weight:900;" },
+    // 2. PAINTS (3 sztuki)
     { name: "Golden God", category:"paint", price: 100, type: "glow", value: "#ffd700", shadow: "#ffae00", previewStyle: "color:#ffd700;text-shadow:0 0 10px #ffae00; font-weight:800;" },
-    { name: "The Matrix", category:"paint", price: 40, type: "color", value: "#00ff00", previewStyle: "color:#00ff00; font-family:'Courier Prime'; text-shadow: 2px 2px 0px #000;" },
-    { name: "Purple Haze", category:"paint", price: 40, type: "gradient", value: "linear-gradient(90deg, #8E2DE2, #4A00E0)", previewStyle: "background: linear-gradient(90deg, #8E2DE2, #4A00E0); -webkit-background-clip: text; color: transparent; font-weight:900;" },
-    { name: "Ice Walker", category:"paint", price: 50, type: "glow", value: "#ffffff", shadow: "#00ffff", previewStyle: "color:#fff; text-shadow:0 0 10px #00ffff; font-weight:800;" },
-    { name: "Void Lord", category:"paint", price: 60, type: "gradient", value: "linear-gradient(180deg, #232526, #414345)", previewStyle: "background: linear-gradient(180deg, #232526, #414345); -webkit-background-clip: text; color: transparent; font-weight:900; -webkit-text-stroke: 1px white;" },
+    { name: "Ocean Depth", category:"paint", price: 50, type: "gradient", value: "linear-gradient(90deg, #00c6ff, #0072ff)", previewStyle: "background: linear-gradient(90deg, #00c6ff, #0072ff); -webkit-background-clip: text; color: transparent; font-weight:900;" },
+    { name: "Neon Cyber", category:"paint", price: 50, type: "gradient", value: "linear-gradient(90deg, #ff00cc, #333399)", previewStyle: "background: linear-gradient(90deg, #ff00cc, #333399); -webkit-background-clip: text; color: transparent; font-weight:900;" },
 
-    // BADGE
+    // 3. BADGES (3 sztuki)
     { name: "Star Badge", category:"badge", price: 20, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/1828/1828884.png", previewStyle: "" },
-    { name: "Shield Badge", category:"badge", price: 30, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/343/343053.png", previewStyle: "" },
     { name: "King Crown", category:"badge", price: 50, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/2545/2545603.png", previewStyle: "" },
     { name: "Gato Paw", category:"badge", price: 40, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/1076/1076928.png", previewStyle: "" },
 
-    // FONTS
-    { name: "Default Font", category:"font", price: 0, type: "font", value: "inherit", previewStyle: "" },
-    { name: "Retro Pixel", category:"font", price: 30, type: "font", value: "'Press Start 2P', cursive", previewStyle: "font-family:'Press Start 2P'; font-size:10px;" },
-    { name: "Bangers", category:"font", price: 30, type: "font", value: "'Bangers', cursive", previewStyle: "font-family:'Bangers'" },
-    { name: "Army", category:"font", price: 30, type: "font", value: "'Black Ops One', cursive", previewStyle: "font-family:'Black Ops One'" },
-    
-    // INK
-    { name: "Golden Ink", category:"ink", price: 50, type: "ink", value: "#ffd700", previewStyle: "color:#ffd700" },
-    { name: "Hot Pink Ink", category:"ink", price: 50, type: "ink", value: "#ff0066", previewStyle: "color:#ff0066" },
-    
-    // TŁA (BG) - WIĘCEJ OPCJI
+    // 4. FRAMES/BG (3 sztuki)
     { name: "Golden Glow", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(255, 215, 0, 0.2), transparent)", previewStyle: "background:rgba(255,215,0,0.3)" },
-    { name: "Toxic Mist", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(0, 255, 0, 0.2), transparent)", previewStyle: "background:rgba(0,255,0,0.2)" },
     { name: "Night Sky", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(25, 25, 112, 0.6), transparent)", previewStyle: "background:navy; color:white;" },
     { name: "Neon Border", category:"bg", price: 80, type: "bg", value: "border: 1px solid #00ffff; box-shadow: 0 0 10px #00ffff inset; background: rgba(0,0,0,0.4);", previewStyle: "border:1px solid #00ffff;" },
-    { name: "Royal Gold", category:"bg", price: 120, type: "bg", value: "background: linear-gradient(180deg, #BF953F, #FCF6BA, #B38728); border-radius: 4px; padding: 2px 5px; color: black; font-weight: bold;", previewStyle: "background:gold; color:black;" },
-    { name: "Matrix Rain", category:"bg", price: 90, type: "bg", value: "background: #000; border: 1px solid #0f0; color: #0f0; font-family: monospace;", previewStyle: "background:black; color:#0f0;" },
-    { name: "Cyber Punk", category:"bg", price: 100, type: "bg", value: "background: #f0f; border-bottom: 2px solid #0ff; padding-left: 10px;", previewStyle: "background:#f0f; border-bottom:2px solid #0ff;" },
-    { name: "Ramka Testowa", category:"bg", price: 10, type: "bg", value: "border: 1px solid gold; background: rgba(0,0,0,0.5);", previewStyle: "border:1px solid gold;" }
+
+    // 5. INK (3 sztuki)
+    { name: "Golden Ink", category:"ink", price: 50, type: "ink", value: "#ffd700", previewStyle: "color:#ffd700" },
+    { name: "Hot Pink Ink", category:"ink", price: 50, type: "ink", value: "#ff0066", previewStyle: "color:#ff0066" },
+    { name: "Matrix Green", category:"ink", price: 50, type: "ink", value: "#00ff00", previewStyle: "color:#00ff00; font-family:monospace" }
 ];
 
 window.onload = () => {
@@ -393,14 +369,10 @@ function renderShop() {
 
         let actionBtn;
         if (isOwned) {
-            // LOGIKA ZDEJMOWANIA:
             if (isActive) {
-                // Jeśli to Classic Green (default paint) lub Default Font, nie pokazuj "Zdejmij", tylko "Założone"
-                // Bo nie chcemy usuwać nicku z bazy, tylko ustawić na zielony.
                 if (item.name === "Classic Green" || item.name === "Default Font") {
                      actionBtn = `<button class="btn-action btn-equipped" disabled>AKTYWNE</button>`;
                 } else {
-                     // Dla innych przedmiotów przycisk ZDEJMIJ
                      actionBtn = `<button class="btn-action btn-unequip" onclick="unequipItem('${item.category}')">ZDEJMIJ</button>`;
                 }
             } else {
@@ -425,35 +397,20 @@ async function equipItemByName(name) {
     const user = currentUser.login.toLowerCase(); 
     let payload = item.value;
     if(item.category === 'paint') { payload = { type: item.type, value: item.value }; if(item.shadow) payload.shadow = item.shadow; }
-    
-    try { 
-        await api(`premium/${user}/${item.category}`, "PUT", payload); 
-        activeItems[item.category] = item.name; 
-        localStorage.setItem('gato_active', JSON.stringify(activeItems)); 
-        renderShop(); 
-    } catch(e) { alert("Błąd bazy!"); }
+    try { await api(`premium/${user}/${item.category}`, "PUT", payload); activeItems[item.category] = item.name; localStorage.setItem('gato_active', JSON.stringify(activeItems)); renderShop(); } catch(e) { alert("Błąd bazy!"); }
 }
 
-// NOWA FUNKCJA ZDEJMOWANIA
 async function unequipItem(category) {
     if(!currentUser) return;
     const user = currentUser.login.toLowerCase();
-    
-    // Jeśli zdejmujemy paint, przywróć "Classic Green" lokalnie (wizualnie), ale w bazie usuń wpis customowy
-    // Lub ustaw w bazie na null
     try {
-        await api(`premium/${user}/${category}`, "DELETE"); // Usuwamy wpis z bazy
-        
-        // Resetujemy lokalny stan
+        await api(`premium/${user}/${category}`, "DELETE");
         if (category === 'paint') activeItems['paint'] = "Classic Green";
         else if (category === 'font') activeItems['font'] = "Default Font";
-        else activeItems[category] = ""; // Dla badge, bg, ink po prostu pusto
-        
+        else activeItems[category] = "";
         localStorage.setItem('gato_active', JSON.stringify(activeItems));
         renderShop();
-    } catch(e) {
-        alert("Błąd podczas zdejmowania!");
-    }
+    } catch(e) { alert("Błąd!"); }
 }
 
 function updateCoinDisplay() { document.getElementById('coinCount').innerText = coins; localStorage.setItem('gato_coins', coins); localStorage.setItem('gato_owned', JSON.stringify(ownedItems)); }
@@ -462,9 +419,9 @@ function switchPaintSubTab(tab) { document.getElementById('viewInventory').style
 function togglePreviewTheme() { document.getElementById('chatPreviewBox').classList.toggle('light'); }
 function fireConfetti(shopMode){ if(!shopMode && confettiCooldown) return; if(!shopMode) { confettiCooldown = true; setTimeout(()=>confettiCooldown=false, 10000); } confetti({particleCount:100, spread:70, origin: {x:0.5, y:0.5}, colors: ['#facc15', '#ffffff']}); }
 
-// EMOTE LOGIC
+// EMOTE LOGIC FIXED
 function openEmoteForm(isNew = false) { 
-    if(!currentUser) return; 
+    if(!currentUser) { alert("Musisz być zalogowany!"); return; } // FIX: Dodałem alert
     document.getElementById('emoChannel').value = currentUser.login; 
     if(isNew) {
         document.getElementById('emoFormTitle').innerText = "Dodaj Nową Emotkę";
