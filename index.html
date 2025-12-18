@@ -12,8 +12,9 @@
     :root {
         --bg: #0b1120;       
         --panel: #1e293b;    
-        --accent: #38bdf8;   
+        --accent: #38bdf8;   /* Gato Blue */
         --accent-glow: rgba(56, 189, 248, 0.5);
+        --twitch: #9146ff;   
         --yellow: #facc15;   
         --yellow-glow: rgba(250, 204, 21, 0.5);
         --text: #f1f5f9;     
@@ -36,7 +37,7 @@
     
     /* ===== HEADER ===== */
     header {
-        background: rgba(15, 23, 42, 0.8);
+        background: rgba(15, 23, 42, 0.9);
         backdrop-filter: blur(10px);
         height: 80px;
         display: flex;
@@ -49,7 +50,7 @@
         z-index: 100;
     }
 
-    /* Grupa po lewej stronie */
+    /* LEWA STRONA HEADER */
     .header-left {
         display: flex;
         align-items: center;
@@ -62,11 +63,11 @@
         color: var(--accent);
         letter-spacing: -1px;
         text-transform: uppercase;
-        position: relative;
         text-shadow: 0 0 20px var(--accent-glow);
         display: flex;
         align-items: center;
         gap: 10px;
+        cursor: pointer;
     }
     
     .beta-tag {
@@ -81,29 +82,37 @@
         transform: translateY(-2px);
     }
 
-    .btn-download-nav {
-        background: rgba(250, 204, 21, 0.1);
-        color: var(--yellow);
-        border: 1px solid var(--yellow);
-        padding: 8px 16px;
+    /* USER PROFILE / LOGIN BTN */
+    .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: rgba(145, 70, 255, 0.15);
+        padding: 5px 15px 5px 5px;
+        border-radius: 50px;
+        border: 1px solid var(--twitch);
+        animation: fadeIn 0.5s;
+    }
+    .user-avatar { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--twitch); }
+    .user-nick { font-weight: 700; font-size: 14px; color: #fff; }
+    
+    .btn-login {
+        background: var(--twitch);
+        color: white;
+        border: none;
+        padding: 10px 20px;
         border-radius: 8px;
         font-weight: 700;
-        font-size: 12px;
         cursor: pointer;
-        transition: 0.3s;
-        text-transform: uppercase;
-        letter-spacing: 1px;
         display: flex;
         align-items: center;
         gap: 8px;
+        transition: 0.3s;
+        box-shadow: 0 0 15px rgba(145, 70, 255, 0.3);
     }
-    .btn-download-nav:hover {
-        background: var(--yellow);
-        color: #000;
-        box-shadow: 0 0 15px var(--yellow-glow);
-    }
+    .btn-login:hover { background: #772ce8; transform: translateY(-1px); }
 
-    /* Nawigacja (prawa strona) */
+    /* PRAWA STRONA HEADER (NAV) */
     nav { display: flex; gap: 8px; background: #0f172a; padding: 5px; border-radius: 12px; border: 1px solid var(--border); }
     
     nav button {
@@ -124,6 +133,11 @@
         box-shadow: 0 0 15px var(--accent-glow);
     }
 
+    /* Przycisk Download w Nav (żółty) */
+    nav button.btn-yellow { color: var(--yellow); border: 1px solid rgba(250, 204, 21, 0.1); }
+    nav button.btn-yellow:hover { background: rgba(250, 204, 21, 0.1); }
+    nav button.btn-yellow.active { background: var(--yellow); color: #000; box-shadow: 0 0 20px var(--yellow-glow); border-color: var(--yellow); }
+
     /* ===== CONTENT ===== */
     .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
     
@@ -135,451 +149,439 @@
         to { opacity: 1; transform: translateY(0); } 
     }
 
-    h2 { 
-        color: white; 
-        font-size: 28px; 
-        margin-bottom: 10px; 
-    }
+    h2 { color: white; font-size: 28px; margin-bottom: 10px; }
     p.desc { color: var(--text-muted); margin-top: 0; margin-bottom: 30px; }
 
-    /* ===== INPUTS & UI ===== */
-    .input-row {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 30px;
+    /* ===== BLOCKER (LOGGED OUT) ===== */
+    .login-blocker {
+        text-align: center;
+        padding: 60px 20px;
         background: var(--panel);
-        padding: 20px;
-        border-radius: 16px;
         border: 1px solid var(--border);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        align-items: flex-start; 
-        flex-wrap: wrap;
+        border-radius: 20px;
+        margin-top: 40px;
+        box-shadow: 0 0 50px rgba(0,0,0,0.3);
+    }
+    .login-blocker h2 { font-size: 32px; margin-bottom: 10px; }
+
+    /* ===== UI ELEMENTS ===== */
+    .input-row {
+        display: flex; gap: 15px; margin-bottom: 30px; background: var(--panel);
+        padding: 20px; border-radius: 16px; border: 1px solid var(--border);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2); align-items: flex-start; flex-wrap: wrap;
     }
 
     .form-group { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 150px; }
     .form-group label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
 
     input, select {
-        padding: 14px;
-        background: #0f172a;
-        border: 1px solid var(--border);
-        color: white;
-        border-radius: 10px;
-        font-size: 14px;
-        outline: none;
-        width: 100%;
-        font-family: inherit;
-        transition: 0.2s;
+        padding: 14px; background: #0f172a; border: 1px solid var(--border); color: white;
+        border-radius: 10px; font-size: 14px; outline: none; width: 100%; transition: 0.2s;
     }
     input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
+    input:disabled { opacity: 0.6; cursor: not-allowed; background: #162032; }
 
-    /* Custom File Input */
-    .file-upload-wrapper {
-        position: relative;
-        overflow: hidden;
-        display: inline-block;
-        width: 100%;
-    }
+    /* File Upload */
+    .file-upload-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; }
     .file-upload-btn {
-        border: 1px dashed var(--border);
-        color: var(--text-muted);
-        background: #0f172a;
-        padding: 12px;
-        border-radius: 10px;
-        text-align: center;
-        cursor: pointer;
-        font-size: 13px;
-        transition: 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
+        border: 1px dashed var(--border); color: var(--text-muted); background: #0f172a;
+        padding: 12px; border-radius: 10px; text-align: center; cursor: pointer; font-size: 13px;
+        transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px;
     }
     .file-upload-btn:hover { border-color: var(--accent); color: var(--accent); }
     .file-upload-wrapper input[type=file] {
-        font-size: 100px;
-        position: absolute;
-        left: 0;
-        top: 0;
-        opacity: 0;
-        cursor: pointer;
-        height: 100%;
+        font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%;
     }
-    
-    #filePreview {
-        margin-top: 10px;
-        max-height: 40px;
-        display: none;
-        border-radius: 4px;
-        border: 1px solid var(--accent);
-    }
+    #filePreview { margin-top: 10px; max-height: 40px; display: none; border-radius: 4px; border: 1px solid var(--accent); }
 
     button.btn-primary {
-        padding: 14px 28px;
-        background: linear-gradient(135deg, var(--accent), #0ea5e9);
-        border: none;
-        color: #0f172a;
-        font-weight: 800;
-        border-radius: 10px;
-        cursor: pointer;
-        font-size: 15px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        transition: transform 0.2s, box-shadow 0.2s;
-        height: 48px; 
-        margin-top: 23px;
+        padding: 14px 28px; background: linear-gradient(135deg, var(--accent), #0ea5e9); border: none; color: #0f172a;
+        font-weight: 800; border-radius: 10px; cursor: pointer; font-size: 15px; text-transform: uppercase;
+        letter-spacing: 1px; transition: transform 0.2s, box-shadow 0.2s; height: 48px; margin-top: 23px;
     }
-    button.btn-primary:hover { 
-        transform: translateY(-2px); 
-        box-shadow: 0 10px 25px var(--accent-glow); 
-    }
+    button.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px var(--accent-glow); }
 
-    /* ===== HERO CARDS (Download & Info) ===== */
+    /* HERO CARD (Download & Info) */
     .hero-card {
         background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(0,0,0,0));
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        padding: 60px 40px;
-        text-align: center;
-        box-shadow: 0 0 50px rgba(0,0,0,0.2);
-        position: relative;
-        overflow: hidden;
+        border: 1px solid var(--border); border-radius: 20px; padding: 60px 40px;
+        text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.2); position: relative; overflow: hidden;
     }
-
-    /* Specyficzne dla Download */
     .download-style {
         background: linear-gradient(135deg, rgba(250, 204, 21, 0.05), rgba(0,0,0,0));
         border-color: rgba(250, 204, 21, 0.3);
         box-shadow: 0 0 50px rgba(250, 204, 21, 0.05);
     }
-    
-    .hero-card h1 {
-        font-size: 48px;
-        margin: 0 0 15px 0;
-        font-weight: 900;
-        color: white;
-    }
-
-    .hero-card p {
-        font-size: 18px;
-        color: var(--text-muted);
-        max-width: 600px;
-        margin: 0 auto 40px auto;
-        line-height: 1.6;
-    }
-
+    .hero-card h1 { font-size: 48px; margin: 0 0 15px 0; font-weight: 900; color: white; }
     .btn-download-big {
-        background: var(--yellow);
-        color: #000;
-        font-size: 20px;
-        font-weight: 900;
-        padding: 20px 60px;
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        box-shadow: 0 10px 40px var(--yellow-glow);
-        transition: 0.3s;
+        background: var(--yellow); color: #000; font-size: 20px; font-weight: 900; padding: 20px 60px;
+        border: none; border-radius: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px;
+        box-shadow: 0 10px 40px var(--yellow-glow); transition: 0.3s;
     }
+    .btn-download-big:hover { transform: scale(1.05); box-shadow: 0 15px 60px var(--yellow-glow); background: #fde047; }
 
-    .btn-download-big:hover {
-        transform: scale(1.05);
-        box-shadow: 0 15px 60px var(--yellow-glow);
-        background: #fde047;
-    }
-
-    .features-list {
-        display: flex;
-        justify-content: center;
-        gap: 30px;
-        margin-top: 50px;
-        flex-wrap: wrap;
-    }
-    
-    .feature {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-weight: 600;
-        color: #fff;
-    }
-    .feature span { color: var(--yellow); }
-
-    /* ===== PRESET GRID ===== */
-    .preset-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 12px;
-        margin-bottom: 30px;
-    }
-
+    /* PRESETS */
+    .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 30px; }
     .preset-card {
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 15px;
-        cursor: pointer;
-        text-align: center;
-        transition: 0.2s;
-        position: relative;
+        background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 15px;
+        cursor: pointer; text-align: center; transition: 0.2s; position: relative;
     }
     .preset-card:hover { border-color: var(--text-muted); transform: translateY(-2px); }
-    .preset-card.selected {
-        border-color: var(--accent);
-        background: rgba(56, 189, 248, 0.1);
-        box-shadow: 0 0 0 2px var(--accent);
-    }
-    .preset-preview {
-        font-size: 18px;
-        font-weight: 800;
-        margin-bottom: 8px;
-        display: block;
-        padding: 5px 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .preset-name {
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: var(--text-muted);
-        font-weight: 700;
-    }
+    .preset-card.selected { border-color: var(--accent); background: rgba(56, 189, 248, 0.1); box-shadow: 0 0 0 2px var(--accent); }
+    .preset-preview { font-size: 18px; font-weight: 800; margin-bottom: 8px; display: block; padding: 5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .preset-name { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; }
 
-    /* ===== LISTS ===== */
+    /* LISTS */
     .list-container { display: grid; gap: 10px; }
     .list-item {
-        background: var(--panel);
-        padding: 15px 20px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-left: 4px solid var(--border);
-        transition: 0.2s;
+        background: var(--panel); padding: 15px 20px; border-radius: 12px;
+        display: flex; align-items: center; justify-content: space-between;
+        border-left: 4px solid var(--border); transition: 0.2s;
     }
     .list-item:hover { border-left-color: var(--accent); background: #253248; }
-    
     .item-details { display: flex; align-items: center; gap: 15px; }
-    .badge-tag { 
-        font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase; 
-    }
+    .badge-tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase; }
     .tag-global { background: var(--success); color: #000; }
     .tag-channel { background: var(--accent); color: #000; }
-
     .btn-del {
-        background: rgba(239, 68, 68, 0.15);
-        color: var(--danger);
-        border: none;
-        padding: 8px 12px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 700;
-        transition: 0.2s;
+        background: rgba(239, 68, 68, 0.15); color: var(--danger); border: none;
+        padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: 0.2s;
     }
     .btn-del:hover { background: var(--danger); color: white; }
 
-    /* Animation for "Coming Soon" */
-    @keyframes pulseText {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.5; }
-    }
-    .blink-text {
-        animation: pulseText 2s infinite;
-        font-weight: 300;
-        letter-spacing: 2px;
-        color: var(--accent);
-    }
+    /* Animations */
+    @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .blink-text { animation: pulseText 2s infinite; font-weight: 300; letter-spacing: 2px; color: var(--accent); }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 </style>
 </head>
 <body>
 
 <header>
-    <!-- LEWA STRONA: LOGO + BETA + DOWNLOAD -->
+    <!-- LEWA STRONA: LOGO + LOGIN/PROFILE -->
     <div class="header-left">
         <div class="logo">
             Gato.TV
             <span class="beta-tag">BETA</span>
         </div>
-        <button class="btn-download-nav" onclick="openDownloadTab()">
-            <span>⬇</span> Download
-        </button>
+        
+        <!-- Stan: Niezalogowany -->
+        <div id="loginBtnContainer">
+            <button class="btn-login" onclick="loginWithTwitch()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h2.998L22.286 11.57V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+                Zaloguj
+            </button>
+        </div>
+
+        <!-- Stan: Zalogowany -->
+        <div id="userProfile" class="user-profile" style="display:none;">
+            <img id="avatar" class="user-avatar" src="">
+            <span id="username" class="user-nick">...</span>
+        </div>
     </div>
 
-    <!-- PRAWA STRONA: NAVIGACJA -->
+    <!-- PRAWA STRONA: NAV -->
     <nav>
         <button class="active" onclick="switchTab('paints')">Paints</button>
         <button onclick="switchTab('emotes')">Emotes</button>
         <button onclick="switchTab('badges')">Odznaki</button>
-        <button onclick="switchTab('info')">Informacje</button>
+        <button onclick="switchTab('info')">Info</button>
+        <button class="btn-yellow" onclick="switchTab('download')">Download</button>
     </nav>
 </header>
 
 <div class="container">
 
-    <!-- ================== PAINTS ================== -->
-    <div id="paints" class="panel active">
-        <h2>Style Nicków</h2>
-        <p class="desc">Wybierz styl z listy i przypisz do użytkownika.</p>
-
-        <div class="input-row">
-            <div class="form-group" style="flex:2">
-                <label>Nick użytkownika</label>
-                <input id="paintNick" placeholder="np. gatodev">
-            </div>
-            <button class="btn-primary" onclick="applyPreset()">Nadaj Styl</button>
-        </div>
-
-        <h3 style="color: var(--text-muted); font-size: 14px; text-transform: uppercase;">Dostępne Presety</h3>
-        <div class="preset-grid" id="presetGrid"></div>
-
-        <h3 style="margin-top: 40px; color: var(--text-muted); font-size: 14px; text-transform: uppercase;">Aktywne Painty</h3>
-        <div id="listPaints" class="list-container">Loading...</div>
+    <!-- EKRAN BLOKADY (DLA NIEZALOGOWANYCH) -->
+    <div id="loggedOutMsg" class="login-blocker">
+        <h2>🔒 Wymagane Logowanie</h2>
+        <p style="color: #94a3b8; font-size: 18px; margin-bottom: 30px;">
+            Aby zarządzać bazą danych wtyczki, musisz potwierdzić tożsamość.
+        </p>
+        <button class="btn-login" style="margin: 0 auto; padding: 15px 30px; font-size: 16px;" onclick="loginWithTwitch()">
+            Zaloguj się przez Twitch
+        </button>
     </div>
 
-    <!-- ================== EMOTES ================== -->
-    <div id="emotes" class="panel">
-        <h2>Emotki</h2>
-        <p class="desc">Dodaj emotki globalne lub przypisane do konkretnego kanału. Możesz wgrać plik lub wkleić link.</p>
-        
-        <div class="input-row">
-            <div class="form-group" style="flex:1;">
-                <label>Nazwa (kod)</label>
-                <input id="emoName" placeholder="np. xdd">
+    <!-- APLIKACJA (DLA ZALOGOWANYCH) -->
+    <div id="appContent" style="display:none;">
+
+        <!-- PAINTS -->
+        <div id="paints" class="panel active">
+            <h2>Style Nicków</h2>
+            <div class="input-row">
+                <div class="form-group" style="flex:2">
+                    <label>Nick użytkownika</label>
+                    <input id="paintNick" placeholder="np. gatodev">
+                </div>
+                <button class="btn-primary" onclick="applyPreset()">Nadaj Styl</button>
             </div>
 
-            <!-- SEKCJA UPLOADU -->
-            <div class="form-group" style="flex:2;">
-                <label>Obrazek (Plik lub URL)</label>
-                <div class="file-upload-wrapper">
-                    <div class="file-upload-btn" id="fileBtnText">
-                        <span>📂 Wybierz plik z komputera</span>
+            <h3 style="color: var(--text-muted); font-size: 14px; text-transform: uppercase;">Dostępne Presety</h3>
+            <div class="preset-grid" id="presetGrid"></div>
+
+            <h3 style="margin-top: 40px; color: var(--text-muted); font-size: 14px; text-transform: uppercase;">Aktywne Painty</h3>
+            <div id="listPaints" class="list-container">Loading...</div>
+        </div>
+
+        <!-- EMOTES -->
+        <div id="emotes" class="panel">
+            <h2>Emotki</h2>
+            <p class="desc">Dodaj emotkę. Pole 'Autor' zostanie uzupełnione Twoim nickiem.</p>
+            
+            <div class="input-row">
+                <div class="form-group" style="flex:1;">
+                    <label>Nazwa (kod)</label>
+                    <input id="emoName" placeholder="np. xdd">
+                </div>
+
+                <!-- SEKCJA UPLOADU -->
+                <div class="form-group" style="flex:2;">
+                    <label>Obrazek (Plik lub URL)</label>
+                    <div class="file-upload-wrapper">
+                        <div class="file-upload-btn" id="fileBtnText">
+                            <span>📂 Wybierz plik</span>
+                        </div>
+                        <input type="file" id="emoFile" accept="image/*" onchange="previewFile()">
                     </div>
-                    <input type="file" id="emoFile" accept="image/*" onchange="previewFile()">
+                    <img id="filePreview" src="" alt="Podgląd">
+                    <input id="emoUrl" placeholder="lub wklej link..." style="margin-top:5px;">
                 </div>
-                <img id="filePreview" src="" alt="Podgląd">
-                <input id="emoUrl" placeholder="lub wklej link (https://...)" style="margin-top:5px;">
-            </div>
 
-            <div class="form-group" style="flex:1;">
-                <label>Autor</label>
-                <input id="emoAuthor" placeholder="Nick autora">
-            </div>
-            
-            <div class="form-group" style="flex:1;">
-                <label>Zasięg</label>
-                <select id="emoScope" onchange="toggleChannelInput()">
-                    <option value="global">Globalny</option>
-                    <option value="channel">Tylko Kanał</option>
-                </select>
-            </div>
-            
-            <div class="form-group" id="channelInputGroup" style="display:none; flex:1;">
-                <label>Nazwa Kanału</label>
-                <input id="emoChannel" placeholder="np. xayoo_">
-            </div>
-            
-            <button class="btn-primary" onclick="addEmote()">Dodaj</button>
-        </div>
-        <div id="listEmotes" class="list-container">Loading...</div>
-    </div>
-
-    <!-- ================== BADGES ================== -->
-    <div id="badges" class="panel">
-        <h2>Odznaki</h2>
-        <p class="desc">Ikonka wyświetlana przed nickiem.</p>
-        
-        <div class="input-row">
-            <div class="form-group">
-                <label>Nick</label>
-                <input id="badgeNick" placeholder="Nick użytkownika">
-            </div>
-            <div class="form-group" style="flex:2">
-                <label>URL Ikonki (18x18px)</label>
-                <input id="badgeUrl" placeholder="https://...">
-            </div>
-            <button class="btn-primary" onclick="addBadge()">Przypisz</button>
-        </div>
-        <div id="listBadges" class="list-container">Loading...</div>
-    </div>
-
-    <!-- ================== DOWNLOAD TAB ================== -->
-    <div id="download" class="panel">
-        <div class="hero-card download-style">
-            <h1 style="background: linear-gradient(90deg, #fff, var(--yellow)); -webkit-background-clip: text; color: transparent;">Zainstaluj Gato.TV</h1>
-            <p>Najlepsza wtyczka do Twitcha. Odkryj nowy wymiar czatowania dzięki unikalnym emotkom, kolorowym nickom i odznakom.</p>
-            
-            <button class="btn-download-big" onclick="fireConfetti()">POBIERZ WTYCZKĘ (v1.0)</button>
-
-            <div class="features-list">
-                <div class="feature"><span>★</span> Custom Emotes</div>
-                <div class="feature"><span>★</span> RGB Nicknames</div>
-                <div class="feature"><span>★</span> Exclusive Badges</div>
-                <div class="feature"><span>★</span> Zero Lag</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================== INFORMACJE (NEW) ================== -->
-    <div id="info" class="panel">
-        <div class="hero-card">
-            <h1>Gato.TV</h1>
-            
-            <div style="margin: 40px 0;">
-                <p style="font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px;">Autor wtyczki</p>
-                <div style="font-size: 32px; font-weight: 800; color: var(--accent); text-shadow: 0 0 20px var(--accent-glow);">
-                    GatoJestemFormaOstateczna
+                <div class="form-group" style="flex:1;">
+                    <label>Autor</label>
+                    <input id="emoAuthor" disabled> <!-- ZABLOKOWANE -->
                 </div>
+                
+                <div class="form-group" style="flex:1;">
+                    <label>Zasięg</label>
+                    <select id="emoScope" onchange="toggleChannelInput()">
+                        <option value="global">Globalny</option>
+                        <option value="channel">Tylko Kanał</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="channelInputGroup" style="display:none; flex:1;">
+                    <label>Nazwa Kanału</label>
+                    <input id="emoChannel" placeholder="np. xayoo_">
+                </div>
+                
+                <button class="btn-primary" onclick="addEmote()">Dodaj</button>
             </div>
+            <div id="listEmotes" class="list-container">Loading...</div>
+        </div>
 
-            <div class="blink-text">
-                Opis Coming Soon...
+        <!-- BADGES -->
+        <div id="badges" class="panel">
+            <h2>Odznaki</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label>Nick</label>
+                    <input id="badgeNick" placeholder="Nick użytkownika">
+                </div>
+                <div class="form-group" style="flex:2">
+                    <label>URL Ikonki (18x18px)</label>
+                    <input id="badgeUrl" placeholder="https://...">
+                </div>
+                <button class="btn-primary" onclick="addBadge()">Przypisz</button>
+            </div>
+            <div id="listBadges" class="list-container">Loading...</div>
+        </div>
+
+        <!-- INFO -->
+        <div id="info" class="panel">
+            <div class="hero-card">
+                <h1>Gato.TV</h1>
+                <div style="margin: 40px 0;">
+                    <p style="font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px;">Autor wtyczki</p>
+                    <div style="font-size: 32px; font-weight: 800; color: var(--accent); text-shadow: 0 0 20px var(--accent-glow);">
+                        GatoJestemFormaOstateczna
+                    </div>
+                </div>
+                <div class="blink-text">Opis Coming Soon...</div>
             </div>
         </div>
-    </div>
 
+        <!-- DOWNLOAD -->
+        <div id="download" class="panel">
+            <div class="hero-card download-style">
+                <h1 style="background: linear-gradient(90deg, #fff, var(--yellow)); -webkit-background-clip: text; color: transparent;">Zainstaluj Gato.TV</h1>
+                <p>Najlepsza wtyczka do Twitcha. Odkryj nowy wymiar czatowania.</p>
+                <button class="btn-download-big" onclick="fireConfetti()">POBIERZ WTYCZKĘ (v1.0)</button>
+            </div>
+        </div>
+
+    </div> <!-- End appContent -->
 </div>
 
 <script>
-const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
+// ==================== KONFIGURACJA TWITCH ====================
+// TWOJE CLIENT ID
+const CLIENT_ID = 'l0agnxl8yeto7wda5wvblpg1mr55db'; 
+// ADRES LOKALNY - Upewnij się, że masz taki port w przeglądarce!
+const REDIRECT_URI = 'http://127.0.0.1:5500/index.html'; 
+// =============================================================
 
-// ================== EFFECT LOGIC ==================
-function openDownloadTab() {
-    switchTab('download');
-    // USUNIĘTO fireConfetti() stąd - teraz działa tylko z dużego przycisku
+const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
+let currentUser = null; 
+
+// ==================== INIT & LOGIN LOGIC ====================
+window.onload = () => {
+    // Sprawdzanie czy wracamy z logowania
+    if (document.location.hash.includes('access_token')) {
+        const params = new URLSearchParams(document.location.hash.substring(1));
+        const token = params.get('access_token');
+        validateToken(token);
+        window.history.replaceState({}, document.title, "/index.html");
+    }
+};
+
+function loginWithTwitch() {
+    const url = `https://id.twitch.tv/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=user:read:email`;
+    window.location.href = url;
 }
 
-function fireConfetti() {
-    // Strzał konfetti z dwóch stron ekranu
-    var duration = 2000;
-    var end = Date.now() + duration;
-
-    (function frame() {
-        confetti({
-            particleCount: 5,
-            angle: 60,
-            spread: 55,
-            origin: { x: 0 },
-            colors: ['#38bdf8', '#facc15', '#ef4444']
+async function validateToken(token) {
+    try {
+        const res = await fetch('https://api.twitch.tv/helix/users', {
+            headers: { 'Client-ID': CLIENT_ID, 'Authorization': `Bearer ${token}` }
         });
-        confetti({
-            particleCount: 5,
-            angle: 120,
-            spread: 55,
-            origin: { x: 1 },
-            colors: ['#38bdf8', '#facc15', '#ef4444']
-        });
-
-        if (Date.now() < end) {
-            requestAnimationFrame(frame);
+        const data = await res.json();
+        
+        if (data.data && data.data.length > 0) {
+            currentUser = data.data[0];
+            enableApp();
+        } else {
+            alert("Błąd logowania Twitch (Invalid Token)!");
         }
+    } catch(e) { console.error(e); alert("Błąd weryfikacji!"); }
+}
+
+function enableApp() {
+    document.getElementById('loggedOutMsg').style.display = 'none';
+    document.getElementById('loginBtnContainer').style.display = 'none';
+    document.getElementById('appContent').style.display = 'block';
+    document.getElementById('userProfile').style.display = 'flex';
+
+    document.getElementById('avatar').src = currentUser.profile_image_url;
+    document.getElementById('username').innerText = currentUser.display_name;
+    document.getElementById('emoAuthor').value = currentUser.display_name;
+
+    renderPresets();
+    loadAll();
+}
+
+// ==================== API & LOGIC ====================
+async function api(path, method = "GET", body = null) {
+    const opts = { method };
+    if(body) opts.body = JSON.stringify(body);
+    try {
+        const res = await fetch(`${DB_URL}/${path}.json`, opts);
+        return res.json();
+    } catch(e) { console.error(e); }
+}
+
+async function loadAll() {
+    // Paints List
+    const premium = await api('premium') || {};
+    const plist = document.getElementById('listPaints');
+    const paints = Object.keys(premium).filter(k => premium[k].paint);
+    
+    plist.innerHTML = paints.length ? paints.map(k => {
+        const p = premium[k].paint;
+        let style = "";
+        if(p.type === 'color') style = `color: ${p.value}`;
+        else if(p.type === 'gradient') style = `background: ${p.value}; -webkit-background-clip: text; color: transparent;`;
+        else if(p.type === 'glow') style = `color: ${p.value}; text-shadow: 0 0 10px ${p.shadow}`;
+        else if(p.type === 'animated-rainbow') style = `background: linear-gradient(90deg, red, blue); -webkit-background-clip:text; color:transparent;`;
+
+        return `<div class="list-item">
+            <div class="item-details"><span style="font-weight:bold; font-size:16px; ${style}">${k}</span></div>
+            <button class="btn-del" onclick="del('premium/${k}/paint')">Usuń</button>
+        </div>`;
+    }).join('') : '<div style="padding:10px; color:#666">Brak paintów.</div>';
+
+    // Emotes List
+    const emotes = await api('emotes') || {};
+    document.getElementById('listEmotes').innerHTML = Object.keys(emotes).map(k => {
+        const e = emotes[k];
+        const scopeTag = e.scope === 'channel' ? `<span class="badge-tag tag-channel">CHANNEL: ${e.channel}</span>` : `<span class="badge-tag tag-global">GLOBAL</span>`;
+        return `<div class="list-item">
+            <div class="item-details">
+                <img src="${e.url}" style="height:28px; max-width:50px;">
+                <div><span style="font-weight:bold;">${k}</span> <span style="font-size:11px; color:#888">by ${e.author || "?"}</span><div>${scopeTag}</div></div>
+            </div>
+            <button class="btn-del" onclick="del('emotes/${k}')">Usuń</button>
+        </div>`;
+    }).join('');
+
+    // Badges List
+    const badges = Object.keys(premium).filter(k => premium[k].badge);
+    document.getElementById('listBadges').innerHTML = badges.map(k => 
+        `<div class="list-item"><div class="item-details"><img src="${premium[k].badge}" style="height:24px;"><strong>${k}</strong></div><button class="btn-del" onclick="del('premium/${k}/badge')">Usuń</button></div>`
+    ).join('');
+}
+
+// ==================== ACTIONS ====================
+async function addEmote() {
+    if (!currentUser) return alert("Musisz być zalogowany!");
+    
+    const name = document.getElementById('emoName').value.trim();
+    let url = document.getElementById('emoUrl').value.trim();
+    const scope = document.getElementById('emoScope').value;
+    let channel = document.getElementById('emoChannel').value.trim().toLowerCase();
+    
+    const fileInput = document.getElementById('emoFile');
+    if (fileInput.files.length > 0) {
+        try { url = await toBase64(fileInput.files[0]); } catch(e) { return alert("Błąd pliku!"); }
+    }
+
+    if(!name || !url) return alert("Nazwa i URL wymagane!");
+    if(scope === 'channel' && !channel) return alert("Podaj kanał!");
+
+    const payload = { url, author: currentUser.display_name, scope };
+    if(scope === 'channel') payload.channel = channel;
+
+    await api(`emotes/${name}`, "PUT", payload);
+    document.getElementById('emoName').value = "";
+    document.getElementById('emoUrl').value = "";
+    fileInput.value = "";
+    previewFile();
+    loadAll();
+}
+
+async function applyPreset() {
+    const nick = document.getElementById("paintNick").value.trim().toLowerCase();
+    if(!nick || selectedPresetIndex === null) return alert("Wybierz nick i styl!");
+    const p = PRESETS[selectedPresetIndex];
+    const payload = { type: p.type };
+    if (p.value) payload.value = p.value;
+    if (p.shadow) payload.shadow = p.shadow;
+    await api(`premium/${nick}/paint`, "PUT", payload);
+    loadAll();
+}
+
+async function addBadge() {
+    const nick = document.getElementById('badgeNick').value.trim().toLowerCase();
+    const url = document.getElementById('badgeUrl').value.trim();
+    if(!nick || !url) return alert("Dane wymagane");
+    await api(`premium/${nick}/badge`, "PUT", url);
+    loadAll();
+}
+
+async function del(path) { if(confirm("Usunąć?")) { await api(path, "DELETE"); loadAll(); } }
+
+// ==================== HELPERS & PRESETS ====================
+function fireConfetti() {
+    var end = Date.now() + 2000;
+    (function frame() {
+        confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#38bdf8', '#facc15', '#9146ff'] });
+        confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#38bdf8', '#facc15', '#9146ff'] });
+        if (Date.now() < end) requestAnimationFrame(frame);
     }());
 }
 
-// ================== HELPERS ==================
 const toBase64 = file => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -592,31 +594,31 @@ function previewFile() {
     const preview = document.getElementById('filePreview');
     const text = document.getElementById('fileBtnText');
     const urlInput = document.getElementById('emoUrl');
-
     if (file) {
-        text.innerHTML = `✅ Wybrano: ${file.name}`;
-        text.style.borderColor = "var(--success)";
-        text.style.color = "var(--success)";
-        urlInput.disabled = true;
-        urlInput.placeholder = "Używany jest plik lokalny";
-        urlInput.value = "";
+        text.innerHTML = `✅ ${file.name}`; text.style.borderColor = "var(--success)"; text.style.color = "var(--success)";
+        urlInput.disabled = true; urlInput.value = "";
         const reader = new FileReader();
-        reader.onload = function(e) {
-            preview.src = e.target.result;
-            preview.style.display = 'block';
-        }
+        reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
         reader.readAsDataURL(file);
     } else {
-        text.innerHTML = `📂 Wybierz plik z komputera`;
-        text.style.borderColor = "";
-        text.style.color = "";
-        preview.style.display = 'none';
-        urlInput.disabled = false;
-        urlInput.placeholder = "lub wklej link (https://...)";
+        text.innerHTML = `📂 Wybierz plik`; text.style.borderColor = ""; text.style.color = "";
+        preview.style.display = 'none'; urlInput.disabled = false;
     }
 }
 
-// ================== PRESETS LIBRARY ==================
+function switchTab(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if(event.target.tagName === 'BUTTON') event.target.classList.add('active');
+}
+
+function toggleChannelInput() {
+    document.getElementById('channelInputGroup').style.display = 
+        document.getElementById('emoScope').value === 'channel' ? 'flex' : 'none';
+}
+
+// Preset Library
 const PRESETS = [
     { name: "Rainbow", type: "animated-rainbow", previewStyle: "background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta); -webkit-background-clip: text; color: transparent;" },
     { name: "Lava", type: "glow", value: "#ff3300", shadow: "#ffaa00", previewStyle: "color: #ff3300; text-shadow: 0 0 10px #ffaa00;" },
@@ -641,192 +643,18 @@ const PRESETS = [
     { name: "Magenta", type: "color", value: "#d946ef", previewStyle: "color: #d946ef" },
     { name: "Coral", type: "color", value: "#fb7185", previewStyle: "color: #fb7185" },
     { name: "Teal", type: "color", value: "#14b8a6", previewStyle: "color: #14b8a6" },
-    { name: "White", type: "color", value: "#ffffff", previewStyle: "color: #ffffff" },
+    { name: "White", type: "color", value: "#ffffff", previewStyle: "color: #ffffff" }
 ];
-
 let selectedPresetIndex = null;
-
-// ================== LOGIC ==================
-
 function renderPresets() {
-    const grid = document.getElementById("presetGrid");
-    grid.innerHTML = "";
+    const grid = document.getElementById("presetGrid"); grid.innerHTML = "";
     PRESETS.forEach((preset, index) => {
-        const card = document.createElement("div");
-        card.className = "preset-card";
-        card.onclick = () => selectPreset(index, card);
-        card.innerHTML = `
-            <span class="preset-preview" style="${preset.previewStyle}">NickName</span>
-            <span class="preset-name">${preset.name}</span>
-        `;
+        const card = document.createElement("div"); card.className = "preset-card";
+        card.onclick = () => { selectedPresetIndex = index; document.querySelectorAll(".preset-card").forEach(c => c.classList.remove("selected")); card.classList.add("selected"); };
+        card.innerHTML = `<span class="preset-preview" style="${preset.previewStyle}">NickName</span><span class="preset-name">${preset.name}</span>`;
         grid.appendChild(card);
     });
 }
-
-function selectPreset(index, cardElement) {
-    selectedPresetIndex = index;
-    document.querySelectorAll(".preset-card").forEach(c => c.classList.remove("selected"));
-    cardElement.classList.add("selected");
-}
-
-function toggleChannelInput() {
-    const scope = document.getElementById('emoScope').value;
-    const group = document.getElementById('channelInputGroup');
-    if(scope === 'channel') group.style.display = 'flex';
-    else group.style.display = 'none';
-}
-
-// === ACTIONS ===
-
-async function applyPreset() {
-    const nick = document.getElementById("paintNick").value.trim().toLowerCase();
-    if(!nick) return alert("Wpisz nick!");
-    if(selectedPresetIndex === null) return alert("Wybierz styl!");
-
-    const p = PRESETS[selectedPresetIndex];
-    const payload = { type: p.type };
-    if (p.value) payload.value = p.value;
-    if (p.shadow) payload.shadow = p.shadow;
-
-    await api(`premium/${nick}/paint`, "PUT", payload);
-    document.getElementById("paintNick").value = "";
-    loadAll();
-}
-
-async function addEmote() {
-    const name = document.getElementById('emoName').value.trim();
-    let url = document.getElementById('emoUrl').value.trim();
-    const author = document.getElementById('emoAuthor').value.trim();
-    const scope = document.getElementById('emoScope').value;
-    let channel = document.getElementById('emoChannel').value.trim().toLowerCase();
-    
-    // FILE HANDLING
-    const fileInput = document.getElementById('emoFile');
-    if (fileInput.files.length > 0) {
-        try {
-            url = await toBase64(fileInput.files[0]);
-        } catch(e) {
-            return alert("Błąd przetwarzania pliku!");
-        }
-    }
-
-    if(!name || !url) return alert("Nazwa i Obrazek są wymagane!");
-    if(scope === 'channel' && !channel) return alert("Podaj nazwę kanału!");
-
-    const payload = { url, author, scope };
-    if(scope === 'channel') payload.channel = channel;
-
-    await api(`emotes/${name}`, "PUT", payload);
-    document.getElementById('emoName').value = "";
-    document.getElementById('emoUrl').value = "";
-    document.getElementById('emoAuthor').value = "";
-    document.getElementById('emoChannel').value = "";
-    fileInput.value = "";
-    previewFile(); 
-    loadAll();
-}
-
-async function addBadge() {
-    const nick = document.getElementById('badgeNick').value.trim().toLowerCase();
-    const url = document.getElementById('badgeUrl').value.trim();
-    if(!nick || !url) return alert("Wypełnij pola!");
-    await api(`premium/${nick}/badge`, "PUT", url);
-    document.getElementById('badgeNick').value = "";
-    document.getElementById('badgeUrl').value = "";
-    loadAll();
-}
-
-async function del(path) {
-    if(confirm("Usunąć?")) {
-        await api(path, "DELETE");
-        loadAll();
-    }
-}
-
-// === CORE ===
-async function api(path, method = "GET", body = null) {
-    const opts = { method };
-    if(body) opts.body = JSON.stringify(body);
-    try {
-        const res = await fetch(`${DB_URL}/${path}.json`, opts);
-        return res.json();
-    } catch(e) { console.error(e); }
-}
-
-async function loadAll() {
-    // PAINTS
-    const premium = await api('premium') || {};
-    const plist = document.getElementById('listPaints');
-    const paints = Object.keys(premium).filter(k => premium[k].paint);
-    
-    plist.innerHTML = paints.length ? paints.map(k => {
-        const p = premium[k].paint;
-        let style = "";
-        if(p.type === 'color') style = `color: ${p.value}`;
-        else if(p.type === 'gradient') style = `background: ${p.value}; -webkit-background-clip: text; color: transparent;`;
-        else if(p.type === 'glow') style = `color: ${p.value}; text-shadow: 0 0 10px ${p.shadow}`;
-        else if(p.type === 'animated-rainbow') style = `background: linear-gradient(90deg, red, blue); -webkit-background-clip:text; color:transparent;`;
-
-        return `
-            <div class="list-item">
-                <div class="item-details">
-                    <span style="font-weight:bold; font-size:16px; ${style}">${k}</span>
-                    <span style="font-size:12px; color:#666">(${p.type})</span>
-                </div>
-                <button class="btn-del" onclick="del('premium/${k}/paint')">Usuń</button>
-            </div>
-        `;
-    }).join('') : '<div style="padding:10px; color:#666">Brak paintów.</div>';
-
-    // EMOTES
-    const emotes = await api('emotes') || {};
-    document.getElementById('listEmotes').innerHTML = Object.keys(emotes).map(k => {
-        const e = emotes[k];
-        const scopeTag = e.scope === 'channel' 
-            ? `<span class="badge-tag tag-channel">CHANNEL: ${e.channel}</span>` 
-            : `<span class="badge-tag tag-global">GLOBAL</span>`;
-        const authorInfo = e.author ? `<span style="font-size:11px; color:#888">by ${e.author}</span>` : "";
-
-        return `
-        <div class="list-item">
-            <div class="item-details">
-                <img src="${e.url}" style="height:28px; max-width: 50px;">
-                <div style="display:flex; flex-direction:column;">
-                    <span style="font-weight:bold;">${k} ${authorInfo}</span>
-                    <div style="margin-top:2px;">${scopeTag}</div>
-                </div>
-            </div>
-            <button class="btn-del" onclick="del('emotes/${k}')">Usuń</button>
-        </div>
-    `}).join('');
-    
-    // BADGES
-    const badges = Object.keys(premium).filter(k => premium[k].badge);
-    document.getElementById('listBadges').innerHTML = badges.map(k => `
-        <div class="list-item">
-            <div class="item-details">
-                <img src="${premium[k].badge}" style="height:24px;">
-                <strong>${k}</strong>
-            </div>
-            <button class="btn-del" onclick="del('premium/${k}/badge')">Usuń</button>
-        </div>
-    `).join('');
-}
-
-function switchTab(id) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    
-    // Obsługa przycisków w nav
-    if (event && event.target && event.target.tagName === 'BUTTON' && event.target.parentElement.tagName === 'NAV') {
-        event.target.classList.add('active');
-    }
-}
-
-// INIT
-renderPresets();
-loadAll();
 </script>
 </body>
 </html>
