@@ -13,8 +13,6 @@ body{
   background:linear-gradient(135deg,#0e0e13,#15151d);
   color:white;
 }
-
-/* TOP BAR */
 header{
   height:64px;
   display:flex;
@@ -42,10 +40,8 @@ nav button{
   margin-left:20px;
   cursor:pointer;
 }
-nav button.active,
-nav button:hover{color:white}
+nav button.active,nav button:hover{color:white}
 
-/* LAYOUT */
 .container{
   max-width:1000px;
   margin:40px auto;
@@ -59,7 +55,6 @@ nav button:hover{color:white}
 }
 .panel.active{display:block}
 
-/* PAINTS */
 .paint-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
@@ -82,11 +77,6 @@ nav button:hover{color:white}
   text-align:center;
 }
 
-.badge-checkbox{
-  margin-top:14px;
-  font-weight:700;
-}
-
 input{
   width:100%;
   padding:12px;
@@ -97,7 +87,7 @@ input{
 }
 
 button.primary{
-  margin-top:14px;
+  margin-top:12px;
   padding:12px 20px;
   border-radius:10px;
   border:none;
@@ -110,7 +100,7 @@ button.primary{
 /* EMOTES */
 .form{
   display:grid;
-  grid-template-columns:1fr 2fr auto;
+  grid-template-columns:1fr 1fr 2fr auto;
   gap:12px;
 }
 .emote-list{
@@ -160,18 +150,16 @@ button.primary{
 
   <input id="nick" placeholder="Nick z Twitcha">
   <div class="preview" id="preview">Podgląd nicku</div>
-
   <div class="paint-grid" id="paintGrid"></div>
 
-  <div class="badge-checkbox">
-    <label>
-      <input type="checkbox" id="badgeCheckbox">
-      Nadaj badge <b>Beta Tester</b>
-    </label>
-  </div>
+  <label>
+    <input type="checkbox" id="badgeCheckbox">
+    Nadaj badge <b>Beta Tester</b>
+  </label>
 
   <button class="primary" id="applyPaint">Nadaj paint</button>
   <button class="primary" id="applyBadge">Nadaj badge</button>
+  <button class="primary" id="resetUser">RESET (paint + badge)</button>
 </div>
 
 <!-- EMOTES -->
@@ -179,7 +167,8 @@ button.primary{
   <h1>Global Emotes</h1>
 
   <div class="form">
-    <input id="emoteName" placeholder="Nazwa emotki">
+    <input id="emoteTrigger" placeholder="Trigger (np. xdd)">
+    <input id="emoteAuthor" placeholder="Autor">
     <input id="emoteUrl" placeholder="Link do obrazka">
     <button class="primary" id="addEmote">Dodaj</button>
   </div>
@@ -198,7 +187,7 @@ button.primary{
 <script>
 const API="https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
 
-/* ================= PAINTS ================= */
+/* ---------- PAINTS ---------- */
 
 const paints=[
  {label:"Red",paint:{type:"color",color:"#ff3333"}},
@@ -250,40 +239,83 @@ paints.forEach(p=>{
   grid.appendChild(d);
 });
 grid.firstChild.classList.add("active");
-
 document.getElementById("nick").oninput=renderPreview;
 
-/* ===== SAFE FIREBASE MERGE ===== */
-
+/* FIREBASE SAFE MERGE */
 async function getUser(nick){
   return await fetch(`${API}/premium/${nick}.json`).then(r=>r.json())||{};
 }
 
 document.getElementById("applyPaint").onclick=async()=>{
-  const nick=document.getElementById("nick").value.trim().toLowerCase();
-  if(!nick) return alert("Podaj nick");
+  const nick=nickInput();
   const data=await getUser(nick);
   data.paint=selected;
-  await fetch(`${API}/premium/${nick}.json`,{
-    method:"PUT",
-    body:JSON.stringify(data)
-  });
+  await saveUser(nick,data);
 };
 
 document.getElementById("applyBadge").onclick=async()=>{
-  const nick=document.getElementById("nick").value.trim().toLowerCase();
-  if(!nick) return alert("Podaj nick");
+  const nick=nickInput();
   const data=await getUser(nick);
   data.badge="beta";
-  await fetch(`${API}/premium/${nick}.json`,{
+  await saveUser(nick,data);
+};
+
+document.getElementById("resetUser").onclick=async()=>{
+  const nick=nickInput();
+  await fetch(`${API}/premium/${nick}.json`,{method:"DELETE"});
+};
+
+function nickInput(){
+  const n=document.getElementById("nick").value.trim().toLowerCase();
+  if(!n) throw alert("Podaj nick");
+  return n;
+}
+function saveUser(nick,data){
+  return fetch(`${API}/premium/${nick}.json`,{
     method:"PUT",
     body:JSON.stringify(data)
   });
+}
+
+/* ---------- EMOTES ---------- */
+
+async function loadEmotes(){
+  const r=await fetch(`${API}/emotes.json`);
+  const data=await r.json()||{};
+  const list=document.getElementById("emoteList");
+  list.innerHTML="";
+  Object.entries(data).forEach(([k,v])=>{
+    const d=document.createElement("div");
+    d.className="emote";
+    d.innerHTML=`
+      <img src="${v.url}">
+      <div><b>${k}</b></div>
+      <small>${v.author||""}</small>
+      <button class="delete">X</button>
+    `;
+    d.querySelector(".delete").onclick=async()=>{
+      await fetch(`${API}/emotes/${k}.json`,{method:"DELETE"});
+      loadEmotes();
+    };
+    list.appendChild(d);
+  });
+}
+
+document.getElementById("addEmote").onclick=async()=>{
+  const t=document.getElementById("emoteTrigger").value.trim();
+  const a=document.getElementById("emoteAuthor").value.trim();
+  const u=document.getElementById("emoteUrl").value.trim();
+  if(!t||!u) return alert("Trigger i URL wymagane");
+  await fetch(`${API}/emotes/${t}.json`,{
+    method:"PUT",
+    body:JSON.stringify({url:u,author:a})
+  });
+  loadEmotes();
 };
 
-renderPreview();
+loadEmotes();
 
-/* ================= TABS ================= */
+/* TABS */
 document.querySelectorAll("nav button").forEach(b=>{
   b.onclick=()=>{
     document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
@@ -295,6 +327,5 @@ document.querySelectorAll("nav button").forEach(b=>{
 </script>
 
 <script src="content.js"></script>
-
 </body>
 </html>
