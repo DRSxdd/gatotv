@@ -5,14 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gato.TV Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
-<!-- Biblioteka do konfetti -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
     :root {
         --bg: #0b1120;       
         --panel: #1e293b;    
-        --accent: #38bdf8;   /* Gato Blue */
+        --accent: #38bdf8;
         --accent-glow: rgba(56, 189, 248, 0.5);
         --twitch: #9146ff;   
         --yellow: #facc15;   
@@ -23,208 +22,62 @@
         --danger: #ef4444;
         --success: #22c55e;
     }
-    
     * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top, #172554, var(--bg)); color: var(--text); min-height: 100vh; padding-bottom: 50px; }
     
-    body {
-        margin: 0;
-        font-family: 'Outfit', sans-serif;
-        background: radial-gradient(circle at top, #172554, var(--bg));
-        color: var(--text);
-        min-height: 100vh;
-        padding-bottom: 50px;
-    }
+    /* HEADER */
+    header { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .header-left { display: flex; align-items: center; gap: 25px; }
+    .logo { font-size: 32px; font-weight: 900; color: var(--accent); letter-spacing: -1px; text-transform: uppercase; text-shadow: 0 0 20px var(--accent-glow); display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    .beta-tag { font-size: 11px; background: var(--danger); color: white; padding: 3px 8px; border-radius: 6px; font-weight: 700; letter-spacing: 1px; box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); transform: translateY(-2px); }
     
-    /* ===== HEADER ===== */
-    header {
-        background: rgba(15, 23, 42, 0.9);
-        backdrop-filter: blur(10px);
-        height: 80px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 40px;
-        border-bottom: 1px solid var(--border);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
-
-    /* LEWA STRONA HEADER */
-    .header-left {
-        display: flex;
-        align-items: center;
-        gap: 25px;
-    }
-
-    .logo {
-        font-size: 32px;
-        font-weight: 900;
-        color: var(--accent);
-        letter-spacing: -1px;
-        text-transform: uppercase;
-        text-shadow: 0 0 20px var(--accent-glow);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        cursor: pointer;
-    }
-    
-    .beta-tag {
-        font-size: 11px;
-        background: var(--danger);
-        color: white;
-        padding: 3px 8px;
-        border-radius: 6px;
-        font-weight: 700;
-        letter-spacing: 1px;
-        box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
-        transform: translateY(-2px);
-    }
-
-    /* USER PROFILE / LOGIN BTN */
-    .user-profile {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        background: rgba(145, 70, 255, 0.15);
-        padding: 5px 15px 5px 5px;
-        border-radius: 50px;
-        border: 1px solid var(--twitch);
-        animation: fadeIn 0.5s;
-    }
+    .user-profile { display: flex; align-items: center; gap: 12px; background: rgba(145, 70, 255, 0.15); padding: 5px 15px 5px 5px; border-radius: 50px; border: 1px solid var(--twitch); animation: fadeIn 0.5s; }
     .user-avatar { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--twitch); }
     .user-nick { font-weight: 700; font-size: 14px; color: #fff; }
     
-    .btn-login {
-        background: var(--twitch);
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-weight: 700;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        transition: 0.3s;
-        box-shadow: 0 0 15px rgba(145, 70, 255, 0.3);
-    }
+    .btn-login { background: var(--twitch); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: 0 0 15px rgba(145, 70, 255, 0.3); }
     .btn-login:hover { background: #772ce8; transform: translateY(-1px); }
 
-    /* PRAWA STRONA HEADER (NAV) */
     nav { display: flex; gap: 8px; background: #0f172a; padding: 5px; border-radius: 12px; border: 1px solid var(--border); }
-    
-    nav button {
-        background: none;
-        border: none;
-        color: var(--text-muted);
-        font-size: 14px;
-        font-weight: 600;
-        padding: 10px 20px;
-        cursor: pointer;
-        border-radius: 8px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    nav button { background: none; border: none; color: var(--text-muted); font-size: 14px; font-weight: 600; padding: 10px 20px; cursor: pointer; border-radius: 8px; transition: 0.3s; }
     nav button:hover { color: #fff; background: rgba(255,255,255,0.05); }
-    nav button.active { 
-        background: var(--accent); 
-        color: #000; 
-        box-shadow: 0 0 15px var(--accent-glow);
-    }
-
+    nav button.active { background: var(--accent); color: #000; box-shadow: 0 0 15px var(--accent-glow); }
     nav button.btn-yellow { color: var(--yellow); border: 1px solid rgba(250, 204, 21, 0.1); }
     nav button.btn-yellow:hover { background: rgba(250, 204, 21, 0.1); }
     nav button.btn-yellow.active { background: var(--yellow); color: #000; box-shadow: 0 0 20px var(--yellow-glow); border-color: var(--yellow); }
 
-    /* ===== CONTENT ===== */
+    /* CONTENT */
     .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
-    
     .panel { display: none; animation: slideUp 0.4s ease-out; }
     .panel.active { display: block; }
-    
-    @keyframes slideUp { 
-        from { opacity: 0; transform: translateY(20px); } 
-        to { opacity: 1; transform: translateY(0); } 
-    }
-
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     h2 { color: white; font-size: 28px; margin-bottom: 10px; }
     p.desc { color: var(--text-muted); margin-top: 0; margin-bottom: 30px; }
 
-    /* ===== BLOCKER (LOGGED OUT) ===== */
-    .login-blocker {
-        text-align: center;
-        padding: 60px 20px;
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        margin-top: 40px;
-        box-shadow: 0 0 50px rgba(0,0,0,0.3);
-    }
+    /* BLOCKER */
+    .login-blocker { text-align: center; padding: 60px 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 20px; margin-top: 40px; box-shadow: 0 0 50px rgba(0,0,0,0.3); }
     .login-blocker h2 { font-size: 32px; margin-bottom: 10px; }
 
-    /* ===== UI ELEMENTS ===== */
-    .input-row {
-        display: flex; gap: 15px; margin-bottom: 30px; background: var(--panel);
-        padding: 20px; border-radius: 16px; border: 1px solid var(--border);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.2); align-items: flex-start; flex-wrap: wrap;
-    }
-
+    /* UI */
+    .input-row { display: flex; gap: 15px; margin-bottom: 30px; background: var(--panel); padding: 20px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.2); align-items: flex-start; flex-wrap: wrap; }
     .form-group { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 150px; }
     .form-group label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-
-    input, select {
-        padding: 14px; background: #0f172a; border: 1px solid var(--border); color: white;
-        border-radius: 10px; font-size: 14px; outline: none; width: 100%; transition: 0.2s;
-    }
+    input, select { padding: 14px; background: #0f172a; border: 1px solid var(--border); color: white; border-radius: 10px; font-size: 14px; outline: none; width: 100%; transition: 0.2s; }
     input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
     input:disabled { opacity: 0.6; cursor: not-allowed; background: #162032; }
 
-    /* File Upload */
     .file-upload-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; }
-    .file-upload-btn {
-        border: 1px dashed var(--border); color: var(--text-muted); background: #0f172a;
-        padding: 12px; border-radius: 10px; text-align: center; cursor: pointer; font-size: 13px;
-        transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px;
-    }
+    .file-upload-btn { border: 1px dashed var(--border); color: var(--text-muted); background: #0f172a; padding: 12px; border-radius: 10px; text-align: center; cursor: pointer; font-size: 13px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
     .file-upload-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .file-upload-wrapper input[type=file] {
-        font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%;
-    }
+    .file-upload-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%; }
     #filePreview { margin-top: 10px; max-height: 40px; display: none; border-radius: 4px; border: 1px solid var(--accent); }
 
-    button.btn-primary {
-        padding: 14px 28px; background: linear-gradient(135deg, var(--accent), #0ea5e9); border: none; color: #0f172a;
-        font-weight: 800; border-radius: 10px; cursor: pointer; font-size: 15px; text-transform: uppercase;
-        letter-spacing: 1px; transition: transform 0.2s, box-shadow 0.2s; height: 48px; margin-top: 23px;
-    }
+    button.btn-primary { padding: 14px 28px; background: linear-gradient(135deg, var(--accent), #0ea5e9); border: none; color: #0f172a; font-weight: 800; border-radius: 10px; cursor: pointer; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; transition: transform 0.2s, box-shadow 0.2s; height: 48px; margin-top: 23px; }
     button.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px var(--accent-glow); }
-
-    /* HERO CARD (Download & Info) */
-    .hero-card {
-        background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(0,0,0,0));
-        border: 1px solid var(--border); border-radius: 20px; padding: 60px 40px;
-        text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.2); position: relative; overflow: hidden;
-    }
-    .download-style {
-        background: linear-gradient(135deg, rgba(250, 204, 21, 0.05), rgba(0,0,0,0));
-        border-color: rgba(250, 204, 21, 0.3);
-        box-shadow: 0 0 50px rgba(250, 204, 21, 0.05);
-    }
-    .hero-card h1 { font-size: 48px; margin: 0 0 15px 0; font-weight: 900; color: white; }
-    .btn-download-big {
-        background: var(--yellow); color: #000; font-size: 20px; font-weight: 900; padding: 20px 60px;
-        border: none; border-radius: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px;
-        box-shadow: 0 10px 40px var(--yellow-glow); transition: 0.3s;
-    }
-    .btn-download-big:hover { transform: scale(1.05); box-shadow: 0 15px 60px var(--yellow-glow); background: #fde047; }
 
     /* PRESETS */
     .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 30px; }
-    .preset-card {
-        background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 15px;
-        cursor: pointer; text-align: center; transition: 0.2s; position: relative;
-    }
+    .preset-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 15px; cursor: pointer; text-align: center; transition: 0.2s; position: relative; }
     .preset-card:hover { border-color: var(--text-muted); transform: translateY(-2px); }
     .preset-card.selected { border-color: var(--accent); background: rgba(56, 189, 248, 0.1); box-shadow: 0 0 0 2px var(--accent); }
     .preset-preview { font-size: 18px; font-weight: 800; margin-bottom: 8px; display: block; padding: 5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -232,55 +85,40 @@
 
     /* LISTS */
     .list-container { display: grid; gap: 10px; }
-    .list-item {
-        background: var(--panel); padding: 15px 20px; border-radius: 12px;
-        display: flex; align-items: center; justify-content: space-between;
-        border-left: 4px solid var(--border); transition: 0.2s;
-    }
+    .list-item { background: var(--panel); padding: 15px 20px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--border); transition: 0.2s; }
     .list-item:hover { border-left-color: var(--accent); background: #253248; }
     .item-details { display: flex; align-items: center; gap: 15px; }
     .badge-tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase; }
     .tag-global { background: var(--success); color: #000; }
     .tag-channel { background: var(--accent); color: #000; }
-    .btn-del {
-        background: rgba(239, 68, 68, 0.15); color: var(--danger); border: none;
-        padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: 0.2s;
-    }
+    .btn-del { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: 0.2s; }
     .btn-del:hover { background: var(--danger); color: white; }
 
-    /* Animations */
-    @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    /* HERO */
+    .hero-card { background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(0,0,0,0)); border: 1px solid var(--border); border-radius: 20px; padding: 60px 40px; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
+    .download-style { background: linear-gradient(135deg, rgba(250, 204, 21, 0.05), rgba(0,0,0,0)); border-color: rgba(250, 204, 21, 0.3); box-shadow: 0 0 50px rgba(250, 204, 21, 0.05); }
+    .btn-download-big { background: var(--yellow); color: #000; font-size: 20px; font-weight: 900; padding: 20px 60px; border: none; border-radius: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 10px 40px var(--yellow-glow); transition: 0.3s; }
+    .btn-download-big:hover { transform: scale(1.05); box-shadow: 0 15px 60px var(--yellow-glow); background: #fde047; }
     .blink-text { animation: pulseText 2s infinite; font-weight: 300; letter-spacing: 2px; color: var(--accent); }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
+    @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 </style>
 </head>
 <body>
 
 <header>
-    <!-- LEWA STRONA: LOGO + LOGIN/PROFILE -->
     <div class="header-left">
-        <div class="logo">
-            Gato.TV
-            <span class="beta-tag">BETA</span>
-        </div>
-        
-        <!-- Stan: Niezalogowany -->
+        <div class="logo">Gato.TV <span class="beta-tag">BETA</span></div>
         <div id="loginBtnContainer">
             <button class="btn-login" onclick="loginWithTwitch()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h2.998L22.286 11.57V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
                 Zaloguj
             </button>
         </div>
-
-        <!-- Stan: Zalogowany -->
         <div id="userProfile" class="user-profile" style="display:none;">
             <img id="avatar" class="user-avatar" src="">
             <span id="username" class="user-nick">...</span>
         </div>
     </div>
-
-    <!-- PRAWA STRONA: NAV -->
     <nav>
         <button class="active" onclick="switchTab('paints')">Paints</button>
         <button onclick="switchTab('emotes')">Emotes</button>
@@ -291,35 +129,22 @@
 </header>
 
 <div class="container">
-
-    <!-- EKRAN BLOKADY (DLA NIEZALOGOWANYCH) -->
     <div id="loggedOutMsg" class="login-blocker">
         <h2>🔒 Wymagane Logowanie</h2>
-        <p style="color: #94a3b8; font-size: 18px; margin-bottom: 30px;">
-            Aby zarządzać bazą danych wtyczki, musisz potwierdzić tożsamość.
-        </p>
-        <button class="btn-login" style="margin: 0 auto; padding: 15px 30px; font-size: 16px;" onclick="loginWithTwitch()">
-            Zaloguj się przez Twitch
-        </button>
+        <p style="color: #94a3b8; font-size: 18px; margin-bottom: 30px;">Aby zarządzać bazą danych wtyczki, musisz potwierdzić tożsamość.</p>
+        <button class="btn-login" style="margin: 0 auto; padding: 15px 30px; font-size: 16px;" onclick="loginWithTwitch()">Zaloguj się przez Twitch</button>
     </div>
 
-    <!-- APLIKACJA (DLA ZALOGOWANYCH) -->
     <div id="appContent" style="display:none;">
-
         <!-- PAINTS -->
         <div id="paints" class="panel active">
             <h2>Style Nicków</h2>
             <div class="input-row">
-                <div class="form-group" style="flex:2">
-                    <label>Nick użytkownika</label>
-                    <input id="paintNick" placeholder="np. gatodev">
-                </div>
+                <div class="form-group" style="flex:2"><label>Nick użytkownika</label><input id="paintNick" placeholder="np. gatodev"></div>
                 <button class="btn-primary" onclick="applyPreset()">Nadaj Styl</button>
             </div>
-
             <h3 style="color: var(--text-muted); font-size: 14px; text-transform: uppercase;">Dostępne Presety</h3>
             <div class="preset-grid" id="presetGrid"></div>
-
             <h3 style="margin-top: 40px; color: var(--text-muted); font-size: 14px; text-transform: uppercase;">Aktywne Painty</h3>
             <div id="listPaints" class="list-container">Loading...</div>
         </div>
@@ -327,45 +152,17 @@
         <!-- EMOTES -->
         <div id="emotes" class="panel">
             <h2>Emotki</h2>
-            <p class="desc">Dodaj emotkę. Pole 'Autor' zostanie uzupełnione Twoim nickiem.</p>
-            
             <div class="input-row">
-                <div class="form-group" style="flex:1;">
-                    <label>Nazwa (kod)</label>
-                    <input id="emoName" placeholder="np. xdd">
-                </div>
-
-                <!-- SEKCJA UPLOADU -->
+                <div class="form-group" style="flex:1;"><label>Nazwa</label><input id="emoName" placeholder="np. xdd"></div>
                 <div class="form-group" style="flex:2;">
-                    <label>Obrazek (Plik lub URL)</label>
-                    <div class="file-upload-wrapper">
-                        <div class="file-upload-btn" id="fileBtnText">
-                            <span>📂 Wybierz plik</span>
-                        </div>
-                        <input type="file" id="emoFile" accept="image/*" onchange="previewFile()">
-                    </div>
+                    <label>Obrazek</label>
+                    <div class="file-upload-wrapper"><div class="file-upload-btn" id="fileBtnText"><span>📂 Wybierz plik</span></div><input type="file" id="emoFile" accept="image/*" onchange="previewFile()"></div>
                     <img id="filePreview" src="" alt="Podgląd">
-                    <input id="emoUrl" placeholder="lub wklej link..." style="margin-top:5px;">
+                    <input id="emoUrl" placeholder="lub link..." style="margin-top:5px;">
                 </div>
-
-                <div class="form-group" style="flex:1;">
-                    <label>Autor</label>
-                    <input id="emoAuthor" disabled> <!-- ZABLOKOWANE -->
-                </div>
-                
-                <div class="form-group" style="flex:1;">
-                    <label>Zasięg</label>
-                    <select id="emoScope" onchange="toggleChannelInput()">
-                        <option value="global">Globalny</option>
-                        <option value="channel">Tylko Kanał</option>
-                    </select>
-                </div>
-                
-                <div class="form-group" id="channelInputGroup" style="display:none; flex:1;">
-                    <label>Nazwa Kanału</label>
-                    <input id="emoChannel" placeholder="np. xayoo_">
-                </div>
-                
+                <div class="form-group" style="flex:1;"><label>Autor</label><input id="emoAuthor" disabled></div>
+                <div class="form-group" style="flex:1;"><label>Zasięg</label><select id="emoScope" onchange="toggleChannelInput()"><option value="global">Globalny</option><option value="channel">Tylko Kanał</option></select></div>
+                <div class="form-group" id="channelInputGroup" style="display:none; flex:1;"><label>Nazwa Kanału</label><input id="emoChannel" placeholder="np. xayoo_"></div>
                 <button class="btn-primary" onclick="addEmote()">Dodaj</button>
             </div>
             <div id="listEmotes" class="list-container">Loading...</div>
@@ -375,14 +172,8 @@
         <div id="badges" class="panel">
             <h2>Odznaki</h2>
             <div class="input-row">
-                <div class="form-group">
-                    <label>Nick</label>
-                    <input id="badgeNick" placeholder="Nick użytkownika">
-                </div>
-                <div class="form-group" style="flex:2">
-                    <label>URL Ikonki (18x18px)</label>
-                    <input id="badgeUrl" placeholder="https://...">
-                </div>
+                <div class="form-group"><label>Nick</label><input id="badgeNick"></div>
+                <div class="form-group" style="flex:2"><label>URL Ikonki</label><input id="badgeUrl"></div>
                 <button class="btn-primary" onclick="addBadge()">Przypisz</button>
             </div>
             <div id="listBadges" class="list-container">Loading...</div>
@@ -394,9 +185,7 @@
                 <h1>Gato.TV</h1>
                 <div style="margin: 40px 0;">
                     <p style="font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px;">Autor wtyczki</p>
-                    <div style="font-size: 32px; font-weight: 800; color: var(--accent); text-shadow: 0 0 20px var(--accent-glow);">
-                        GatoJestemFormaOstateczna
-                    </div>
+                    <div style="font-size: 32px; font-weight: 800; color: var(--accent); text-shadow: 0 0 20px var(--accent-glow);">GatoJestemFormaOstateczna</div>
                 </div>
                 <div class="blink-text">Opis Coming Soon...</div>
             </div>
@@ -410,29 +199,29 @@
                 <button class="btn-download-big" onclick="fireConfetti()">POBIERZ WTYCZKĘ (v1.0)</button>
             </div>
         </div>
-
-    </div> <!-- End appContent -->
+    </div>
 </div>
 
 <script>
-// ==================== KONFIGURACJA TWITCH ====================
+// ==================== KONFIGURACJA ====================
 const CLIENT_ID = 'l0agnxl8yeto7wda5wvblpg1mr55db'; 
-// !!! WAŻNE: ADRES TWOJEJ STRONY NA GITHUBIE !!!
-const REDIRECT_URI = 'https://drsxdd.github.io/index.html'; 
-// =============================================================
-
+// UWAGA: TEN LINK MUSI BYĆ DOKŁADNIE TAKI SAM W KONSOLI TWITCHA (z '/' na końcu!)
+const REDIRECT_URI = 'https://drsxdd.github.io/gatotv/'; 
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
+// ======================================================
+
 let currentUser = null; 
 
-// ==================== INIT & LOGIN LOGIC ====================
 window.onload = () => {
-    // Sprawdzanie czy wracamy z logowania
+    // Sprawdź czy wracamy z Twitcha
     if (document.location.hash.includes('access_token')) {
         const params = new URLSearchParams(document.location.hash.substring(1));
         const token = params.get('access_token');
-        validateToken(token);
-        // Czyścimy URL
-        window.history.replaceState({}, document.title, window.location.pathname);
+        if(token) {
+            validateToken(token);
+            // Wyczyść URL ale zachowaj ścieżkę
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
     }
 };
 
@@ -452,9 +241,10 @@ async function validateToken(token) {
             currentUser = data.data[0];
             enableApp();
         } else {
-            alert("Błąd logowania Twitch (Invalid Token)!");
+            console.error(data);
+            alert("Błąd logowania (Token odrzucony)!");
         }
-    } catch(e) { console.error(e); alert("Błąd weryfikacji!"); }
+    } catch(e) { console.error(e); alert("Błąd połączenia z API Twitcha!"); }
 }
 
 function enableApp() {
@@ -462,198 +252,92 @@ function enableApp() {
     document.getElementById('loginBtnContainer').style.display = 'none';
     document.getElementById('appContent').style.display = 'block';
     document.getElementById('userProfile').style.display = 'flex';
-
     document.getElementById('avatar').src = currentUser.profile_image_url;
     document.getElementById('username').innerText = currentUser.display_name;
     document.getElementById('emoAuthor').value = currentUser.display_name;
-
     renderPresets();
     loadAll();
 }
 
-// ==================== API & LOGIC ====================
-async function api(path, method = "GET", body = null) {
-    const opts = { method };
-    if(body) opts.body = JSON.stringify(body);
-    try {
-        const res = await fetch(`${DB_URL}/${path}.json`, opts);
-        return res.json();
-    } catch(e) { console.error(e); }
+// API & HELPERS
+async function api(path, method="GET", body=null) {
+    const opts = { method }; if(body) opts.body = JSON.stringify(body);
+    try { const res = await fetch(`${DB_URL}/${path}.json`, opts); return res.json(); } catch(e) { console.error(e); }
 }
 
 async function loadAll() {
-    // Paints List
     const premium = await api('premium') || {};
     const plist = document.getElementById('listPaints');
     const paints = Object.keys(premium).filter(k => premium[k].paint);
-    
     plist.innerHTML = paints.length ? paints.map(k => {
         const p = premium[k].paint;
         let style = "";
-        if(p.type === 'color') style = `color: ${p.value}`;
-        else if(p.type === 'gradient') style = `background: ${p.value}; -webkit-background-clip: text; color: transparent;`;
-        else if(p.type === 'glow') style = `color: ${p.value}; text-shadow: 0 0 10px ${p.shadow}`;
-        else if(p.type === 'animated-rainbow') style = `background: linear-gradient(90deg, red, blue); -webkit-background-clip:text; color:transparent;`;
+        if(p.type === 'color') style = `color:${p.value}`;
+        else if(p.type === 'gradient') style = `background:${p.value}; -webkit-background-clip:text; color:transparent;`;
+        else if(p.type === 'glow') style = `color:${p.value}; text-shadow:0 0 10px ${p.shadow}`;
+        else if(p.type === 'animated-rainbow') style = `background:linear-gradient(90deg,red,blue);-webkit-background-clip:text;color:transparent;`;
+        return `<div class="list-item"><div class="item-details"><span style="font-weight:bold; font-size:16px; ${style}">${k}</span></div><button class="btn-del" onclick="del('premium/${k}/paint')">Usuń</button></div>`;
+    }).join('') : '<div style="padding:10px; color:#666">Brak.</div>';
 
-        return `<div class="list-item">
-            <div class="item-details"><span style="font-weight:bold; font-size:16px; ${style}">${k}</span></div>
-            <button class="btn-del" onclick="del('premium/${k}/paint')">Usuń</button>
-        </div>`;
-    }).join('') : '<div style="padding:10px; color:#666">Brak paintów.</div>';
-
-    // Emotes List
     const emotes = await api('emotes') || {};
     document.getElementById('listEmotes').innerHTML = Object.keys(emotes).map(k => {
         const e = emotes[k];
         const scopeTag = e.scope === 'channel' ? `<span class="badge-tag tag-channel">CHANNEL: ${e.channel}</span>` : `<span class="badge-tag tag-global">GLOBAL</span>`;
-        return `<div class="list-item">
-            <div class="item-details">
-                <img src="${e.url}" style="height:28px; max-width:50px;">
-                <div><span style="font-weight:bold;">${k}</span> <span style="font-size:11px; color:#888">by ${e.author || "?"}</span><div>${scopeTag}</div></div>
-            </div>
-            <button class="btn-del" onclick="del('emotes/${k}')">Usuń</button>
-        </div>`;
+        return `<div class="list-item"><div class="item-details"><img src="${e.url}" style="height:28px; max-width:50px;"><div><span style="font-weight:bold;">${k}</span> <span style="font-size:11px; color:#888">by ${e.author||"?"}</span><div>${scopeTag}</div></div></div><button class="btn-del" onclick="del('emotes/${k}')">Usuń</button></div>`;
     }).join('');
 
-    // Badges List
     const badges = Object.keys(premium).filter(k => premium[k].badge);
-    document.getElementById('listBadges').innerHTML = badges.map(k => 
-        `<div class="list-item"><div class="item-details"><img src="${premium[k].badge}" style="height:24px;"><strong>${k}</strong></div><button class="btn-del" onclick="del('premium/${k}/badge')">Usuń</button></div>`
-    ).join('');
+    document.getElementById('listBadges').innerHTML = badges.map(k => `<div class="list-item"><div class="item-details"><img src="${premium[k].badge}" style="height:24px;"><strong>${k}</strong></div><button class="btn-del" onclick="del('premium/${k}/badge')">Usuń</button></div>`).join('');
 }
 
-// ==================== ACTIONS ====================
 async function addEmote() {
-    if (!currentUser) return alert("Musisz być zalogowany!");
-    
+    if(!currentUser) return;
     const name = document.getElementById('emoName').value.trim();
     let url = document.getElementById('emoUrl').value.trim();
     const scope = document.getElementById('emoScope').value;
     let channel = document.getElementById('emoChannel').value.trim().toLowerCase();
-    
-    const fileInput = document.getElementById('emoFile');
-    if (fileInput.files.length > 0) {
-        try { url = await toBase64(fileInput.files[0]); } catch(e) { return alert("Błąd pliku!"); }
-    }
-
-    if(!name || !url) return alert("Nazwa i URL wymagane!");
-    if(scope === 'channel' && !channel) return alert("Podaj kanał!");
-
+    const file = document.getElementById('emoFile').files[0];
+    if (file) try { url = await toBase64(file); } catch(e) { return alert("Błąd pliku"); }
+    if(!name || !url) return alert("Pola wymagane");
+    if(scope === 'channel' && !channel) return alert("Podaj kanał");
     const payload = { url, author: currentUser.display_name, scope };
     if(scope === 'channel') payload.channel = channel;
-
     await api(`emotes/${name}`, "PUT", payload);
-    document.getElementById('emoName').value = "";
-    document.getElementById('emoUrl').value = "";
-    fileInput.value = "";
-    previewFile();
-    loadAll();
+    document.getElementById('emoName').value = ""; document.getElementById('emoUrl').value = ""; document.getElementById('emoFile').value = "";
+    previewFile(); loadAll();
 }
 
 async function applyPreset() {
     const nick = document.getElementById("paintNick").value.trim().toLowerCase();
-    if(!nick || selectedPresetIndex === null) return alert("Wybierz nick i styl!");
+    if(!nick || selectedPresetIndex === null) return alert("Brak danych");
     const p = PRESETS[selectedPresetIndex];
-    const payload = { type: p.type };
-    if (p.value) payload.value = p.value;
-    if (p.shadow) payload.shadow = p.shadow;
-    await api(`premium/${nick}/paint`, "PUT", payload);
-    loadAll();
+    const payload = { type: p.type }; if (p.value) payload.value = p.value; if (p.shadow) payload.shadow = p.shadow;
+    await api(`premium/${nick}/paint`, "PUT", payload); loadAll();
 }
 
 async function addBadge() {
-    const nick = document.getElementById('badgeNick').value.trim().toLowerCase();
-    const url = document.getElementById('badgeUrl').value.trim();
-    if(!nick || !url) return alert("Dane wymagane");
-    await api(`premium/${nick}/badge`, "PUT", url);
-    loadAll();
+    const nick = document.getElementById('badgeNick').value.trim().toLowerCase(); const url = document.getElementById('badgeUrl').value.trim();
+    if(!nick||!url) return; await api(`premium/${nick}/badge`, "PUT", url); loadAll();
 }
-
 async function del(path) { if(confirm("Usunąć?")) { await api(path, "DELETE"); loadAll(); } }
-
-// ==================== HELPERS & PRESETS ====================
-function fireConfetti() {
-    var end = Date.now() + 2000;
-    (function frame() {
-        confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#38bdf8', '#facc15', '#9146ff'] });
-        confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#38bdf8', '#facc15', '#9146ff'] });
-        if (Date.now() < end) requestAnimationFrame(frame);
-    }());
-}
-
-const toBase64 = file => new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-});
-
-function previewFile() {
-    const file = document.getElementById('emoFile').files[0];
-    const preview = document.getElementById('filePreview');
-    const text = document.getElementById('fileBtnText');
-    const urlInput = document.getElementById('emoUrl');
-    if (file) {
-        text.innerHTML = `✅ ${file.name}`; text.style.borderColor = "var(--success)"; text.style.color = "var(--success)";
-        urlInput.disabled = true; urlInput.value = "";
-        const reader = new FileReader();
-        reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
-        reader.readAsDataURL(file);
-    } else {
-        text.innerHTML = `📂 Wybierz plik`; text.style.borderColor = ""; text.style.color = "";
-        preview.style.display = 'none'; urlInput.disabled = false;
-    }
-}
 
 function switchTab(id) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    if(event.target.tagName === 'BUTTON') event.target.classList.add('active');
+    if(event && event.target.tagName === 'BUTTON') event.target.classList.add('active');
 }
+function toggleChannelInput() { document.getElementById('channelInputGroup').style.display = document.getElementById('emoScope').value === 'channel' ? 'flex' : 'none'; }
+function previewFile() {
+    const f = document.getElementById('emoFile').files[0]; const p = document.getElementById('filePreview'); const t = document.getElementById('fileBtnText');
+    if(f) { t.innerHTML=`✅ ${f.name}`; t.style.color="#22c55e"; document.getElementById('emoUrl').disabled=true; const r=new FileReader(); r.onload=e=>{p.src=e.target.result; p.style.display='block'}; r.readAsDataURL(f); }
+    else { t.innerHTML=`📂 Wybierz plik`; t.style.color=""; p.style.display='none'; document.getElementById('emoUrl').disabled=false; }
+}
+const toBase64=f=>new Promise((res,rej)=>{const r=new FileReader();r.readAsDataURL(f);r.onload=()=>res(r.result);r.onerror=e=>rej(e)});
+function fireConfetti(){var e=Date.now()+2e3;!function t(){confetti({particleCount:5,angle:60,spread:55,origin:{x:0},colors:['#38bdf8','#facc15','#9146ff']});confetti({particleCount:5,angle:120,spread:55,origin:{x:1},colors:['#38bdf8','#facc15','#9146ff']});Date.now()<e&&requestAnimationFrame(t)}()}
 
-function toggleChannelInput() {
-    document.getElementById('channelInputGroup').style.display = 
-        document.getElementById('emoScope').value === 'channel' ? 'flex' : 'none';
-}
-
-// Preset Library
-const PRESETS = [
-    { name: "Rainbow", type: "animated-rainbow", previewStyle: "background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta); -webkit-background-clip: text; color: transparent;" },
-    { name: "Lava", type: "glow", value: "#ff3300", shadow: "#ffaa00", previewStyle: "color: #ff3300; text-shadow: 0 0 10px #ffaa00;" },
-    { name: "Toxic", type: "glow", value: "#ccff00", shadow: "#00ff00", previewStyle: "color: #ccff00; text-shadow: 0 0 10px #00ff00;" },
-    { name: "Ice", type: "glow", value: "#e0f2fe", shadow: "#0ea5e9", previewStyle: "color: #e0f2fe; text-shadow: 0 0 10px #0ea5e9;" },
-    { name: "Cyber", type: "glow", value: "#ff00ff", shadow: "#ff0088", previewStyle: "color: #ff00ff; text-shadow: 0 0 10px #ff0088;" },
-    { name: "Golden", type: "glow", value: "#ffd700", shadow: "#ffae00", previewStyle: "color: #ffd700; text-shadow: 0 0 10px #ffae00;" },
-    { name: "Ghost", type: "glow", value: "#ffffff", shadow: "#ffffff", previewStyle: "color: #fff; text-shadow: 0 0 10px #fff;" },
-    { name: "Vampire", type: "glow", value: "#ff0000", shadow: "#880000", previewStyle: "color: #ff0000; text-shadow: 0 0 10px #880000;" },
-    { name: "Matrix", type: "glow", value: "#00ff00", shadow: "#003300", previewStyle: "color: #00ff00; text-shadow: 0 0 8px #00ff00; font-family: monospace;" },
-    { name: "Sunset", type: "gradient", value: "linear-gradient(to right, #f59e0b, #ef4444)", previewStyle: "background: linear-gradient(to right, #f59e0b, #ef4444); -webkit-background-clip: text; color: transparent;" },
-    { name: "Ocean", type: "gradient", value: "linear-gradient(to right, #06b6d4, #3b82f6)", previewStyle: "background: linear-gradient(to right, #06b6d4, #3b82f6); -webkit-background-clip: text; color: transparent;" },
-    { name: "Berry", type: "gradient", value: "linear-gradient(to right, #ec4899, #8b5cf6)", previewStyle: "background: linear-gradient(to right, #ec4899, #8b5cf6); -webkit-background-clip: text; color: transparent;" },
-    { name: "Mint", type: "gradient", value: "linear-gradient(to right, #34d399, #059669)", previewStyle: "background: linear-gradient(to right, #34d399, #059669); -webkit-background-clip: text; color: transparent;" },
-    { name: "Poland", type: "gradient", value: "linear-gradient(to bottom, #ffffff 50%, #ff0000 50%)", previewStyle: "background: linear-gradient(to bottom, #ffffff 50%, #ff0000 50%); -webkit-background-clip: text; color: transparent;" },
-    { name: "Barbie", type: "gradient", value: "linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)", previewStyle: "background: linear-gradient(45deg, #ff9a9e, #fecfef); -webkit-background-clip: text; color: transparent;" },
-    { name: "Joker", type: "gradient", value: "linear-gradient(to right, #6a11cb 0%, #2575fc 100%)", previewStyle: "background: linear-gradient(to right, #6a11cb, #2575fc); -webkit-background-clip: text; color: transparent;" },
-    { name: "Police", type: "gradient", value: "linear-gradient(90deg, #0000ff, #ff0000)", previewStyle: "background: linear-gradient(90deg, #0000ff, #ff0000); -webkit-background-clip: text; color: transparent;" },
-    { name: "Deep Void", type: "color", value: "#6366f1", previewStyle: "color: #6366f1" },
-    { name: "Hot Red", type: "color", value: "#ff0000", previewStyle: "color: #ff0000" },
-    { name: "Lime", type: "color", value: "#84cc16", previewStyle: "color: #84cc16" },
-    { name: "Magenta", type: "color", value: "#d946ef", previewStyle: "color: #d946ef" },
-    { name: "Coral", type: "color", value: "#fb7185", previewStyle: "color: #fb7185" },
-    { name: "Teal", type: "color", value: "#14b8a6", previewStyle: "color: #14b8a6" },
-    { name: "White", type: "color", value: "#ffffff", previewStyle: "color: #ffffff" }
-];
-let selectedPresetIndex = null;
-function renderPresets() {
-    const grid = document.getElementById("presetGrid"); grid.innerHTML = "";
-    PRESETS.forEach((preset, index) => {
-        const card = document.createElement("div"); card.className = "preset-card";
-        card.onclick = () => { selectedPresetIndex = index; document.querySelectorAll(".preset-card").forEach(c => c.classList.remove("selected")); card.classList.add("selected"); };
-        card.innerHTML = `<span class="preset-preview" style="${preset.previewStyle}">NickName</span><span class="preset-name">${preset.name}</span>`;
-        grid.appendChild(card);
-    });
-}
+const PRESETS=[{name:"Rainbow",type:"animated-rainbow",previewStyle:"background:linear-gradient(90deg,red,blue);-webkit-background-clip:text;color:transparent;"},{name:"Lava",type:"glow",value:"#ff3300",shadow:"#ffaa00",previewStyle:"color:#ff3300;text-shadow:0 0 10px #ffaa00;"},{name:"Toxic",type:"glow",value:"#ccff00",shadow:"#00ff00",previewStyle:"color:#ccff00;text-shadow:0 0 10px #00ff00;"},{name:"Ice",type:"glow",value:"#e0f2fe",shadow:"#0ea5e9",previewStyle:"color:#e0f2fe;text-shadow:0 0 10px #0ea5e9;"},{name:"Cyber",type:"glow",value:"#ff00ff",shadow:"#ff0088",previewStyle:"color:#ff00ff;text-shadow:0 0 10px #ff0088;"},{name:"Golden",type:"glow",value:"#ffd700",shadow:"#ffae00",previewStyle:"color:#ffd700;text-shadow:0 0 10px #ffae00;"},{name:"Ghost",type:"glow",value:"#ffffff",shadow:"#ffffff",previewStyle:"color:#fff;text-shadow:0 0 10px #fff;"},{name:"Vampire",type:"glow",value:"#ff0000",shadow:"#880000",previewStyle:"color:#ff0000;text-shadow:0 0 10px #880000;"},{name:"Matrix",type:"glow",value:"#00ff00",shadow:"#003300",previewStyle:"color:#00ff00;text-shadow:0 0 8px #00ff00;font-family:monospace;"},{name:"Sunset",type:"gradient",value:"linear-gradient(to right,#f59e0b,#ef4444)",previewStyle:"background:linear-gradient(to right,#f59e0b,#ef4444);-webkit-background-clip:text;color:transparent;"},{name:"Ocean",type:"gradient",value:"linear-gradient(to right,#06b6d4,#3b82f6)",previewStyle:"background:linear-gradient(to right,#06b6d4,#3b82f6);-webkit-background-clip:text;color:transparent;"},{name:"Berry",type:"gradient",value:"linear-gradient(to right,#ec4899,#8b5cf6)",previewStyle:"background:linear-gradient(to right,#ec4899,#8b5cf6);-webkit-background-clip:text;color:transparent;"},{name:"Mint",type:"gradient",value:"linear-gradient(to right,#34d399,#059669)",previewStyle:"background:linear-gradient(to right,#34d399,#059669);-webkit-background-clip:text;color:transparent;"},{name:"Deep Void",type:"color",value:"#6366f1",previewStyle:"color:#6366f1"},{name:"Hot Red",type:"color",value:"#ff0000",previewStyle:"color:#ff0000"},{name:"Lime",type:"color",value:"#84cc16",previewStyle:"color:#84cc16"},{name:"Magenta",type:"color",value:"#d946ef",previewStyle:"color:#d946ef"},{name:"Coral",type:"color",value:"#fb7185",previewStyle:"color:#fb7185"},{name:"Teal",type:"color",value:"#14b8a6",previewStyle:"color:#14b8a6"},{name:"White",type:"color",value:"#ffffff",previewStyle:"color:#ffffff"}];
+let selectedPresetIndex=null; function renderPresets(){const g=document.getElementById("presetGrid");g.innerHTML="";PRESETS.forEach((p,i)=>{const c=document.createElement("div");c.className="preset-card";c.onclick=()=>{selectedPresetIndex=i;document.querySelectorAll(".preset-card").forEach(x=>x.classList.remove("selected"));c.classList.add("selected")};c.innerHTML=`<span class="preset-preview" style="${p.previewStyle}">NickName</span><span class="preset-name">${p.name}</span>`;g.appendChild(c)})}
 </script>
 </body>
 </html>
