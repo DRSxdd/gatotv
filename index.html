@@ -5,13 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gato.TV Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+<!-- Biblioteka do konfetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 <style>
     :root {
         --bg: #0b1120;       
         --panel: #1e293b;    
         --accent: #38bdf8;   
         --accent-glow: rgba(56, 189, 248, 0.5);
-        --yellow: #facc15;   /* Nowy kolor dla Download */
+        --yellow: #facc15;   
         --yellow-glow: rgba(250, 204, 21, 0.5);
         --text: #f1f5f9;     
         --text-muted: #94a3b8;
@@ -38,12 +41,19 @@
         height: 80px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: space-between; /* Rozdziela lewą (logo+btn) i prawą (nav) stronę */
         padding: 0 40px;
         border-bottom: 1px solid var(--border);
         position: sticky;
         top: 0;
         z-index: 100;
+    }
+
+    /* Grupa po lewej stronie: Logo, Beta, Download */
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 25px;
     }
 
     .logo {
@@ -52,15 +62,50 @@
         color: var(--accent);
         letter-spacing: -1px;
         text-transform: uppercase;
-        animation: floatLogo 3s ease-in-out infinite;
+        position: relative;
         text-shadow: 0 0 20px var(--accent-glow);
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
     
-    @keyframes floatLogo {
-        0%, 100% { transform: translateY(0); text-shadow: 0 0 20px var(--accent-glow); }
-        50% { transform: translateY(-3px); text-shadow: 0 0 35px var(--accent-glow); }
+    /* Napis BETA */
+    .beta-tag {
+        font-size: 11px;
+        background: var(--danger);
+        color: white;
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+        transform: translateY(-2px); /* Lekko w górę */
     }
 
+    /* Przycisk Download w Headerze */
+    .btn-download-nav {
+        background: rgba(250, 204, 21, 0.1);
+        color: var(--yellow);
+        border: 1px solid var(--yellow);
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 12px;
+        cursor: pointer;
+        transition: 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn-download-nav:hover {
+        background: var(--yellow);
+        color: #000;
+        box-shadow: 0 0 15px var(--yellow-glow);
+    }
+
+    /* Nawigacja (prawa strona) */
     nav { display: flex; gap: 8px; background: #0f172a; padding: 5px; border-radius: 12px; border: 1px solid var(--border); }
     
     nav button {
@@ -79,21 +124,6 @@
         background: var(--accent); 
         color: #000; 
         box-shadow: 0 0 15px var(--accent-glow);
-    }
-
-    /* Styl dla przycisku DOWNLOAD (Żółty) */
-    nav button.btn-yellow {
-        color: var(--yellow);
-        border: 1px solid rgba(250, 204, 21, 0.1);
-    }
-    nav button.btn-yellow:hover {
-        background: rgba(250, 204, 21, 0.1);
-    }
-    nav button.btn-yellow.active {
-        background: var(--yellow);
-        color: #000;
-        box-shadow: 0 0 20px var(--yellow-glow);
-        border-color: var(--yellow);
     }
 
     /* ===== CONTENT ===== */
@@ -208,12 +238,12 @@
 
     /* ===== DOWNLOAD CARD STYLES ===== */
     .download-hero {
-        background: linear-gradient(135deg, rgba(250, 204, 21, 0.1), rgba(0,0,0,0));
-        border: 1px solid var(--yellow);
+        background: linear-gradient(135deg, rgba(250, 204, 21, 0.05), rgba(0,0,0,0));
+        border: 1px solid rgba(250, 204, 21, 0.3);
         border-radius: 20px;
         padding: 60px 40px;
         text-align: center;
-        box-shadow: 0 0 50px rgba(250, 204, 21, 0.1);
+        box-shadow: 0 0 50px rgba(250, 204, 21, 0.05);
         position: relative;
         overflow: hidden;
     }
@@ -353,13 +383,22 @@
 <body>
 
 <header>
-    <div class="logo">Gato.TV</div>
+    <!-- LEWA STRONA: LOGO + BETA + DOWNLOAD -->
+    <div class="header-left">
+        <div class="logo">
+            Gato.TV
+            <span class="beta-tag">BETA</span>
+        </div>
+        <button class="btn-download-nav" onclick="openDownloadTab()">
+            <span>⬇</span> Download
+        </button>
+    </div>
+
+    <!-- PRAWA STRONA: NAVIGACJA -->
     <nav>
         <button class="active" onclick="switchTab('paints')">Paints</button>
         <button onclick="switchTab('emotes')">Emotes</button>
         <button onclick="switchTab('badges')">Odznaki</button>
-        <!-- NOWY PRZYCISK DOWNLOAD -->
-        <button class="btn-yellow" onclick="switchTab('download')">DOWNLOAD</button>
     </nav>
 </header>
 
@@ -399,8 +438,6 @@
             <!-- SEKCJA UPLOADU -->
             <div class="form-group" style="flex:2;">
                 <label>Obrazek (Plik lub URL)</label>
-                
-                <!-- File Input -->
                 <div class="file-upload-wrapper">
                     <div class="file-upload-btn" id="fileBtnText">
                         <span>📂 Wybierz plik z komputera</span>
@@ -408,8 +445,6 @@
                     <input type="file" id="emoFile" accept="image/*" onchange="previewFile()">
                 </div>
                 <img id="filePreview" src="" alt="Podgląd">
-
-                <!-- URL Input (jako alternatywa) -->
                 <input id="emoUrl" placeholder="lub wklej link (https://...)" style="margin-top:5px;">
             </div>
 
@@ -455,13 +490,13 @@
         <div id="listBadges" class="list-container">Loading...</div>
     </div>
 
-    <!-- ================== DOWNLOAD TAB (NEW) ================== -->
+    <!-- ================== DOWNLOAD TAB ================== -->
     <div id="download" class="panel">
         <div class="download-hero">
             <h1>Zainstaluj Gato.TV</h1>
             <p>Najlepsza wtyczka do Twitcha. Odkryj nowy wymiar czatowania dzięki unikalnym emotkom, kolorowym nickom i odznakom.</p>
             
-            <button class="btn-download-big">POBIERZ WTYCZKĘ (v1.0)</button>
+            <button class="btn-download-big" onclick="fireConfetti()">POBIERZ WTYCZKĘ (v1.0)</button>
 
             <div class="features-list">
                 <div class="feature"><span>★</span> Custom Emotes</div>
@@ -476,6 +511,39 @@
 
 <script>
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
+
+// ================== EFFECT LOGIC ==================
+function openDownloadTab() {
+    switchTab('download');
+    fireConfetti();
+}
+
+function fireConfetti() {
+    // Strzał konfetti z dwóch stron ekranu
+    var duration = 2000;
+    var end = Date.now() + duration;
+
+    (function frame() {
+        confetti({
+            particleCount: 5,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+            colors: ['#38bdf8', '#facc15', '#ef4444']
+        });
+        confetti({
+            particleCount: 5,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+            colors: ['#38bdf8', '#facc15', '#ef4444']
+        });
+
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
+        }
+    }());
+}
 
 // ================== HELPERS ==================
 const toBase64 = file => new Promise((resolve, reject) => {
@@ -716,9 +784,8 @@ function switchTab(id) {
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     
-    // Obsługa kliknięcia w menu
-    // Jeśli wywołanie pochodzi z onclick, `event.target` ustawi klasę active
-    if (event && event.target && event.target.tagName === 'BUTTON') {
+    // Obsługa przycisków w nav
+    if (event && event.target && event.target.tagName === 'BUTTON' && event.target.parentElement.tagName === 'NAV') {
         event.target.classList.add('active');
     }
 }
