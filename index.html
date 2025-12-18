@@ -81,7 +81,7 @@
     .form-group label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
     input, select { padding: 14px; background: #0f172a; border: 1px solid var(--border); color: white; border-radius: 10px; font-size: 14px; outline: none; width: 100%; transition: 0.2s; }
     input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
-    input:disabled { opacity: 0.6; cursor: not-allowed; background: #162032; color: #aaa; border-color: #334155; }
+    input:disabled { opacity: 0.6; cursor: not-allowed; background: #162032; }
 
     /* SUB-NAV */
     .sub-nav { display: flex; gap: 20px; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
@@ -113,7 +113,7 @@
     .emote-card {
         background: #131c2e;
         border: 1px solid var(--border);
-        border-radius: 8px;
+        border-radius: 12px;
         padding: 12px 8px;
         text-align: center;
         transition: 0.2s;
@@ -168,27 +168,37 @@
         display: inline-block;
     }
 
-    /* SPECIFIC FOR MY EMOTES (EDIT/DELETE) */
-    .manage-actions {
+    /* OVERLAYS (DELETE & ADD) */
+    .action-overlay {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
         display: flex;
-        gap: 5px;
-        margin-top: 10px;
-        width: 100%;
-    }
-    .btn-mini {
-        flex: 1;
-        font-size: 10px;
-        padding: 4px;
-        border: none;
-        border-radius: 4px;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
         cursor: pointer;
-        font-weight: bold;
-        text-transform: uppercase;
+        opacity: 0;
+        transition: 0.2s;
+        font-size: 14px;
+        z-index: 2;
     }
+    .emote-card:hover .action-overlay { opacity: 1; }
+    
+    .del-btn { background: var(--danger); color: white; }
+    .del-btn:hover { transform: scale(1.1); }
+    
+    .add-btn { background: var(--success); color: #000; }
+    .add-btn:hover { transform: scale(1.1); }
+
+    /* MANAGE ACTIONS */
+    .manage-actions { display: flex; gap: 5px; margin-top: 10px; width: 100%; }
+    .btn-mini { flex: 1; font-size: 10px; padding: 4px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
     .btn-edit { background: #334155; color: white; }
-    .btn-edit:hover { background: #475569; }
     .btn-delete { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
-    .btn-delete:hover { background: var(--danger); color: white; }
 
     /* SHOP / PRESETS */
     .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
@@ -297,7 +307,7 @@
                     <h2>Galeria Emotek (Global)</h2>
                     <button class="btn-primary small" onclick="openEmoteForm()">+ DODAJ SWOJĄ</button>
                 </div>
-                <!-- GLOBALNY GRID (dla podglądu co inni dodali) -->
+                <!-- GLOBALNY GRID -->
                 <div id="emotesGrid" class="emotes-grid">Loading...</div>
             </div>
 
@@ -318,7 +328,7 @@
                     <!-- ZABLOKOWANY INPUT KANAŁU -->
                     <div class="form-group" style="flex:1.5;"><label>Kanał Twitch (Twój)</label><input id="emoChannel" disabled></div>
                     
-                    <button class="btn-primary" onclick="addEmote()">DODAJ / ZAPISZ</button>
+                    <button class="btn-primary" onclick="addEmote()">ZAPISZ</button>
                 </div>
 
                 <!-- SEKCJA: ZARZĄDZAJ SWOIMI -->
@@ -382,7 +392,7 @@ const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.ap
 let currentUser = null; 
 let coins = 10; 
 let ownedPaints = ["Classic Green"]; 
-let allEmotesData = {}; // Cache for emotes
+let allEmotesData = {}; // Cache
 
 // Presets Definition
 const PRESETS = [
@@ -552,21 +562,19 @@ function switchTab(id) {
 // EMOTE VIEW SYSTEM
 function openEmoteForm() {
     if(!currentUser) return;
-    // FILL CHANNEL INPUT WITH CURRENT USER LOGIN (LOCKED)
-    document.getElementById('emoChannel').value = currentUser.login;
-    renderMyEmotes(); // Refresh my emotes
+    document.getElementById('emoChannel').value = currentUser.login; // LOCK CHANNEL
+    renderMyEmotes(); 
     document.getElementById('emotesGalleryView').style.display = 'none';
     document.getElementById('emotesFormView').style.display = 'block';
 }
 function closeEmoteForm() {
     document.getElementById('emotesFormView').style.display = 'none';
     document.getElementById('emotesGalleryView').style.display = 'block';
-    loadAll(); // Refresh gallery
+    loadAll(); 
 }
 
 function renderMyEmotes() {
     const grid = document.getElementById('myEmotesGrid');
-    // Filter only my emotes
     const myKeys = Object.keys(allEmotesData).filter(k => 
         allEmotesData[k].author === currentUser.display_name || 
         allEmotesData[k].channel === currentUser.login
@@ -602,8 +610,15 @@ function editEmote(name) {
     document.getElementById('fileBtnText').innerText = "📂 Zmień plik";
     document.getElementById('filePreview').src = e.url;
     document.getElementById('filePreview').style.display = 'block';
-    // Scroll to top
     document.querySelector('.input-row').scrollIntoView({ behavior: 'smooth' });
+}
+
+function cloneEmote(name, url) {
+    openEmoteForm();
+    document.getElementById('emoName').value = name;
+    document.getElementById('emoUrl').value = url;
+    document.getElementById('filePreview').src = url;
+    document.getElementById('filePreview').style.display = 'block';
 }
 
 // API & ACTIONS
@@ -617,15 +632,25 @@ async function loadAll() {
     document.getElementById('listPaints').innerHTML = Object.keys(paints).filter(k=>paints[k].paint).map(k=>`<div class="list-item"><b>${k}</b> <button class="btn-del" onclick="del('premium/${k}/paint')">X</button></div>`).join('');
     
     if(currentUser) {
-        allEmotesData = await api('emotes') || {}; // CACHE for usage in renderMyEmotes
+        allEmotesData = await api('emotes') || {}; 
         
-        // GLOBAL GRID RENDER
         const emoteKeys = Object.keys(allEmotesData).reverse();
         document.getElementById('emotesGrid').innerHTML = emoteKeys.map(k => {
             const e = allEmotesData[k];
             const channelTag = `<span class="channel-tag">#${e.channel}</span>`;
+            const isOwner = e.author === currentUser.display_name;
+            
+            // LOGIKA PRZYCISKÓW: DELETE (Owner) lub USE (Other)
+            let actionBtn = "";
+            if(isOwner) {
+                actionBtn = `<div class="action-overlay del-btn" onclick="del('emotes/${k}')" title="Usuń">✖</div>`;
+            } else {
+                actionBtn = `<div class="action-overlay add-btn" onclick="cloneEmote('${k}', '${e.url}')" title="Użyj u siebie">✚</div>`;
+            }
+
             return `
             <div class="emote-card">
+                ${actionBtn}
                 <img src="${e.url}" class="emote-img">
                 <div class="emote-info">
                     <div class="emote-name">${k}</div>
@@ -647,9 +672,8 @@ async function addEmote() {
     const name = document.getElementById('emoName').value.trim();
     let url = document.getElementById('emoUrl').value.trim();
     
-    // LOCKED TO CURRENT USER
     const scope = 'channel';
-    const channel = currentUser.login; // Force own login
+    const channel = currentUser.login; 
     
     const file = document.getElementById('emoFile').files[0];
     if (file) try { url = await toBase64(file); } catch(e) { return alert("Błąd pliku"); }
@@ -659,18 +683,17 @@ async function addEmote() {
     const payload = { url, author: currentUser.display_name, scope, channel };
     await api(`emotes/${name}`, "PUT", payload);
     
-    // Refresh My Emotes part specifically
-    allEmotesData = await api('emotes') || {};
-    renderMyEmotes();
-    
-    // Clear inputs but keep view open
+    // Clear & Return
     document.getElementById('emoName').value = "";
     document.getElementById('emoUrl').value = "";
     document.getElementById('emoFile').value = "";
     document.getElementById('fileBtnText').innerText = "📂 Wybierz plik";
     document.getElementById('filePreview').style.display = "none";
     document.getElementById('emoUrl').disabled = false;
+    
     alert("Zapisano!");
+    renderMyEmotes(); 
+    loadAll(); // update global list too
 }
 
 async function addBadge() {
@@ -684,11 +707,13 @@ async function addBadge() {
 async function del(path, refreshMyEmotes = false) { 
     if(confirm("Usunąć?")) { 
         await api(path, "DELETE"); 
+        loadAll(); 
         if(refreshMyEmotes) {
-            allEmotesData = await api('emotes') || {};
-            renderMyEmotes();
-        } else {
-            loadAll(); 
+            // Wait slighty for API to propagate then refresh local
+            setTimeout(async () => {
+                allEmotesData = await api('emotes') || {};
+                renderMyEmotes();
+            }, 500);
         }
     } 
 }
