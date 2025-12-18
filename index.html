@@ -36,7 +36,7 @@
     
     /* ===== HEADER ===== */
     header { 
-        background: rgba(15, 23, 42, 0.9); 
+        background: rgba(15, 23, 42, 0.95); 
         backdrop-filter: blur(12px); 
         height: 70px; 
         display: flex; 
@@ -54,6 +54,7 @@
     .logo { font-size: 28px; font-weight: 900; color: var(--accent); letter-spacing: -1px; text-transform: uppercase; text-shadow: 0 0 20px var(--accent-glow); cursor: pointer; display: flex; align-items: center; gap: 8px; }
     .beta-tag { font-size: 10px; background: var(--danger); color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700; transform: translateY(-2px); }
     
+    /* USER PROFILE */
     .user-profile { display: none; align-items: center; gap: 10px; background: rgba(145, 70, 255, 0.15); padding: 4px 12px 4px 4px; border-radius: 50px; border: 1px solid var(--twitch); }
     .user-avatar { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--twitch); }
     .user-nick { font-weight: 700; font-size: 14px; color: #fff; }
@@ -61,11 +62,12 @@
     .btn-login { background: var(--twitch); color: white; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 0 15px rgba(145, 70, 255, 0.2); }
     .btn-login:hover { background: #772ce8; transform: translateY(-1px); }
     
-    .btn-logout { background: transparent; border: none; cursor: pointer; padding: 5px; border-radius: 50%; transition: 0.2s; font-size: 14px; display: flex; align-items: center; }
-    .btn-logout:hover { background: rgba(239, 68, 68, 0.2); }
+    .btn-logout { background: transparent; border: none; cursor: pointer; padding: 5px; border-radius: 50%; transition: 0.2s; font-size: 14px; display: flex; align-items: center; color: var(--danger); }
+    .btn-logout:hover { background: rgba(239, 68, 68, 0.2); transform: scale(1.1); }
 
     .coin-display { display: flex; align-items: center; gap: 6px; background: rgba(250, 204, 21, 0.1); border: 1px solid var(--yellow); color: var(--yellow); padding: 6px 14px; border-radius: 10px; font-weight: 800; font-size: 14px; margin-right: 20px; }
 
+    /* NAV */
     nav { display: flex; gap: 5px; background: #0f172a; padding: 4px; border-radius: 10px; border: 1px solid var(--border); }
     nav button { background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 600; padding: 8px 16px; cursor: pointer; border-radius: 6px; transition: 0.2s; }
     nav button:hover { color: #fff; background: rgba(255,255,255,0.05); }
@@ -126,7 +128,7 @@
     
     .card-preview { padding: 30px 10px; font-size: 20px; font-weight: 900; display:flex; align-items:center; justify-content:center; height: 100px; }
     .card-info { background: #131c2e; padding: 12px; border-radius: 0 0 8px 8px; display: flex; flex-direction: column; gap: 8px; }
-    .preset-name { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; }
+    .preset-name { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; display: block; }
     .preset-price { font-size: 11px; color: var(--yellow); font-weight: 700; }
     
     .btn-action { width: 100%; padding: 8px; border-radius: 6px; border: none; font-weight: 700; cursor: pointer; font-size: 11px; text-transform: uppercase; transition: 0.2s; }
@@ -155,6 +157,12 @@
     input:focus { border-color: var(--accent); }
     input:disabled { opacity: 0.5; cursor: not-allowed; background: #162032; }
     
+    .file-upload-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; }
+    .file-upload-btn { border: 1px dashed var(--border); color: var(--text-muted); background: #0f172a; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; font-size: 13px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .file-upload-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .file-upload-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%; }
+    #filePreview { margin-top: 10px; max-height: 40px; display: none; border-radius: 4px; border: 1px solid var(--accent); }
+
     button.btn-primary { padding: 12px 24px; background: linear-gradient(135deg, var(--accent), #0ea5e9); border: none; color: #0f172a; font-weight: 800; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 14px; text-transform: uppercase; }
     button.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px var(--accent-glow); }
     button.btn-secondary { background: #334155; color: white; padding: 8px 16px; border-radius: 6px; border:none; font-weight:600; cursor:pointer; font-size: 12px; }
@@ -169,6 +177,7 @@
     .hero-card { background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(0,0,0,0)); border: 1px solid var(--border); border-radius: 20px; padding: 60px 40px; text-align: center; }
     .btn-download-big { background: var(--yellow); color: #000; font-size: 18px; font-weight: 900; padding: 15px 40px; border: none; border-radius: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin-top: 20px; transition: 0.2s; }
     .btn-download-big:hover { transform: scale(1.05); box-shadow: 0 10px 30px var(--yellow-glow); }
+    .btn-download-big:disabled { background: #334155; color: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
 
     @keyframes shine { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 </style>
@@ -210,7 +219,7 @@
     <div id="paints" class="panel active">
         <div class="login-blocker" id="paintsBlocker">
             <h2>🔒 Wymagane Logowanie</h2>
-            <p style="color:#94a3b8; margin-bottom:20px;">Zaloguj się, aby zarządzać wyglądem i robić zakupy.</p>
+            <p style="color:#94a3b8; margin-bottom:20px;">Zaloguj się, aby zarządzać wyglądem.</p>
             <button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button>
         </div>
 
@@ -244,6 +253,7 @@
     <div id="emotes" class="panel">
         <div class="login-blocker" id="emotesBlocker">
             <h2>🔒 Wymagane Logowanie</h2>
+            <p style="color:#94a3b8; margin-bottom:20px;">Zaloguj się, aby dodawać emotki.</p>
             <button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button>
         </div>
 
@@ -281,14 +291,19 @@
     </div>
 
     <!-- OTHER TABS -->
-    <div id="info" class="panel"><div class="hero-card"><h1>Gato.TV</h1><p>Twitch: GatoJestemFormaOstateczna</p></div></div>
-    <div id="download" class="panel"><div class="hero-card download-style"><h1>Zainstaluj</h1><p>Wersja 1.0 Beta</p><button class="btn-download-big" onclick="fireConfetti()">POBIERZ</button></div></div>
+    <div id="info" class="panel"><div class="hero-card"><h1>Gato.TV</h1><p>Autor: GatoJestemFormaOstateczna</p></div></div>
+    <div id="download" class="panel">
+        <div class="hero-card download-style">
+            <h1>Zainstaluj</h1>
+            <p>Wersja 1.0 Beta</p>
+            <button id="dlBtn" class="btn-download-big" onclick="downloadAction()">POBIERZ</button>
+        </div>
+    </div>
 
 </div>
 
 <script>
 // ==================== CONFIG ====================
-// Twoje oryginalne dane:
 const CLIENT_ID = 'l0agnxl8yeto7wda5wvblpg1mr55db'; 
 const REDIRECT_URI = 'https://drsxdd.github.io/gatotv/'; 
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
@@ -298,6 +313,7 @@ let currentUser = null;
 let coins = 10; 
 let ownedItems = ["Classic Green"]; 
 let allEmotesData = {}; 
+let confettiCooldown = false;
 
 const CATALOG = [
     { name: "Classic Green", category:"paint", price: 0, type: "color", value: "#00ff00", previewStyle: "color:#00ff00" },
@@ -305,26 +321,30 @@ const CATALOG = [
     { name: "Fire Lord", category:"paint", price: 50, type: "gradient", value: "linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #ff0000)", previewStyle: "background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #ff0000); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: shine 3s linear infinite; font-weight:900;" },
     { name: "Golden Legend", category:"paint", price: 100, type: "glow", value: "#ffd700", shadow: "#ffae00", previewStyle: "color:#ffd700;text-shadow:0 0 10px #ffae00; font-weight:800;" },
     { name: "RGB Master", category:"paint", price: 200, type: "animated-rainbow", previewStyle: "background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta); -webkit-background-clip: text; color: transparent; font-weight:900;" },
+    
     // Badges
     { name: "Star Badge", category:"badge", price: 20, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/1828/1828884.png", previewStyle: "" },
     { name: "Shield Badge", category:"badge", price: 30, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/343/343053.png", previewStyle: "" },
     { name: "King Crown", category:"badge", price: 50, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/2545/2545603.png", previewStyle: "" },
+    
     // Ink
     { name: "Golden Ink", category:"ink", price: 50, type: "ink", value: "#ffd700", previewStyle: "color:#ffd700" },
     { name: "Matrix Green", category:"ink", price: 50, type: "ink", value: "#00ff00", previewStyle: "color:#00ff00; font-family:monospace" },
+    
     // Fonts
     { name: "Default Font", category:"font", price: 0, type: "font", value: "inherit", previewStyle: "" },
     { name: "Retro Pixel", category:"font", price: 30, type: "font", value: "'Press Start 2P', cursive", previewStyle: "font-family:'Press Start 2P'" },
+    
     // Bg
     { name: "Golden Glow", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(255, 215, 0, 0.1), transparent)", previewStyle: "background:rgba(255,215,0,0.3)" }
 ];
 
 // INIT LOGIC
 window.onload = () => {
-    // 1. Force logout state visually first
-    setLoggedOutState();
+    // Force logout state initially
+    toggleLoginState(false);
 
-    // 2. Check for Token (Hash or Storage)
+    // Check for Token
     if (document.location.hash.includes('access_token')) {
         const params = new URLSearchParams(document.location.hash.substring(1));
         const token = params.get('access_token');
@@ -345,12 +365,20 @@ window.onload = () => {
     renderShop();
 };
 
-function setLoggedOutState() {
-    document.getElementById('loginBtnContainer').style.display = 'block';
-    document.getElementById('userProfile').style.display = 'none';
-    document.getElementById('coinDisplay').style.display = 'none';
-    document.querySelectorAll('.login-blocker').forEach(b => b.style.display = 'flex');
-    document.querySelectorAll('.protected-content').forEach(c => c.style.display = 'none');
+function toggleLoginState(isLoggedIn) {
+    if(isLoggedIn) {
+        document.getElementById('loginBtnContainer').style.display = 'none';
+        document.getElementById('userProfile').style.display = 'flex';
+        document.getElementById('coinDisplay').style.display = 'flex';
+        document.querySelectorAll('.login-blocker').forEach(b => b.style.display = 'none');
+        document.querySelectorAll('.protected-content').forEach(c => c.style.display = 'block');
+    } else {
+        document.getElementById('loginBtnContainer').style.display = 'block';
+        document.getElementById('userProfile').style.display = 'none';
+        document.getElementById('coinDisplay').style.display = 'none';
+        document.querySelectorAll('.login-blocker').forEach(b => b.style.display = 'block');
+        document.querySelectorAll('.protected-content').forEach(c => c.style.display = 'none');
+    }
 }
 
 function loginWithTwitch() {
@@ -368,26 +396,18 @@ async function validateToken(token) {
         if(!res.ok) throw new Error("Token Invalid");
         const data = await res.json();
         currentUser = data.data[0];
-        enableApp();
+        
+        document.getElementById('avatar').src = currentUser.profile_image_url;
+        document.getElementById('username').innerText = currentUser.display_name;
+        document.getElementById('previewUser').innerText = currentUser.display_name;
+        
+        toggleLoginState(true);
+        loadAll();
     } catch(e) {
         console.error("Login fail:", e);
         localStorage.removeItem('twitch_token');
-        setLoggedOutState();
+        toggleLoginState(false);
     }
-}
-
-function enableApp() {
-    document.getElementById('loginBtnContainer').style.display = 'none';
-    document.getElementById('userProfile').style.display = 'flex';
-    document.getElementById('coinDisplay').style.display = 'flex';
-    document.querySelectorAll('.login-blocker').forEach(b => b.style.display = 'none');
-    document.querySelectorAll('.protected-content').forEach(c => c.style.display = 'block');
-
-    document.getElementById('avatar').src = currentUser.profile_image_url;
-    document.getElementById('username').innerText = currentUser.display_name;
-    document.getElementById('previewUser').innerText = currentUser.display_name;
-    
-    loadAll();
 }
 
 // SHOP RENDER
@@ -436,7 +456,7 @@ function buyItem(idx) {
     const item = CATALOG[idx];
     if(coins >= item.price) {
         coins -= item.price; ownedItems.push(item.name);
-        updateCoinDisplay(); renderShop(); fireConfetti();
+        updateCoinDisplay(); renderShop(); fireConfetti(true);
     }
 }
 
@@ -445,21 +465,41 @@ async function equipItem(idx) {
     const item = CATALOG[idx];
     const user = currentUser.login;
     
-    if(item.category === 'paint') await api(`premium/${user}/paint`, "PUT", { type: item.type, value: item.value, shadow: item.shadow });
-    else if(item.category === 'badge') await api(`premium/${user}/badge`, "PUT", item.value);
-    else if(item.category === 'ink') await api(`premium/${user}/ink`, "PUT", item.value);
-    else if(item.category === 'font') await api(`premium/${user}/font`, "PUT", item.value);
-    else if(item.category === 'bg') await api(`premium/${user}/bg`, "PUT", item.value);
+    // Construct payload based on type
+    let payload = item.value; // default for badge/ink/font simple values
+    if(item.category === 'paint') {
+        payload = { type: item.type, value: item.value };
+        if(item.shadow) payload.shadow = item.shadow;
+    }
     
+    await api(`premium/${user}/${item.category}`, "PUT", payload);
     alert(`Założono: ${item.name}`);
 }
 
 // HELPERS
 function updateCoinDisplay() { document.getElementById('coinCount').innerText = coins; localStorage.setItem('gato_coins', coins); localStorage.setItem('gato_owned', JSON.stringify(ownedItems)); }
-function switchTab(id) { document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); document.querySelectorAll('nav button').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); if(event && event.target.tagName==='BUTTON') event.target.classList.add('active'); }
+function switchTab(id) { document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); document.querySelectorAll('nav button').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); if(event.target.tagName==='BUTTON') event.target.classList.add('active'); }
 function switchPaintSubTab(tab) { document.getElementById('viewInventory').style.display = tab==='inv'?'block':'none'; document.getElementById('viewShop').style.display = tab==='shop'?'block':'none'; document.getElementById('tabInv').className = tab==='inv'?'active':''; document.getElementById('tabShop').className = tab==='shop'?'active':''; }
 function togglePreviewTheme() { document.getElementById('chatPreviewBox').classList.toggle('light'); }
-function fireConfetti(){var e=Date.now()+1500;!function t(){confetti({particleCount:5,angle:60,spread:55,origin:{x:0},colors:['#38bdf8','#facc15','#9146ff']});confetti({particleCount:5,angle:120,spread:55,origin:{x:1},colors:['#38bdf8','#facc15','#9146ff']});Date.now()<e&&requestAnimationFrame(t)}()}
+
+function downloadAction() {
+    if(!confettiCooldown) {
+        fireConfetti(false);
+        confettiCooldown = true;
+        const btn = document.getElementById('dlBtn');
+        btn.disabled = true;
+        btn.innerText = "Pobrano!";
+        setTimeout(() => { confettiCooldown = false; btn.disabled = false; btn.innerText = "POBIERZ (v1.0)"; }, 5000);
+    }
+}
+
+function fireConfetti(shopMode){
+    const colors = shopMode ? ['#facc15', '#ffffff'] : ['#38bdf8','#facc15','#9146ff'];
+    const origin = shopMode ? {x:0.5, y:0.5} : {x:0, y:1};
+    
+    confetti({particleCount:100, spread:70, origin: origin, colors: colors});
+    if(!shopMode) confetti({particleCount:100, spread:70, origin: {x:1, y:1}, colors: colors});
+}
 
 // EMOTES LOGIC
 function openEmoteForm() { if(!currentUser) return; document.getElementById('emoChannel').value = currentUser.login; renderMyEmotes(); document.getElementById('emotesGalleryView').style.display='none'; document.getElementById('emotesFormView').style.display='block'; }
