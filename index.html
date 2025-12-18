@@ -133,7 +133,6 @@
         box-shadow: 0 0 15px var(--accent-glow);
     }
 
-    /* Przycisk Download w Nav (żółty) */
     nav button.btn-yellow { color: var(--yellow); border: 1px solid rgba(250, 204, 21, 0.1); }
     nav button.btn-yellow:hover { background: rgba(250, 204, 21, 0.1); }
     nav button.btn-yellow.active { background: var(--yellow); color: #000; box-shadow: 0 0 20px var(--yellow-glow); border-color: var(--yellow); }
@@ -417,10 +416,9 @@
 
 <script>
 // ==================== KONFIGURACJA TWITCH ====================
-// TWOJE CLIENT ID
 const CLIENT_ID = 'l0agnxl8yeto7wda5wvblpg1mr55db'; 
-// ADRES LOKALNY - Upewnij się, że masz taki port w przeglądarce!
-const REDIRECT_URI = 'http://127.0.0.1:5500/index.html'; 
+// !!! WAŻNE: ADRES TWOJEJ STRONY NA GITHUBIE !!!
+const REDIRECT_URI = 'https://drsxdd.github.io/index.html'; 
 // =============================================================
 
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
@@ -433,7 +431,8 @@ window.onload = () => {
         const params = new URLSearchParams(document.location.hash.substring(1));
         const token = params.get('access_token');
         validateToken(token);
-        window.history.replaceState({}, document.title, "/index.html");
+        // Czyścimy URL
+        window.history.replaceState({}, document.title, window.location.pathname);
     }
 };
 
