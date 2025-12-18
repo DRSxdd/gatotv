@@ -38,6 +38,9 @@
     .btn-login { background: var(--twitch); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: 0 0 15px rgba(145, 70, 255, 0.3); }
     .btn-login:hover { background: #772ce8; transform: translateY(-1px); }
 
+    .btn-logout { background: transparent; border: none; cursor: pointer; padding: 5px; border-radius: 50%; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+    .btn-logout:hover { background: rgba(239, 68, 68, 0.2); transform: scale(1.1); }
+
     /* COINS DISPLAY */
     .coin-display {
         display: flex; align-items: center; gap: 8px; background: rgba(250, 204, 21, 0.1); 
@@ -248,6 +251,7 @@
         <div id="userProfile" class="user-profile" style="display:none;">
             <img id="avatar" class="user-avatar" src="">
             <span id="username" class="user-nick">...</span>
+            <button onclick="logout()" class="btn-logout" title="Wyloguj">🛑</button>
         </div>
     </div>
     
@@ -427,6 +431,20 @@ const PRESETS = [
 
 // INIT
 window.onload = () => {
+    // Persist login (Priority 1: Hash, Priority 2: Stored Token)
+    if (document.location.hash.includes('access_token')) {
+        const params = new URLSearchParams(document.location.hash.substring(1));
+        const token = params.get('access_token');
+        if(token) {
+            localStorage.setItem('twitch_token', token); // Save for later
+            validateToken(token);
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    } else {
+        const storedToken = localStorage.getItem('twitch_token');
+        if(storedToken) validateToken(storedToken);
+    }
+
     if(localStorage.getItem('gato_coins') !== null) coins = parseInt(localStorage.getItem('gato_coins'));
     else localStorage.setItem('gato_coins', 10);
 
@@ -434,15 +452,6 @@ window.onload = () => {
     
     updateCoinDisplay();
     renderShop();
-
-    if (document.location.hash.includes('access_token')) {
-        const params = new URLSearchParams(document.location.hash.substring(1));
-        const token = params.get('access_token');
-        if(token) {
-            validateToken(token);
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-    }
 };
 
 // SHOP LOGIC
@@ -521,6 +530,11 @@ function loginWithTwitch() {
     window.location.href = url;
 }
 
+function logout() {
+    localStorage.removeItem('twitch_token');
+    location.reload();
+}
+
 async function validateToken(token) {
     try {
         const res = await fetch('https://api.twitch.tv/helix/users', { headers: { 'Client-ID': CLIENT_ID, 'Authorization': `Bearer ${token}` } });
@@ -528,6 +542,9 @@ async function validateToken(token) {
         if (data.data && data.data.length > 0) {
             currentUser = data.data[0];
             enableApp();
+        } else {
+            // Token expired or invalid
+            localStorage.removeItem('twitch_token');
         }
     } catch(e) { console.error(e); }
 }
@@ -619,6 +636,7 @@ function cloneEmote(name, url) {
     document.getElementById('emoUrl').value = url;
     document.getElementById('filePreview').src = url;
     document.getElementById('filePreview').style.display = 'block';
+    document.getElementById('emoUrl').disabled = false;
 }
 
 // API & ACTIONS
@@ -683,7 +701,6 @@ async function addEmote() {
     const payload = { url, author: currentUser.display_name, scope, channel };
     await api(`emotes/${name}`, "PUT", payload);
     
-    // Clear & Return
     document.getElementById('emoName').value = "";
     document.getElementById('emoUrl').value = "";
     document.getElementById('emoFile').value = "";
@@ -693,7 +710,7 @@ async function addEmote() {
     
     alert("Zapisano!");
     renderMyEmotes(); 
-    loadAll(); // update global list too
+    loadAll(); 
 }
 
 async function addBadge() {
@@ -709,7 +726,6 @@ async function del(path, refreshMyEmotes = false) {
         await api(path, "DELETE"); 
         loadAll(); 
         if(refreshMyEmotes) {
-            // Wait slighty for API to propagate then refresh local
             setTimeout(async () => {
                 allEmotesData = await api('emotes') || {};
                 renderMyEmotes();
