@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gato.TV Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Press+Start+2P&family=Permanent+Marker&family=Courier+Prime&family=Bangers&family=Black+Ops+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Press+Start+2P&family=Permanent+Marker&family=Courier+Prime&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
@@ -120,38 +120,18 @@
     .edit-btn { right: 32px; background: var(--yellow); color: black; } 
     .add-btn { right: 6px; background: var(--success); color: #000; }
 
-    /* NEW INFO CARD DESIGN */
-    .info-card-container { display:flex; flex-direction:column; align-items:center; gap:20px; }
-    .id-card { 
-        background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95)); 
-        border: 1px solid var(--border); 
-        border-radius: 20px; 
-        padding: 40px; 
-        width: 100%; 
-        max-width: 500px;
-        text-align: center;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-        position: relative;
-        overflow: hidden;
-    }
-    .id-card::before { content:''; position:absolute; top:-50px; left:-50px; width:150px; height:150px; background:var(--accent); filter:blur(80px); opacity:0.2; }
-    .id-card img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--panel); box-shadow: 0 0 20px var(--accent-glow); margin-bottom: 15px; }
-    .id-name { font-size: 24px; font-weight: 900; color: white; margin-bottom: 5px; }
-    .id-role { color: var(--accent); font-weight: 700; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 25px; }
-    .id-stats { display: flex; justify-content: space-around; width: 100%; margin-bottom: 25px; padding: 20px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .id-stat h4 { font-size: 20px; color: white; margin: 0; }
-    .id-stat span { font-size: 11px; color: var(--text-muted); text-transform: uppercase; }
-    .id-links { display: flex; gap: 10px; justify-content: center; }
-    .id-btn { background: #334155; color: white; padding: 8px 20px; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; transition: 0.2s; }
-    .id-btn:hover { background: var(--accent); color: black; }
+    /* INFO TAB - CLEAN */
+    .info-box { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 40px; text-align: center; }
+    .info-box h1 { font-size: 36px; margin-bottom: 10px; color: white; }
+    .info-box p { color: var(--text-muted); margin-bottom: 30px; }
+    .info-list { text-align: left; max-width: 400px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
+    .info-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; color: white; font-weight: 600; }
 
-    /* DOWNLOAD TAB */
-    .dl-wrapper { display: flex; align-items: center; gap: 40px; background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 50px; overflow: hidden; position: relative; }
-    .dl-content { flex: 1; z-index: 2; }
-    .dl-content h1 { font-size: 42px; margin: 0 0 10px 0; background: linear-gradient(90deg, #fff, #94a3b8); -webkit-background-clip: text; color: transparent; line-height: 1.1; }
-    .dl-content p { color: var(--text-muted); font-size: 16px; margin-bottom: 30px; line-height: 1.6; }
-    .btn-download-glow { background: linear-gradient(90deg, var(--yellow), #f59e0b); color: #000; font-size: 16px; font-weight: 900; padding: 16px 40px; border: none; border-radius: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 30px rgba(250, 204, 21, 0.3); transition: 0.2s; display: inline-flex; align-items: center; gap: 10px; }
-    .btn-download-glow:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(250, 204, 21, 0.5); }
+    /* DOWNLOAD TAB - HERO STYLE */
+    .hero-card { background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(0,0,0,0)); border: 1px solid var(--border); border-radius: 20px; padding: 60px 40px; text-align: center; }
+    .download-style { border-color: rgba(250, 204, 21, 0.3); box-shadow: 0 0 50px rgba(250, 204, 21, 0.05); }
+    .btn-download-big { background: var(--yellow); color: #000; font-size: 18px; font-weight: 900; padding: 15px 40px; border: none; border-radius: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin-top: 20px; transition: 0.2s; }
+    .btn-download-big:hover { transform: scale(1.05); box-shadow: 0 10px 30px var(--yellow-glow); }
 </style>
 </head>
 <body>
@@ -169,7 +149,7 @@
         </div>
     </div>
     <div style="display:flex; align-items:center;">
-        <div id="coinDisplay" class="coin-display" style="display:none;"><span>🪙</span> <span id="coinCount">10</span></div>
+        <div id="coinDisplay" class="coin-display" style="display:none;"><span>🪙</span> <span id="coinCount">100</span></div>
         <nav>
             <button class="active" onclick="switchTab('paints')">Sklep</button>
             <button onclick="switchTab('emotes')">Emotes</button>
@@ -235,35 +215,26 @@
         </div>
     </div>
 
-    <!-- INFO (NEW CARD STYLE) -->
+    <!-- INFO (CLEAN STYLE) -->
     <div id="info" class="panel">
-        <div class="info-card-container">
-            <div class="id-card">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Gato" alt="Avatar">
-                <div class="id-name">Gato.TV</div>
-                <div class="id-role">DEVELOPER</div>
-                <div class="id-stats">
-                    <div class="id-stat"><h4>1.0</h4><span>Version</span></div>
-                    <div class="id-stat"><h4>BETA</h4><span>Status</span></div>
-                </div>
-                <div class="id-links">
-                    <a href="#" class="id-btn">GitHub</a>
-                    <a href="#" class="id-btn">Discord</a>
-                </div>
+        <div class="info-box">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Gato" style="width:100px; border-radius:50%; margin-bottom:20px;">
+            <h1>Gato.TV</h1>
+            <p>Najlepszy dodatek do czatu Twitch</p>
+            <div class="info-list">
+                <div class="info-item"><span>Wersja</span> <span>1.0</span></div>
+                <div class="info-item"><span>Autor</span> <span>GatoJestemFormaOstateczna</span></div>
+                <div class="info-item"><span>Cena</span> <span>Darmowe</span></div>
             </div>
         </div>
     </div>
     
-    <!-- DOWNLOAD -->
+    <!-- DOWNLOAD (HERO STYLE) -->
     <div id="download" class="panel">
-        <div class="dl-wrapper">
-            <div class="dl-content">
-                <div style="display:inline-block; padding:5px 10px; background:rgba(250,204,21,0.2); color:var(--yellow); border-radius:50px; font-size:12px; font-weight:700; margin-bottom:15px;">NOWOŚĆ: Wersja 1.0</div>
-                <h1>Ulepsz swój czat<br>z Gato.TV</h1>
-                <p>Odkryj nowy wymiar interakcji na Twitchu.</p>
-                <button class="btn-download-glow" onclick="fireConfetti()"><span>POBIERZ ROZSZERZENIE</span></button>
-            </div>
-            <div class="dl-visual"><img src="https://cdn-icons-png.flaticon.com/512/5968/5968819.png"></div>
+        <div class="hero-card download-style">
+            <h1>Zainstaluj</h1>
+            <p>Wersja 1.0 Beta</p>
+            <button class="btn-download-big" onclick="fireConfetti()">POBIERZ</button>
         </div>
     </div>
 </div>
@@ -275,37 +246,19 @@ const REDIRECT_URI = 'https://drsxdd.github.io/gatotv/';
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
 
 let currentUser = null; 
-let coins = 200; 
-let ownedItems = ["Classic Green", "Default Font"]; 
-let activeItems = { paint: "Classic Green", badge: "", ink: "", font: "Default Font", bg: "" }; 
+let coins = 100; // 1. Start with 100
+let ownedItems = []; // 3. Start empty
+let activeItems = { paint: "", badge: "", ink: "", font: "", bg: "" }; 
 let allEmotesData = {}; 
 let confettiCooldown = false;
 
-// ==================== KATALOG (ZREDUKOWANY DO 3 + DOMYŚLNE) ====================
+// 4. LIMITOWANY SKLEP (Ceny = 5)
 const CATALOG = [
-    // 1. DOMYŚLNE
-    { name: "Classic Green", category:"paint", price: 0, type: "color", value: "#00ff00", previewStyle: "color:#00ff00" },
-    { name: "Default Font", category:"font", price: 0, type: "font", value: "inherit", previewStyle: "" },
-
-    // 2. PAINTS (3 sztuki)
-    { name: "Golden God", category:"paint", price: 100, type: "glow", value: "#ffd700", shadow: "#ffae00", previewStyle: "color:#ffd700;text-shadow:0 0 10px #ffae00; font-weight:800;" },
-    { name: "Ocean Depth", category:"paint", price: 50, type: "gradient", value: "linear-gradient(90deg, #00c6ff, #0072ff)", previewStyle: "background: linear-gradient(90deg, #00c6ff, #0072ff); -webkit-background-clip: text; color: transparent; font-weight:900;" },
-    { name: "Neon Cyber", category:"paint", price: 50, type: "gradient", value: "linear-gradient(90deg, #ff00cc, #333399)", previewStyle: "background: linear-gradient(90deg, #ff00cc, #333399); -webkit-background-clip: text; color: transparent; font-weight:900;" },
-
-    // 3. BADGES (3 sztuki)
-    { name: "Star Badge", category:"badge", price: 20, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/1828/1828884.png", previewStyle: "" },
-    { name: "King Crown", category:"badge", price: 50, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/2545/2545603.png", previewStyle: "" },
-    { name: "Gato Paw", category:"badge", price: 40, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/1076/1076928.png", previewStyle: "" },
-
-    // 4. FRAMES/BG (3 sztuki)
-    { name: "Golden Glow", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(255, 215, 0, 0.2), transparent)", previewStyle: "background:rgba(255,215,0,0.3)" },
-    { name: "Night Sky", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(25, 25, 112, 0.6), transparent)", previewStyle: "background:navy; color:white;" },
-    { name: "Neon Border", category:"bg", price: 80, type: "bg", value: "border: 1px solid #00ffff; box-shadow: 0 0 10px #00ffff inset; background: rgba(0,0,0,0.4);", previewStyle: "border:1px solid #00ffff;" },
-
-    // 5. INK (3 sztuki)
-    { name: "Golden Ink", category:"ink", price: 50, type: "ink", value: "#ffd700", previewStyle: "color:#ffd700" },
-    { name: "Hot Pink Ink", category:"ink", price: 50, type: "ink", value: "#ff0066", previewStyle: "color:#ff0066" },
-    { name: "Matrix Green", category:"ink", price: 50, type: "ink", value: "#00ff00", previewStyle: "color:#00ff00; font-family:monospace" }
+    { name: "Neon Cyber", category:"paint", price: 5, type: "gradient", value: "linear-gradient(90deg, #ff00cc, #333399)", previewStyle: "background: linear-gradient(90deg, #ff00cc, #333399); -webkit-background-clip: text; color: transparent; font-weight:900;" },
+    { name: "Star Badge", category:"badge", price: 5, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/1828/1828884.png", previewStyle: "" },
+    { name: "Neon Border", category:"bg", price: 5, type: "bg", value: "border: 1px solid #00ffff; box-shadow: 0 0 10px #00ffff inset; background: rgba(0,0,0,0.4);", previewStyle: "border:1px solid #00ffff;" },
+    { name: "Golden Ink", category:"ink", price: 5, type: "ink", value: "#ffd700", previewStyle: "color:#ffd700" },
+    { name: "Hot Pink Ink", category:"ink", price: 5, type: "ink", value: "#ff0066", previewStyle: "color:#ff0066" }
 ];
 
 window.onload = () => {
@@ -320,7 +273,6 @@ window.onload = () => {
     if(localStorage.getItem('gato_coins')) coins = parseInt(localStorage.getItem('gato_coins'));
     if(localStorage.getItem('gato_owned')) ownedItems = JSON.parse(localStorage.getItem('gato_owned'));
     if(localStorage.getItem('gato_active')) activeItems = JSON.parse(localStorage.getItem('gato_active'));
-    if(!ownedItems.includes("Classic Green")) ownedItems.push("Classic Green");
     updateCoinDisplay(); renderShop();
 };
 
@@ -363,18 +315,18 @@ function renderShop() {
         card.onmouseenter = () => { if(item.category==='paint') document.getElementById('previewUser').style.cssText=item.previewStyle; };
         card.onmouseleave = () => { document.getElementById('previewUser').style.cssText=""; };
 
-        let preview = `<div style="${item.previewStyle}">NickName</div>`;
+        // 5. LEPSZY PODGLĄD DLA INK
+        let previewText = "NickName";
+        if(item.category === "ink") previewText = "ABC";
+
+        let preview = `<div style="${item.previewStyle}">${previewText}</div>`;
         if(item.category==="badge") preview = `<img src="${item.value}" class="badge-preview-img">`;
         if(item.category==="bg") preview = `<div style="width:100%;height:20px;${item.previewStyle}"></div>`;
 
         let actionBtn;
         if (isOwned) {
             if (isActive) {
-                if (item.name === "Classic Green" || item.name === "Default Font") {
-                     actionBtn = `<button class="btn-action btn-equipped" disabled>AKTYWNE</button>`;
-                } else {
-                     actionBtn = `<button class="btn-action btn-unequip" onclick="unequipItem('${item.category}')">ZDEJMIJ</button>`;
-                }
+                 actionBtn = `<button class="btn-action btn-unequip" onclick="unequipItem('${item.category}')">ZDEJMIJ</button>`;
             } else {
                 actionBtn = `<button class="btn-action btn-equip" onclick="equipItemByName('${item.name}')">Załóż</button>`;
             }
@@ -396,8 +348,14 @@ async function equipItemByName(name) {
     const item = CATALOG.find(x => x.name === name);
     const user = currentUser.login.toLowerCase(); 
     let payload = item.value;
-    if(item.category === 'paint') { payload = { type: item.type, value: item.value }; if(item.shadow) payload.shadow = item.shadow; }
-    try { await api(`premium/${user}/${item.category}`, "PUT", payload); activeItems[item.category] = item.name; localStorage.setItem('gato_active', JSON.stringify(activeItems)); renderShop(); } catch(e) { alert("Błąd bazy!"); }
+    if(item.category === 'paint') { payload = { type: item.type, value: item.value }; }
+    
+    try { 
+        await api(`premium/${user}/${item.category}`, "PUT", payload); 
+        activeItems[item.category] = item.name; 
+        localStorage.setItem('gato_active', JSON.stringify(activeItems)); 
+        renderShop(); 
+    } catch(e) { alert("Błąd bazy!"); }
 }
 
 async function unequipItem(category) {
@@ -405,9 +363,7 @@ async function unequipItem(category) {
     const user = currentUser.login.toLowerCase();
     try {
         await api(`premium/${user}/${category}`, "DELETE");
-        if (category === 'paint') activeItems['paint'] = "Classic Green";
-        else if (category === 'font') activeItems['font'] = "Default Font";
-        else activeItems[category] = "";
+        activeItems[category] = "";
         localStorage.setItem('gato_active', JSON.stringify(activeItems));
         renderShop();
     } catch(e) { alert("Błąd!"); }
@@ -419,9 +375,9 @@ function switchPaintSubTab(tab) { document.getElementById('viewInventory').style
 function togglePreviewTheme() { document.getElementById('chatPreviewBox').classList.toggle('light'); }
 function fireConfetti(shopMode){ if(!shopMode && confettiCooldown) return; if(!shopMode) { confettiCooldown = true; setTimeout(()=>confettiCooldown=false, 10000); } confetti({particleCount:100, spread:70, origin: {x:0.5, y:0.5}, colors: ['#facc15', '#ffffff']}); }
 
-// EMOTE LOGIC FIXED
+// EMOTE LOGIC
 function openEmoteForm(isNew = false) { 
-    if(!currentUser) { alert("Musisz być zalogowany!"); return; } // FIX: Dodałem alert
+    if(!currentUser) { alert("Musisz być zalogowany!"); return; } 
     document.getElementById('emoChannel').value = currentUser.login; 
     if(isNew) {
         document.getElementById('emoFormTitle').innerText = "Dodaj Nową Emotkę";
@@ -456,7 +412,22 @@ async function addEmote() {
 function cloneEmote(n,u) { openEmoteForm(true); document.getElementById('emoName').value=n; document.getElementById('emoUrl').value=u; }
 async function del(p, r=false) { if(confirm("Usunąć?")) { await api(p, "DELETE"); loadAll(); if(r) setTimeout(()=>{loadAll(); renderMyEmotes()}, 500); } }
 async function api(path, method="GET", body=null) { const opts = { method }; if(body) opts.body = JSON.stringify(body); const res = await fetch(`${DB_URL}/${path}.json`, opts); if (!res.ok) throw new Error("API Error"); return res.json(); }
-function previewFile() { const f = document.getElementById('emoFile').files[0]; if(f) { document.getElementById('emoUrl').disabled=true; const r=new FileReader(); r.onload=e=>{document.getElementById('filePreview').src=e.target.result; document.getElementById('filePreview').style.display='block'}; r.readAsDataURL(f); } }
+
+// 6. FIX DLA EMOTEK Z PLIKU
+function previewFile() { 
+    const f = document.getElementById('emoFile').files[0]; 
+    if(f) { 
+        // Wypełniamy pole URL, żeby addEmote mogło go użyć
+        const r=new FileReader(); 
+        r.onload=e=>{
+            document.getElementById('filePreview').src=e.target.result; 
+            document.getElementById('filePreview').style.display='block';
+            document.getElementById('emoUrl').value = e.target.result; // WAŻNE: Wpisanie base64 do inputa
+            document.getElementById('emoUrl').disabled = true;
+        }; 
+        r.readAsDataURL(f); 
+    } 
+}
 </script>
 </body>
 </html>
