@@ -1,15 +1,15 @@
 const API="https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
 
-// ===================== EMOTES =====================
+/* ===================== EMOTES ===================== */
 let EMOTES = { global:{}, channels:{} };
 
 async function loadEmotes(){
   try{
-    // Global
+    // Globalne
     const rGlobal = await fetch(`${API}/emotes/global.json`);
     EMOTES.global = await rGlobal.json() || {};
 
-    // Kanały
+    // Kanałowe
     const rChannels = await fetch(`${API}/emotes/channels.json`);
     EMOTES.channels = await rChannels.json() || {};
 
@@ -53,7 +53,7 @@ function appendEmote(list,key,e,ch){
   list.appendChild(d);
 }
 
-// Dodawanie emotki
+// Dodawanie emotki z możliwością wyboru global/channel
 document.getElementById("addEmote").onclick=async()=>{
   const trigger = document.getElementById("emoteTrigger").value.trim();
   const author  = document.getElementById("emoteAuthor").value.trim();
@@ -78,7 +78,7 @@ document.getElementById("addEmote").onclick=async()=>{
   loadEmotes();
 }
 
-// ===================== REPLACE EMOTES W CHAT =====================
+/* ===================== REPLACE EMOTES W CHAT ===================== */
 function replaceEmotes(msg, channel="global"){
   if(msg.dataset.emotesDone) return;
 
@@ -104,7 +104,7 @@ function replaceEmotes(msg, channel="global"){
   }
 }
 
-// ===================== SCAN CHAT =====================
+/* ===================== SCAN CHAT ===================== */
 function scan(){
   document.querySelectorAll('span[data-a-target="chat-message-username"]').forEach(paintNick);
   document.querySelectorAll('span[data-a-target="chat-message-text"]').forEach(msg=>{
@@ -113,7 +113,7 @@ function scan(){
   });
 }
 
-// ===================== OBSERVER =====================
+/* ===================== OBSERVER ===================== */
 const observer = new MutationObserver(mutations=>{
   mutations.forEach(m=>{
     m.addedNodes.forEach(n=>{
@@ -129,7 +129,7 @@ const observer = new MutationObserver(mutations=>{
   });
 });
 
-// ===================== INIT =====================
+/* ===================== INIT ===================== */
 const wait = setInterval(()=>{
   const chat = document.querySelector('[role="log"]');
   if(chat){
@@ -141,4 +141,3 @@ const wait = setInterval(()=>{
 
 setInterval(scan,1500);
 loadEmotes();
-
