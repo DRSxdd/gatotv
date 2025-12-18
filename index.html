@@ -38,9 +38,6 @@
     .btn-login { background: var(--twitch); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: 0 0 15px rgba(145, 70, 255, 0.3); }
     .btn-login:hover { background: #772ce8; transform: translateY(-1px); }
 
-    .btn-logout { background: transparent; border: none; cursor: pointer; padding: 5px; border-radius: 50%; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
-    .btn-logout:hover { background: rgba(239, 68, 68, 0.2); transform: scale(1.1); }
-
     /* COINS DISPLAY */
     .coin-display {
         display: flex; align-items: center; gap: 8px; background: rgba(250, 204, 21, 0.1); 
@@ -105,99 +102,21 @@
     button.btn-secondary { background: #334155; color: white; padding: 10px 20px; border-radius: 8px; border:none; font-weight:700; cursor:pointer; }
     button.btn-secondary:hover { background: #475569; }
 
-    /* ===== EMOTE GRID (7TV STYLE) ===== */
-    .emotes-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-        gap: 15px;
-        margin-top: 20px;
-    }
-
-    .emote-card {
-        background: #131c2e;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 12px 8px;
-        text-align: center;
-        transition: 0.2s;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 130px;
-        overflow: hidden;
-    }
-    .emote-card:hover {
-        background: #1e293b;
-        transform: translateY(-3px);
-        border-color: var(--accent);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
-
-    .emote-img {
-        max-width: 100%;
-        height: 48px;
-        object-fit: contain;
-        margin-bottom: 10px;
-        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
-    }
-
+    /* ===== EMOTE GRID ===== */
+    .emotes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 15px; margin-top: 20px; }
+    .emote-card { background: #131c2e; border: 1px solid var(--border); border-radius: 12px; padding: 12px 8px; text-align: center; transition: 0.2s; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: space-between; min-height: 130px; overflow: hidden; }
+    .emote-card:hover { background: #1e293b; transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+    .emote-img { max-width: 100%; height: 48px; object-fit: contain; margin-bottom: 10px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
     .emote-info { width: 100%; }
-    .emote-name {
-        font-weight: 800;
-        font-size: 13px;
-        color: #fff;
-        margin-bottom: 4px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    .emote-meta {
-        font-size: 10px;
-        color: var(--text-muted);
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-    }
-    .channel-tag {
-        color: var(--accent);
-        font-weight: 700;
-        text-transform: uppercase;
-        background: rgba(56, 189, 248, 0.1);
-        padding: 2px 4px;
-        border-radius: 4px;
-        margin-top: 2px;
-        display: inline-block;
-    }
-
-    /* OVERLAYS (DELETE & ADD) */
-    .action-overlay {
-        position: absolute;
-        top: 6px;
-        right: 6px;
-        width: 24px;
-        height: 24px;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 900;
-        cursor: pointer;
-        opacity: 0;
-        transition: 0.2s;
-        font-size: 14px;
-        z-index: 2;
-    }
+    .emote-name { font-weight: 800; font-size: 13px; color: #fff; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .emote-meta { font-size: 10px; color: var(--text-muted); display: flex; flex-direction: column; gap: 2px; }
+    .channel-tag { color: var(--accent); font-weight: 700; text-transform: uppercase; background: rgba(56, 189, 248, 0.1); padding: 2px 4px; border-radius: 4px; margin-top: 2px; display: inline-block; }
+    .delete-overlay { position: absolute; top: 6px; right: 6px; background: var(--danger); color: white; width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; opacity: 0; transition: 0.2s; font-size: 12px; z-index: 2; }
+    .emote-card:hover .delete-overlay { opacity: 1; }
+    .action-overlay { position: absolute; top: 6px; right: 6px; width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; cursor: pointer; opacity: 0; transition: 0.2s; font-size: 14px; z-index: 2; }
     .emote-card:hover .action-overlay { opacity: 1; }
-    
     .del-btn { background: var(--danger); color: white; }
-    .del-btn:hover { transform: scale(1.1); }
-    
     .add-btn { background: var(--success); color: #000; }
-    .add-btn:hover { transform: scale(1.1); }
-
-    /* MANAGE ACTIONS */
     .manage-actions { display: flex; gap: 5px; margin-top: 10px; width: 100%; }
     .btn-mini { flex: 1; font-size: 10px; padding: 4px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
     .btn-edit { background: #334155; color: white; }
@@ -208,7 +127,7 @@
     .preset-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 5px; cursor: pointer; text-align: center; transition: 0.2s; position: relative; overflow: hidden; display: flex; flex-direction: column; }
     .preset-card:hover { border-color: var(--text-muted); transform: translateY(-2px); }
     .preset-card.owned { border-color: var(--success); background: rgba(34, 197, 94, 0.05); }
-    .card-preview { padding: 30px 10px; font-size: 24px; font-weight: 900; }
+    .card-preview { padding: 30px 10px; font-size: 24px; font-weight: 900; display:flex; align-items:center; justify-content:center; height: 100px; }
     .card-info { background: #131c2e; padding: 12px; border-radius: 0 0 12px 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; justify-content: flex-end;}
     .preset-name { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; display: block; }
     .preset-price { font-size: 11px; color: var(--yellow); font-weight: 700; margin-bottom: 5px; display: block; }
@@ -217,6 +136,9 @@
     .btn-buy:hover { background: #fde047; }
     .btn-equip { background: var(--success); color: #fff; }
     .btn-equip:hover { background: #16a34a; }
+    
+    /* BADGE IMAGE IN SHOP */
+    .badge-preview-img { width: 48px; height: 48px; object-fit: contain; }
 
     /* HERO */
     .hero-card { background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(0,0,0,0)); border: 1px solid var(--border); border-radius: 20px; padding: 60px 40px; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
@@ -261,9 +183,8 @@
         </div>
         
         <nav>
-            <button class="active" onclick="switchTab('paints')">Paints</button>
+            <button class="active" onclick="switchTab('paints')">Sklep</button>
             <button onclick="switchTab('emotes')">Emotes</button>
-            <button onclick="switchTab('badges')">Odznaki</button>
             <button onclick="switchTab('info')">Info</button>
             <button class="btn-yellow" onclick="switchTab('download')">Download</button>
         </nav>
@@ -272,22 +193,22 @@
 
 <div class="container">
 
-    <!-- TAB: PAINTS (WYMAGA LOGOWANIA) -->
+    <!-- TAB: SKLEP & EKWIPUNEK (DAWNIEJ PAINTS) -->
     <div id="paints" class="panel active">
         <div id="paintsBlocker" class="login-blocker">
             <h2>🔒 Wymagane Logowanie</h2>
-            <p style="color:#94a3b8">Zaloguj się, aby zarządzać kolorami nicku i robić zakupy.</p>
+            <p style="color:#94a3b8">Zaloguj się, aby kupować i zmieniać wygląd.</p>
             <button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button>
         </div>
 
         <div id="paintsContent" style="display:none;">
             <div class="sub-nav">
-                <button id="tabInv" class="active" onclick="switchPaintSubTab('inv')">TWOJE PAINTY</button>
-                <button id="tabShop" onclick="switchPaintSubTab('shop')">SKLEP (SHOP)</button>
+                <button id="tabInv" class="active" onclick="switchPaintSubTab('inv')">EKWIPUNEK</button>
+                <button id="tabShop" onclick="switchPaintSubTab('shop')">SKLEP</button>
             </div>
             <div id="viewInventory"><div id="inventoryGrid" class="preset-grid"></div></div>
             <div id="viewShop" style="display:none;">
-                <p style="color:var(--text-muted); margin-bottom:20px;">Wydaj monety na unikalne efekty.</p>
+                <p style="color:var(--text-muted); margin-bottom:20px;">Wydaj monety na kolory nicku oraz odznaki.</p>
                 <div id="shopGrid" class="preset-grid"></div>
             </div>
             <div style="margin-top:50px; opacity:0.5; font-size:12px;">DEBUG: Baza danych</div>
@@ -299,23 +220,21 @@
     <div id="emotes" class="panel">
         <div id="emotesBlocker" class="login-blocker">
             <h2>🔒 Wymagane Logowanie</h2>
-            <p style="color:#94a3b8">Zaloguj się, aby zarządzać emotkami.</p>
+            <p style="color:#94a3b8">Zaloguj się, aby dodawać emotki.</p>
             <button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button>
         </div>
 
         <div id="emotesContent" style="display:none;">
-            
-            <!-- --- WIDOK 1: GALERIA SIATKI --- -->
+            <!-- WIDOK GALERII -->
             <div id="emotesGalleryView">
                 <div class="panel-top-bar">
                     <h2>Galeria Emotek (Global)</h2>
                     <button class="btn-primary small" onclick="openEmoteForm()">+ DODAJ SWOJĄ</button>
                 </div>
-                <!-- GLOBALNY GRID -->
                 <div id="emotesGrid" class="emotes-grid">Loading...</div>
             </div>
 
-            <!-- --- WIDOK 2: FORMULARZ DODAWANIA + MOJE EMOTKI --- -->
+            <!-- WIDOK DODAWANIA -->
             <div id="emotesFormView" style="display:none; animation: slideIn 0.3s ease-out;">
                 <div class="panel-top-bar">
                     <h2>Dodaj Nową Emotkę</h2>
@@ -324,45 +243,22 @@
 
                 <div class="input-row">
                     <div class="form-group" style="flex:1;"><label>Nazwa (Kod)</label><input id="emoName" placeholder="np. xdd"></div>
-                    <div class="form-group" style="flex:2;"><label>Obrazek (Plik lub Link)</label>
+                    <div class="form-group" style="flex:2;"><label>Obrazek</label>
                         <div class="file-upload-wrapper"><div class="file-upload-btn" id="fileBtnText"><span>📂 Wybierz plik</span></div><input type="file" id="emoFile" accept="image/*" onchange="previewFile()"></div>
                         <img id="filePreview" src="" alt="Podgląd"><input id="emoUrl" placeholder="lub link..." style="margin-top:5px;">
                     </div>
                     <div class="form-group"><label>Autor</label><input id="emoAuthor" disabled></div>
-                    <!-- ZABLOKOWANY INPUT KANAŁU -->
-                    <div class="form-group" style="flex:1.5;"><label>Kanał Twitch (Twój)</label><input id="emoChannel" disabled></div>
-                    
+                    <div class="form-group" style="flex:1.5;"><label>Kanał Twitch</label><input id="emoChannel" disabled></div>
                     <button class="btn-primary" onclick="addEmote()">ZAPISZ</button>
                 </div>
 
-                <!-- SEKCJA: ZARZĄDZAJ SWOIMI -->
-                <h3 style="margin-top:40px; border-top:1px solid var(--border); padding-top:20px;">Zarządzaj swoimi emotkami</h3>
-                <div id="myEmotesGrid" class="emotes-grid">
-                    <!-- Tu JS wrzuci tylko emotki użytkownika -->
-                </div>
+                <h3 style="margin-top:40px; border-top:1px solid var(--border); padding-top:20px;">Twoje Emotki</h3>
+                <div id="myEmotesGrid" class="emotes-grid"></div>
             </div>
-
         </div>
     </div>
 
-    <!-- TAB: BADGES (WYMAGA LOGOWANIA) -->
-    <div id="badges" class="panel">
-        <div id="badgesBlocker" class="login-blocker">
-            <h2>🔒 Wymagane Logowanie</h2>
-            <button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button>
-        </div>
-        <div id="badgesContent" style="display:none;">
-            <h2>Odznaki</h2>
-            <div class="input-row">
-                <div class="form-group"><label>Nick</label><input id="badgeNick"></div>
-                <div class="form-group" style="flex:2"><label>URL</label><input id="badgeUrl"></div>
-                <button class="btn-primary" onclick="addBadge()">Przypisz</button>
-            </div>
-            <div id="listBadges" class="list-container">Loading...</div>
-        </div>
-    </div>
-
-    <!-- TAB: INFO (PUBLICZNA) -->
+    <!-- TAB: INFO -->
     <div id="info" class="panel">
         <div class="hero-card">
             <h1>Gato.TV</h1>
@@ -374,7 +270,7 @@
         </div>
     </div>
 
-    <!-- TAB: DOWNLOAD (PUBLICZNA) -->
+    <!-- TAB: DOWNLOAD -->
     <div id="download" class="panel">
         <div class="hero-card download-style">
             <h1 style="background: linear-gradient(90deg, #fff, var(--yellow)); -webkit-background-clip: text; color: transparent;">Zainstaluj Gato.TV</h1>
@@ -392,51 +288,50 @@ const REDIRECT_URI = 'https://drsxdd.github.io/gatotv/';
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
 // ================================================
 
-// STATE
 let currentUser = null; 
 let coins = 10; 
-let ownedPaints = ["Classic Green"]; 
-let allEmotesData = {}; // Cache
+let ownedItems = ["Classic Green"]; // Changed name for generic usage
+let allEmotesData = {}; 
 
-// Presets Definition
-const PRESETS = [
-    { name: "Classic Green", price: 0, type: "color", value: "#00ff00", previewStyle: "color:#00ff00" },
-    { name: "Mana Potion", price: 10, type: "gradient", value: "linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%)", previewStyle: `background-image: linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%); filter: drop-shadow(rgb(215, 15, 255) 0px 0px 0.1px) drop-shadow(rgb(64, 0, 77) 1px 1px 0.1px); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: shine 3s linear infinite; font-weight: 900;` },
-    { name: "Paradise Potion", price: 100, type: "gradient", value: "linear-gradient(90deg, #f093fb 0%, #f5576c 50%, #4facfe 100%)", previewStyle: "background: linear-gradient(90deg, #f093fb 0%, #f5576c 50%, #4facfe 100%); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: shine 3s linear infinite; font-weight: 900;" },
-    { name: "Ocean", price: 150, type: "gradient", value: "linear-gradient(to right, #00c6ff, #0072ff)", previewStyle: "background: linear-gradient(to right, #00c6ff, #0072ff); -webkit-background-clip: text; color: transparent;" },
-    { name: "Sunset", price: 200, type: "gradient", value: "linear-gradient(to right, #f59e0b, #ef4444)", previewStyle: "background: linear-gradient(to right, #f59e0b, #ef4444); -webkit-background-clip: text; color: transparent;" },
-    { name: "Neon Blue", price: 200, type: "glow", value: "#e0f2fe", shadow: "#0088ff", previewStyle: "color:#e0f2fe;text-shadow:0 0 10px #0088ff;" },
-    { name: "Toxic Green", price: 250, type: "glow", value: "#ccff00", shadow: "#00ff00", previewStyle: "color:#ccff00;text-shadow:0 0 10px #00ff00;" },
-    { name: "Berry", price: 300, type: "gradient", value: "linear-gradient(to right, #c31432, #240b36)", previewStyle: "background: linear-gradient(to right, #c31432, #240b36); -webkit-background-clip: text; color: transparent;" },
-    { name: "Lava", price: 350, type: "glow", value: "#ff3300", shadow: "#ffaa00", previewStyle: "color:#ff3300;text-shadow:0 0 10px #ffaa00;" },
-    { name: "Ghost", price: 400, type: "glow", value: "#ffffff", shadow: "#ffffff", previewStyle: "color:#fff;text-shadow:0 0 10px #fff;" },
-    { name: "Gold", price: 500, type: "glow", value: "#ffd700", shadow: "#ffae00", previewStyle: "color:#ffd700;text-shadow:0 0 10px #ffae00;" },
-    { name: "Candy", price: 600, type: "gradient", value: "linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)", previewStyle: "background: linear-gradient(45deg, #ff9a9e, #fecfef); -webkit-background-clip: text; color: transparent;" },
-    { name: "Aurora", price: 700, type: "gradient", value: "linear-gradient(to right, #00f260, #0575e6)", previewStyle: "background: linear-gradient(to right, #00f260, #0575e6); -webkit-background-clip: text; color: transparent;" },
-    { name: "Fire", price: 800, type: "gradient", value: "linear-gradient(to right, #f12711, #f5af19)", previewStyle: "background: linear-gradient(to right, #f12711, #f5af19); -webkit-background-clip: text; color: transparent;" },
-    { name: "Matrix", price: 900, type: "glow", value: "#00ff00", shadow: "#003300", previewStyle: "color: #00ff00; text-shadow: 0 0 8px #00ff00; font-family: monospace;" },
-    { name: "Rainbow", price: 1000, type: "animated-rainbow", previewStyle: "background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta); -webkit-background-clip: text; color: transparent;" },
-    { name: "Blue", price: 10, type: "color", value: "#0088ff", previewStyle: "color:#0088ff" },
-    { name: "Red", price: 10, type: "color", value: "#ff4444", previewStyle: "color:#ff4444" },
-    { name: "Pink", price: 10, type: "color", value: "#ff66aa", previewStyle: "color:#ff66aa" },
-    { name: "Orange", price: 20, type: "color", value: "#ff8800", previewStyle: "color:#ff8800" },
-    { name: "Purple", price: 20, type: "color", value: "#aa00ff", previewStyle: "color:#aa00ff" },
-    { name: "Cyan", price: 30, type: "color", value: "#00ffff", previewStyle: "color:#00ffff" },
-    { name: "Mint", price: 30, type: "color", value: "#00ffaa", previewStyle: "color:#00ffaa" },
-    { name: "Deep Void", price: 50, type: "color", value: "#6366f1", previewStyle: "color:#6366f1" },
-    { name: "Hot Pink", price: 50, type: "color", value: "#ff0066", previewStyle: "color:#ff0066" },
-    { name: "Golden Rod", price: 50, type: "color", value: "#daa520", previewStyle: "color:#daa520" },
-    { name: "White", price: 100, type: "color", value: "#ffffff", previewStyle: "color:#ffffff" },
+// CATALOG (PAINTS & BADGES)
+const CATALOG = [
+    // --- PAINTS ---
+    { name: "Classic Green", category:"paint", price: 0, type: "color", value: "#00ff00", previewStyle: "color:#00ff00" },
+    { 
+        name: "Mana Potion", category:"paint", price: 10, type: "gradient", 
+        value: "linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%)",
+        previewStyle: `background-image: linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%); filter: drop-shadow(rgb(215, 15, 255) 0px 0px 0.1px) drop-shadow(rgb(64, 0, 77) 1px 1px 0.1px); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: shine 3s linear infinite; font-weight: 900;`
+    },
+    { name: "Fire Lord", category:"paint", price: 50, type: "gradient", value: "linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #ff0000)", previewStyle: "background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #ff0000); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: shine 3s linear infinite; font-weight:900;" },
+    { name: "Golden Legend", category:"paint", price: 100, type: "glow", value: "#ffd700", shadow: "#ffae00", previewStyle: "color:#ffd700;text-shadow:0 0 10px #ffae00; font-weight:800;" },
+    { name: "RGB Master", category:"paint", price: 200, type: "animated-rainbow", previewStyle: "background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta); -webkit-background-clip: text; color: transparent; font-weight:900;" },
+
+    // --- BADGES (TEST) ---
+    // Using Data URIs for icons to ensure they work without external images
+    { 
+        name: "Star Badge", category:"badge", price: 20, type: "badge", 
+        value: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmZDIwMCI+PHBhdGggZD0iTTEyIC41ODdsMy42NjggNy40MzEgOC4yIDEuMTkyLTUuOTM0IDUuNzg3IDEuNCA4LjE2OEwxMiAxOC44OTZsLTcuMzM0IDMuODYzIDEuNC04LjE2OC01LjkzNC01Ljc4NyA4LjItMS4xOTJ6Ii8+PC9zdmc+",
+        previewStyle: "" 
+    },
+    { 
+        name: "Shield Badge", category:"badge", price: 30, type: "badge", 
+        value: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzM4YmRmOCI+PHBhdGggZD0iTTEyIDFMMyA1djZWMTEuNWMwIDUuMjUgMy44NjMgMTAuMDQgOSAxMS41IDUuMTM3LTEuNDYgOS02LjI1IDktMTEuNVY1bC05LTR6Ii8+PC9zdmc+",
+        previewStyle: ""
+    },
+    { 
+        name: "King Crown", category:"badge", price: 50, type: "badge", 
+        value: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZhY2MxNSI+PHBhdGggZD0iTTUgMTZsMy04IDQgNCA0LTQgMyA4SDV6bTAtMTBWMmgxNHY0bDUtNXYyM0gwVjVsNS01eiIvPjwvc3ZnPg==",
+        previewStyle: ""
+    }
 ];
 
 // INIT
 window.onload = () => {
-    // Persist login (Priority 1: Hash, Priority 2: Stored Token)
     if (document.location.hash.includes('access_token')) {
         const params = new URLSearchParams(document.location.hash.substring(1));
         const token = params.get('access_token');
         if(token) {
-            localStorage.setItem('twitch_token', token); // Save for later
+            localStorage.setItem('twitch_token', token);
             validateToken(token);
             window.history.replaceState({}, document.title, window.location.pathname);
         }
@@ -448,13 +343,12 @@ window.onload = () => {
     if(localStorage.getItem('gato_coins') !== null) coins = parseInt(localStorage.getItem('gato_coins'));
     else localStorage.setItem('gato_coins', 10);
 
-    if(localStorage.getItem('gato_owned')) ownedPaints = JSON.parse(localStorage.getItem('gato_owned'));
+    if(localStorage.getItem('gato_owned')) ownedItems = JSON.parse(localStorage.getItem('gato_owned'));
     
     updateCoinDisplay();
     renderShop();
 };
 
-// SHOP LOGIC
 function switchPaintSubTab(tab) {
     if(tab === 'inv') {
         document.getElementById('viewInventory').style.display = 'block';
@@ -472,7 +366,7 @@ function switchPaintSubTab(tab) {
 function updateCoinDisplay() {
     document.getElementById('coinCount').innerText = coins;
     localStorage.setItem('gato_coins', coins);
-    localStorage.setItem('gato_owned', JSON.stringify(ownedPaints));
+    localStorage.setItem('gato_owned', JSON.stringify(ownedItems));
 }
 
 function renderShop() {
@@ -481,71 +375,87 @@ function renderShop() {
     shopGrid.innerHTML = "";
     invGrid.innerHTML = "";
 
-    PRESETS.forEach((p, index) => {
-        const isOwned = ownedPaints.includes(p.name);
+    CATALOG.forEach((item, index) => {
+        const isOwned = ownedItems.includes(item.name);
         const card = document.createElement("div");
         card.className = isOwned ? "preset-card owned" : "preset-card";
         
-        let actionBtn = "";
-        if (isOwned) {
-            actionBtn = `<button class="btn-action btn-equip" onclick="equipPaint(${index})">Ustaw (Equip)</button>`;
+        let previewContent = "";
+        if(item.category === "badge") {
+            previewContent = `<img src="${item.value}" class="badge-preview-img">`;
         } else {
-            const canAfford = coins >= p.price;
-            const disabled = canAfford ? "" : "opacity:0.5; pointer-events:none;";
-            actionBtn = `<button class="btn-action btn-buy" style="${disabled}" onclick="buyPaint(${index})">Kup (${p.price})</button>`;
+            previewContent = `<div style="${item.previewStyle}">NickName</div>`;
         }
 
-        card.innerHTML = `<div class="card-preview" style="${p.previewStyle}">NickName</div><div class="card-info"><div><span class="preset-name">${p.name}</span><span class="preset-price">${isOwned ? "POSIADANE" : p.price + " 🪙"}</span></div>${actionBtn}</div>`;
+        let actionBtn = "";
+        if (isOwned) {
+            const btnText = item.category === "badge" ? "Załóż (Badge)" : "Załóż (Paint)";
+            actionBtn = `<button class="btn-action btn-equip" onclick="equipItem(${index})">${btnText}</button>`;
+        } else {
+            const canAfford = coins >= item.price;
+            const disabled = canAfford ? "" : "opacity:0.5; pointer-events:none;";
+            actionBtn = `<button class="btn-action btn-buy" style="${disabled}" onclick="buyItem(${index})">Kup (${item.price})</button>`;
+        }
+
+        card.innerHTML = `
+            <div class="card-preview">${previewContent}</div>
+            <div class="card-info">
+                <div>
+                    <span class="preset-name">${item.name}</span>
+                    <span class="preset-price" style="color:${item.category==='badge'?'#9146ff':'#facc15'}">
+                        ${isOwned ? "POSIADANE" : item.price + " 🪙"}
+                    </span>
+                </div>
+                ${actionBtn}
+            </div>
+        `;
 
         if(isOwned) invGrid.appendChild(card);
         else shopGrid.appendChild(card);
     });
 }
 
-function buyPaint(index) {
-    const p = PRESETS[index];
-    if(coins >= p.price) {
-        coins -= p.price;
-        ownedPaints.push(p.name);
+function buyItem(index) {
+    const item = CATALOG[index];
+    if(coins >= item.price) {
+        coins -= item.price;
+        ownedItems.push(item.name);
         updateCoinDisplay();
         renderShop();
         fireConfetti();
     }
 }
 
-async function equipPaint(index) {
+async function equipItem(index) {
     if(!currentUser) return alert("Błąd sesji.");
-    const p = PRESETS[index];
-    const payload = { type: p.type };
-    if (p.value) payload.value = p.value;
-    if (p.shadow) payload.shadow = p.shadow;
-    await api(`premium/${currentUser.login}/paint`, "PUT", payload);
-    alert(`Ustawiono styl: ${p.name}`);
+    const item = CATALOG[index];
+    
+    // LOGIKA ROZDZIELENIA NA PAINTY I ODZNAKI
+    if(item.category === 'badge') {
+        await api(`premium/${currentUser.login}/badge`, "PUT", item.value); // String URL
+        alert(`Założono odznakę: ${item.name}`);
+    } else {
+        const payload = { type: item.type };
+        if (item.value) payload.value = item.value;
+        if (item.shadow) payload.shadow = item.shadow;
+        await api(`premium/${currentUser.login}/paint`, "PUT", payload);
+        alert(`Ustawiono kolor: ${item.name}`);
+    }
     loadAll();
 }
 
-// LOGIN & AUTH
 function loginWithTwitch() {
     const url = `https://id.twitch.tv/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=user:read:email`;
     window.location.href = url;
 }
-
-function logout() {
-    localStorage.removeItem('twitch_token');
-    location.reload();
-}
+function logout() { localStorage.removeItem('twitch_token'); location.reload(); }
 
 async function validateToken(token) {
     try {
         const res = await fetch('https://api.twitch.tv/helix/users', { headers: { 'Client-ID': CLIENT_ID, 'Authorization': `Bearer ${token}` } });
         const data = await res.json();
-        if (data.data && data.data.length > 0) {
-            currentUser = data.data[0];
-            enableApp();
-        } else {
-            // Token expired or invalid
-            localStorage.removeItem('twitch_token');
-        }
+        if (data.data && data.data.length > 0) { currentUser = data.data[0]; enableApp(); } 
+        else { localStorage.removeItem('twitch_token'); }
     } catch(e) { console.error(e); }
 }
 
@@ -554,11 +464,10 @@ function enableApp() {
     document.getElementById('emotesBlocker').style.display = 'none';
     document.getElementById('badgesBlocker').style.display = 'none';
     document.getElementById('paintsBlocker').style.display = 'none';
-    
     document.getElementById('userProfile').style.display = 'flex';
     document.getElementById('coinDisplay').style.display = 'flex';
     document.getElementById('emotesContent').style.display = 'block';
-    document.getElementById('badgesContent').style.display = 'block';
+    // document.getElementById('badgesContent').style.display = 'block'; // Badges are now in Shop
     document.getElementById('paintsContent').style.display = 'block';
 
     document.getElementById('avatar').src = currentUser.profile_image_url;
@@ -568,7 +477,6 @@ function enableApp() {
     loadAll();
 }
 
-// TABS SYSTEM
 function switchTab(id) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
@@ -576,10 +484,9 @@ function switchTab(id) {
     if(event && event.target.tagName === 'BUTTON') event.target.classList.add('active');
 }
 
-// EMOTE VIEW SYSTEM
 function openEmoteForm() {
     if(!currentUser) return;
-    document.getElementById('emoChannel').value = currentUser.login; // LOCK CHANNEL
+    document.getElementById('emoChannel').value = currentUser.login;
     renderMyEmotes(); 
     document.getElementById('emotesGalleryView').style.display = 'none';
     document.getElementById('emotesFormView').style.display = 'block';
@@ -604,23 +511,12 @@ function renderMyEmotes() {
 
     grid.innerHTML = myKeys.map(k => {
         const e = allEmotesData[k];
-        return `
-        <div class="emote-card">
-            <img src="${e.url}" class="emote-img">
-            <div class="emote-info">
-                <div class="emote-name">${k}</div>
-                <div class="manage-actions">
-                    <button class="btn-mini btn-edit" onclick="editEmote('${k}')">EDYTUJ</button>
-                    <button class="btn-mini btn-delete" onclick="del('emotes/${k}', true)">USUŃ</button>
-                </div>
-            </div>
-        </div>`;
+        return `<div class="emote-card"><img src="${e.url}" class="emote-img"><div class="emote-info"><div class="emote-name">${k}</div><div class="manage-actions"><button class="btn-mini btn-edit" onclick="editEmote('${k}')">EDYTUJ</button><button class="btn-mini btn-delete" onclick="del('emotes/${k}', true)">USUŃ</button></div></div></div>`;
     }).join('');
 }
 
 function editEmote(name) {
-    const e = allEmotesData[name];
-    if(!e) return;
+    const e = allEmotesData[name]; if(!e) return;
     document.getElementById('emoName').value = name;
     document.getElementById('emoUrl').value = e.url;
     document.getElementById('emoUrl').disabled = false;
@@ -639,7 +535,6 @@ function cloneEmote(name, url) {
     document.getElementById('emoUrl').disabled = false;
 }
 
-// API & ACTIONS
 async function api(path, method="GET", body=null) {
     const opts = { method }; if(body) opts.body = JSON.stringify(body);
     try { const res = await fetch(`${DB_URL}/${path}.json`, opts); return res.json(); } catch(e) {}
@@ -651,37 +546,16 @@ async function loadAll() {
     
     if(currentUser) {
         allEmotesData = await api('emotes') || {}; 
-        
         const emoteKeys = Object.keys(allEmotesData).reverse();
         document.getElementById('emotesGrid').innerHTML = emoteKeys.map(k => {
             const e = allEmotesData[k];
             const channelTag = `<span class="channel-tag">#${e.channel}</span>`;
             const isOwner = e.author === currentUser.display_name;
-            
-            // LOGIKA PRZYCISKÓW: DELETE (Owner) lub USE (Other)
             let actionBtn = "";
-            if(isOwner) {
-                actionBtn = `<div class="action-overlay del-btn" onclick="del('emotes/${k}')" title="Usuń">✖</div>`;
-            } else {
-                actionBtn = `<div class="action-overlay add-btn" onclick="cloneEmote('${k}', '${e.url}')" title="Użyj u siebie">✚</div>`;
-            }
-
-            return `
-            <div class="emote-card">
-                ${actionBtn}
-                <img src="${e.url}" class="emote-img">
-                <div class="emote-info">
-                    <div class="emote-name">${k}</div>
-                    <div class="emote-meta">
-                        <span>by ${e.author || "?"}</span>
-                        ${channelTag}
-                    </div>
-                </div>
-            </div>`;
+            if(isOwner) actionBtn = `<div class="action-overlay del-btn" onclick="del('emotes/${k}')" title="Usuń">✖</div>`;
+            else actionBtn = `<div class="action-overlay add-btn" onclick="cloneEmote('${k}', '${e.url}')" title="Użyj u siebie">✚</div>`;
+            return `<div class="emote-card">${actionBtn}<img src="${e.url}" class="emote-img"><div class="emote-info"><div class="emote-name">${k}</div><div class="emote-meta"><span>by ${e.author||"?"}</span>${channelTag}</div></div></div>`;
         }).join('');
-
-        const badges = await api('premium') || {};
-        document.getElementById('listBadges').innerHTML = Object.keys(badges).filter(k=>badges[k].badge).map(k=>`<div class="list-item"><b>${k}</b><button class="btn-del" onclick="del('premium/${k}/badge')">X</button></div>`).join('');
     }
 }
 
@@ -689,49 +563,18 @@ async function addEmote() {
     if(!currentUser) return;
     const name = document.getElementById('emoName').value.trim();
     let url = document.getElementById('emoUrl').value.trim();
-    
-    const scope = 'channel';
     const channel = currentUser.login; 
-    
     const file = document.getElementById('emoFile').files[0];
     if (file) try { url = await toBase64(file); } catch(e) { return alert("Błąd pliku"); }
-    
     if(!name || !url) return alert("Brakuje nazwy lub obrazka!");
-
-    const payload = { url, author: currentUser.display_name, scope, channel };
+    const payload = { url, author: currentUser.display_name, scope: 'channel', channel };
     await api(`emotes/${name}`, "PUT", payload);
-    
-    document.getElementById('emoName').value = "";
-    document.getElementById('emoUrl').value = "";
-    document.getElementById('emoFile').value = "";
-    document.getElementById('fileBtnText').innerText = "📂 Wybierz plik";
-    document.getElementById('filePreview').style.display = "none";
-    document.getElementById('emoUrl').disabled = false;
-    
-    alert("Zapisano!");
-    renderMyEmotes(); 
-    loadAll(); 
-}
-
-async function addBadge() {
-    const nick = document.getElementById('badgeNick').value.trim().toLowerCase();
-    const url = document.getElementById('badgeUrl').value.trim();
-    if(!nick||!url) return;
-    await api(`premium/${nick}/badge`, "PUT", url);
-    loadAll();
+    document.getElementById('emoName').value = ""; document.getElementById('emoUrl').value = ""; document.getElementById('emoFile').value = ""; document.getElementById('fileBtnText').innerText = "📂 Wybierz plik"; document.getElementById('filePreview').style.display = "none"; document.getElementById('emoUrl').disabled = false;
+    alert("Zapisano!"); renderMyEmotes(); loadAll(); 
 }
 
 async function del(path, refreshMyEmotes = false) { 
-    if(confirm("Usunąć?")) { 
-        await api(path, "DELETE"); 
-        loadAll(); 
-        if(refreshMyEmotes) {
-            setTimeout(async () => {
-                allEmotesData = await api('emotes') || {};
-                renderMyEmotes();
-            }, 500);
-        }
-    } 
+    if(confirm("Usunąć?")) { await api(path, "DELETE"); loadAll(); if(refreshMyEmotes) { setTimeout(async () => { allEmotesData = await api('emotes') || {}; renderMyEmotes(); }, 500); } } 
 }
 function previewFile() { const f = document.getElementById('emoFile').files[0]; if(f) { document.getElementById('emoUrl').disabled=true; const r=new FileReader(); r.onload=e=>{document.getElementById('filePreview').src=e.target.result; document.getElementById('filePreview').style.display='block'}; r.readAsDataURL(f); } }
 const toBase64=f=>new Promise((res,rej)=>{const r=new FileReader();r.readAsDataURL(f);r.onload=()=>res(r.result);r.onerror=e=>rej(e)});
