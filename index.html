@@ -91,7 +91,7 @@
     button.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px var(--accent-glow); }
 
     /* SHOP / PRESETS */
-    .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+    .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
     
     .preset-card {
         background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 5px;
@@ -102,8 +102,9 @@
     .preset-card.owned { border-color: var(--success); background: rgba(34, 197, 94, 0.05); }
     
     .card-preview { padding: 25px 10px; font-size: 20px; font-weight: 800; }
-    .card-info { background: #131c2e; padding: 12px; border-radius: 0 0 12px 12px; }
-    .preset-name { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 8px; }
+    .card-info { background: #131c2e; padding: 12px; border-radius: 0 0 12px 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; justify-content: flex-end;}
+    .preset-name { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; display: block; }
+    .preset-price { font-size: 11px; color: var(--yellow); font-weight: 700; margin-bottom: 5px; display: block; }
     
     .btn-action { width: 100%; padding: 8px; border-radius: 6px; border: none; font-weight: 700; cursor: pointer; font-size: 12px; text-transform: uppercase; transition: 0.2s; }
     .btn-buy { background: var(--yellow); color: #000; }
@@ -145,7 +146,7 @@
     
     <div style="display:flex; align-items:center;">
         <div id="coinDisplay" class="coin-display" style="display:none;">
-            <span>🪙</span> <span id="coinCount">200</span>
+            <span>🪙</span> <span id="coinCount">0</span>
         </div>
         
         <nav>
@@ -186,7 +187,7 @@
 
             <!-- SKLEP -->
             <div id="viewShop" style="display:none;">
-                <p style="color:var(--text-muted); margin-bottom:20px;">Wydaj monety na unikalne efekty. Monety zdobywasz za siedzenie na czacie (symulacja).</p>
+                <p style="color:var(--text-muted); margin-bottom:20px;">Wydaj monety na unikalne efekty. Zbieraj monety będąc aktywnym.</p>
                 <div id="shopGrid" class="preset-grid">
                     <!-- JS WYPEŁNI TO -->
                 </div>
@@ -272,21 +273,46 @@ const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.ap
 
 // STATE
 let currentUser = null; 
-let coins = 200; 
+let coins = 0; 
 let ownedPaints = ["Classic Green"]; 
 
-// Presets Definition
+// Presets Definition (SHOP ITEMS)
 const PRESETS = [
+    // --- TIER 1: CHEAP COLORS (10-30) ---
     { name: "Classic Green", price: 0, type: "color", value: "#00ff00", previewStyle: "color:#00ff00" },
-    { name: "Hot Red", price: 50, type: "color", value: "#ff0000", previewStyle: "color:#ff0000" },
+    { name: "Blue", price: 10, type: "color", value: "#0088ff", previewStyle: "color:#0088ff" },
+    { name: "Red", price: 10, type: "color", value: "#ff4444", previewStyle: "color:#ff4444" },
+    { name: "Pink", price: 10, type: "color", value: "#ff66aa", previewStyle: "color:#ff66aa" },
+    { name: "Orange", price: 20, type: "color", value: "#ff8800", previewStyle: "color:#ff8800" },
+    { name: "Purple", price: 20, type: "color", value: "#aa00ff", previewStyle: "color:#aa00ff" },
+    { name: "Cyan", price: 30, type: "color", value: "#00ffff", previewStyle: "color:#00ffff" },
+    { name: "Mint", price: 30, type: "color", value: "#00ffaa", previewStyle: "color:#00ffaa" },
+
+    // --- TIER 2: PREMIUM COLORS (50) ---
     { name: "Deep Void", price: 50, type: "color", value: "#6366f1", previewStyle: "color:#6366f1" },
-    { name: "Toxic", price: 100, type: "glow", value: "#ccff00", shadow: "#00ff00", previewStyle: "color:#ccff00;text-shadow:0 0 10px #00ff00;" },
-    { name: "Lava", price: 100, type: "glow", value: "#ff3300", shadow: "#ffaa00", previewStyle: "color:#ff3300;text-shadow:0 0 10px #ffaa00;" },
-    { name: "Ice", price: 100, type: "glow", value: "#e0f2fe", shadow: "#0ea5e9", previewStyle: "color:#e0f2fe;text-shadow:0 0 10px #0ea5e9;" },
-    { name: "Rainbow", price: 200, type: "animated-rainbow", previewStyle: "background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta); -webkit-background-clip: text; color: transparent;" },
-    { name: "Sunset", price: 150, type: "gradient", value: "linear-gradient(to right, #f59e0b, #ef4444)", previewStyle: "background: linear-gradient(to right, #f59e0b, #ef4444); -webkit-background-clip: text; color: transparent;" },
-    { name: "Poland", price: 150, type: "gradient", value: "linear-gradient(to bottom, #ffffff 50%, #ff0000 50%)", previewStyle: "background: linear-gradient(to bottom, #ffffff 50%, #ff0000 50%); -webkit-background-clip: text; color: transparent;" },
-    { name: "Matrix", price: 300, type: "glow", value: "#00ff00", shadow: "#003300", previewStyle: "color: #00ff00; text-shadow: 0 0 8px #00ff00; font-family: monospace;" }
+    { name: "Hot Pink", price: 50, type: "color", value: "#ff0066", previewStyle: "color:#ff0066" },
+    { name: "Golden Rod", price: 50, type: "color", value: "#daa520", previewStyle: "color:#daa520" },
+    { name: "White", price: 100, type: "color", value: "#ffffff", previewStyle: "color:#ffffff" },
+
+    // --- TIER 3: GRADIENTS & BASIC GLOWS (150-400) ---
+    { name: "Ocean", price: 150, type: "gradient", value: "linear-gradient(to right, #00c6ff, #0072ff)", previewStyle: "background: linear-gradient(to right, #00c6ff, #0072ff); -webkit-background-clip: text; color: transparent;" },
+    { name: "Sunset", price: 200, type: "gradient", value: "linear-gradient(to right, #f59e0b, #ef4444)", previewStyle: "background: linear-gradient(to right, #f59e0b, #ef4444); -webkit-background-clip: text; color: transparent;" },
+    { name: "Neon Blue", price: 200, type: "glow", value: "#e0f2fe", shadow: "#0088ff", previewStyle: "color:#e0f2fe;text-shadow:0 0 10px #0088ff;" },
+    { name: "Toxic Green", price: 250, type: "glow", value: "#ccff00", shadow: "#00ff00", previewStyle: "color:#ccff00;text-shadow:0 0 10px #00ff00;" },
+    { name: "Berry", price: 300, type: "gradient", value: "linear-gradient(to right, #c31432, #240b36)", previewStyle: "background: linear-gradient(to right, #c31432, #240b36); -webkit-background-clip: text; color: transparent;" },
+    { name: "Poland", price: 300, type: "gradient", value: "linear-gradient(to bottom, #ffffff 50%, #ff0000 50%)", previewStyle: "background: linear-gradient(to bottom, #ffffff 50%, #ff0000 50%); -webkit-background-clip: text; color: transparent;" },
+    { name: "Lava", price: 350, type: "glow", value: "#ff3300", shadow: "#ffaa00", previewStyle: "color:#ff3300;text-shadow:0 0 10px #ffaa00;" },
+    { name: "Ghost", price: 400, type: "glow", value: "#ffffff", shadow: "#ffffff", previewStyle: "color:#fff;text-shadow:0 0 10px #fff;" },
+
+    // --- TIER 4: COMPLEX & ELITE (500-900) ---
+    { name: "Gold", price: 500, type: "glow", value: "#ffd700", shadow: "#ffae00", previewStyle: "color:#ffd700;text-shadow:0 0 10px #ffae00;" },
+    { name: "Candy", price: 600, type: "gradient", value: "linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)", previewStyle: "background: linear-gradient(45deg, #ff9a9e, #fecfef); -webkit-background-clip: text; color: transparent;" },
+    { name: "Aurora", price: 700, type: "gradient", value: "linear-gradient(to right, #00f260, #0575e6)", previewStyle: "background: linear-gradient(to right, #00f260, #0575e6); -webkit-background-clip: text; color: transparent;" },
+    { name: "Fire", price: 800, type: "gradient", value: "linear-gradient(to right, #f12711, #f5af19)", previewStyle: "background: linear-gradient(to right, #f12711, #f5af19); -webkit-background-clip: text; color: transparent;" },
+    { name: "Matrix", price: 900, type: "glow", value: "#00ff00", shadow: "#003300", previewStyle: "color: #00ff00; text-shadow: 0 0 8px #00ff00; font-family: monospace;" },
+
+    // --- TIER 5: LEGENDARY (1000) ---
+    { name: "Rainbow", price: 1000, type: "animated-rainbow", previewStyle: "background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta); -webkit-background-clip: text; color: transparent;" }
 ];
 
 // INIT
@@ -348,7 +374,16 @@ function renderShop() {
             actionBtn = `<button class="btn-action btn-buy" style="${disabled}" onclick="buyPaint(${index})">Kup (${p.price})</button>`;
         }
 
-        card.innerHTML = `<div class="card-preview" style="${p.previewStyle}">NickName</div><div class="card-info"><span class="preset-name">${p.name}</span>${actionBtn}</div>`;
+        card.innerHTML = `
+            <div class="card-preview" style="${p.previewStyle}">NickName</div>
+            <div class="card-info">
+                <div>
+                    <span class="preset-name">${p.name}</span>
+                    <span class="preset-price">${isOwned ? "POSIADANE" : p.price + " 🪙"}</span>
+                </div>
+                ${actionBtn}
+            </div>
+        `;
 
         if(isOwned) invGrid.appendChild(card);
         else shopGrid.appendChild(card);
@@ -399,14 +434,14 @@ function enableApp() {
     document.getElementById('loginBtnContainer').style.display = 'none';
     document.getElementById('emotesBlocker').style.display = 'none';
     document.getElementById('badgesBlocker').style.display = 'none';
-    document.getElementById('paintsBlocker').style.display = 'none'; // New blocker
+    document.getElementById('paintsBlocker').style.display = 'none';
     
     // Show content
     document.getElementById('userProfile').style.display = 'flex';
     document.getElementById('coinDisplay').style.display = 'flex';
     document.getElementById('emotesContent').style.display = 'block';
     document.getElementById('badgesContent').style.display = 'block';
-    document.getElementById('paintsContent').style.display = 'block'; // New content
+    document.getElementById('paintsContent').style.display = 'block';
 
     // Fill data
     document.getElementById('avatar').src = currentUser.profile_image_url;
