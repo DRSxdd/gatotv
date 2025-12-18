@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gato.TV Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+<!-- Import czcionek do podglądu -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Press+Start+2P&family=Permanent+Marker&family=Courier+Prime&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -13,6 +14,7 @@
         --bg: #0b1120;       
         --panel: #1e293b;    
         --accent: #38bdf8;
+        --accent-glow: rgba(56, 189, 248, 0.5);
         --twitch: #9146ff;   
         --yellow: #facc15;   
         --text: #f1f5f9;     
@@ -24,23 +26,27 @@
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top, #172554, var(--bg)); color: var(--text); min-height: 100vh; padding-bottom: 50px; }
     
-    /* HEADER & NAV */
+    /* HEADER */
     header { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.3); }
-    .logo { font-size: 28px; font-weight: 900; color: var(--accent); letter-spacing: -1px; text-transform: uppercase; text-shadow: 0 0 20px rgba(56,189,248,0.5); cursor: pointer; }
+    .header-left { display: flex; align-items: center; gap: 25px; }
+    .logo { font-size: 28px; font-weight: 900; color: var(--accent); letter-spacing: -1px; text-transform: uppercase; text-shadow: 0 0 20px var(--accent-glow); cursor: pointer; display: flex; align-items: center; gap: 8px; }
     .beta-tag { font-size: 10px; background: var(--danger); color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700; transform: translateY(-2px); }
     
     .user-profile { display: none; align-items: center; gap: 10px; background: rgba(145, 70, 255, 0.15); padding: 4px 12px 4px 4px; border-radius: 50px; border: 1px solid var(--twitch); }
     .user-avatar { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--twitch); }
     .user-nick { font-weight: 700; font-size: 14px; color: #fff; }
     
-    .btn-login { background: var(--twitch); color: white; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; }
-    .btn-logout { background: transparent; border: none; cursor: pointer; padding: 5px; font-size: 14px; }
+    .btn-login { background: var(--twitch); color: white; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 0 15px rgba(145, 70, 255, 0.2); }
+    .btn-login:hover { background: #772ce8; transform: translateY(-1px); }
+    .btn-logout { background: transparent; border: none; cursor: pointer; padding: 5px; border-radius: 50%; transition: 0.2s; font-size: 14px; display: flex; align-items: center; }
+    .btn-logout:hover { background: rgba(239, 68, 68, 0.2); }
+
     .coin-display { display: flex; align-items: center; gap: 6px; background: rgba(250, 204, 21, 0.1); border: 1px solid var(--yellow); color: var(--yellow); padding: 6px 14px; border-radius: 10px; font-weight: 800; font-size: 14px; margin-right: 20px; }
 
     nav { display: flex; gap: 5px; background: #0f172a; padding: 4px; border-radius: 10px; border: 1px solid var(--border); }
     nav button { background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 600; padding: 8px 16px; cursor: pointer; border-radius: 6px; transition: 0.2s; }
     nav button:hover { color: #fff; background: rgba(255,255,255,0.05); }
-    nav button.active { background: var(--accent); color: #0b1120; font-weight: 800; box-shadow: 0 0 15px rgba(56,189,248,0.5); }
+    nav button.active { background: var(--accent); color: #0b1120; font-weight: 800; box-shadow: 0 0 15px var(--accent-glow); }
     nav button.btn-yellow { color: var(--yellow); }
     nav button.btn-yellow.active { background: var(--yellow); color: #000; box-shadow: 0 0 15px rgba(250, 204, 21, 0.5); }
 
@@ -50,9 +56,10 @@
     @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
     .login-blocker { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; margin-top: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; }
+    .login-blocker h2 { font-size: 28px; margin-bottom: 10px; color: white; }
     .protected-content { display: none; }
 
-    /* PREVIEW & UI */
+    /* CHAT PREVIEW */
     .chat-preview-container { background: #18181b; border: 1px solid #333; border-radius: 12px; padding: 15px 20px; margin-bottom: 30px; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
     .chat-preview-container.light { background: #ffffff; border-color: #e5e5e5; }
     .chat-preview-container.light .chat-msg, .chat-preview-container.light .chat-colon, .chat-preview-container.light .chat-time { color: #0e0e10; }
@@ -82,90 +89,70 @@
     .preset-price { font-size: 11px; color: var(--yellow); font-weight: 700; }
     .btn-action { width: 100%; padding: 8px; border-radius: 6px; border: none; font-weight: 700; cursor: pointer; font-size: 11px; text-transform: uppercase; transition: 0.2s; }
     .btn-buy { background: var(--yellow); color: #000; }
+    .btn-buy:hover { background: #fde047; }
     .btn-equip { background: var(--success); color: #fff; }
-    .btn-unequip { background: #ef4444; color: #fff; }
+    .btn-equip:hover { background: #16a34a; }
     .badge-preview-img { width: 42px; height: 42px; object-fit: contain; }
     .category-badge { position: absolute; top:8px; left:8px; padding:2px 6px; border-radius:4px; font-size:9px; font-weight:bold; text-transform:uppercase; color:white; z-index: 2; }
     .cat-paint { background: #38bdf8; } .cat-badge { background: #9146ff; } .cat-ink { background: #f43f5e; } .cat-font { background: #10b981; } .cat-bg { background: #f59e0b; }
 
-    /* === NEW EMOTES SYSTEM === */
-    .emotes-wrapper { display: flex; flex-direction: column; gap: 20px; }
-    
-    /* 10 Columns Grid */
-    .gallery-grid { 
-        display: grid; 
-        grid-template-columns: repeat(10, 1fr); 
-        gap: 10px; 
-    }
-    
-    .gallery-item { 
-        background: #131c2e; 
-        border: 1px solid var(--border); 
-        border-radius: 8px; 
-        padding: 5px; 
-        text-align: center; 
-        position: relative; 
-        transition: 0.2s; 
-        display:flex; 
-        flex-direction:column; 
-        align-items:center; 
-        justify-content:center; 
-        height: 80px; 
-    }
-    .gallery-item:hover { border-color: var(--accent); transform: scale(1.05); z-index: 2; }
-    .gallery-img { width: 100%; height: 32px; object-fit: contain; margin-bottom: 4px; }
-    .gallery-name { font-weight: 700; font-size: 9px; color: white; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; }
-    
-    .overlay-actions { position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:none; flex-direction:column; justify-content:center; align-items:center; gap:5px; border-radius:8px; }
-    .gallery-item:hover .overlay-actions { display:flex; }
-    .mini-btn { font-size:10px; padding:4px 8px; border-radius:4px; border:none; cursor:pointer; font-weight:bold; width: 80%; }
-    .btn-edit { background:var(--yellow); color:black; }
-    .btn-del { background:var(--danger); color:white; }
-    .btn-add { background:var(--success); color:black; }
+    /* EMOTES */
+    .input-row { display: flex; gap: 15px; margin-bottom: 30px; background: var(--panel); padding: 20px; border-radius: 12px; border: 1px solid var(--border); align-items: flex-end; flex-wrap: wrap; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 150px; }
+    label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+    input { padding: 12px; background: #0f172a; border: 1px solid var(--border); color: white; border-radius: 8px; font-size: 14px; width: 100%; outline: none; }
+    input:focus { border-color: var(--accent); }
+    input:disabled { opacity: 0.5; cursor: not-allowed; background: #162032; }
+    button.btn-primary { padding: 12px 24px; background: linear-gradient(135deg, var(--accent), #0ea5e9); border: none; color: #0f172a; font-weight: 800; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 14px; text-transform: uppercase; }
+    button.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px var(--accent-glow); }
+    button.btn-secondary { background: #334155; color: white; padding: 8px 16px; border-radius: 6px; border:none; font-weight:600; cursor:pointer; font-size: 12px; }
+    .file-upload-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; }
+    .file-upload-btn { border: 1px dashed var(--border); color: var(--text-muted); background: #0f172a; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .file-upload-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%; }
+    #filePreview { margin-top: 10px; max-height: 40px; display: none; border-radius: 4px; border: 1px solid var(--accent); }
 
-    /* Form Styles */
-    .emote-form { background: var(--panel); border: 1px solid var(--border); padding: 30px; border-radius: 12px; display:none; }
-    .form-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .form-row { display: flex; gap: 15px; align-items: flex-end; }
-    .form-group { flex: 1; display: flex; flex-direction: column; gap: 5px; }
-    .form-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-    .form-input { padding: 12px; background: #0f172a; border: 1px solid var(--border); color: white; border-radius: 8px; font-size: 14px; width: 100%; outline: none; }
-    .form-input:disabled { background: #334155; color: #94a3b8; }
-    
-    .btn-upload { background: #0f172a; border: 1px dashed var(--accent); color: var(--accent); padding: 12px; border-radius: 8px; cursor: pointer; text-align: center; font-size: 12px; font-weight: 600; display: block; width: 100%; }
-    .btn-upload:hover { background: rgba(56,189,248,0.1); }
-    #hiddenFileInput { display: none; }
-    #previewImage { margin-top: 10px; height: 50px; display: none; border: 1px solid var(--border); background: #000; padding: 2px; }
+    .emotes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin-top: 20px; }
+    .emote-card { background: #131c2e; border: 1px solid var(--border); border-radius: 10px; padding: 15px; text-align: center; position: relative; transition: 0.2s; min-height: 120px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; }
+    .emote-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+    .emote-img { height: 40px; object-fit: contain; margin-bottom: 10px; }
+    .emote-name { font-weight: 700; font-size: 13px; color: white; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .channel-tag { color: var(--accent); font-weight: 700; text-transform: uppercase; background: rgba(56, 189, 248, 0.1); padding: 2px 4px; border-radius: 4px; margin-top: 2px; display: inline-block; font-size: 10px; }
+    .action-overlay { position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; opacity: 0; transition: 0.2s; font-size: 12px; color: white; z-index: 2; }
+    .emote-card:hover .action-overlay { opacity: 1; }
+    .del-btn { background: var(--danger); }
+    .add-btn { background: var(--success); color: #000; }
 
-    .btn-save { background: var(--success); color: black; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 900; cursor: pointer; height: 42px; }
-    .btn-back { background: #334155; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
-
-    /* INFO (Clean) */
-    .info-box { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 40px; text-align: center; }
-    .info-list { text-align: left; max-width: 400px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
-    .info-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; color: white; font-weight: 600; }
-
-    /* DOWNLOAD (Hero) */
+    /* HERO */
     .hero-card { background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(0,0,0,0)); border: 1px solid var(--border); border-radius: 20px; padding: 60px 40px; text-align: center; }
     .download-style { border-color: rgba(250, 204, 21, 0.3); box-shadow: 0 0 50px rgba(250, 204, 21, 0.05); }
     .btn-download-big { background: var(--yellow); color: #000; font-size: 18px; font-weight: 900; padding: 15px 40px; border: none; border-radius: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin-top: 20px; transition: 0.2s; }
     .btn-download-big:hover { transform: scale(1.05); box-shadow: 0 10px 30px var(--yellow-glow); }
+
+    @keyframes shine { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 </style>
 </head>
 <body>
 
 <header>
     <div class="header-left">
-        <div class="logo" onclick="switchTab('download')">Gato.TV <span class="beta-tag">BETA</span></div>
-        <div id="loginBtnContainer"><button class="btn-login" onclick="loginWithTwitch()">Zaloguj</button></div>
+        <div class="logo">Gato.TV <span class="beta-tag">BETA</span></div>
+        <div id="loginBtnContainer">
+            <button class="btn-login" onclick="loginWithTwitch()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h2.998L22.286 11.57V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+                Zaloguj
+            </button>
+        </div>
         <div id="userProfile" class="user-profile">
             <img id="avatar" class="user-avatar" src="">
             <span id="username" class="user-nick">...</span>
             <button onclick="logout()" class="btn-logout" title="Wyloguj">🛑</button>
         </div>
     </div>
+    
     <div style="display:flex; align-items:center;">
-        <div id="coinDisplay" class="coin-display" style="display:none;"><span>🪙</span> <span id="coinCount">100</span></div>
+        <div id="coinDisplay" class="coin-display" style="display:none;">
+            <span>🪙</span> <span id="coinCount">10</span>
+        </div>
         <nav>
             <button class="active" onclick="switchTab('paints')">Sklep</button>
             <button onclick="switchTab('emotes')">Emotes</button>
@@ -176,102 +163,85 @@
 </header>
 
 <div class="container">
-    <!-- 1. SKLEP -->
+
+    <!-- TAB: SKLEP & EKWIPUNEK -->
     <div id="paints" class="panel active">
-        <div class="login-blocker" id="paintsBlocker"><h2>🔒 Wymagane Logowanie</h2><button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button></div>
+        <div class="login-blocker" id="paintsBlocker">
+            <h2>🔒 Wymagane Logowanie</h2>
+            <p style="color:#94a3b8; margin-bottom:20px;">Zaloguj się, aby zarządzać wyglądem.</p>
+            <button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button>
+        </div>
+
         <div class="protected-content" id="paintsContent">
+            <!-- LIVE PREVIEW BOX -->
             <div class="chat-preview-container" id="chatPreviewBox">
                 <div class="chat-line">
-                    <span class="chat-time">12:30</span><span class="chat-badges"><span class="chat-badge-icon"></span></span>
-                    <span class="chat-username" id="previewUser">TwojNick</span><span class="chat-colon">:</span><span class="chat-msg">Gato.TV to najlepsza wtyczka! 🐱</span>
+                    <span class="chat-time">12:30</span>
+                    <span class="chat-badges"><span class="chat-badge-icon"></span></span>
+                    <span class="chat-username" id="previewUser">TwojNick</span>
+                    <span class="chat-colon">:</span>
+                    <span class="chat-msg">Gato.TV to najlepsza wtyczka! 🐱</span>
                 </div>
                 <button class="toggle-theme-btn" onclick="togglePreviewTheme()">🌗</button>
             </div>
+
             <div class="sub-nav">
                 <button id="tabInv" class="active" onclick="switchPaintSubTab('inv')">EKWIPUNEK</button>
                 <button id="tabShop" onclick="switchPaintSubTab('shop')">SKLEP</button>
             </div>
-            <div id="viewInventory"><div id="inventoryGrid" class="preset-grid"></div></div>
-            <div id="viewShop" style="display:none;"><div id="shopGrid" class="preset-grid"></div></div>
-        </div>
-    </div>
-
-    <!-- 2. EMOTES (COMPLETELY REWRITTEN) -->
-    <div id="emotes" class="panel">
-        <div class="login-blocker" id="emotesBlocker"><h2>🔒 Wymagane Logowanie</h2><button class="btn-login" onclick="loginWithTwitch()">Zaloguj</button></div>
-        <div class="protected-content" id="emotesContent">
             
-            <!-- SECTION A: GALLERY -->
-            <div id="SECTION_GALLERY">
+            <div id="viewInventory"><div id="inventoryGrid" class="preset-grid"></div></div>
+            <div id="viewShop" style="display:none;">
+                <p style="color:var(--text-muted); margin-bottom:20px;">Kupuj unikalne efekty za monety.</p>
+                <div id="shopGrid" class="preset-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB: EMOTES -->
+    <div id="emotes" class="panel">
+        <div class="login-blocker" id="emotesBlocker">
+            <h2>🔒 Wymagane Logowanie</h2>
+            <p style="color:#94a3b8; margin-bottom:20px;">Zaloguj się, aby zarządzać emotkami.</p>
+            <button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button>
+        </div>
+
+        <div class="protected-content" id="emotesContent">
+            <div id="emotesGalleryView">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <h2>Galeria Emotek (Global 10x5)</h2>
-                    <button class="btn-save" onclick="showEmoteForm()">+ DODAJ SWOJĄ</button>
+                    <h2>Galeria Emotek (Global)</h2>
+                    <button class="btn-primary small" onclick="openEmoteForm()">+ DODAJ SWOJĄ</button>
                 </div>
-                <div id="galleryContainer" class="gallery-grid">Ładowanie...</div>
+                <div id="emotesGrid" class="emotes-grid">Loading...</div>
             </div>
 
-            <!-- SECTION B: FORM -->
-            <div id="SECTION_FORM" class="emote-form">
-                <div class="form-header">
-                    <h2 id="formTitle">Dodaj Nową Emotkę</h2>
-                    <button class="btn-back" onclick="showGallery()">Anuluj</button>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group" style="flex:1">
-                        <label class="form-label">Nazwa (np. xdd)</label>
-                        <input id="inpName" class="form-input" placeholder="Wpisz kod emotki">
-                    </div>
-                    
-                    <div class="form-group" style="flex:2">
-                        <label class="form-label">Obrazek</label>
-                        <!-- Hidden file input triggered by label/button -->
-                        <input type="file" id="hiddenFileInput" accept="image/*" onchange="processFile()">
-                        <div class="btn-upload" onclick="document.getElementById('hiddenFileInput').click()">📂 Wybierz plik z komputera</div>
-                        
-                        <input id="inpUrl" class="form-input" placeholder="...lub wklej link URL" style="margin-top:5px;">
-                        <img id="previewImage" src="">
-                    </div>
-
-                    <div class="form-group" style="flex:1">
-                        <label class="form-label">Autor</label>
-                        <input id="inpAuthor" class="form-input" disabled>
-                    </div>
-
-                    <button class="btn-save" onclick="submitEmote()">ZAPISZ</button>
+            <div id="emotesFormView" style="display:none;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h2>Dodaj Nową Emotkę</h2>
+                    <button class="btn-secondary" onclick="closeEmoteForm()">Powrót</button>
                 </div>
 
-                <div style="margin-top:30px; border-top:1px solid var(--border); padding-top:20px;">
-                    <h3>Twoje Emotki</h3>
-                    <div id="myEmotesContainer" class="gallery-grid"></div>
+                <div class="input-row">
+                    <div class="form-group" style="flex:1;"><label>Nazwa (Kod)</label><input id="emoName" placeholder="np. xdd"></div>
+                    <div class="form-group" style="flex:2;"><label>Obrazek</label>
+                        <div class="file-upload-wrapper"><div class="file-upload-btn" id="fileBtnText"><span>📂 Wybierz plik</span></div><input type="file" id="emoFile" accept="image/*" onchange="previewFile()"></div>
+                        <input id="emoUrl" placeholder="lub link..." style="margin-top:5px;">
+                    </div>
+                    <div class="form-group"><label>Autor</label><input id="emoAuthor" disabled></div>
+                    <div class="form-group" style="flex:1.5;"><label>Kanał</label><input id="emoChannel" disabled></div>
+                    <button class="btn-primary" onclick="addEmote()">ZAPISZ</button>
                 </div>
-            </div>
 
-        </div>
-    </div>
-
-    <!-- 3. INFO -->
-    <div id="info" class="panel">
-        <div class="info-box">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Gato" style="width:100px; border-radius:50%; margin-bottom:20px;">
-            <h1>Gato.TV</h1>
-            <p>Ultimate Chat Enhancer</p>
-            <div class="info-list">
-                <div class="info-item"><span>Wersja</span> <span>1.0 Beta</span></div>
-                <div class="info-item"><span>Autor</span> <span>GatoJestemFormaOstateczna</span></div>
-                <div class="info-item"><span>Status</span> <span style="color:#22c55e">Online</span></div>
+                <h3 style="margin-top:30px; border-top:1px solid var(--border); padding-top:20px; color:white;">Twoje Emotki</h3>
+                <div id="myEmotesGrid" class="emotes-grid"></div>
             </div>
         </div>
     </div>
-    
-    <!-- 4. DOWNLOAD -->
-    <div id="download" class="panel">
-        <div class="hero-card download-style">
-            <h1>Zainstaluj</h1>
-            <p>Wersja 1.0 Beta</p>
-            <button class="btn-download-big" onclick="fireConfetti()">POBIERZ</button>
-        </div>
-    </div>
+
+    <!-- OTHER TABS -->
+    <div id="info" class="panel"><div class="hero-card"><h1>Gato.TV</h1><p>Autor: GatoJestemFormaOstateczna</p></div></div>
+    <div id="download" class="panel"><div class="hero-card download-style"><h1>Zainstaluj</h1><p>Wersja 1.0 Beta</p><button class="btn-download-big" onclick="fireConfetti()">POBIERZ</button></div></div>
+
 </div>
 
 <script>
@@ -279,36 +249,56 @@
 const CLIENT_ID = 'l0agnxl8yeto7wda5wvblpg1mr55db'; 
 const REDIRECT_URI = 'https://drsxdd.github.io/gatotv/'; 
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
+// ================================================
 
 let currentUser = null; 
-let coins = 100; 
-let ownedItems = []; 
-let activeItems = { paint: "", badge: "", ink: "", font: "", bg: "" }; 
+let coins = 10; 
+let ownedItems = ["Classic Green", "Default Font"]; 
 let allEmotesData = {}; 
 let confettiCooldown = false;
 
-// KATALOG (5 COINS)
 const CATALOG = [
-    { name: "Neon Cyber", category:"paint", price: 5, type: "gradient", value: "linear-gradient(90deg, #ff00cc, #333399)", previewStyle: "background: linear-gradient(90deg, #ff00cc, #333399); -webkit-background-clip: text; color: transparent; font-weight:900;" },
-    { name: "Star Badge", category:"badge", price: 5, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/1828/1828884.png", previewStyle: "" },
-    { name: "Neon Border", category:"bg", price: 5, type: "bg", value: "border: 1px solid #00ffff; box-shadow: 0 0 10px #00ffff inset; background: rgba(0,0,0,0.4);", previewStyle: "border:1px solid #00ffff;" },
-    { name: "Golden Ink", category:"ink", price: 5, type: "ink", value: "#ffd700", previewStyle: "color:#ffd700" },
-    { name: "Hot Pink Ink", category:"ink", price: 5, type: "ink", value: "#ff0066", previewStyle: "color:#ff0066" }
+    // PAINTS (5)
+    { name: "Classic Green", category:"paint", price: 0, type: "color", value: "#00ff00", previewStyle: "color:#00ff00" },
+    { name: "Mana Potion", category:"paint", price: 10, type: "gradient", value: "linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%)", previewStyle: `background-image: linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%); filter: drop-shadow(rgb(215, 15, 255) 0px 0px 0.1px) drop-shadow(rgb(64, 0, 77) 1px 1px 0.1px); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: shine 3s linear infinite; font-weight: 900;` },
+    { name: "Fire Lord", category:"paint", price: 50, type: "gradient", value: "linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #ff0000)", previewStyle: "background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #ff0000); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: shine 3s linear infinite; font-weight:900;" },
+    { name: "Golden Legend", category:"paint", price: 100, type: "glow", value: "#ffd700", shadow: "#ffae00", previewStyle: "color:#ffd700;text-shadow:0 0 10px #ffae00; font-weight:800;" },
+    { name: "RGB Master", category:"paint", price: 200, type: "animated-rainbow", previewStyle: "background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta); -webkit-background-clip: text; color: transparent; font-weight:900;" },
+    // BADGES (3)
+    { name: "Star Badge", category:"badge", price: 20, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/1828/1828884.png", previewStyle: "" },
+    { name: "Shield Badge", category:"badge", price: 30, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/343/343053.png", previewStyle: "" },
+    { name: "King Crown", category:"badge", price: 50, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/2545/2545603.png", previewStyle: "" },
+    // INK (3)
+    { name: "Golden Ink", category:"ink", price: 50, type: "ink", value: "#ffd700", previewStyle: "color:#ffd700" },
+    { name: "Matrix Green", category:"ink", price: 50, type: "ink", value: "#00ff00", previewStyle: "color:#00ff00; font-family:monospace" },
+    { name: "Hot Pink", category:"ink", price: 50, type: "ink", value: "#ff0066", previewStyle: "color:#ff0066" },
+    // FONTS (2)
+    { name: "Default Font", category:"font", price: 0, type: "font", value: "inherit", previewStyle: "" },
+    { name: "Retro Pixel", category:"font", price: 30, type: "font", value: "'Press Start 2P', cursive", previewStyle: "font-family:'Press Start 2P'" },
+    // BG (2)
+    { name: "Golden Glow", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(255, 215, 0, 0.1), transparent)", previewStyle: "background:rgba(255,215,0,0.3)" },
+    { name: "Toxic Mist", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(0, 255, 0, 0.1), transparent)", previewStyle: "background:rgba(0,255,0,0.2)" }
 ];
 
+// INIT
 window.onload = () => {
-    setLoggedOutState(); 
+    setLoggedOutState(); // Force logout UI first
+
     if (document.location.hash.includes('access_token')) {
         const token = new URLSearchParams(document.location.hash.substring(1)).get('access_token');
-        if(token) { localStorage.setItem('twitch_token', token); validateToken(token); window.history.replaceState({}, document.title, window.location.pathname); }
+        if(token) {
+            localStorage.setItem('twitch_token', token);
+            validateToken(token);
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
     } else {
         const stored = localStorage.getItem('twitch_token');
         if(stored) validateToken(stored);
     }
+
     if(localStorage.getItem('gato_coins')) coins = parseInt(localStorage.getItem('gato_coins'));
     if(localStorage.getItem('gato_owned')) ownedItems = JSON.parse(localStorage.getItem('gato_owned'));
-    if(localStorage.getItem('gato_active')) activeItems = JSON.parse(localStorage.getItem('gato_active'));
-    updateCoinDisplay(); renderShop();
+    updateCoinDisplay();
 };
 
 function setLoggedOutState() {
@@ -318,246 +308,158 @@ function setLoggedOutState() {
     document.querySelectorAll('.login-blocker').forEach(b => b.style.display = 'flex');
     document.querySelectorAll('.protected-content').forEach(c => c.style.display = 'none');
 }
-function loginWithTwitch() { window.location.href = `https://id.twitch.tv/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=user:read:email`; }
-function logout() { localStorage.removeItem('twitch_token'); location.reload(); }
-async function validateToken(token) {
-    try { const res = await fetch('https://api.twitch.tv/helix/users', { headers: { 'Client-ID': CLIENT_ID, 'Authorization': `Bearer ${token}` } });
-    if(!res.ok) throw new Error("Token Invalid"); const data = await res.json(); currentUser = data.data[0]; enableApp(); } catch(e) { localStorage.removeItem('twitch_token'); setLoggedOutState(); }
+
+function loginWithTwitch() {
+    window.location.href = `https://id.twitch.tv/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=user:read:email`;
 }
+
+function logout() {
+    localStorage.removeItem('twitch_token');
+    location.reload();
+}
+
+async function validateToken(token) {
+    try {
+        const res = await fetch('https://api.twitch.tv/helix/users', { headers: { 'Client-ID': CLIENT_ID, 'Authorization': `Bearer ${token}` } });
+        if(!res.ok) throw new Error("Token Invalid");
+        const data = await res.json();
+        currentUser = data.data[0];
+        enableApp();
+    } catch(e) {
+        console.error("Login fail:", e);
+        localStorage.removeItem('twitch_token');
+        setLoggedOutState();
+    }
+}
+
 function enableApp() {
     document.getElementById('loginBtnContainer').style.display = 'none';
     document.getElementById('userProfile').style.display = 'flex';
     document.getElementById('coinDisplay').style.display = 'flex';
     document.querySelectorAll('.login-blocker').forEach(b => b.style.display = 'none');
     document.querySelectorAll('.protected-content').forEach(c => c.style.display = 'block');
+
     document.getElementById('avatar').src = currentUser.profile_image_url;
     document.getElementById('username').innerText = currentUser.display_name;
     document.getElementById('previewUser').innerText = currentUser.display_name;
+    document.getElementById('emoAuthor').value = currentUser.display_name;
     loadAll();
+    renderShop(); // IMPORTANT: Render shop after login confirm
 }
 
+// SHOP LOGIC
 function renderShop() {
     const shop = document.getElementById("shopGrid");
     const inv = document.getElementById("inventoryGrid");
     shop.innerHTML = ""; inv.innerHTML = "";
-    CATALOG.forEach((item) => {
+
+    CATALOG.forEach((item, index) => {
         const isOwned = ownedItems.includes(item.name);
-        const isActive = activeItems[item.category] === item.name;
         const card = document.createElement("div");
         card.className = isOwned ? "preset-card owned" : "preset-card";
         
-        card.onmouseenter = () => { if(item.category==='paint') document.getElementById('previewUser').style.cssText=item.previewStyle; };
-        card.onmouseleave = () => { document.getElementById('previewUser').style.cssText=""; };
-
-        let previewText = "NickName"; if(item.category === "ink") previewText = "ABC";
-        let preview = `<div style="${item.previewStyle}">${previewText}</div>`;
-        if(item.category==="badge") preview = `<img src="${item.value}" class="badge-preview-img">`;
-        if(item.category==="bg") preview = `<div style="width:100%;height:20px;${item.previewStyle}"></div>`;
-
-        let actionBtn;
-        if (isOwned) {
-            actionBtn = isActive ? `<button class="btn-action btn-unequip" onclick="unequipItem('${item.category}')">ZDEJMIJ</button>` : `<button class="btn-action btn-equip" onclick="equipItemByName('${item.name}')">Załóż</button>`;
-        } else {
-             actionBtn = `<button class="btn-action btn-buy" onclick="buyItemByName('${item.name}')">Kup ${item.price}</button>`;
+        // Mouse hover preview
+        card.onmouseenter = () => {
+            if(item.category === 'paint') document.getElementById('previewUser').style.cssText = item.previewStyle + "; font-size:13px;";
+            else if(item.category === 'ink') document.querySelector('.chat-msg').style.cssText = item.previewStyle;
+        };
+        card.onmouseleave = () => {
+            document.getElementById('previewUser').style.cssText = "";
+            document.querySelector('.chat-msg').style.cssText = "";
         }
-        card.innerHTML = `<span class="category-badge cat-${item.category}">${item.category}</span><div class="card-preview">${preview}</div><div class="card-info"><div><span class="preset-name">${item.name}</span><span class="preset-price">${isOwned?"POSIADANE":item.price+" 🪙"}</span></div>${actionBtn}</div>`;
+
+        let preview = `<div style="${item.previewStyle}">NickName</div>`;
+        if(item.category === "badge") preview = `<img src="${item.value}" class="badge-preview-img">`;
+        if(item.category === "bg") preview = `<div style="width:100%;height:20px;${item.previewStyle}"></div>`;
+        if(item.category === "font") preview = `<div style="${item.previewStyle}">Abc</div>`;
+        if(item.category === "ink") preview = `<div style="${item.previewStyle}">Tekst</div>`;
+
+        let btn = isOwned 
+            ? `<button class="btn-action btn-equip" onclick="equipItem(${index})">Załóż</button>`
+            : `<button class="btn-action btn-buy" onclick="buyItem(${index})">Kup ${item.price}</button>`;
+
+        card.innerHTML = `
+            <span class="category-badge cat-${item.category}">${item.category}</span>
+            <div class="card-preview">${preview}</div>
+            <div class="card-info">
+                <div>
+                    <span class="preset-name">${item.name}</span>
+                    <span class="preset-price" style="color:${item.category==='badge'?'#9146ff':'#facc15'}">
+                        ${isOwned ? "POSIADANE" : item.price + " 🪙"}
+                    </span>
+                </div>
+                ${actionBtn}
+            </div>
+        `;
         (isOwned ? inv : shop).appendChild(card);
     });
 }
 
-function buyItemByName(name) {
-    const item = CATALOG.find(x => x.name === name);
-    if(coins >= item.price) { coins -= item.price; ownedItems.push(item.name); updateCoinDisplay(); renderShop(); fireConfetti(true); } else alert("Za mało monet!");
+function buyItem(idx) {
+    const item = CATALOG[idx];
+    if(coins >= item.price) {
+        coins -= item.price; ownedItems.push(item.name);
+        updateCoinDisplay(); renderShop(); fireConfetti(true);
+    }
 }
 
-async function equipItemByName(name) {
+async function equipItem(idx) {
     if(!currentUser) return;
-    const item = CATALOG.find(x => x.name === name);
-    const user = currentUser.login.toLowerCase(); 
+    const item = CATALOG[idx];
+    const user = currentUser.login;
     let payload = item.value;
-    if(item.category === 'paint') { payload = { type: item.type, value: item.value }; }
-    try { await api(`premium/${user}/${item.category}`, "PUT", payload); activeItems[item.category] = item.name; localStorage.setItem('gato_active', JSON.stringify(activeItems)); renderShop(); } catch(e) { alert("Błąd bazy!"); }
+    if(item.category === 'paint') {
+        payload = { type: item.type, value: item.value };
+        if(item.shadow) payload.shadow = item.shadow;
+    }
+    await api(`premium/${user}/${item.category}`, "PUT", payload);
+    alert(`Założono: ${item.name}`);
 }
 
-async function unequipItem(category) {
-    if(!currentUser) return;
-    const user = currentUser.login.toLowerCase();
-    try {
-        await api(`premium/${user}/${category}`, "DELETE");
-        activeItems[category] = "";
-        localStorage.setItem('gato_active', JSON.stringify(activeItems));
-        renderShop();
-    } catch(e) { alert("Błąd!"); }
-}
-
+// HELPERS
 function updateCoinDisplay() { document.getElementById('coinCount').innerText = coins; localStorage.setItem('gato_coins', coins); localStorage.setItem('gato_owned', JSON.stringify(ownedItems)); }
 function switchTab(id) { document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); document.querySelectorAll('nav button').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); if(event.target.tagName==='BUTTON') event.target.classList.add('active'); }
 function switchPaintSubTab(tab) { document.getElementById('viewInventory').style.display = tab==='inv'?'block':'none'; document.getElementById('viewShop').style.display = tab==='shop'?'block':'none'; document.getElementById('tabInv').className = tab==='inv'?'active':''; document.getElementById('tabShop').className = tab==='shop'?'active':''; }
 function togglePreviewTheme() { document.getElementById('chatPreviewBox').classList.toggle('light'); }
-function fireConfetti(shopMode){ if(!shopMode && confettiCooldown) return; if(!shopMode) { confettiCooldown = true; setTimeout(()=>confettiCooldown=false, 10000); } confetti({particleCount:100, spread:70, origin: {x:0.5, y:0.5}, colors: ['#facc15', '#ffffff']}); }
-
-// =================== REWRITTEN EMOTE SYSTEM ===================
-
-function showEmoteForm(isNew = true) {
-    // 1. Check Login
-    if(!currentUser) return alert("Musisz być zalogowany!");
-
-    // 2. Clear Form or Prep for Edit
-    if(isNew) {
-        document.getElementById('formTitle').innerText = "Dodaj Nową Emotkę";
-        document.getElementById('inpName').value = "";
-        document.getElementById('inpName').disabled = false;
-        document.getElementById('inpUrl').value = "";
-        document.getElementById('inpAuthor').value = currentUser.display_name;
-        document.getElementById('previewImage').style.display = "none";
-    }
-
-    // 3. Render My Emotes List at bottom of form
-    renderMyEmotesList();
-
-    // 4. Switch Views
-    document.getElementById('SECTION_GALLERY').style.display = 'none';
-    document.getElementById('SECTION_FORM').style.display = 'block';
+function fireConfetti(shopMode){
+    if(!shopMode && confettiCooldown) return;
+    if(!shopMode) { confettiCooldown = true; setTimeout(()=>confettiCooldown=false, 10000); }
+    const colors = shopMode ? ['#facc15', '#ffffff'] : ['#38bdf8','#facc15','#9146ff'];
+    const origin = shopMode ? {x:0.5, y:0.5} : {x:0, y:1};
+    confetti({particleCount:100, spread:70, origin: origin, colors: colors});
+    if(!shopMode) confetti({particleCount:100, spread:70, origin: {x:1, y:1}, colors: colors});
 }
 
-function showGallery() {
-    document.getElementById('SECTION_FORM').style.display = 'none';
-    document.getElementById('SECTION_GALLERY').style.display = 'block';
-    loadAll();
-}
-
-// FILE PROCESSING
-function processFile() {
-    const file = document.getElementById('hiddenFileInput').files[0];
-    if(file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const base64 = e.target.result;
-            // Fill URL input with base64 data
-            document.getElementById('inpUrl').value = base64;
-            // Show preview
-            document.getElementById('previewImage').src = base64;
-            document.getElementById('previewImage').style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
-async function submitEmote() {
-    const name = document.getElementById('inpName').value.trim();
-    const url = document.getElementById('inpUrl').value.trim();
-    const author = currentUser.display_name;
-    const channel = currentUser.login;
-
-    if(!name || !url) return alert("Wypełnij nazwę i URL (lub wybierz plik)!");
-
-    // Send to Firebase
-    await api(`emotes/${name}`, "PUT", {
-        url: url,
-        author: author,
-        scope: 'channel',
-        channel: channel
-    });
-
-    alert("Emotka dodana!");
-    showGallery();
-}
+// EMOTES LOGIC
+function openEmoteForm() { if(!currentUser) return; document.getElementById('emoChannel').value = currentUser.login; renderMyEmotes(); document.getElementById('emotesGalleryView').style.display='none'; document.getElementById('emotesFormView').style.display='block'; }
+function closeEmoteForm() { document.getElementById('emotesFormView').style.display='none'; document.getElementById('emotesGalleryView').style.display='block'; loadAll(); }
 
 async function loadAll() {
-    if(!currentUser) return;
-    const data = await api('emotes') || {};
-    allEmotesData = data;
-    
-    // Render Global Grid
-    const html = Object.keys(data).reverse().map(key => {
-        const item = data[key];
-        let overlay = "";
-        
-        // If owner, show Edit/Delete. If not, show Add/Clone.
-        if(item.author === currentUser.display_name) {
-            overlay = `
-                <div class="overlay-actions">
-                    <button class="mini-btn btn-edit" onclick="editEmote('${key}')">EDYTUJ</button>
-                    <button class="mini-btn btn-del" onclick="deleteEmote('${key}')">USUŃ</button>
-                </div>
-            `;
-        } else {
-            overlay = `
-                <div class="overlay-actions">
-                    <button class="mini-btn btn-add" onclick="cloneEmote('${key}')">DODAJ</button>
-                </div>
-            `;
-        }
-
-        return `
-            <div class="gallery-item">
-                ${overlay}
-                <img src="${item.url}" class="gallery-img">
-                <div class="gallery-name">${key}</div>
-            </div>
-        `;
-    }).join('');
-    
-    document.getElementById('galleryContainer').innerHTML = html;
-}
-
-function renderMyEmotesList() {
-    const keys = Object.keys(allEmotesData).filter(k => allEmotesData[k].author === currentUser.display_name).reverse();
-    const html = keys.map(k => {
-        return `
-            <div class="gallery-item">
-                <div class="overlay-actions">
-                    <button class="mini-btn btn-edit" onclick="editEmote('${k}')">EDYTUJ</button>
-                    <button class="mini-btn btn-del" onclick="deleteEmote('${k}')">USUŃ</button>
-                </div>
-                <img src="${allEmotesData[k].url}" class="gallery-img">
-                <div class="gallery-name">${k}</div>
-            </div>
-        `;
-    }).join('');
-    
-    document.getElementById('myEmotesContainer').innerHTML = html || "<p style='color:#666;width:100%'>Brak własnych emotek.</p>";
-}
-
-function editEmote(name) {
-    if(!allEmotesData[name]) return;
-    showEmoteForm(false); // Mode: Edit
-    
-    document.getElementById('formTitle').innerText = "Edycja: " + name;
-    document.getElementById('inpName').value = name;
-    document.getElementById('inpName').disabled = true; // Cannot change ID
-    document.getElementById('inpUrl').value = allEmotesData[name].url;
-    document.getElementById('previewImage').src = allEmotesData[name].url;
-    document.getElementById('previewImage').style.display = "block";
-}
-
-function cloneEmote(name) {
-    const data = allEmotesData[name];
-    showEmoteForm(true);
-    document.getElementById('inpName').value = name;
-    document.getElementById('inpUrl').value = data.url;
-    document.getElementById('previewImage').src = data.url;
-    document.getElementById('previewImage').style.display = "block";
-}
-
-async function deleteEmote(name) {
-    if(confirm("Usunąć emotkę " + name + "?")) {
-        await api(`emotes/${name}`, "DELETE");
-        loadAll(); // Refresh
-        // If inside form, refresh list there too
-        if(document.getElementById('SECTION_FORM').style.display === 'block') {
-            renderMyEmotesList();
-        }
+    if(currentUser) {
+        allEmotesData = await api('emotes') || {}; 
+        document.getElementById('emotesGrid').innerHTML = Object.keys(allEmotesData).reverse().map(k=>{
+            const e=allEmotesData[k];
+            let btn = e.author===currentUser.display_name ? `<div class="action-overlay del-btn" onclick="del('emotes/${k}')">✖</div>` : `<div class="action-overlay add-btn" onclick="cloneEmote('${k}','${e.url}')">✚</div>`;
+            return `<div class="emote-card">${btn}<img src="${e.url}" class="emote-img"><div class="emote-info"><div class="emote-name">${k}</div><div class="channel-tag">#${e.channel}</div></div></div>`;
+        }).join('');
     }
 }
-
-async function api(path, method="GET", body=null) { 
-    const opts = { method }; 
-    if(body) opts.body = JSON.stringify(body); 
-    const res = await fetch(`${DB_URL}/${path}.json`, opts); 
-    if (!res.ok) throw new Error("API Error"); 
-    return res.json(); 
+function renderMyEmotes() {
+    const keys = Object.keys(allEmotesData).filter(k=>allEmotesData[k].channel===currentUser.login).reverse();
+    document.getElementById('myEmotesGrid').innerHTML = keys.length ? keys.map(k=>`<div class="emote-card"><img src="${allEmotesData[k].url}" class="emote-img"><div class="emote-name">${k}</div><div class="action-overlay del-btn" onclick="del('emotes/${k}', true)">✖</div></div>`).join('') : '<p style="color:#666">Brak emotek.</p>';
 }
+
+async function addEmote() {
+    const name=document.getElementById('emoName').value.trim(); const url=document.getElementById('emoUrl').value.trim();
+    if(!name||!url) return alert("Brakuje danych");
+    await api(`emotes/${name}`, "PUT", { url, author: currentUser.display_name, scope:'channel', channel:currentUser.login });
+    closeEmoteForm();
+}
+function cloneEmote(n,u) { openEmoteForm(); document.getElementById('emoName').value=n; document.getElementById('emoUrl').value=u; }
+async function del(p, r=false) { if(confirm("Usunąć?")) { await api(p, "DELETE"); loadAll(); if(r) setTimeout(()=>{loadAll(); openEmoteForm()}, 500); } }
+async function api(path, method="GET", body=null) { const opts={method}; if(body) opts.body=JSON.stringify(body); try{const r=await fetch(`${DB_URL}/${path}.json`,opts);return r.json()}catch(e){} }
+function previewFile() { const f = document.getElementById('emoFile').files[0]; if(f) { document.getElementById('emoUrl').disabled=true; const r=new FileReader(); r.onload=e=>{document.getElementById('filePreview').src=e.target.result; document.getElementById('filePreview').style.display='block'}; r.readAsDataURL(f); } }
+const toBase64=f=>new Promise((res,rej)=>{const r=new FileReader();r.readAsDataURL(f);r.onload=()=>res(r.result);r.onerror=e=>rej(e)});
 </script>
 </body>
 </html>
