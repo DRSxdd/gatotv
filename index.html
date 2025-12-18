@@ -41,7 +41,7 @@
         height: 80px;
         display: flex;
         align-items: center;
-        justify-content: space-between; /* Rozdziela lewą (logo+btn) i prawą (nav) stronę */
+        justify-content: space-between;
         padding: 0 40px;
         border-bottom: 1px solid var(--border);
         position: sticky;
@@ -49,7 +49,7 @@
         z-index: 100;
     }
 
-    /* Grupa po lewej stronie: Logo, Beta, Download */
+    /* Grupa po lewej stronie */
     .header-left {
         display: flex;
         align-items: center;
@@ -69,7 +69,6 @@
         gap: 10px;
     }
     
-    /* Napis BETA */
     .beta-tag {
         font-size: 11px;
         background: var(--danger);
@@ -79,10 +78,9 @@
         font-weight: 700;
         letter-spacing: 1px;
         box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
-        transform: translateY(-2px); /* Lekko w górę */
+        transform: translateY(-2px);
     }
 
-    /* Przycisk Download w Headerze */
     .btn-download-nav {
         background: rgba(250, 204, 21, 0.1);
         color: var(--yellow);
@@ -236,28 +234,33 @@
         box-shadow: 0 10px 25px var(--accent-glow); 
     }
 
-    /* ===== DOWNLOAD CARD STYLES ===== */
-    .download-hero {
-        background: linear-gradient(135deg, rgba(250, 204, 21, 0.05), rgba(0,0,0,0));
-        border: 1px solid rgba(250, 204, 21, 0.3);
+    /* ===== HERO CARDS (Download & Info) ===== */
+    .hero-card {
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(0,0,0,0));
+        border: 1px solid var(--border);
         border-radius: 20px;
         padding: 60px 40px;
         text-align: center;
-        box-shadow: 0 0 50px rgba(250, 204, 21, 0.05);
+        box-shadow: 0 0 50px rgba(0,0,0,0.2);
         position: relative;
         overflow: hidden;
     }
 
-    .download-hero h1 {
+    /* Specyficzne dla Download */
+    .download-style {
+        background: linear-gradient(135deg, rgba(250, 204, 21, 0.05), rgba(0,0,0,0));
+        border-color: rgba(250, 204, 21, 0.3);
+        box-shadow: 0 0 50px rgba(250, 204, 21, 0.05);
+    }
+    
+    .hero-card h1 {
         font-size: 48px;
         margin: 0 0 15px 0;
-        background: linear-gradient(90deg, #fff, var(--yellow));
-        -webkit-background-clip: text;
-        color: transparent;
         font-weight: 900;
+        color: white;
     }
 
-    .download-hero p {
+    .hero-card p {
         font-size: 18px;
         color: var(--text-muted);
         max-width: 600px;
@@ -378,6 +381,18 @@
     }
     .btn-del:hover { background: var(--danger); color: white; }
 
+    /* Animation for "Coming Soon" */
+    @keyframes pulseText {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+    .blink-text {
+        animation: pulseText 2s infinite;
+        font-weight: 300;
+        letter-spacing: 2px;
+        color: var(--accent);
+    }
+
 </style>
 </head>
 <body>
@@ -399,6 +414,7 @@
         <button class="active" onclick="switchTab('paints')">Paints</button>
         <button onclick="switchTab('emotes')">Emotes</button>
         <button onclick="switchTab('badges')">Odznaki</button>
+        <button onclick="switchTab('info')">Informacje</button>
     </nav>
 </header>
 
@@ -492,8 +508,8 @@
 
     <!-- ================== DOWNLOAD TAB ================== -->
     <div id="download" class="panel">
-        <div class="download-hero">
-            <h1>Zainstaluj Gato.TV</h1>
+        <div class="hero-card download-style">
+            <h1 style="background: linear-gradient(90deg, #fff, var(--yellow)); -webkit-background-clip: text; color: transparent;">Zainstaluj Gato.TV</h1>
             <p>Najlepsza wtyczka do Twitcha. Odkryj nowy wymiar czatowania dzięki unikalnym emotkom, kolorowym nickom i odznakom.</p>
             
             <button class="btn-download-big" onclick="fireConfetti()">POBIERZ WTYCZKĘ (v1.0)</button>
@@ -507,6 +523,24 @@
         </div>
     </div>
 
+    <!-- ================== INFORMACJE (NEW) ================== -->
+    <div id="info" class="panel">
+        <div class="hero-card">
+            <h1>Gato.TV</h1>
+            
+            <div style="margin: 40px 0;">
+                <p style="font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px;">Autor wtyczki</p>
+                <div style="font-size: 32px; font-weight: 800; color: var(--accent); text-shadow: 0 0 20px var(--accent-glow);">
+                    GatoJestemFormaOstateczna
+                </div>
+            </div>
+
+            <div class="blink-text">
+                Opis Coming Soon...
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
@@ -515,7 +549,7 @@ const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.ap
 // ================== EFFECT LOGIC ==================
 function openDownloadTab() {
     switchTab('download');
-    fireConfetti();
+    // USUNIĘTO fireConfetti() stąd - teraz działa tylko z dużego przycisku
 }
 
 function fireConfetti() {
