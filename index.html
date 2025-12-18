@@ -91,7 +91,7 @@
     button.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px var(--accent-glow); }
 
     /* SHOP / PRESETS */
-    .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
+    .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
     
     .preset-card {
         background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 5px;
@@ -101,7 +101,7 @@
     .preset-card:hover { border-color: var(--text-muted); transform: translateY(-2px); }
     .preset-card.owned { border-color: var(--success); background: rgba(34, 197, 94, 0.05); }
     
-    .card-preview { padding: 25px 10px; font-size: 20px; font-weight: 800; }
+    .card-preview { padding: 30px 10px; font-size: 24px; font-weight: 900; }
     .card-info { background: #131c2e; padding: 12px; border-radius: 0 0 12px 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; justify-content: flex-end;}
     .preset-name { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; display: block; }
     .preset-price { font-size: 11px; color: var(--yellow); font-weight: 700; margin-bottom: 5px; display: block; }
@@ -118,6 +118,13 @@
     .btn-download-big { background: var(--yellow); color: #000; font-size: 20px; font-weight: 900; padding: 20px 60px; border: none; border-radius: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 10px 40px var(--yellow-glow); transition: 0.3s; }
     .btn-download-big:hover { transform: scale(1.05); box-shadow: 0 15px 60px var(--yellow-glow); background: #fde047; }
     .blink-text { animation: pulseText 2s infinite; font-weight: 300; letter-spacing: 2px; color: var(--accent); }
+    
+    /* ANIMACJA DLA MANA POTION (SHINE) */
+    @keyframes shine {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
     @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     
     /* Lists */
@@ -146,7 +153,7 @@
     
     <div style="display:flex; align-items:center;">
         <div id="coinDisplay" class="coin-display" style="display:none;">
-            <span>🪙</span> <span id="coinCount">0</span>
+            <span>🪙</span> <span id="coinCount">10</span>
         </div>
         
         <nav>
@@ -187,7 +194,7 @@
 
             <!-- SKLEP -->
             <div id="viewShop" style="display:none;">
-                <p style="color:var(--text-muted); margin-bottom:20px;">Wydaj monety na unikalne efekty. Zbieraj monety będąc aktywnym.</p>
+                <p style="color:var(--text-muted); margin-bottom:20px;">Wydaj monety na unikalne efekty.</p>
                 <div id="shopGrid" class="preset-grid">
                     <!-- JS WYPEŁNI TO -->
                 </div>
@@ -273,51 +280,38 @@ const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.ap
 
 // STATE
 let currentUser = null; 
-let coins = 0; 
+let coins = 10; // Startowe 10 coins
 let ownedPaints = ["Classic Green"]; 
 
 // Presets Definition (SHOP ITEMS)
 const PRESETS = [
-    // --- TIER 1: CHEAP COLORS (10-30) ---
+    // FREE
     { name: "Classic Green", price: 0, type: "color", value: "#00ff00", previewStyle: "color:#00ff00" },
-    { name: "Blue", price: 10, type: "color", value: "#0088ff", previewStyle: "color:#0088ff" },
-    { name: "Red", price: 10, type: "color", value: "#ff4444", previewStyle: "color:#ff4444" },
-    { name: "Pink", price: 10, type: "color", value: "#ff66aa", previewStyle: "color:#ff66aa" },
-    { name: "Orange", price: 20, type: "color", value: "#ff8800", previewStyle: "color:#ff8800" },
-    { name: "Purple", price: 20, type: "color", value: "#aa00ff", previewStyle: "color:#aa00ff" },
-    { name: "Cyan", price: 30, type: "color", value: "#00ffff", previewStyle: "color:#00ffff" },
-    { name: "Mint", price: 30, type: "color", value: "#00ffaa", previewStyle: "color:#00ffaa" },
-
-    // --- TIER 2: PREMIUM COLORS (50) ---
-    { name: "Deep Void", price: 50, type: "color", value: "#6366f1", previewStyle: "color:#6366f1" },
-    { name: "Hot Pink", price: 50, type: "color", value: "#ff0066", previewStyle: "color:#ff0066" },
-    { name: "Golden Rod", price: 50, type: "color", value: "#daa520", previewStyle: "color:#daa520" },
-    { name: "White", price: 100, type: "color", value: "#ffffff", previewStyle: "color:#ffffff" },
-
-    // --- TIER 3: GRADIENTS & BASIC GLOWS (150-400) ---
-    { name: "Ocean", price: 150, type: "gradient", value: "linear-gradient(to right, #00c6ff, #0072ff)", previewStyle: "background: linear-gradient(to right, #00c6ff, #0072ff); -webkit-background-clip: text; color: transparent;" },
-    { name: "Sunset", price: 200, type: "gradient", value: "linear-gradient(to right, #f59e0b, #ef4444)", previewStyle: "background: linear-gradient(to right, #f59e0b, #ef4444); -webkit-background-clip: text; color: transparent;" },
-    { name: "Neon Blue", price: 200, type: "glow", value: "#e0f2fe", shadow: "#0088ff", previewStyle: "color:#e0f2fe;text-shadow:0 0 10px #0088ff;" },
-    { name: "Toxic Green", price: 250, type: "glow", value: "#ccff00", shadow: "#00ff00", previewStyle: "color:#ccff00;text-shadow:0 0 10px #00ff00;" },
-    { name: "Berry", price: 300, type: "gradient", value: "linear-gradient(to right, #c31432, #240b36)", previewStyle: "background: linear-gradient(to right, #c31432, #240b36); -webkit-background-clip: text; color: transparent;" },
-    { name: "Poland", price: 300, type: "gradient", value: "linear-gradient(to bottom, #ffffff 50%, #ff0000 50%)", previewStyle: "background: linear-gradient(to bottom, #ffffff 50%, #ff0000 50%); -webkit-background-clip: text; color: transparent;" },
-    { name: "Lava", price: 350, type: "glow", value: "#ff3300", shadow: "#ffaa00", previewStyle: "color:#ff3300;text-shadow:0 0 10px #ffaa00;" },
-    { name: "Ghost", price: 400, type: "glow", value: "#ffffff", shadow: "#ffffff", previewStyle: "color:#fff;text-shadow:0 0 10px #fff;" },
-
-    // --- TIER 4: COMPLEX & ELITE (500-900) ---
-    { name: "Gold", price: 500, type: "glow", value: "#ffd700", shadow: "#ffae00", previewStyle: "color:#ffd700;text-shadow:0 0 10px #ffae00;" },
-    { name: "Candy", price: 600, type: "gradient", value: "linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)", previewStyle: "background: linear-gradient(45deg, #ff9a9e, #fecfef); -webkit-background-clip: text; color: transparent;" },
-    { name: "Aurora", price: 700, type: "gradient", value: "linear-gradient(to right, #00f260, #0575e6)", previewStyle: "background: linear-gradient(to right, #00f260, #0575e6); -webkit-background-clip: text; color: transparent;" },
-    { name: "Fire", price: 800, type: "gradient", value: "linear-gradient(to right, #f12711, #f5af19)", previewStyle: "background: linear-gradient(to right, #f12711, #f5af19); -webkit-background-clip: text; color: transparent;" },
-    { name: "Matrix", price: 900, type: "glow", value: "#00ff00", shadow: "#003300", previewStyle: "color: #00ff00; text-shadow: 0 0 8px #00ff00; font-family: monospace;" },
-
-    // --- TIER 5: LEGENDARY (1000) ---
-    { name: "Rainbow", price: 1000, type: "animated-rainbow", previewStyle: "background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta); -webkit-background-clip: text; color: transparent;" }
+    
+    // PAID (Mana Potion)
+    { 
+        name: "Mana Potion", 
+        price: 10, 
+        type: "gradient", 
+        value: "linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%)",
+        previewStyle: `
+            background-image: linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%);
+            filter: drop-shadow(rgb(215, 15, 255) 0px 0px 0.1px) drop-shadow(rgb(64, 0, 77) 1px 1px 0.1px);
+            -webkit-background-clip: text;
+            color: transparent;
+            background-size: 200% auto;
+            animation: shine 3s linear infinite;
+            font-weight: 900;
+        `
+    }
 ];
 
 // INIT
 window.onload = () => {
-    if(localStorage.getItem('gato_coins')) coins = parseInt(localStorage.getItem('gato_coins'));
+    // Odczyt z localStorage (chyba że pierwszy raz)
+    if(localStorage.getItem('gato_coins') !== null) coins = parseInt(localStorage.getItem('gato_coins'));
+    else localStorage.setItem('gato_coins', 10); // Ustaw 10 na start jeśli brak
+
     if(localStorage.getItem('gato_owned')) ownedPaints = JSON.parse(localStorage.getItem('gato_owned'));
     
     updateCoinDisplay();
