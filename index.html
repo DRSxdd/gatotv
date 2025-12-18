@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>gato.tv panel</title>
-
 <style>
 *{box-sizing:border-box}
 body{
@@ -13,7 +12,6 @@ body{
   background:linear-gradient(135deg,#0e0e13,#15151d);
   color:white;
 }
-
 /* TOP BAR */
 header{
   height:64px;
@@ -75,6 +73,37 @@ nav button.active,nav button:hover{color:white}
   text-align:center;
 }
 
+/* BADGES */
+.badge-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(80px,1fr));
+  gap:12px;
+  margin-top:24px;
+}
+.badge{
+  background:#0f0f17;
+  border-radius:12px;
+  padding:10px;
+  text-align:center;
+  cursor:pointer;
+  border:2px solid transparent;
+}
+.badge.active{border-color:#ffcc00}
+.badge img{
+  width:32px;
+  height:32px;
+}
+.preview-badge{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  justify-content:center;
+}
+.preview-badge img{
+  width:24px;
+  height:24px;
+}
+
 /* EMOTES */
 .form{
   display:grid;
@@ -118,7 +147,6 @@ button.primary{
 }
 </style>
 </head>
-
 <body>
 
 <header>
@@ -135,13 +163,15 @@ button.primary{
 <!-- PAINTS -->
 <div class="panel active" id="paints">
   <h1>Paints</h1>
-
   <input id="nick" placeholder="Nick z Twitcha">
   <div class="preview" id="preview">Podgląd nicku</div>
 
   <div class="paint-grid" id="paintGrid"></div>
 
-  <button class="primary" id="applyPaint">Nadaj paint</button>
+  <h2 style="margin-top:40px">Badges</h2>
+  <div class="badge-grid" id="badgeGrid"></div>
+
+  <button class="primary" id="applyPaint">Nadaj paint + badge</button>
 </div>
 
 <!-- EMOTES -->
@@ -167,6 +197,7 @@ button.primary{
 <script>
 const API="https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
 
+// -------------------- PAINTS --------------------
 const paints=[
  {label:"Red",paint:{type:"color",color:"#ff3333"}},
  {label:"Blue",paint:{type:"color",color:"#33ccff"}},
@@ -179,31 +210,57 @@ const paints=[
  {label:"Split RW",paint:{type:"split",color:"#ff0000",splitColor:"#ffffff"}},
  {label:"Split BY",paint:{type:"split",color:"#3399ff",splitColor:"#ffff00"}}
 ];
-
 let selected=paints[0].paint;
+
+// -------------------- BADGES --------------------
+const badges=[
+ {id:"none",label:"Brak",url:null},
+ {id:"crown",label:"Crown",url:"https://cdn-icons-png.flaticon.com/512/616/616489.png"},
+ {id:"star",label:"Star",url:"https://cdn-icons-png.flaticon.com/512/616/616554.png"},
+ {id:"dev",label:"Dev",url:"https://cdn-icons-png.flaticon.com/512/5968/5968292.png"},
+ {id:"vip",label:"VIP",url:"https://cdn-icons-png.flaticon.com/512/2583/2583344.png"},
+];
+let selectedBadge=null;
+
+// -------------------- RENDER PAINTS --------------------
 const grid=document.getElementById("paintGrid");
+const badgeGrid=document.getElementById("badgeGrid");
 const preview=document.getElementById("preview");
 
 function renderPreview(){
-  const t=document.getElementById("nick").value||"Podgląd";
-  preview.innerHTML=t;
-  preview.style="";
-  if(selected.type==="color") preview.style.color=selected.color;
+  const nick=document.getElementById("nick").value||"Podgląd";
+  preview.innerHTML="";
+  const wrap=document.createElement("div");
+  wrap.className="preview-badge";
+  if(selectedBadge && selectedBadge.url){
+    const img=document.createElement("img");
+    img.src=selectedBadge.url;
+    wrap.appendChild(img);
+  }
+  const span=document.createElement("span");
+  span.textContent=nick;
+  wrap.appendChild(span);
+
+  // paint
+  span.style="";
+  if(selected.type==="color") span.style.color=selected.color;
   if(selected.type==="gradient"){
-    preview.style.background=selected.gradient;
-    preview.style.webkitBackgroundClip="text";
-    preview.style.webkitTextFillColor="transparent";
+    span.style.background=selected.gradient;
+    span.style.webkitBackgroundClip="text";
+    span.style.webkitTextFillColor="transparent";
   }
   if(selected.type==="split"){
-    const m=Math.floor(t.length/2);
-    preview.innerHTML=
-      `<span style="color:${selected.color}">${t.slice(0,m)}</span>`+
-      `<span style="color:${selected.splitColor}">${t.slice(m)}</span>`;
+    const m=Math.floor(nick.length/2);
+    span.innerHTML=
+      `<span style="color:${selected.color}">${nick.slice(0,m)}</span>`+
+      `<span style="color:${selected.splitColor}">${nick.slice(m)}</span>`;
   }
   if(selected.glow)
-    preview.style.textShadow=`0 0 6px ${selected.glowColor}`;
+    span.style.textShadow=`0 0 6px ${selected.glowColor}`;
+  preview.appendChild(wrap);
 }
 
+// paints
 paints.forEach(p=>{
   const d=document.createElement("div");
   d.className="paint";
@@ -218,19 +275,40 @@ paints.forEach(p=>{
 });
 grid.firstChild.classList.add("active");
 
-document.getElementById("nick").oninput=renderPreview;
+// badges
+badges.forEach(b=>{
+  const d=document.createElement("div");
+  d.className="badge";
+  d.innerHTML=b.url ? `<img src="${b.url}"><div>${b.label}</div>` : `<div>${b.label}</div>`;
+  d.onclick=()=>{
+    document.querySelectorAll(".badge").forEach(x=>x.classList.remove("active"));
+    d.classList.add("active");
+    selectedBadge = b.id==="none"?null:b;
+    renderPreview();
+  };
+  badgeGrid.appendChild(d);
+});
+badgeGrid.firstChild.classList.add("active");
 
+// update preview
+document.getElementById("nick").oninput=renderPreview;
+renderPreview();
+
+// apply paint + badge
 document.getElementById("applyPaint").onclick=async()=>{
   const nick=document.getElementById("nick").value.trim().toLowerCase();
   if(!nick) return alert("Podaj nick");
-  const payload={};
-  payload[nick]={paint:selected};
-  await fetch(API+"/premium.json",{method:"PATCH",body:JSON.stringify(payload)});
+
+  const data={paint:selected};
+  if(selectedBadge) data.badge=selectedBadge;
+
+  await fetch(API+"/premium.json",{
+    method:"PATCH",
+    body:JSON.stringify({[nick]:data})
+  });
 };
 
-renderPreview();
-
-/* tabs + emotes (bez zmian) */
+// tabs
 document.querySelectorAll("nav button").forEach(b=>{
   b.onclick=()=>{
     document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
@@ -240,7 +318,7 @@ document.querySelectorAll("nav button").forEach(b=>{
   };
 });
 </script>
-
 </body>
 </html>
+
 
