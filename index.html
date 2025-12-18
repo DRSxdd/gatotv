@@ -166,11 +166,16 @@ button.primary{
 <div class="panel" id="emotes">
   <h1>Emotes</h1>
 
+  <div>
+    <label><input type="radio" name="scope" value="global" checked> Globalna</label>
+    <label><input type="radio" name="scope" value="channel"> Kanałowa</label>
+  </div>
+
   <div class="form">
     <input id="emoteTrigger" placeholder="Trigger (np. xdd)">
     <input id="emoteAuthor" placeholder="Autor">
+    <input id="emoteChannel" placeholder="Kanał (jeśli kanałowa)">
     <input id="emoteUrl" placeholder="Link do obrazka">
-    <input id="emoteChannel" placeholder="Kanał (opcjonalnie)">
     <button class="primary" id="addEmote">Dodaj</button>
   </div>
 
@@ -186,5 +191,17 @@ button.primary{
 </div>
 
 <script src="content.js"></script>
+<script>
+/* TABS */
+document.querySelectorAll("nav button").forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+    b.classList.add("active");
+    document.getElementById(b.dataset.tab).classList.add("active");
+  };
+});
+</script>
+
 </body>
 </html>
