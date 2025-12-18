@@ -87,11 +87,14 @@
     .card-info { background: #131c2e; padding: 12px; border-radius: 0 0 8px 8px; display: flex; flex-direction: column; gap: 8px; flex: 1; justify-content: flex-end; }
     .preset-name { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; display: block; }
     .preset-price { font-size: 11px; color: var(--yellow); font-weight: 700; }
+    
     .btn-action { width: 100%; padding: 8px; border-radius: 6px; border: none; font-weight: 700; cursor: pointer; font-size: 11px; text-transform: uppercase; transition: 0.2s; }
     .btn-buy { background: var(--yellow); color: #000; }
     .btn-buy:hover { background: #fde047; }
     .btn-equip { background: var(--success); color: #fff; }
     .btn-equip:hover { background: #16a34a; }
+    .btn-equipped { background: #334155; color: #94a3b8; cursor: default; }
+    
     .badge-preview-img { width: 42px; height: 42px; object-fit: contain; }
     .category-badge { position: absolute; top:8px; left:8px; padding:2px 6px; border-radius:4px; font-size:9px; font-weight:bold; text-transform:uppercase; color:white; z-index: 2; }
     .cat-paint { background: #38bdf8; } .cat-badge { background: #9146ff; } .cat-ink { background: #f43f5e; } .cat-font { background: #10b981; } .cat-bg { background: #f59e0b; }
@@ -101,6 +104,7 @@
     .form-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 150px; }
     label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
     input { padding: 12px; background: #0f172a; border: 1px solid var(--border); color: white; border-radius: 8px; font-size: 14px; width: 100%; outline: none; }
+    input:disabled { background: #1e293b; color: #64748b; border-color: transparent; }
     button.btn-primary { padding: 12px 24px; background: linear-gradient(135deg, var(--accent), #0ea5e9); border: none; color: #0f172a; font-weight: 800; border-radius: 8px; cursor: pointer; font-size: 14px; text-transform: uppercase; }
     button.btn-secondary { background: #334155; color: white; padding: 8px 16px; border-radius: 6px; border:none; font-weight:600; cursor:pointer; font-size: 12px; }
     .file-upload-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; }
@@ -114,16 +118,34 @@
     .emote-img { height: 40px; object-fit: contain; margin-bottom: 10px; }
     .emote-name { font-weight: 700; font-size: 13px; color: white; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .channel-tag { color: var(--accent); font-weight: 700; text-transform: uppercase; background: rgba(56, 189, 248, 0.1); padding: 2px 4px; border-radius: 4px; margin-top: 2px; display: inline-block; font-size: 10px; }
-    .action-overlay { position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; opacity: 0; transition: 0.2s; font-size: 12px; color: white; z-index: 2; }
+    
+    .action-overlay { position: absolute; top: 6px; width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; opacity: 0; transition: 0.2s; font-size: 12px; color: white; z-index: 2; }
     .emote-card:hover .action-overlay { opacity: 1; }
-    .del-btn { background: var(--danger); }
-    .add-btn { background: var(--success); color: #000; }
+    .del-btn { right: 6px; background: var(--danger); }
+    .edit-btn { right: 32px; background: var(--yellow); color: black; } /* Edit Icon */
+    .add-btn { right: 6px; background: var(--success); color: #000; }
 
-    /* HERO */
-    .hero-card { background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(0,0,0,0)); border: 1px solid var(--border); border-radius: 20px; padding: 60px 40px; text-align: center; }
-    .download-style { border-color: rgba(250, 204, 21, 0.3); box-shadow: 0 0 50px rgba(250, 204, 21, 0.05); }
-    .btn-download-big { background: var(--yellow); color: #000; font-size: 18px; font-weight: 900; padding: 15px 40px; border: none; border-radius: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin-top: 20px; transition: 0.2s; }
-    .btn-download-big:hover { transform: scale(1.05); box-shadow: 0 10px 30px var(--yellow-glow); }
+    /* DOWNLOAD TAB REDESIGN */
+    .dl-wrapper { display: flex; align-items: center; gap: 40px; background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 50px; overflow: hidden; position: relative; }
+    .dl-content { flex: 1; z-index: 2; }
+    .dl-content h1 { font-size: 42px; margin: 0 0 10px 0; background: linear-gradient(90deg, #fff, #94a3b8); -webkit-background-clip: text; color: transparent; line-height: 1.1; }
+    .dl-content p { color: var(--text-muted); font-size: 16px; margin-bottom: 30px; line-height: 1.6; }
+    .dl-features { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+    .dl-feat { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; color: #e2e8f0; }
+    .dl-feat svg { color: var(--success); }
+    .dl-visual { flex: 0.8; display: flex; justify-content: center; align-items: center; position: relative; }
+    .dl-visual img { width: 100%; max-width: 250px; filter: drop-shadow(0 0 50px rgba(56,189,248,0.2)); transform: rotate(-5deg); transition: 0.5s; }
+    .dl-wrapper:hover .dl-visual img { transform: rotate(0deg) scale(1.05); }
+    
+    .btn-download-glow { 
+        background: linear-gradient(90deg, var(--yellow), #f59e0b); 
+        color: #000; font-size: 16px; font-weight: 900; 
+        padding: 16px 40px; border: none; border-radius: 12px; 
+        cursor: pointer; text-transform: uppercase; letter-spacing: 1px; 
+        box-shadow: 0 10px 30px rgba(250, 204, 21, 0.3); 
+        transition: 0.2s; display: inline-flex; align-items: center; gap: 10px;
+    }
+    .btn-download-glow:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(250, 204, 21, 0.5); }
 
     @keyframes shine { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 </style>
@@ -207,14 +229,14 @@
             <div id="emotesGalleryView">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                     <h2>Galeria Emotek (Global)</h2>
-                    <button class="btn-primary" style="height:36px; font-size:12px; padding:0 15px;" onclick="openEmoteForm()">+ DODAJ SWOJĄ</button>
+                    <button class="btn-primary" style="height:36px; font-size:12px; padding:0 15px;" onclick="openEmoteForm(true)">+ DODAJ SWOJĄ</button>
                 </div>
                 <div id="emotesGrid" class="emotes-grid">Loading...</div>
             </div>
 
             <div id="emotesFormView" style="display:none;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <h2>Dodaj Nową Emotkę</h2>
+                    <h2 id="emoteFormTitle">Dodaj Nową Emotkę</h2>
                     <button class="btn-secondary" onclick="closeEmoteForm()">Powrót</button>
                 </div>
 
@@ -237,7 +259,33 @@
 
     <!-- OTHER TABS -->
     <div id="info" class="panel"><div class="hero-card"><h1>Gato.TV</h1><p>Autor: GatoJestemFormaOstateczna</p></div></div>
-    <div id="download" class="panel"><div class="hero-card download-style"><h1>Zainstaluj</h1><p>Wersja 1.0 Beta</p><button class="btn-download-big" onclick="fireConfetti()">POBIERZ</button></div></div>
+    
+    <!-- NEW DOWNLOAD TAB -->
+    <div id="download" class="panel">
+        <div class="dl-wrapper">
+            <div class="dl-content">
+                <div style="display:inline-block; padding:5px 10px; background:rgba(250,204,21,0.2); color:var(--yellow); border-radius:50px; font-size:12px; font-weight:700; margin-bottom:15px;">NOWOŚĆ: Wersja 1.0</div>
+                <h1>Ulepsz swój czat<br>z Gato.TV</h1>
+                <p>Odkryj nowy wymiar interakcji na Twitchu. Kolorowe nicki, unikalne odznaki, customowe emotki i wiele więcej. Dołącz do elity już teraz.</p>
+                
+                <div class="dl-features">
+                    <div class="dl-feat"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg> Customowe Nicki</div>
+                    <div class="dl-feat"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg> Globalne Emotki</div>
+                    <div class="dl-feat"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg> Widoczne dla wszystkich</div>
+                    <div class="dl-feat"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg> 100% Darmowe</div>
+                </div>
+
+                <button class="btn-download-glow" onclick="fireConfetti()">
+                    <span>POBIERZ ROZSZERZENIE</span>
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 4v12m0 0l-4-4m4 4l4-4m0 8h-8"></path></svg>
+                </button>
+            </div>
+            <div class="dl-visual">
+                <!-- Placeholder na logo lub mockup -->
+                <img src="https://cdn-icons-png.flaticon.com/512/5968/5968819.png" alt="Twitch Icon">
+            </div>
+        </div>
+    </div>
 
 </div>
 
@@ -251,6 +299,8 @@ const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.ap
 let currentUser = null; 
 let coins = 100; // startowy bonus
 let ownedItems = ["Classic Green", "Default Font"]; 
+// NOWOŚĆ: Przechowujemy aktywne przedmioty (category -> item_name)
+let activeItems = { paint: "Classic Green", badge: "", ink: "", font: "Default Font", bg: "" }; 
 let allEmotesData = {}; 
 let confettiCooldown = false;
 
@@ -280,14 +330,16 @@ const CATALOG = [
     { name: "Retro Pixel", category:"font", price: 30, type: "font", value: "'Press Start 2P', cursive", previewStyle: "font-family:'Press Start 2P'; font-size:10px;" },
     { name: "Marker", category:"font", price: 30, type: "font", value: "'Permanent Marker', cursive", previewStyle: "font-family:'Permanent Marker'" },
 
-    // BG (Tło wiadomości)
-    { name: "Golden Glow", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(255, 215, 0, 0.1), transparent)", previewStyle: "background:rgba(255,215,0,0.3)" },
-    { name: "Toxic Mist", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(0, 255, 0, 0.1), transparent)", previewStyle: "background:rgba(0,255,0,0.2)" }
+    // BG (Tło wiadomości - Nowe ładniejsze + 1 testowa ramka)
+    { name: "Golden Glow", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(255, 215, 0, 0.2), transparent)", previewStyle: "background:rgba(255,215,0,0.3)" },
+    { name: "Toxic Mist", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(0, 255, 0, 0.2), transparent)", previewStyle: "background:rgba(0,255,0,0.2)" },
+    { name: "Night Sky", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(25, 25, 112, 0.6), transparent)", previewStyle: "background:navy; color:white;" },
+    { name: "Testowa Ramka", category:"bg", price: 10, type: "bg", value: "border", previewStyle: "border:1px solid gold;" }
 ];
 
 // INIT
 window.onload = () => {
-    setLoggedOutState(); // Default state
+    setLoggedOutState(); 
 
     if (document.location.hash.includes('access_token')) {
         const token = new URLSearchParams(document.location.hash.substring(1)).get('access_token');
@@ -303,6 +355,7 @@ window.onload = () => {
 
     if(localStorage.getItem('gato_coins')) coins = parseInt(localStorage.getItem('gato_coins'));
     if(localStorage.getItem('gato_owned')) ownedItems = JSON.parse(localStorage.getItem('gato_owned'));
+    if(localStorage.getItem('gato_active')) activeItems = JSON.parse(localStorage.getItem('gato_active')); // Load active state
     updateCoinDisplay(); renderShop();
 };
 
@@ -351,7 +404,7 @@ function enableApp() {
     loadAll();
 }
 
-// SHOP LOGIC
+// SHOP LOGIC - AKTUALIZACJA PRZYCISKU
 function renderShop() {
     const shop = document.getElementById("shopGrid");
     const inv = document.getElementById("inventoryGrid");
@@ -359,10 +412,12 @@ function renderShop() {
 
     CATALOG.forEach((item, index) => {
         const isOwned = ownedItems.includes(item.name);
+        // Sprawdzamy czy ten konkretny przedmiot jest aktualnie założony w swojej kategorii
+        const isActive = activeItems[item.category] === item.name;
+
         const card = document.createElement("div");
         card.className = isOwned ? "preset-card owned" : "preset-card";
         
-        // Mouse hover preview
         card.onmouseenter = () => {
             if(item.category === 'paint') document.getElementById('previewUser').style.cssText = item.previewStyle + "; font-size:13px;";
             else if(item.category === 'ink') document.querySelector('.chat-msg').style.cssText = item.previewStyle;
@@ -380,9 +435,18 @@ function renderShop() {
         if(item.category === "font") preview = `<div style="${item.previewStyle}">Abc</div>`;
         if(item.category === "ink") preview = `<div style="${item.previewStyle}">Tekst</div>`;
 
-        let actionBtn = isOwned 
-            ? `<button class="btn-action btn-equip" onclick="equipItem(${index})">Załóż</button>`
-            : `<button class="btn-action btn-buy" onclick="buyItem(${index})">Kup ${item.price}</button>`;
+        let actionBtn;
+        if (isOwned) {
+            if (isActive) {
+                // Jeśli założone - szary przycisk, nieaktywny
+                actionBtn = `<button class="btn-action btn-equipped" disabled>ZAŁOŻONE</button>`;
+            } else {
+                // Jeśli posiadane ale nie założone - zielony przycisk
+                actionBtn = `<button class="btn-action btn-equip" onclick="equipItem(${index})">Załóż</button>`;
+            }
+        } else {
+             actionBtn = `<button class="btn-action btn-buy" onclick="buyItem(${index})">Kup ${item.price}</button>`;
+        }
 
         card.innerHTML = `
             <span class="category-badge cat-${item.category}">${item.category}</span>
@@ -412,21 +476,21 @@ function buyItem(idx) {
 async function equipItem(idx) {
     if(!currentUser) return;
     const item = CATALOG[idx];
-    const user = currentUser.login.toLowerCase(); // Ważne: lowercase dla spójności z content.js
+    const user = currentUser.login.toLowerCase(); 
     let payload = item.value;
     
-    // Specjalna struktura dla Paint, aby pasowała do content.js (type, value)
     if(item.category === 'paint') {
         payload = { type: item.type, value: item.value };
         if(item.shadow) payload.shadow = item.shadow;
     }
     
-    // WYSYŁANIE DO API (teraz odblokowane)
     try {
         await api(`premium/${user}/${item.category}`, "PUT", payload);
-        alert(`Założono: ${item.name} (Zapisano w bazie)`);
+        // Zapisujemy, że ten przedmiot jest aktywny
+        activeItems[item.category] = item.name;
+        localStorage.setItem('gato_active', JSON.stringify(activeItems)); // Zapisz stan lokalnie
+        renderShop(); // Odśwież widok sklepu (zmieni przycisk na ZAŁOŻONE)
         
-        // Zaktualizuj podgląd na stałe (opcjonalnie)
         if(item.category === 'paint') document.getElementById('previewUser').style = item.previewStyle;
     } catch(e) {
         alert("Błąd połączenia z bazą!");
@@ -449,42 +513,70 @@ function fireConfetti(shopMode){
 }
 
 // EMOTES
-function openEmoteForm() { if(!currentUser) return; document.getElementById('emoChannel').value = currentUser.login; renderMyEmotes(); document.getElementById('emotesGalleryView').style.display='none'; document.getElementById('emotesFormView').style.display='block'; }
+function openEmoteForm(isNew = false) { 
+    if(!currentUser) return; 
+    document.getElementById('emoChannel').value = currentUser.login; 
+    
+    // Jeśli to nowa emotka (nie edycja), wyczyść formularz
+    if(isNew) {
+        document.getElementById('emoFormTitle').innerText = "Dodaj Nową Emotkę";
+        document.getElementById('emoName').value = "";
+        document.getElementById('emoName').disabled = false; // Odblokuj nazwę
+        document.getElementById('emoUrl').value = "";
+        document.getElementById('fileBtnText').innerHTML = "<span>📂 Wybierz plik</span>";
+    }
+
+    renderMyEmotes(); 
+    document.getElementById('emotesGalleryView').style.display='none'; 
+    document.getElementById('emotesFormView').style.display='block'; 
+}
+
 function closeEmoteForm() { document.getElementById('emotesFormView').style.display='none'; document.getElementById('emotesGalleryView').style.display='block'; loadAll(); }
+
+// NOWOŚĆ: Funkcja Edycji
+function editEmote(name) {
+    if(!allEmotesData[name]) return;
+    const data = allEmotesData[name];
+    
+    openEmoteForm(false); // Otwórz formularz w trybie edycji
+    document.getElementById('emoFormTitle').innerText = "Edytuj Emotkę";
+    
+    document.getElementById('emoName').value = name;
+    document.getElementById('emoName').disabled = true; // Zablokuj edycję nazwy (to jest ID)
+    document.getElementById('emoUrl').value = data.url;
+}
 
 async function loadAll() {
     if(currentUser) {
         allEmotesData = await api('emotes') || {}; 
         document.getElementById('emotesGrid').innerHTML = Object.keys(allEmotesData).reverse().map(k=>{
             const e=allEmotesData[k];
-            let btn = e.author===currentUser.display_name ? `<div class="action-overlay del-btn" onclick="del('emotes/${k}')">✖</div>` : `<div class="action-overlay add-btn" onclick="cloneEmote('${k}','${e.url}')">✚</div>`;
+            let btn = e.author===currentUser.display_name ? `<div class="action-overlay del-btn" onclick="del('emotes/${k}')">✖</div><div class="action-overlay edit-btn" onclick="editEmote('${k}')">✏️</div>` : `<div class="action-overlay add-btn" onclick="cloneEmote('${k}','${e.url}')">✚</div>`;
             return `<div class="emote-card">${btn}<img src="${e.url}" class="emote-img"><div class="emote-info"><div class="emote-name">${k}</div><div class="channel-tag">#${e.channel}</div></div></div>`;
         }).join('');
     }
 }
+
 function renderMyEmotes() {
     const keys = Object.keys(allEmotesData).filter(k=>allEmotesData[k].channel===currentUser.login).reverse();
-    document.getElementById('myEmotesGrid').innerHTML = keys.length ? keys.map(k=>`<div class="emote-card"><img src="${allEmotesData[k].url}" class="emote-img"><div class="emote-name">${k}</div><div class="action-overlay del-btn" onclick="del('emotes/${k}', true)">✖</div></div>`).join('') : '<p style="color:#666">Brak emotek.</p>';
+    document.getElementById('myEmotesGrid').innerHTML = keys.length ? keys.map(k=>`<div class="emote-card"><img src="${allEmotesData[k].url}" class="emote-img"><div class="emote-name">${k}</div><div class="action-overlay del-btn" onclick="del('emotes/${k}', true)">✖</div><div class="action-overlay edit-btn" onclick="editEmote('${k}')">✏️</div></div>`).join('') : '<p style="color:#666">Brak emotek.</p>';
 }
 
 async function addEmote() {
     const name=document.getElementById('emoName').value.trim(); const url=document.getElementById('emoUrl').value.trim();
     if(!name||!url) return alert("Brakuje danych");
     
-    // Zapisywanie emotki do bazy
+    // Zapisywanie emotki do bazy (działa jako Create i Update)
     await api(`emotes/${name}`, "PUT", { url, author: currentUser.display_name, scope:'channel', channel:currentUser.login });
     
     closeEmoteForm();
 }
-function cloneEmote(n,u) { openEmoteForm(); document.getElementById('emoName').value=n; document.getElementById('emoUrl').value=u; }
-async function del(p, r=false) { if(confirm("Usunąć?")) { await api(p, "DELETE"); loadAll(); if(r) setTimeout(()=>{loadAll(); openEmoteForm()}, 500); } }
+function cloneEmote(n,u) { openEmoteForm(true); document.getElementById('emoName').value=n; document.getElementById('emoUrl').value=u; }
+async function del(p, r=false) { if(confirm("Usunąć?")) { await api(p, "DELETE"); loadAll(); if(r) setTimeout(()=>{loadAll(); renderMyEmotes()}, 500); } }
 
-// === API CALL HELPER ===
 async function api(path, method="GET", body=null) { 
     const opts = { method }; 
     if(body) opts.body = JSON.stringify(body); 
-    
-    // Wywołanie do Firebase REST API
     const res = await fetch(`${DB_URL}/${path}.json`, opts);
     if (!res.ok) throw new Error("API Error");
     return res.json(); 
