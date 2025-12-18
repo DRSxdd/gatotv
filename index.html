@@ -6,7 +6,7 @@
 <title>gato.tv panel</title>
 
 <style>
-*{box-sizing:border-box;}
+*{box-sizing:border-box}
 body{
   margin:0;
   font-family:Inter,Segoe UI,sans-serif;
@@ -53,7 +53,7 @@ nav button.active,nav button:hover{color:white}
   padding:24px;
   border-radius:16px;
 }
-.panel.active{display:block;}
+.panel.active{display:block}
 
 .paint-grid{
   display:grid;
@@ -77,11 +77,6 @@ nav button.active,nav button:hover{color:white}
   text-align:center;
 }
 
-.badge-checkbox{
-  margin-top:14px;
-  font-weight:700;
-}
-
 input{
   width:100%;
   padding:12px;
@@ -92,7 +87,7 @@ input{
 }
 
 button.primary{
-  margin-top:14px;
+  margin-top:12px;
   padding:12px 20px;
   border-radius:10px;
   border:none;
@@ -105,7 +100,7 @@ button.primary{
 /* EMOTES */
 .form{
   display:grid;
-  grid-template-columns:1fr 2fr auto;
+  grid-template-columns:1fr 1fr 1fr 2fr auto;
   gap:12px;
 }
 .emote-list{
@@ -152,32 +147,34 @@ button.primary{
 <!-- PAINTS -->
 <div class="panel active" id="paints">
   <h1>Paints</h1>
+
   <input id="nick" placeholder="Nick z Twitcha">
   <div class="preview" id="preview">Podgląd nicku</div>
   <div class="paint-grid" id="paintGrid"></div>
 
-  <div class="badge-checkbox">
-    <label>
-      <input type="checkbox" id="badgeCheckbox">
-      Nadaj badge <b>Beta Tester</b>
-    </label>
-  </div>
+  <label>
+    <input type="checkbox" id="badgeCheckbox">
+    Nadaj badge <b>Beta Tester</b>
+  </label>
 
   <button class="primary" id="applyPaint">Nadaj paint</button>
   <button class="primary" id="applyBadge">Nadaj badge</button>
-  <button class="primary" id="resetPaintBadge">Reset paint & badge</button>
+  <button class="primary" id="resetUser">RESET (paint + badge)</button>
 </div>
 
 <!-- EMOTES -->
 <div class="panel" id="emotes">
-  <h1>Global i kanałowe Emotes</h1>
+  <h1>Emotes</h1>
+
   <div>
     <label><input type="radio" name="scope" value="global" checked> Globalna</label>
     <label><input type="radio" name="scope" value="channel"> Kanałowa</label>
   </div>
 
   <div class="form">
-    <input id="emoteName" placeholder="Nazwa emotki / autora">
+    <input id="emoteTrigger" placeholder="Trigger (np. xdd)">
+    <input id="emoteAuthor" placeholder="Autor">
+    <input id="emoteChannel" placeholder="Kanał (jeśli kanałowa)">
     <input id="emoteUrl" placeholder="Link do obrazka">
     <button class="primary" id="addEmote">Dodaj</button>
   </div>
@@ -193,11 +190,10 @@ button.primary{
 
 </div>
 
-<script src="content.js"></script>
 <script>
 const API="https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
 
-/* ================= PAINTS / BADGES ================= */
+/* ---------- PAINTS ---------- */
 const paints=[
  {label:"Red",paint:{type:"color",color:"#ff3333"}},
  {label:"Blue",paint:{type:"color",color:"#33ccff"}},
@@ -227,9 +223,8 @@ function renderPreview(){
   }
   if(selected.type==="split"){
     const m=Math.floor(t.length/2);
-    preview.innerHTML=
-      `<span style="color:${selected.color}">${t.slice(0,m)}</span>`+
-      `<span style="color:${selected.splitColor}">${t.slice(m)}</span>`;
+    preview.innerHTML=`<span style="color:${selected.color}">${t.slice(0,m)}</span>`+
+                      `<span style="color:${selected.splitColor}">${t.slice(m)}</span>`;
   }
   if(selected.glow)
     preview.style.textShadow=`0 0 6px ${selected.glowColor}`;
@@ -248,47 +243,110 @@ paints.forEach(p=>{
   grid.appendChild(d);
 });
 grid.firstChild.classList.add("active");
-
 document.getElementById("nick").oninput=renderPreview;
 
+/* FIREBASE SAFE MERGE */
 async function getUser(nick){
   return await fetch(`${API}/premium/${nick}.json`).then(r=>r.json())||{};
 }
-
-document.getElementById("applyPaint").onclick=async()=>{
-  const nick=document.getElementById("nick").value.trim().toLowerCase();
-  if(!nick) return alert("Podaj nick");
-  const data=await getUser(nick);
-  data.paint=selected;
-  await fetch(`${API}/premium/${nick}.json`,{
+function saveUser(nick,data){
+  return fetch(`${API}/premium/${nick}.json`,{
     method:"PUT",
     body:JSON.stringify(data)
   });
+}
+
+function nickInput(){
+  const n=document.getElementById("nick").value.trim().toLowerCase();
+  if(!n) throw alert("Podaj nick");
+  return n;
+}
+
+document.getElementById("applyPaint").onclick=async()=>{
+  const nick=nickInput();
+  const data=await getUser(nick);
+  data.paint=selected;
+  await saveUser(nick,data);
 };
 
 document.getElementById("applyBadge").onclick=async()=>{
-  const nick=document.getElementById("nick").value.trim().toLowerCase();
-  if(!nick) return alert("Podaj nick");
+  const nick=nickInput();
   const data=await getUser(nick);
-  data.badge="b";
-  await fetch(`${API}/premium/${nick}.json`,{
-    method:"PUT",
-    body:JSON.stringify(data)
-  });
+  data.badge="beta";
+  await saveUser(nick,data);
 };
 
-document.getElementById("resetPaintBadge").onclick=async()=>{
-  const nick=document.getElementById("nick").value.trim().toLowerCase();
-  if(!nick) return alert("Podaj nick");
-  await fetch(`${API}/premium/${nick}.json`,{
-    method:"DELETE"
-  });
-  renderPreview();
+document.getElementById("resetUser").onclick=async()=>{
+  const nick=nickInput();
+  await fetch(`${API}/premium/${nick}.json`,{method:"DELETE"});
 };
 
-renderPreview();
+/* ---------- EMOTES ---------- */
+const EMOTES = { global:{}, channels:{} };
 
-/* ================= TABS ================= */
+async function loadEmotes(){
+  try{
+    const rGlobal=await fetch(`${API}/emotes/global.json`);
+    EMOTES.global = await rGlobal.json()||{};
+    const rChannels=await fetch(`${API}/emotes/channels.json`);
+    EMOTES.channels = await rChannels.json()||{};
+    renderEmoteList();
+  }catch(e){}
+}
+
+function renderEmoteList(){
+  const list=document.getElementById("emoteList");
+  list.innerHTML="";
+  // Global
+  for(const k in EMOTES.global){
+    appendEmote(list,k,EMOTES.global[k],"global");
+  }
+  // Kanał
+  for(const ch in EMOTES.channels){
+    for(const k in EMOTES.channels[ch]){
+      appendEmote(list,k,EMOTES.channels[ch][k],ch);
+    }
+  }
+}
+
+function appendEmote(list,key,e,ch){
+  const d=document.createElement("div");
+  d.className="emote";
+  d.innerHTML=`<img src="${e.url}"><div><b>${key}</b></div><small>${e.author||""}${ch!=="global"?" | "+ch:""}</small><button class="delete">X</button>`;
+  d.querySelector(".delete").onclick=async()=>{
+    const path=ch==="global"?`/emotes/global/${key}.json`:`/emotes/channels/${ch}/${key}.json`;
+    await fetch(API+path,{method:"DELETE"});
+    loadEmotes();
+  };
+  list.appendChild(d);
+}
+
+document.getElementById("addEmote").onclick=async()=>{
+  const trigger=document.getElementById("emoteTrigger").value.trim();
+  const author=document.getElementById("emoteAuthor").value.trim();
+  const url=document.getElementById("emoteUrl").value.trim();
+  const scope=document.querySelector('input[name="scope"]:checked').value;
+  const channel=document.getElementById("emoteChannel").value.trim();
+  if(!trigger||!url) return alert("Trigger i URL wymagane");
+  if(scope==="global"){
+    await fetch(`${API}/emotes/global/${trigger}.json`,{
+      method:"PUT",
+      body:JSON.stringify({url,author})
+    });
+  }else{
+    if(!channel) return alert("Podaj kanał");
+    await fetch(`${API}/emotes/channels/${channel}/${trigger}.json`,{
+      method:"PUT",
+      body:JSON.stringify({url,author})
+    });
+  }
+  loadEmotes();
+}
+
+loadEmotes();
+setInterval(loadEmotes,5000);
+
+/* TABS */
 document.querySelectorAll("nav button").forEach(b=>{
   b.onclick=()=>{
     document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
@@ -299,5 +357,6 @@ document.querySelectorAll("nav button").forEach(b=>{
 });
 </script>
 
+<script src="content.js"></script>
 </body>
 </html>
