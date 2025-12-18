@@ -26,7 +26,7 @@
     body { margin: 0; font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top, #172554, var(--bg)); color: var(--text); min-height: 100vh; padding-bottom: 50px; }
     
     /* HEADER */
-    header { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    header { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
     .header-left { display: flex; align-items: center; gap: 25px; }
     .logo { font-size: 32px; font-weight: 900; color: var(--accent); letter-spacing: -1px; text-transform: uppercase; text-shadow: 0 0 20px var(--accent-glow); display: flex; align-items: center; gap: 10px; cursor: pointer; }
     .beta-tag { font-size: 11px; background: var(--danger); color: white; padding: 3px 8px; border-radius: 6px; font-weight: 700; letter-spacing: 1px; box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); transform: translateY(-2px); }
@@ -37,6 +37,14 @@
     
     .btn-login { background: var(--twitch); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: 0 0 15px rgba(145, 70, 255, 0.3); }
     .btn-login:hover { background: #772ce8; transform: translateY(-1px); }
+
+    /* COINS DISPLAY */
+    .coin-display {
+        display: flex; align-items: center; gap: 8px; background: rgba(250, 204, 21, 0.1); 
+        border: 1px solid var(--yellow); color: var(--yellow); padding: 8px 16px; 
+        border-radius: 12px; font-weight: 800; font-size: 16px; margin-right: 20px;
+        box-shadow: 0 0 15px rgba(250, 204, 21, 0.2);
+    }
 
     nav { display: flex; gap: 8px; background: #0f172a; padding: 5px; border-radius: 12px; border: 1px solid var(--border); }
     nav button { background: none; border: none; color: var(--text-muted); font-size: 14px; font-weight: 600; padding: 10px 20px; cursor: pointer; border-radius: 8px; transition: 0.3s; }
@@ -75,24 +83,28 @@
     button.btn-primary { padding: 14px 28px; background: linear-gradient(135deg, var(--accent), #0ea5e9); border: none; color: #0f172a; font-weight: 800; border-radius: 10px; cursor: pointer; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; transition: transform 0.2s, box-shadow 0.2s; height: 48px; margin-top: 23px; }
     button.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px var(--accent-glow); }
 
-    /* PRESETS */
-    .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 30px; }
-    .preset-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 15px; cursor: pointer; text-align: center; transition: 0.2s; position: relative; }
+    /* SHOP / PRESETS */
+    .section-title { color: var(--text-muted); font-size: 14px; text-transform: uppercase; margin: 30px 0 15px 0; border-bottom: 1px solid var(--border); padding-bottom: 10px; display: flex; justify-content: space-between; }
+    .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+    
+    .preset-card {
+        background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 5px;
+        cursor: pointer; text-align: center; transition: 0.2s; position: relative; overflow: hidden;
+        display: flex; flex-direction: column;
+    }
     .preset-card:hover { border-color: var(--text-muted); transform: translateY(-2px); }
-    .preset-card.selected { border-color: var(--accent); background: rgba(56, 189, 248, 0.1); box-shadow: 0 0 0 2px var(--accent); }
-    .preset-preview { font-size: 18px; font-weight: 800; margin-bottom: 8px; display: block; padding: 5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .preset-name { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; }
-
-    /* LISTS */
-    .list-container { display: grid; gap: 10px; }
-    .list-item { background: var(--panel); padding: 15px 20px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--border); transition: 0.2s; }
-    .list-item:hover { border-left-color: var(--accent); background: #253248; }
-    .item-details { display: flex; align-items: center; gap: 15px; }
-    .badge-tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase; }
-    .tag-global { background: var(--success); color: #000; }
-    .tag-channel { background: var(--accent); color: #000; }
-    .btn-del { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: 0.2s; }
-    .btn-del:hover { background: var(--danger); color: white; }
+    .preset-card.owned { border-color: var(--success); background: rgba(34, 197, 94, 0.05); }
+    
+    .card-preview { padding: 25px 10px; font-size: 20px; font-weight: 800; }
+    .card-info { background: #131c2e; padding: 12px; border-radius: 0 0 12px 12px; }
+    .preset-name { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 8px; }
+    
+    .btn-action { width: 100%; padding: 8px; border-radius: 6px; border: none; font-weight: 700; cursor: pointer; font-size: 12px; text-transform: uppercase; transition: 0.2s; }
+    .btn-buy { background: var(--yellow); color: #000; }
+    .btn-buy:hover { background: #fde047; }
+    .btn-equip { background: var(--success); color: #fff; }
+    .btn-equip:hover { background: #16a34a; }
+    .price-tag { display: inline-flex; align-items: center; gap: 4px; }
 
     /* HERO */
     .hero-card { background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(0,0,0,0)); border: 1px solid var(--border); border-radius: 20px; padding: 60px 40px; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
@@ -101,13 +113,19 @@
     .btn-download-big:hover { transform: scale(1.05); box-shadow: 0 15px 60px var(--yellow-glow); background: #fde047; }
     .blink-text { animation: pulseText 2s infinite; font-weight: 300; letter-spacing: 2px; color: var(--accent); }
     @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    
+    /* Lists */
+    .list-container { display: grid; gap: 10px; }
+    .list-item { background: var(--panel); padding: 15px 20px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--border); }
+    .btn-del { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+
 </style>
 </head>
 <body>
 
 <header>
     <div class="header-left">
-        <div class="logo">Gato.TV <span class="beta-tag">BETA</span></div>
+        <div class="logo" onclick="switchTab('download')">Gato.TV <span class="beta-tag">BETA</span></div>
         <div id="loginBtnContainer">
             <button class="btn-login" onclick="loginWithTwitch()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h2.998L22.286 11.57V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
@@ -119,112 +137,224 @@
             <span id="username" class="user-nick">...</span>
         </div>
     </div>
-    <nav>
-        <button class="active" onclick="switchTab('paints')">Paints</button>
-        <button onclick="switchTab('emotes')">Emotes</button>
-        <button onclick="switchTab('badges')">Odznaki</button>
-        <button onclick="switchTab('info')">Info</button>
-        <button class="btn-yellow" onclick="switchTab('download')">Download</button>
-    </nav>
+    
+    <div style="display:flex; align-items:center;">
+        <div id="coinDisplay" class="coin-display" style="display:none;">
+            <span>🪙</span> <span id="coinCount">200</span>
+        </div>
+        
+        <nav>
+            <button class="active" onclick="switchTab('paints')">Paints</button>
+            <button onclick="switchTab('emotes')">Emotes</button>
+            <button onclick="switchTab('badges')">Odznaki</button>
+            <button onclick="switchTab('info')">Info</button>
+            <button class="btn-yellow" onclick="switchTab('download')">Download</button>
+        </nav>
+    </div>
 </header>
 
 <div class="container">
-    <div id="loggedOutMsg" class="login-blocker">
-        <h2>🔒 Wymagane Logowanie</h2>
-        <p style="color: #94a3b8; font-size: 18px; margin-bottom: 30px;">Aby zarządzać bazą danych wtyczki, musisz potwierdzić tożsamość.</p>
-        <button class="btn-login" style="margin: 0 auto; padding: 15px 30px; font-size: 16px;" onclick="loginWithTwitch()">Zaloguj się przez Twitch</button>
-    </div>
 
-    <div id="appContent" style="display:none;">
-        <!-- PAINTS -->
-        <div id="paints" class="panel active">
-            <h2>Style Nicków</h2>
-            <div class="input-row">
-                <div class="form-group" style="flex:2"><label>Nick użytkownika</label><input id="paintNick" placeholder="np. gatodev"></div>
-                <button class="btn-primary" onclick="applyPreset()">Nadaj Styl</button>
-            </div>
-            <h3 style="color: var(--text-muted); font-size: 14px; text-transform: uppercase;">Dostępne Presety</h3>
-            <div class="preset-grid" id="presetGrid"></div>
-            <h3 style="margin-top: 40px; color: var(--text-muted); font-size: 14px; text-transform: uppercase;">Aktywne Painty</h3>
-            <div id="listPaints" class="list-container">Loading...</div>
+    <!-- TAB: PAINTS (SKLEP I EKWIPUNEK) -->
+    <div id="paints" class="panel active">
+        <h2>Paint Shop</h2>
+        <p class="desc">Kupuj nowe style za monety i ustawiaj je na swoim koncie.</p>
+
+        <!-- Sekcja Ekwipunku -->
+        <div class="section-title">Twoje Painty (Ekwipunek)</div>
+        <div id="inventoryGrid" class="preset-grid">
+            <!-- Tutaj wpadną kupione -->
         </div>
 
-        <!-- EMOTES -->
-        <div id="emotes" class="panel">
+        <!-- Sekcja Sklepu -->
+        <div class="section-title">Sklep <small>Wybierz styl</small></div>
+        <div id="shopGrid" class="preset-grid">
+            <!-- Tutaj oferta sklepu -->
+        </div>
+
+        <!-- Sekcja Admina (dla testów - ukryta/opcjonalna) -->
+        <div class="section-title" style="margin-top:50px;">Aktywne Painty (Baza Danych)</div>
+        <div id="listPaints" class="list-container">Wymagane logowanie do podglądu bazy.</div>
+    </div>
+
+    <!-- TAB: EMOTES (WYMAGA LOGOWANIA) -->
+    <div id="emotes" class="panel">
+        <div id="emotesBlocker" class="login-blocker">
+            <h2>🔒 Wymagane Logowanie</h2>
+            <p style="color:#94a3b8">Zaloguj się, aby dodawać emotki.</p>
+            <button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button>
+        </div>
+
+        <div id="emotesContent" style="display:none;">
             <h2>Emotki</h2>
             <div class="input-row">
-                <div class="form-group" style="flex:1;"><label>Nazwa</label><input id="emoName" placeholder="np. xdd"></div>
-                <div class="form-group" style="flex:2;">
-                    <label>Obrazek</label>
+                <div class="form-group" style="flex:1;"><label>Nazwa</label><input id="emoName" placeholder="xdd"></div>
+                <div class="form-group" style="flex:2;"><label>Obrazek</label>
                     <div class="file-upload-wrapper"><div class="file-upload-btn" id="fileBtnText"><span>📂 Wybierz plik</span></div><input type="file" id="emoFile" accept="image/*" onchange="previewFile()"></div>
-                    <img id="filePreview" src="" alt="Podgląd">
-                    <input id="emoUrl" placeholder="lub link..." style="margin-top:5px;">
+                    <img id="filePreview" src="" alt="Podgląd"><input id="emoUrl" placeholder="lub link..." style="margin-top:5px;">
                 </div>
-                <div class="form-group" style="flex:1;"><label>Autor</label><input id="emoAuthor" disabled></div>
-                <div class="form-group" style="flex:1;"><label>Zasięg</label><select id="emoScope" onchange="toggleChannelInput()"><option value="global">Globalny</option><option value="channel">Tylko Kanał</option></select></div>
-                <div class="form-group" id="channelInputGroup" style="display:none; flex:1;"><label>Nazwa Kanału</label><input id="emoChannel" placeholder="np. xayoo_"></div>
+                <div class="form-group"><label>Autor</label><input id="emoAuthor" disabled></div>
+                <div class="form-group"><label>Zasięg</label><select id="emoScope" onchange="toggleChannelInput()"><option value="global">Globalny</option><option value="channel">Tylko Kanał</option></select></div>
+                <div class="form-group" id="channelInputGroup" style="display:none"><label>Kanał</label><input id="emoChannel"></div>
                 <button class="btn-primary" onclick="addEmote()">Dodaj</button>
             </div>
             <div id="listEmotes" class="list-container">Loading...</div>
         </div>
+    </div>
 
-        <!-- BADGES -->
-        <div id="badges" class="panel">
+    <!-- TAB: BADGES (WYMAGA LOGOWANIA) -->
+    <div id="badges" class="panel">
+        <div id="badgesBlocker" class="login-blocker">
+            <h2>🔒 Wymagane Logowanie</h2>
+            <button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button>
+        </div>
+        <div id="badgesContent" style="display:none;">
             <h2>Odznaki</h2>
             <div class="input-row">
                 <div class="form-group"><label>Nick</label><input id="badgeNick"></div>
-                <div class="form-group" style="flex:2"><label>URL Ikonki</label><input id="badgeUrl"></div>
+                <div class="form-group" style="flex:2"><label>URL</label><input id="badgeUrl"></div>
                 <button class="btn-primary" onclick="addBadge()">Przypisz</button>
             </div>
             <div id="listBadges" class="list-container">Loading...</div>
         </div>
+    </div>
 
-        <!-- INFO -->
-        <div id="info" class="panel">
-            <div class="hero-card">
-                <h1>Gato.TV</h1>
-                <div style="margin: 40px 0;">
-                    <p style="font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px;">Autor wtyczki</p>
-                    <div style="font-size: 32px; font-weight: 800; color: var(--accent); text-shadow: 0 0 20px var(--accent-glow);">GatoJestemFormaOstateczna</div>
-                </div>
-                <div class="blink-text">Opis Coming Soon...</div>
+    <!-- TAB: INFO (PUBLICZNA) -->
+    <div id="info" class="panel">
+        <div class="hero-card">
+            <h1>Gato.TV</h1>
+            <div style="margin: 40px 0;">
+                <p style="font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px;">Autor wtyczki</p>
+                <div style="font-size: 32px; font-weight: 800; color: var(--accent); text-shadow: 0 0 20px var(--accent-glow);">GatoJestemFormaOstateczna</div>
             </div>
-        </div>
-
-        <!-- DOWNLOAD -->
-        <div id="download" class="panel">
-            <div class="hero-card download-style">
-                <h1 style="background: linear-gradient(90deg, #fff, var(--yellow)); -webkit-background-clip: text; color: transparent;">Zainstaluj Gato.TV</h1>
-                <p>Najlepsza wtyczka do Twitcha. Odkryj nowy wymiar czatowania.</p>
-                <button class="btn-download-big" onclick="fireConfetti()">POBIERZ WTYCZKĘ (v1.0)</button>
-            </div>
+            <div class="blink-text">Opis Coming Soon...</div>
         </div>
     </div>
+
+    <!-- TAB: DOWNLOAD (PUBLICZNA) -->
+    <div id="download" class="panel">
+        <div class="hero-card download-style">
+            <h1 style="background: linear-gradient(90deg, #fff, var(--yellow)); -webkit-background-clip: text; color: transparent;">Zainstaluj Gato.TV</h1>
+            <p>Najlepsza wtyczka do Twitcha. Odkryj nowy wymiar czatowania.</p>
+            <button class="btn-download-big" onclick="fireConfetti()">POBIERZ WTYCZKĘ (v1.0)</button>
+        </div>
+    </div>
+
 </div>
 
 <script>
-// ==================== KONFIGURACJA ====================
+// ==================== CONFIG ====================
 const CLIENT_ID = 'l0agnxl8yeto7wda5wvblpg1mr55db'; 
-// UWAGA: TEN LINK MUSI BYĆ DOKŁADNIE TAKI SAM W KONSOLI TWITCHA (z '/' na końcu!)
 const REDIRECT_URI = 'https://drsxdd.github.io/gatotv/'; 
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
-// ======================================================
+// ================================================
 
+// STATE
 let currentUser = null; 
+let coins = 200; // Startowe monety
+// Domyślny ekwipunek (ID paintów, które user posiada na start)
+let ownedPaints = ["Classic Green"]; 
 
+// Presets Definition (Prices added)
+const PRESETS = [
+    { name: "Classic Green", price: 0, type: "color", value: "#00ff00", previewStyle: "color:#00ff00" },
+    { name: "Hot Red", price: 50, type: "color", value: "#ff0000", previewStyle: "color:#ff0000" },
+    { name: "Deep Void", price: 50, type: "color", value: "#6366f1", previewStyle: "color:#6366f1" },
+    { name: "Toxic", price: 100, type: "glow", value: "#ccff00", shadow: "#00ff00", previewStyle: "color:#ccff00;text-shadow:0 0 10px #00ff00;" },
+    { name: "Lava", price: 100, type: "glow", value: "#ff3300", shadow: "#ffaa00", previewStyle: "color:#ff3300;text-shadow:0 0 10px #ffaa00;" },
+    { name: "Ice", price: 100, type: "glow", value: "#e0f2fe", shadow: "#0ea5e9", previewStyle: "color:#e0f2fe;text-shadow:0 0 10px #0ea5e9;" },
+    { name: "Rainbow", price: 200, type: "animated-rainbow", previewStyle: "background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta); -webkit-background-clip: text; color: transparent;" },
+    { name: "Sunset", price: 150, type: "gradient", value: "linear-gradient(to right, #f59e0b, #ef4444)", previewStyle: "background: linear-gradient(to right, #f59e0b, #ef4444); -webkit-background-clip: text; color: transparent;" },
+    { name: "Poland", price: 150, type: "gradient", value: "linear-gradient(to bottom, #ffffff 50%, #ff0000 50%)", previewStyle: "background: linear-gradient(to bottom, #ffffff 50%, #ff0000 50%); -webkit-background-clip: text; color: transparent;" },
+    { name: "Matrix", price: 300, type: "glow", value: "#00ff00", shadow: "#003300", previewStyle: "color: #00ff00; text-shadow: 0 0 8px #00ff00; font-family: monospace;" }
+];
+
+// INIT
 window.onload = () => {
-    // Sprawdź czy wracamy z Twitcha
+    // Odczyt z localStorage (żeby zapamiętać zakupy po odświeżeniu)
+    if(localStorage.getItem('gato_coins')) coins = parseInt(localStorage.getItem('gato_coins'));
+    if(localStorage.getItem('gato_owned')) ownedPaints = JSON.parse(localStorage.getItem('gato_owned'));
+    
+    updateCoinDisplay();
+    renderShop();
+
     if (document.location.hash.includes('access_token')) {
         const params = new URLSearchParams(document.location.hash.substring(1));
         const token = params.get('access_token');
         if(token) {
             validateToken(token);
-            // Wyczyść URL ale zachowaj ścieżkę
             window.history.replaceState({}, document.title, window.location.pathname);
         }
     }
 };
 
+// SHOP LOGIC
+function updateCoinDisplay() {
+    document.getElementById('coinCount').innerText = coins;
+    localStorage.setItem('gato_coins', coins);
+    localStorage.setItem('gato_owned', JSON.stringify(ownedPaints));
+}
+
+function renderShop() {
+    const shopGrid = document.getElementById("shopGrid");
+    const invGrid = document.getElementById("inventoryGrid");
+    shopGrid.innerHTML = "";
+    invGrid.innerHTML = "";
+
+    PRESETS.forEach((p, index) => {
+        const isOwned = ownedPaints.includes(p.name);
+        
+        const card = document.createElement("div");
+        card.className = isOwned ? "preset-card owned" : "preset-card";
+        
+        let actionBtn = "";
+        if (isOwned) {
+            actionBtn = `<button class="btn-action btn-equip" onclick="equipPaint(${index})">Ustaw (Equip)</button>`;
+        } else {
+            const canAfford = coins >= p.price;
+            const disabled = canAfford ? "" : "opacity:0.5; pointer-events:none;";
+            actionBtn = `<button class="btn-action btn-buy" style="${disabled}" onclick="buyPaint(${index})">Kup (${p.price})</button>`;
+        }
+
+        card.innerHTML = `
+            <div class="card-preview" style="${p.previewStyle}">NickName</div>
+            <div class="card-info">
+                <span class="preset-name">${p.name}</span>
+                ${actionBtn}
+            </div>
+        `;
+
+        if(isOwned) invGrid.appendChild(card);
+        else shopGrid.appendChild(card);
+    });
+}
+
+function buyPaint(index) {
+    const p = PRESETS[index];
+    if(coins >= p.price) {
+        coins -= p.price;
+        ownedPaints.push(p.name);
+        updateCoinDisplay();
+        renderShop();
+        fireConfetti();
+    }
+}
+
+async function equipPaint(index) {
+    if(!currentUser) return alert("Zaloguj się, aby ustawić paint na swoim koncie!");
+    
+    const p = PRESETS[index];
+    const payload = { type: p.type };
+    if (p.value) payload.value = p.value;
+    if (p.shadow) payload.shadow = p.shadow;
+
+    // Aplikuje paint na ZALOGOWANEGO użytkownika
+    await api(`premium/${currentUser.login}/paint`, "PUT", payload);
+    alert(`Ustawiono styl: ${p.name}`);
+    loadAll(); // odśwież listę admina na dole
+}
+
+// LOGIN & AUTH
 function loginWithTwitch() {
     const url = `https://id.twitch.tv/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=user:read:email`;
     window.location.href = url;
@@ -232,62 +362,61 @@ function loginWithTwitch() {
 
 async function validateToken(token) {
     try {
-        const res = await fetch('https://api.twitch.tv/helix/users', {
-            headers: { 'Client-ID': CLIENT_ID, 'Authorization': `Bearer ${token}` }
-        });
+        const res = await fetch('https://api.twitch.tv/helix/users', { headers: { 'Client-ID': CLIENT_ID, 'Authorization': `Bearer ${token}` } });
         const data = await res.json();
-        
         if (data.data && data.data.length > 0) {
             currentUser = data.data[0];
             enableApp();
-        } else {
-            console.error(data);
-            alert("Błąd logowania (Token odrzucony)!");
         }
-    } catch(e) { console.error(e); alert("Błąd połączenia z API Twitcha!"); }
+    } catch(e) { console.error(e); }
 }
 
 function enableApp() {
-    document.getElementById('loggedOutMsg').style.display = 'none';
+    // Hide blockers
     document.getElementById('loginBtnContainer').style.display = 'none';
-    document.getElementById('appContent').style.display = 'block';
+    document.getElementById('emotesBlocker').style.display = 'none';
+    document.getElementById('badgesBlocker').style.display = 'none';
+    
+    // Show content
     document.getElementById('userProfile').style.display = 'flex';
+    document.getElementById('coinDisplay').style.display = 'flex';
+    document.getElementById('emotesContent').style.display = 'block';
+    document.getElementById('badgesContent').style.display = 'block';
+
+    // Fill data
     document.getElementById('avatar').src = currentUser.profile_image_url;
     document.getElementById('username').innerText = currentUser.display_name;
     document.getElementById('emoAuthor').value = currentUser.display_name;
-    renderPresets();
+    
     loadAll();
 }
 
-// API & HELPERS
+// TABS SYSTEM
+function switchTab(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if(event && event.target.tagName === 'BUTTON') event.target.classList.add('active');
+}
+
+// API & ACTIONS
 async function api(path, method="GET", body=null) {
     const opts = { method }; if(body) opts.body = JSON.stringify(body);
-    try { const res = await fetch(`${DB_URL}/${path}.json`, opts); return res.json(); } catch(e) { console.error(e); }
+    try { const res = await fetch(`${DB_URL}/${path}.json`, opts); return res.json(); } catch(e) {}
 }
 
 async function loadAll() {
-    const premium = await api('premium') || {};
-    const plist = document.getElementById('listPaints');
-    const paints = Object.keys(premium).filter(k => premium[k].paint);
-    plist.innerHTML = paints.length ? paints.map(k => {
-        const p = premium[k].paint;
-        let style = "";
-        if(p.type === 'color') style = `color:${p.value}`;
-        else if(p.type === 'gradient') style = `background:${p.value}; -webkit-background-clip:text; color:transparent;`;
-        else if(p.type === 'glow') style = `color:${p.value}; text-shadow:0 0 10px ${p.shadow}`;
-        else if(p.type === 'animated-rainbow') style = `background:linear-gradient(90deg,red,blue);-webkit-background-clip:text;color:transparent;`;
-        return `<div class="list-item"><div class="item-details"><span style="font-weight:bold; font-size:16px; ${style}">${k}</span></div><button class="btn-del" onclick="del('premium/${k}/paint')">Usuń</button></div>`;
-    }).join('') : '<div style="padding:10px; color:#666">Brak.</div>';
-
-    const emotes = await api('emotes') || {};
-    document.getElementById('listEmotes').innerHTML = Object.keys(emotes).map(k => {
-        const e = emotes[k];
-        const scopeTag = e.scope === 'channel' ? `<span class="badge-tag tag-channel">CHANNEL: ${e.channel}</span>` : `<span class="badge-tag tag-global">GLOBAL</span>`;
-        return `<div class="list-item"><div class="item-details"><img src="${e.url}" style="height:28px; max-width:50px;"><div><span style="font-weight:bold;">${k}</span> <span style="font-size:11px; color:#888">by ${e.author||"?"}</span><div>${scopeTag}</div></div></div><button class="btn-del" onclick="del('emotes/${k}')">Usuń</button></div>`;
-    }).join('');
-
-    const badges = Object.keys(premium).filter(k => premium[k].badge);
-    document.getElementById('listBadges').innerHTML = badges.map(k => `<div class="list-item"><div class="item-details"><img src="${premium[k].badge}" style="height:24px;"><strong>${k}</strong></div><button class="btn-del" onclick="del('premium/${k}/badge')">Usuń</button></div>`).join('');
+    const paints = await api('premium') || {};
+    document.getElementById('listPaints').innerHTML = Object.keys(paints).filter(k=>paints[k].paint).map(k=>`<div class="list-item"><b>${k}</b> <button class="btn-del" onclick="del('premium/${k}/paint')">X</button></div>`).join('');
+    
+    // Tylko jak zalogowany ładujemy resztę (dla bezpieczeństwa UI)
+    if(currentUser) {
+        const emotes = await api('emotes') || {};
+        document.getElementById('listEmotes').innerHTML = Object.keys(emotes).map(k=>`<div class="list-item"><img src="${emotes[k].url}" style="height:20px"> <b>${k}</b><button class="btn-del" onclick="del('emotes/${k}')">X</button></div>`).join('');
+        
+        const badges = await api('premium') || {};
+        document.getElementById('listBadges').innerHTML = Object.keys(badges).filter(k=>badges[k].badge).map(k=>`<div class="list-item"><b>${k}</b><button class="btn-del" onclick="del('premium/${k}/badge')">X</button></div>`).join('');
+    }
 }
 
 async function addEmote() {
@@ -297,47 +426,27 @@ async function addEmote() {
     const scope = document.getElementById('emoScope').value;
     let channel = document.getElementById('emoChannel').value.trim().toLowerCase();
     const file = document.getElementById('emoFile').files[0];
-    if (file) try { url = await toBase64(file); } catch(e) { return alert("Błąd pliku"); }
-    if(!name || !url) return alert("Pola wymagane");
-    if(scope === 'channel' && !channel) return alert("Podaj kanał");
+    if (file) try { url = await toBase64(file); } catch(e) { return alert("Error"); }
+    if(!name || !url) return alert("Brakuje danych");
     const payload = { url, author: currentUser.display_name, scope };
     if(scope === 'channel') payload.channel = channel;
     await api(`emotes/${name}`, "PUT", payload);
-    document.getElementById('emoName').value = ""; document.getElementById('emoUrl').value = ""; document.getElementById('emoFile').value = "";
-    previewFile(); loadAll();
-}
-
-async function applyPreset() {
-    const nick = document.getElementById("paintNick").value.trim().toLowerCase();
-    if(!nick || selectedPresetIndex === null) return alert("Brak danych");
-    const p = PRESETS[selectedPresetIndex];
-    const payload = { type: p.type }; if (p.value) payload.value = p.value; if (p.shadow) payload.shadow = p.shadow;
-    await api(`premium/${nick}/paint`, "PUT", payload); loadAll();
+    loadAll();
 }
 
 async function addBadge() {
-    const nick = document.getElementById('badgeNick').value.trim().toLowerCase(); const url = document.getElementById('badgeUrl').value.trim();
-    if(!nick||!url) return; await api(`premium/${nick}/badge`, "PUT", url); loadAll();
+    const nick = document.getElementById('badgeNick').value.trim().toLowerCase();
+    const url = document.getElementById('badgeUrl').value.trim();
+    if(!nick||!url) return;
+    await api(`premium/${nick}/badge`, "PUT", url);
+    loadAll();
 }
+
 async function del(path) { if(confirm("Usunąć?")) { await api(path, "DELETE"); loadAll(); } }
-
-function switchTab(id) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    if(event && event.target.tagName === 'BUTTON') event.target.classList.add('active');
-}
 function toggleChannelInput() { document.getElementById('channelInputGroup').style.display = document.getElementById('emoScope').value === 'channel' ? 'flex' : 'none'; }
-function previewFile() {
-    const f = document.getElementById('emoFile').files[0]; const p = document.getElementById('filePreview'); const t = document.getElementById('fileBtnText');
-    if(f) { t.innerHTML=`✅ ${f.name}`; t.style.color="#22c55e"; document.getElementById('emoUrl').disabled=true; const r=new FileReader(); r.onload=e=>{p.src=e.target.result; p.style.display='block'}; r.readAsDataURL(f); }
-    else { t.innerHTML=`📂 Wybierz plik`; t.style.color=""; p.style.display='none'; document.getElementById('emoUrl').disabled=false; }
-}
+function previewFile() { const f = document.getElementById('emoFile').files[0]; if(f) { document.getElementById('emoUrl').disabled=true; const r=new FileReader(); r.onload=e=>{document.getElementById('filePreview').src=e.target.result; document.getElementById('filePreview').style.display='block'}; r.readAsDataURL(f); } }
 const toBase64=f=>new Promise((res,rej)=>{const r=new FileReader();r.readAsDataURL(f);r.onload=()=>res(r.result);r.onerror=e=>rej(e)});
-function fireConfetti(){var e=Date.now()+2e3;!function t(){confetti({particleCount:5,angle:60,spread:55,origin:{x:0},colors:['#38bdf8','#facc15','#9146ff']});confetti({particleCount:5,angle:120,spread:55,origin:{x:1},colors:['#38bdf8','#facc15','#9146ff']});Date.now()<e&&requestAnimationFrame(t)}()}
-
-const PRESETS=[{name:"Rainbow",type:"animated-rainbow",previewStyle:"background:linear-gradient(90deg,red,blue);-webkit-background-clip:text;color:transparent;"},{name:"Lava",type:"glow",value:"#ff3300",shadow:"#ffaa00",previewStyle:"color:#ff3300;text-shadow:0 0 10px #ffaa00;"},{name:"Toxic",type:"glow",value:"#ccff00",shadow:"#00ff00",previewStyle:"color:#ccff00;text-shadow:0 0 10px #00ff00;"},{name:"Ice",type:"glow",value:"#e0f2fe",shadow:"#0ea5e9",previewStyle:"color:#e0f2fe;text-shadow:0 0 10px #0ea5e9;"},{name:"Cyber",type:"glow",value:"#ff00ff",shadow:"#ff0088",previewStyle:"color:#ff00ff;text-shadow:0 0 10px #ff0088;"},{name:"Golden",type:"glow",value:"#ffd700",shadow:"#ffae00",previewStyle:"color:#ffd700;text-shadow:0 0 10px #ffae00;"},{name:"Ghost",type:"glow",value:"#ffffff",shadow:"#ffffff",previewStyle:"color:#fff;text-shadow:0 0 10px #fff;"},{name:"Vampire",type:"glow",value:"#ff0000",shadow:"#880000",previewStyle:"color:#ff0000;text-shadow:0 0 10px #880000;"},{name:"Matrix",type:"glow",value:"#00ff00",shadow:"#003300",previewStyle:"color:#00ff00;text-shadow:0 0 8px #00ff00;font-family:monospace;"},{name:"Sunset",type:"gradient",value:"linear-gradient(to right,#f59e0b,#ef4444)",previewStyle:"background:linear-gradient(to right,#f59e0b,#ef4444);-webkit-background-clip:text;color:transparent;"},{name:"Ocean",type:"gradient",value:"linear-gradient(to right,#06b6d4,#3b82f6)",previewStyle:"background:linear-gradient(to right,#06b6d4,#3b82f6);-webkit-background-clip:text;color:transparent;"},{name:"Berry",type:"gradient",value:"linear-gradient(to right,#ec4899,#8b5cf6)",previewStyle:"background:linear-gradient(to right,#ec4899,#8b5cf6);-webkit-background-clip:text;color:transparent;"},{name:"Mint",type:"gradient",value:"linear-gradient(to right,#34d399,#059669)",previewStyle:"background:linear-gradient(to right,#34d399,#059669);-webkit-background-clip:text;color:transparent;"},{name:"Deep Void",type:"color",value:"#6366f1",previewStyle:"color:#6366f1"},{name:"Hot Red",type:"color",value:"#ff0000",previewStyle:"color:#ff0000"},{name:"Lime",type:"color",value:"#84cc16",previewStyle:"color:#84cc16"},{name:"Magenta",type:"color",value:"#d946ef",previewStyle:"color:#d946ef"},{name:"Coral",type:"color",value:"#fb7185",previewStyle:"color:#fb7185"},{name:"Teal",type:"color",value:"#14b8a6",previewStyle:"color:#14b8a6"},{name:"White",type:"color",value:"#ffffff",previewStyle:"color:#ffffff"}];
-let selectedPresetIndex=null; function renderPresets(){const g=document.getElementById("presetGrid");g.innerHTML="";PRESETS.forEach((p,i)=>{const c=document.createElement("div");c.className="preset-card";c.onclick=()=>{selectedPresetIndex=i;document.querySelectorAll(".preset-card").forEach(x=>x.classList.remove("selected"));c.classList.add("selected")};c.innerHTML=`<span class="preset-preview" style="${p.previewStyle}">NickName</span><span class="preset-name">${p.name}</span>`;g.appendChild(c)})}
+function fireConfetti(){var e=Date.now()+1500;!function t(){confetti({particleCount:5,angle:60,spread:55,origin:{x:0},colors:['#38bdf8','#facc15','#9146ff']});confetti({particleCount:5,angle:120,spread:55,origin:{x:1},colors:['#38bdf8','#facc15','#9146ff']});Date.now()<e&&requestAnimationFrame(t)}()}
 </script>
 </body>
 </html>
