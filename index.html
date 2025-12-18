@@ -7,14 +7,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
 <style>
     :root {
-        --bg: #0b1120;       /* Bardzo ciemny granat */
-        --panel: #1e293b;    /* Jaśniejszy granat */
-        --accent: #38bdf8;   /* Jasny błękit (Sky Blue) */
+        --bg: #0b1120;       
+        --panel: #1e293b;    
+        --accent: #38bdf8;   
         --accent-glow: rgba(56, 189, 248, 0.5);
-        --text: #f1f5f9;     /* Biały z domieszką niebieskiego */
+        --text: #f1f5f9;     
         --text-muted: #94a3b8;
         --border: #334155;
         --danger: #ef4444;
+        --success: #22c55e;
     }
     
     * { box-sizing: border-box; }
@@ -48,7 +49,6 @@
         color: var(--accent);
         letter-spacing: -1px;
         text-transform: uppercase;
-        position: relative;
         animation: floatLogo 3s ease-in-out infinite;
         text-shadow: 0 0 20px var(--accent-glow);
     }
@@ -93,9 +93,6 @@
         color: white; 
         font-size: 28px; 
         margin-bottom: 10px; 
-        display: flex; 
-        align-items: center; 
-        gap: 10px; 
     }
     p.desc { color: var(--text-muted); margin-top: 0; margin-bottom: 30px; }
 
@@ -110,46 +107,51 @@
         border: 1px solid var(--border);
         box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         align-items: center;
+        flex-wrap: wrap;
     }
 
-    input {
-        flex: 1;
-        padding: 16px;
+    .form-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 150px; }
+    .form-group label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+
+    input, select {
+        padding: 14px;
         background: #0f172a;
         border: 1px solid var(--border);
         color: white;
         border-radius: 10px;
-        font-size: 16px;
+        font-size: 15px;
         outline: none;
-        transition: 0.2s;
+        width: 100%;
         font-family: inherit;
+        transition: 0.2s;
     }
-    input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
+    input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
 
     button.btn-primary {
-        padding: 16px 32px;
+        padding: 14px 28px;
         background: linear-gradient(135deg, var(--accent), #0ea5e9);
         border: none;
         color: #0f172a;
         font-weight: 800;
         border-radius: 10px;
         cursor: pointer;
-        font-size: 16px;
+        font-size: 15px;
         text-transform: uppercase;
         letter-spacing: 1px;
         transition: transform 0.2s, box-shadow 0.2s;
+        height: 100%;
+        margin-top: auto;
     }
     button.btn-primary:hover { 
         transform: translateY(-2px); 
         box-shadow: 0 10px 25px var(--accent-glow); 
     }
-    button.btn-primary:active { transform: scale(0.98); }
 
-    /* ===== PRESET GRID (NOWOŚĆ) ===== */
+    /* ===== PRESET GRID ===== */
     .preset-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 15px;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 12px;
         margin-bottom: 30px;
     }
 
@@ -157,12 +159,11 @@
         background: var(--panel);
         border: 1px solid var(--border);
         border-radius: 12px;
-        padding: 20px;
+        padding: 15px;
         cursor: pointer;
         text-align: center;
         transition: 0.2s;
         position: relative;
-        overflow: hidden;
     }
     
     .preset-card:hover { border-color: var(--text-muted); transform: translateY(-2px); }
@@ -174,15 +175,18 @@
     }
 
     .preset-preview {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 800;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         display: block;
-        padding: 10px 0;
+        padding: 5px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .preset-name {
-        font-size: 12px;
+        font-size: 11px;
         text-transform: uppercase;
         letter-spacing: 1px;
         color: var(--text-muted);
@@ -190,10 +194,7 @@
     }
 
     /* ===== LISTS ===== */
-    .list-container {
-        display: grid;
-        gap: 10px;
-    }
+    .list-container { display: grid; gap: 10px; }
     .list-item {
         background: var(--panel);
         padding: 15px 20px;
@@ -206,8 +207,15 @@
     }
     .list-item:hover { border-left-color: var(--accent); background: #253248; }
     
+    .item-details { display: flex; align-items: center; gap: 15px; }
+    .badge-tag { 
+        font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase; 
+    }
+    .tag-global { background: var(--success); color: #000; }
+    .tag-channel { background: var(--accent); color: #000; }
+
     .btn-del {
-        background: rgba(239, 68, 68, 0.1);
+        background: rgba(239, 68, 68, 0.15);
         color: var(--danger);
         border: none;
         padding: 8px 12px;
@@ -233,20 +241,21 @@
 
 <div class="container">
 
-    <!-- ================== PAINTS (PRESETS) ================== -->
+    <!-- ================== PAINTS ================== -->
     <div id="paints" class="panel active">
         <h2>Style Nicków</h2>
-        <p class="desc">Wybierz gotowy styl z listy i przypisz go do użytkownika.</p>
+        <p class="desc">Wybierz styl z listy i przypisz do użytkownika.</p>
 
         <div class="input-row">
-            <input id="paintNick" placeholder="Wpisz nick użytkownika (np. gatodev)">
-            <button class="btn-primary" onclick="applyPreset()">NADAJ STYL</button>
+            <div class="form-group" style="flex:2">
+                <label>Nick użytkownika</label>
+                <input id="paintNick" placeholder="np. gatodev">
+            </div>
+            <button class="btn-primary" onclick="applyPreset()">Nadaj Styl</button>
         </div>
 
         <h3 style="color: var(--text-muted); font-size: 14px; text-transform: uppercase;">Dostępne Presety</h3>
-        <div class="preset-grid" id="presetGrid">
-            <!-- Tutaj JS wygeneruje kafelki -->
-        </div>
+        <div class="preset-grid" id="presetGrid"></div>
 
         <h3 style="margin-top: 40px; color: var(--text-muted); font-size: 14px; text-transform: uppercase;">Aktywne Painty</h3>
         <div id="listPaints" class="list-container">Loading...</div>
@@ -254,12 +263,33 @@
 
     <!-- ================== EMOTES ================== -->
     <div id="emotes" class="panel">
-        <h2>Globalne Emotki</h2>
-        <p class="desc">Te emotki widzi każdy użytkownik wtyczki.</p>
+        <h2>Emotki</h2>
+        <p class="desc">Dodaj emotki globalne lub przypisane do konkretnego kanału.</p>
         
         <div class="input-row">
-            <input id="emoName" placeholder="Nazwa (np. xdd)" style="flex:0.5">
-            <input id="emoUrl" placeholder="Link do obrazka (URL)">
+            <div class="form-group">
+                <label>Nazwa (kod)</label>
+                <input id="emoName" placeholder="np. xdd">
+            </div>
+            <div class="form-group" style="flex:2">
+                <label>Link do obrazka</label>
+                <input id="emoUrl" placeholder="https://...">
+            </div>
+            <div class="form-group">
+                <label>Autor</label>
+                <input id="emoAuthor" placeholder="Nick autora">
+            </div>
+            <div class="form-group">
+                <label>Zasięg</label>
+                <select id="emoScope" onchange="toggleChannelInput()">
+                    <option value="global">Globalny (wszędzie)</option>
+                    <option value="channel">Tylko Kanał</option>
+                </select>
+            </div>
+            <div class="form-group" id="channelInputGroup" style="display:none">
+                <label>Nazwa Kanału</label>
+                <input id="emoChannel" placeholder="np. xayoo_">
+            </div>
             <button class="btn-primary" onclick="addEmote()">Dodaj</button>
         </div>
         <div id="listEmotes" class="list-container">Loading...</div>
@@ -271,8 +301,14 @@
         <p class="desc">Ikonka wyświetlana przed nickiem.</p>
         
         <div class="input-row">
-            <input id="badgeNick" placeholder="Nick użytkownika">
-            <input id="badgeUrl" placeholder="Link do ikonki (18x18px)">
+            <div class="form-group">
+                <label>Nick</label>
+                <input id="badgeNick" placeholder="Nick użytkownika">
+            </div>
+            <div class="form-group" style="flex:2">
+                <label>URL Ikonki (18x18px)</label>
+                <input id="badgeUrl" placeholder="https://...">
+            </div>
             <button class="btn-primary" onclick="addBadge()">Przypisz</button>
         </div>
         <div id="listBadges" class="list-container">Loading...</div>
@@ -283,43 +319,45 @@
 <script>
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
 
-// ================== PRESETS CONFIG ==================
-// To są gotowe ustawienia, które wysyłamy do Firebase
+// ================== PRESETS LIBRARY ==================
 const PRESETS = [
-    // --- ANIMOWANE ---
+    // Special
     { name: "Rainbow", type: "animated-rainbow", previewStyle: "background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta); -webkit-background-clip: text; color: transparent;" },
     
-    // --- GLOW (NEON) ---
+    // Glows
     { name: "Lava", type: "glow", value: "#ff3300", shadow: "#ffaa00", previewStyle: "color: #ff3300; text-shadow: 0 0 10px #ffaa00;" },
     { name: "Toxic", type: "glow", value: "#ccff00", shadow: "#00ff00", previewStyle: "color: #ccff00; text-shadow: 0 0 10px #00ff00;" },
     { name: "Ice", type: "glow", value: "#e0f2fe", shadow: "#0ea5e9", previewStyle: "color: #e0f2fe; text-shadow: 0 0 10px #0ea5e9;" },
-    { name: "Cyber Pink", type: "glow", value: "#ff00ff", shadow: "#ff0088", previewStyle: "color: #ff00ff; text-shadow: 0 0 10px #ff0088;" },
+    { name: "Cyber", type: "glow", value: "#ff00ff", shadow: "#ff0088", previewStyle: "color: #ff00ff; text-shadow: 0 0 10px #ff0088;" },
     { name: "Golden", type: "glow", value: "#ffd700", shadow: "#ffae00", previewStyle: "color: #ffd700; text-shadow: 0 0 10px #ffae00;" },
     { name: "Ghost", type: "glow", value: "#ffffff", shadow: "#ffffff", previewStyle: "color: #fff; text-shadow: 0 0 10px #fff;" },
     { name: "Vampire", type: "glow", value: "#ff0000", shadow: "#880000", previewStyle: "color: #ff0000; text-shadow: 0 0 10px #880000;" },
+    { name: "Matrix", type: "glow", value: "#00ff00", shadow: "#003300", previewStyle: "color: #00ff00; text-shadow: 0 0 8px #00ff00; font-family: monospace;" },
     
-    // --- GRADIENTY ---
+    // Gradients
     { name: "Sunset", type: "gradient", value: "linear-gradient(to right, #f59e0b, #ef4444)", previewStyle: "background: linear-gradient(to right, #f59e0b, #ef4444); -webkit-background-clip: text; color: transparent;" },
     { name: "Ocean", type: "gradient", value: "linear-gradient(to right, #06b6d4, #3b82f6)", previewStyle: "background: linear-gradient(to right, #06b6d4, #3b82f6); -webkit-background-clip: text; color: transparent;" },
     { name: "Berry", type: "gradient", value: "linear-gradient(to right, #ec4899, #8b5cf6)", previewStyle: "background: linear-gradient(to right, #ec4899, #8b5cf6); -webkit-background-clip: text; color: transparent;" },
     { name: "Mint", type: "gradient", value: "linear-gradient(to right, #34d399, #059669)", previewStyle: "background: linear-gradient(to right, #34d399, #059669); -webkit-background-clip: text; color: transparent;" },
     { name: "Poland", type: "gradient", value: "linear-gradient(to bottom, #ffffff 50%, #ff0000 50%)", previewStyle: "background: linear-gradient(to bottom, #ffffff 50%, #ff0000 50%); -webkit-background-clip: text; color: transparent;" },
-    { name: "Metal", type: "gradient", value: "linear-gradient(45deg, #94a3b8, #e2e8f0, #475569)", previewStyle: "background: linear-gradient(45deg, #94a3b8, #e2e8f0, #475569); -webkit-background-clip: text; color: transparent;" },
+    { name: "Barbie", type: "gradient", value: "linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)", previewStyle: "background: linear-gradient(45deg, #ff9a9e, #fecfef); -webkit-background-clip: text; color: transparent;" },
+    { name: "Joker", type: "gradient", value: "linear-gradient(to right, #6a11cb 0%, #2575fc 100%)", previewStyle: "background: linear-gradient(to right, #6a11cb, #2575fc); -webkit-background-clip: text; color: transparent;" },
+    { name: "Police", type: "gradient", value: "linear-gradient(90deg, #0000ff, #ff0000)", previewStyle: "background: linear-gradient(90deg, #0000ff, #ff0000); -webkit-background-clip: text; color: transparent;" },
     
-    // --- SOLID COLORS (MOCNE) ---
+    // Solid
     { name: "Deep Void", type: "color", value: "#6366f1", previewStyle: "color: #6366f1" },
     { name: "Hot Red", type: "color", value: "#ff0000", previewStyle: "color: #ff0000" },
     { name: "Lime", type: "color", value: "#84cc16", previewStyle: "color: #84cc16" },
     { name: "Magenta", type: "color", value: "#d946ef", previewStyle: "color: #d946ef" },
     { name: "Coral", type: "color", value: "#fb7185", previewStyle: "color: #fb7185" },
     { name: "Teal", type: "color", value: "#14b8a6", previewStyle: "color: #14b8a6" },
+    { name: "White", type: "color", value: "#ffffff", previewStyle: "color: #ffffff" },
 ];
 
 let selectedPresetIndex = null;
 
 // ================== LOGIC ==================
 
-// 1. Render Preset Grid
 function renderPresets() {
     const grid = document.getElementById("presetGrid");
     grid.innerHTML = "";
@@ -329,7 +367,7 @@ function renderPresets() {
         card.className = "preset-card";
         card.onclick = () => selectPreset(index, card);
         card.innerHTML = `
-            <span class="preset-preview" style="${preset.previewStyle}">Nick</span>
+            <span class="preset-preview" style="${preset.previewStyle}">NickName</span>
             <span class="preset-name">${preset.name}</span>
         `;
         grid.appendChild(card);
@@ -338,97 +376,54 @@ function renderPresets() {
 
 function selectPreset(index, cardElement) {
     selectedPresetIndex = index;
-    // UI Update
     document.querySelectorAll(".preset-card").forEach(c => c.classList.remove("selected"));
     cardElement.classList.add("selected");
 }
 
-// 2. Main Functions
+function toggleChannelInput() {
+    const scope = document.getElementById('emoScope').value;
+    const group = document.getElementById('channelInputGroup');
+    if(scope === 'channel') group.style.display = 'flex';
+    else group.style.display = 'none';
+}
+
+// === ACTIONS ===
+
 async function applyPreset() {
     const nick = document.getElementById("paintNick").value.trim().toLowerCase();
-    
-    if(!nick) return alert("Najpierw wpisz nick użytkownika!");
-    if(selectedPresetIndex === null) return alert("Wybierz styl z listy!");
+    if(!nick) return alert("Wpisz nick!");
+    if(selectedPresetIndex === null) return alert("Wybierz styl!");
 
     const p = PRESETS[selectedPresetIndex];
-    
-    // Budujemy obiekt zgodny z content.js
     const payload = { type: p.type };
     if (p.value) payload.value = p.value;
     if (p.shadow) payload.shadow = p.shadow;
 
-    // Save to Firebase
     await api(`premium/${nick}/paint`, "PUT", payload);
-    
-    alert(`Nadano styl ${p.name} dla ${nick}!`);
     document.getElementById("paintNick").value = "";
     loadAll();
-}
-
-async function api(path, method = "GET", body = null) {
-    const opts = { method };
-    if(body) opts.body = JSON.stringify(body);
-    try {
-        const res = await fetch(`${DB_URL}/${path}.json`, opts);
-        return res.json();
-    } catch(e) { console.error(e); }
-}
-
-async function loadAll() {
-    // === PAINTS LIST ===
-    const premium = await api('premium') || {};
-    const plist = document.getElementById('listPaints');
-    const paints = Object.keys(premium).filter(k => premium[k].paint);
-    
-    plist.innerHTML = paints.length ? paints.map(k => {
-        const p = premium[k].paint;
-        let style = "";
-        // Prosta wizualizacja na liście
-        if(p.type === 'color') style = `color: ${p.value}`;
-        else if(p.type === 'gradient') style = `background: ${p.value}; -webkit-background-clip: text; color: transparent;`;
-        else if(p.type === 'glow') style = `color: ${p.value}; text-shadow: 0 0 10px ${p.shadow}`;
-        else if(p.type === 'animated-rainbow') style = `background: linear-gradient(90deg, red, blue); -webkit-background-clip:text; color:transparent;`;
-
-        return `
-            <div class="list-item">
-                <div style="font-weight:bold; font-size:18px; ${style}">${k}</div>
-                <button class="btn-del" onclick="del('premium/${k}/paint')">Usuń</button>
-            </div>
-        `;
-    }).join('') : '<div style="color:#666; padding:10px;">Brak przypisanych paintów.</div>';
-
-    // === EMOTES LIST ===
-    const emotes = await api('emotes') || {};
-    document.getElementById('listEmotes').innerHTML = Object.keys(emotes).map(k => `
-        <div class="list-item">
-            <div style="display:flex; align-items:center; gap:15px;">
-                <img src="${emotes[k].url}" style="height:32px;">
-                <strong>${k}</strong>
-            </div>
-            <button class="btn-del" onclick="del('emotes/${k}')">Usuń</button>
-        </div>
-    `).join('');
-    
-    // === BADGES LIST ===
-    const badges = Object.keys(premium).filter(k => premium[k].badge);
-    document.getElementById('listBadges').innerHTML = badges.map(k => `
-        <div class="list-item">
-            <div style="display:flex; align-items:center; gap:15px;">
-                <img src="${premium[k].badge}" style="height:24px;">
-                <strong>${k}</strong>
-            </div>
-            <button class="btn-del" onclick="del('premium/${k}/badge')">Usuń</button>
-        </div>
-    `).join('');
 }
 
 async function addEmote() {
     const name = document.getElementById('emoName').value.trim();
     const url = document.getElementById('emoUrl').value.trim();
-    if(!name || !url) return alert("Wypełnij pola!");
-    await api(`emotes/${name}`, "PUT", { url });
+    const author = document.getElementById('emoAuthor').value.trim();
+    const scope = document.getElementById('emoScope').value;
+    let channel = document.getElementById('emoChannel').value.trim().toLowerCase();
+
+    if(!name || !url) return alert("Nazwa i URL są wymagane!");
+    if(scope === 'channel' && !channel) return alert("Podaj nazwę kanału!");
+
+    const payload = { url, author, scope };
+    if(scope === 'channel') payload.channel = channel;
+
+    await api(`emotes/${name}`, "PUT", payload);
+    
+    // Clear inputs
     document.getElementById('emoName').value = "";
     document.getElementById('emoUrl').value = "";
+    document.getElementById('emoAuthor').value = "";
+    document.getElementById('emoChannel').value = "";
     loadAll();
 }
 
@@ -449,6 +444,76 @@ async function del(path) {
     }
 }
 
+// === CORE ===
+async function api(path, method = "GET", body = null) {
+    const opts = { method };
+    if(body) opts.body = JSON.stringify(body);
+    try {
+        const res = await fetch(`${DB_URL}/${path}.json`, opts);
+        return res.json();
+    } catch(e) { console.error(e); }
+}
+
+async function loadAll() {
+    // PAINTS
+    const premium = await api('premium') || {};
+    const plist = document.getElementById('listPaints');
+    const paints = Object.keys(premium).filter(k => premium[k].paint);
+    
+    plist.innerHTML = paints.length ? paints.map(k => {
+        const p = premium[k].paint;
+        let style = "";
+        if(p.type === 'color') style = `color: ${p.value}`;
+        else if(p.type === 'gradient') style = `background: ${p.value}; -webkit-background-clip: text; color: transparent;`;
+        else if(p.type === 'glow') style = `color: ${p.value}; text-shadow: 0 0 10px ${p.shadow}`;
+        else if(p.type === 'animated-rainbow') style = `background: linear-gradient(90deg, red, blue); -webkit-background-clip:text; color:transparent;`;
+
+        return `
+            <div class="list-item">
+                <div class="item-details">
+                    <span style="font-weight:bold; font-size:16px; ${style}">${k}</span>
+                    <span style="font-size:12px; color:#666">(${p.type})</span>
+                </div>
+                <button class="btn-del" onclick="del('premium/${k}/paint')">Usuń</button>
+            </div>
+        `;
+    }).join('') : '<div style="padding:10px; color:#666">Brak paintów.</div>';
+
+    // EMOTES
+    const emotes = await api('emotes') || {};
+    document.getElementById('listEmotes').innerHTML = Object.keys(emotes).map(k => {
+        const e = emotes[k];
+        const scopeTag = e.scope === 'channel' 
+            ? `<span class="badge-tag tag-channel">CHANNEL: ${e.channel}</span>` 
+            : `<span class="badge-tag tag-global">GLOBAL</span>`;
+        const authorInfo = e.author ? `<span style="font-size:11px; color:#888">by ${e.author}</span>` : "";
+
+        return `
+        <div class="list-item">
+            <div class="item-details">
+                <img src="${e.url}" style="height:28px;">
+                <div style="display:flex; flex-direction:column;">
+                    <span style="font-weight:bold;">${k} ${authorInfo}</span>
+                    <div style="margin-top:2px;">${scopeTag}</div>
+                </div>
+            </div>
+            <button class="btn-del" onclick="del('emotes/${k}')">Usuń</button>
+        </div>
+    `}).join('');
+    
+    // BADGES
+    const badges = Object.keys(premium).filter(k => premium[k].badge);
+    document.getElementById('listBadges').innerHTML = badges.map(k => `
+        <div class="list-item">
+            <div class="item-details">
+                <img src="${premium[k].badge}" style="height:24px;">
+                <strong>${k}</strong>
+            </div>
+            <button class="btn-del" onclick="del('premium/${k}/badge')">Usuń</button>
+        </div>
+    `).join('');
+}
+
 function switchTab(id) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
@@ -459,7 +524,6 @@ function switchTab(id) {
 // INIT
 renderPresets();
 loadAll();
-
 </script>
 </body>
 </html>
