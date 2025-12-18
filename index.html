@@ -1,143 +1,440 @@
-const API="https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
-
-/* ===================== EMOTES ===================== */
-let EMOTES = { global:{}, channels:{} };
-
-async function loadEmotes(){
-  try{
-    // Globalne
-    const rGlobal = await fetch(`${API}/emotes/global.json`);
-    EMOTES.global = await rGlobal.json() || {};
-
-    // Kanałowe
-    const rChannels = await fetch(`${API}/emotes/channels.json`);
-    EMOTES.channels = await rChannels.json() || {};
-
-    renderEmoteList();
-  }catch(e){
-    console.error("Błąd wczytywania emotes:", e);
-  }
-}
-
-function renderEmoteList(){
-  const list = document.getElementById("emoteList");
-  list.innerHTML = "";
-
-  // Globalne
-  for(const key in EMOTES.global){
-    appendEmote(list,key,EMOTES.global[key],"global");
-  }
-
-  // Kanałowe
-  for(const ch in EMOTES.channels){
-    for(const key in EMOTES.channels[ch]){
-      appendEmote(list,key,EMOTES.channels[ch][key],ch);
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gato.TV Panel Admina</title>
+<style>
+    :root {
+        --bg: #0e0e13;
+        --panel: #18181b;
+        --accent: #00ff00; /* Zielony gato */
+        --accent-hover: #00cc00;
+        --danger: #ef4444;
+        --text: #efeff1;
+        --input-bg: #26262c;
     }
-  }
+    * { box-sizing: border-box; }
+    
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Inter, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+    }
+    
+    /* HEADER */
+    header {
+        background: #000;
+        padding: 0 24px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #333;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .logo {
+        font-weight: 900;
+        font-size: 24px;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px rgba(0,255,0,0.4);
+    }
+    
+    /* NAV */
+    nav { display: flex; gap: 10px; }
+    nav button {
+        background: none;
+        border: none;
+        color: #888;
+        font-size: 14px;
+        font-weight: 700;
+        padding: 10px 15px;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: 0.2s;
+        border-radius: 6px;
+    }
+    nav button:hover { color: #fff; background: rgba(255,255,255,0.05); }
+    nav button.active { color: #000; background: var(--accent); }
+
+    /* CONTENT */
+    .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+    
+    .panel {
+        display: none;
+        background: var(--panel);
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        animation: fadeIn 0.3s ease-out;
+    }
+    .panel.active { display: block; }
+    
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    h2 { margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 24px; font-size: 20px; }
+
+    /* FORMS */
+    .input-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+        background: #202025;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        align-items: end;
+    }
+    
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    label { font-size: 12px; font-weight: bold; color: #aaa; text-transform: uppercase; }
+
+    input, select {
+        padding: 12px;
+        background: var(--input-bg);
+        border: 1px solid #333;
+        color: white;
+        border-radius: 6px;
+        width: 100%;
+        outline: none;
+        transition: 0.2s;
+    }
+    input:focus, select:focus { border-color: var(--accent); }
+
+    button.btn-add {
+        padding: 12px 24px;
+        background: var(--accent);
+        border: none;
+        color: #000;
+        font-weight: 800;
+        border-radius: 6px;
+        cursor: pointer;
+        text-transform: uppercase;
+    }
+    button.btn-add:hover { background: var(--accent-hover); }
+
+    /* LISTS */
+    .item-list { display: grid; gap: 12px; }
+    
+    .item {
+        background: #202025;
+        padding: 12px 20px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-left: 4px solid #333;
+    }
+    .item:hover { background: #2a2a30; border-left-color: var(--accent); }
+
+    .item-info { display: flex; align-items: center; gap: 16px; }
+    .item-name { font-weight: 700; font-size: 16px; }
+    .item-meta { color: #888; font-size: 13px; font-family: monospace; }
+    
+    .preview-box {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: 800;
+        font-size: 12px;
+        background: #000;
+        display: inline-block;
+    }
+
+    img.preview-img { height: 32px; vertical-align: middle; }
+    
+    .btn-del {
+        background: var(--danger);
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+        opacity: 0.7;
+        transition: 0.2s;
+    }
+    .btn-del:hover { opacity: 1; }
+    
+    /* HELPER */
+    .hint { grid-column: 1 / -1; font-size: 12px; color: #666; margin-top: -5px; }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Gato.TV <span style="font-size:10px; vertical-align: super; opacity: 0.7">Admin</span></div>
+    <nav>
+        <button class="active" onclick="switchTab('emotes')">Emotki</button>
+        <button onclick="switchTab('paints')">Paints (Kolory)</button>
+        <button onclick="switchTab('badges')">Odznaki</button>
+    </nav>
+</header>
+
+<div class="container">
+
+    <!-- PANEL EMOTEK -->
+    <div id="emotes" class="panel active">
+        <h2>Zarządzanie Emotkami</h2>
+        <div class="input-group">
+            <div class="field">
+                <label>Nazwa (Trigger)</label>
+                <input id="emoName" placeholder="np. xdd">
+            </div>
+            <div class="field" style="flex: 2;">
+                <label>Link do obrazka</label>
+                <input id="emoUrl" placeholder="https://...">
+            </div>
+            <button class="btn-add" onclick="addEmote()">Dodaj</button>
+        </div>
+        <div id="listEmotes" class="item-list">Ładowanie...</div>
+    </div>
+
+    <!-- PANEL PAINTS -->
+    <div id="paints" class="panel">
+        <h2>Kolory Nicków (Premium)</h2>
+        <p style="color:#666; font-size:14px; margin-bottom:20px;">
+            Każdy dodany tutaj nick przestanie być domyślnie zielony i otrzyma wybrany styl.
+        </p>
+
+        <div class="input-group">
+            <div class="field">
+                <label>Nick (Twitch)</label>
+                <input id="paintNick" placeholder="np. gatodev">
+            </div>
+            <div class="field">
+                <label>Typ Stylu</label>
+                <select id="paintType" onchange="togglePaintInputs()">
+                    <option value="color">Jednolity Kolor</option>
+                    <option value="gradient">Gradient</option>
+                    <option value="glow">Neon (Glow)</option>
+                    <option value="animated-rainbow">Animowana Tęcza</option>
+                </select>
+            </div>
+            
+            <div class="field" id="fieldVal">
+                <label id="labelVal">Wartość (Kolor/CSS)</label>
+                <input id="paintVal" placeholder="#ff0000">
+            </div>
+            
+            <div class="field" id="fieldShadow" style="display:none">
+                <label>Kolor Poświaty (Shadow)</label>
+                <input id="paintShadow" placeholder="#ff00ff">
+            </div>
+
+            <button class="btn-add" onclick="addPaint()">Ustaw</button>
+            
+            <div class="hint" id="hintText">Wpisz kolor HEX (np. #ff0000) lub nazwę (red).</div>
+        </div>
+
+        <div id="listPaints" class="item-list">Ładowanie...</div>
+    </div>
+
+    <!-- PANEL ODZNAK -->
+    <div id="badges" class="panel">
+        <h2>Odznaki przy nicku</h2>
+        <div class="input-group">
+            <div class="field">
+                <label>Nick</label>
+                <input id="badgeNick" placeholder="np. gatodev">
+            </div>
+            <div class="field" style="flex: 2;">
+                <label>Link do ikony (18x18px)</label>
+                <input id="badgeUrl" placeholder="https://...">
+            </div>
+            <button class="btn-add" onclick="addBadge()">Przypisz</button>
+        </div>
+        <div id="listBadges" class="item-list">Ładowanie...</div>
+    </div>
+
+</div>
+
+<script>
+// ================= KONFIGURACJA =================
+const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
+
+// ================= UI LOGIC =================
+function switchTab(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById(id).classList.add('active');
+    // Znajdź przycisk który wywołał funkcję (event.target)
+    event.target.classList.add('active');
+    
+    loadAll();
 }
 
-function appendEmote(list,key,e,ch){
-  const d=document.createElement("div");
-  d.className="emote";
-  d.innerHTML = `
-    <img src="${e.url}">
-    <div><b>${key}</b></div>
-    <small>${e.author||""}${ch!=="global"?" | "+ch:""}</small>
-    <button class="delete">X</button>
-  `;
-  d.querySelector(".delete").onclick = async ()=>{
-    const path = ch==="global"?`/emotes/global/${key}.json`:`/emotes/channels/${ch}/${key}.json`;
-    await fetch(API+path,{method:"DELETE"});
-    loadEmotes();
-  };
-  list.appendChild(d);
+function togglePaintInputs() {
+    const type = document.getElementById('paintType').value;
+    const fieldVal = document.getElementById('fieldVal');
+    const fieldShadow = document.getElementById('fieldShadow');
+    const labelVal = document.getElementById('labelVal');
+    const hint = document.getElementById('hintText');
+
+    // Reset widoczności
+    fieldVal.style.display = 'flex';
+    fieldShadow.style.display = 'none';
+
+    if (type === 'color') {
+        labelVal.innerText = "Kolor (HEX/Name)";
+        hint.innerText = "Np. #ff0000, red, gold";
+    } 
+    else if (type === 'gradient') {
+        labelVal.innerText = "CSS Gradient";
+        hint.innerText = "Np. linear-gradient(90deg, red, blue)";
+    }
+    else if (type === 'glow') {
+        labelVal.innerText = "Kolor Tekstu";
+        fieldShadow.style.display = 'flex';
+        hint.innerText = "Tekst + Kolor poświaty";
+    }
+    else if (type === 'animated-rainbow') {
+        fieldVal.style.display = 'none'; // Tęcza nie potrzebuje parametrów
+        hint.innerText = "Automatyczny efekt tęczy.";
+    }
 }
 
-// Dodawanie emotki z możliwością wyboru global/channel
-document.getElementById("addEmote").onclick=async()=>{
-  const trigger = document.getElementById("emoteTrigger").value.trim();
-  const author  = document.getElementById("emoteAuthor").value.trim();
-  const url     = document.getElementById("emoteUrl").value.trim();
-  const scope   = document.querySelector('input[name="scope"]:checked')?.value || "global";
-  const channel = document.getElementById("emoteChannel")?.value.trim();
-
-  if(!trigger || !url) return alert("Trigger i URL wymagane");
-
-  if(scope==="global"){
-    await fetch(`${API}/emotes/global/${trigger}.json`,{
-      method:"PUT",
-      body:JSON.stringify({url,author})
-    });
-  }else{
-    if(!channel) return alert("Podaj kanał");
-    await fetch(`${API}/emotes/channels/${channel}/${trigger}.json`,{
-      method:"PUT",
-      body:JSON.stringify({url,author})
-    });
-  }
-  loadEmotes();
+// ================= API =================
+async function api(path, method = "GET", body = null) {
+    const opts = { method };
+    if(body) opts.body = JSON.stringify(body);
+    
+    try {
+        const res = await fetch(`${DB_URL}/${path}.json`, opts);
+        return res.json();
+    } catch(e) {
+        console.error(e);
+        alert("Błąd połączenia z bazą!");
+    }
 }
 
-/* ===================== REPLACE EMOTES W CHAT ===================== */
-function replaceEmotes(msg, channel="global"){
-  if(msg.dataset.emotesDone) return;
+// ================= LOAD DATA =================
+async function loadAll() {
+    // 1. Emotki
+    const emotes = await api('emotes') || {};
+    const elist = document.getElementById('listEmotes');
+    elist.innerHTML = Object.keys(emotes).map(k => `
+        <div class="item">
+            <div class="item-info">
+                <img src="${emotes[k].url}" class="preview-img">
+                <span class="item-name">${k}</span>
+            </div>
+            <button class="btn-del" onclick="del('emotes/${k}')">USUŃ</button>
+        </div>
+    `).join('');
 
-  let html = msg.innerHTML;
-  let changed = false;
+    // 2. Premium (Paints & Badges)
+    const premium = await api('premium') || {};
+    
+    // Lista Paints
+    const plist = document.getElementById('listPaints');
+    const paintKeys = Object.keys(premium).filter(k => premium[k].paint);
+    
+    if (paintKeys.length === 0) plist.innerHTML = '<div style="color:#666; padding:10px;">Brak customowych kolorów. Wszyscy mają zielony.</div>';
+    else {
+        plist.innerHTML = paintKeys.map(k => {
+            const p = premium[k].paint;
+            let preview = "";
+            
+            if(p.type === 'color') preview = `<span class="preview-box" style="color:${p.value}">KOLOR</span>`;
+            if(p.type === 'gradient') preview = `<span class="preview-box" style="background:${p.value}; -webkit-background-clip:text; color:transparent;">GRADIENT</span>`;
+            if(p.type === 'glow') preview = `<span class="preview-box" style="color:${p.value}; text-shadow:0 0 5px ${p.shadow}">GLOW</span>`;
+            if(p.type === 'animated-rainbow') preview = `<span class="preview-box" style="background:linear-gradient(90deg, red, blue); -webkit-background-clip:text; color:transparent;">RAINBOW</span>`;
 
-  const allEmotes = {...EMOTES.global};
-  if(channel && EMOTES.channels[channel]){
-    Object.assign(allEmotes, EMOTES.channels[channel]);
-  }
+            return `
+            <div class="item">
+                <div class="item-info">
+                    <span class="item-name">${k}</span>
+                    ${preview}
+                    <span class="item-meta">(${p.type})</span>
+                </div>
+                <button class="btn-del" onclick="del('premium/${k}/paint')">USUŃ</button>
+            </div>`;
+        }).join('');
+    }
 
-  for(const name in allEmotes){
-    const url = allEmotes[name].url;
-    const safe = name.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
-    const re = new RegExp(`(^|\\s)${safe}(?=\\s|$)`,"gi");
-    html = html.replace(re,(m,p1)=>`${p1}<img class="emote-img" src="${url}" alt="${name}">`);
-    changed = true;
-  }
-
-  if(changed){
-    msg.innerHTML = html;
-    msg.dataset.emotesDone = "1";
-  }
+    // Lista Badges
+    const blist = document.getElementById('listBadges');
+    const badgeKeys = Object.keys(premium).filter(k => premium[k].badge);
+    
+    blist.innerHTML = badgeKeys.map(k => `
+        <div class="item">
+            <div class="item-info">
+                <img src="${premium[k].badge}" class="preview-img" style="width:18px; height:18px;">
+                <span class="item-name">${k}</span>
+            </div>
+            <button class="btn-del" onclick="del('premium/${k}/badge')">USUŃ</button>
+        </div>
+    `).join('');
 }
 
-/* ===================== SCAN CHAT ===================== */
-function scan(){
-  document.querySelectorAll('span[data-a-target="chat-message-username"]').forEach(paintNick);
-  document.querySelectorAll('span[data-a-target="chat-message-text"]').forEach(msg=>{
-    const channel = msg.closest('[data-channel]')?.dataset.channel || "global";
-    replaceEmotes(msg, channel);
-  });
+// ================= ACTIONS =================
+async function del(path) {
+    if(confirm("Potwierdzasz usunięcie?")) {
+        await api(path, "DELETE");
+        loadAll();
+    }
 }
 
-/* ===================== OBSERVER ===================== */
-const observer = new MutationObserver(mutations=>{
-  mutations.forEach(m=>{
-    m.addedNodes.forEach(n=>{
-      if(n.nodeType!==1) return;
-      const nick = n.querySelector?.('span[data-a-target="chat-message-username"]');
-      if(nick) paintNick(nick);
-      const msg = n.querySelector?.('span[data-a-target="chat-message-text"]');
-      if(msg){
-        const channel = n.dataset.channel || "global";
-        replaceEmotes(msg, channel);
-      }
-    });
-  });
-});
+async function addEmote() {
+    const name = document.getElementById('emoName').value.trim();
+    const url = document.getElementById('emoUrl').value.trim();
+    
+    if(!name || !url) return alert("Wpisz nazwę i link!");
+    
+    await api(`emotes/${name}`, "PUT", { url });
+    document.getElementById('emoName').value = "";
+    document.getElementById('emoUrl').value = "";
+    loadAll();
+}
 
-/* ===================== INIT ===================== */
-const wait = setInterval(()=>{
-  const chat = document.querySelector('[role="log"]');
-  if(chat){
-    observer.observe(chat,{childList:true,subtree:true});
-    scan();
-    clearInterval(wait);
-  }
-},200);
+async function addPaint() {
+    const nick = document.getElementById('paintNick').value.trim().toLowerCase();
+    const type = document.getElementById('paintType').value;
+    const val = document.getElementById('paintVal').value.trim();
+    const shadow = document.getElementById('paintShadow').value.trim();
+    
+    if(!nick) return alert("Wpisz nick!");
 
-setInterval(scan,1500);
-loadEmotes();
+    let payload = { type };
+    
+    if(type === 'color' || type === 'gradient') {
+        if(!val) return alert("Podaj wartość koloru/gradientu!");
+        payload.value = val;
+    }
+    else if (type === 'glow') {
+        if(!val || !shadow) return alert("Podaj kolor tekstu ORAZ kolor cienia!");
+        payload.value = val;
+        payload.shadow = shadow;
+    }
+    // animated-rainbow nie potrzebuje value
+
+    await api(`premium/${nick}/paint`, "PUT", payload);
+    document.getElementById('paintNick').value = "";
+    loadAll();
+}
+
+async function addBadge() {
+    const nick = document.getElementById('badgeNick').value.trim().toLowerCase();
+    const url = document.getElementById('badgeUrl').value.trim();
+    
+    if(!nick || !url) return alert("Wpisz nick i link!");
+    
+    // Badge zapisujemy jako prosty string (URL)
+    await api(`premium/${nick}/badge`, "PUT", url);
+    document.getElementById('badgeNick').value = "";
+    document.getElementById('badgeUrl').value = "";
+    loadAll();
+}
+
+// START
+loadAll();
+togglePaintInputs(); // Ustaw poprawne pola na start
+</script>
+
+</body>
+</html>
