@@ -25,7 +25,7 @@
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top, #172554, var(--bg)); color: var(--text); min-height: 100vh; padding-bottom: 50px; }
     
-    /* STYLE PODGLĄDU */
+    /* ANIMACJE */
     @keyframes gatoRainbow { 0%{color:#f00} 20%{color:#ff0} 40%{color:#0f0} 60%{color:#0ff} 80%{color:#00f} 100%{color:#f0f} }
     .gato-anim-rainbow { animation: gatoRainbow 4s linear infinite; font-weight: 800; }
     @keyframes gatoShine{0%{background-position:0% 50%}100%{background-position:200% 50%}}
@@ -126,14 +126,11 @@
     input { padding: 15px; background: #0f172a; border: 1px solid var(--border); color: white; border-radius: 8px; font-size: 14px; width: 100%; outline: none; transition: 0.2s; }
     input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
     input:disabled { opacity: 0.6; cursor: not-allowed; background: #162032; }
-
     .file-drop-zone { border: 2px dashed var(--border); background: rgba(15, 23, 42, 0.5); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: 0.2s; position: relative; }
     .file-drop-zone:hover { border-color: var(--accent); background: rgba(56, 189, 248, 0.05); }
     .file-drop-zone input[type=file] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
     .file-info { color: var(--text-muted); font-size: 13px; font-weight: 600; }
-    
     #filePreview { margin-top: 20px; max-height: 80px; display: none; border-radius: 8px; border: 2px solid var(--border); background: #000; padding: 5px; object-fit: contain; margin-left: auto; margin-right: auto; }
-
     button.btn-primary { padding: 14px 24px; background: linear-gradient(135deg, var(--accent), #0ea5e9); border: none; color: #0f172a; font-weight: 900; border-radius: 10px; cursor: pointer; transition: 0.2s; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; width: 100%; }
     button.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 20px var(--accent-glow); }
     button.btn-secondary { background: transparent; color: var(--text-muted); padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border); font-weight: 700; cursor: pointer; font-size: 12px; transition: 0.2s; }
@@ -342,7 +339,7 @@ const CATALOG = [
 // INIT
 window.onload = () => {
     if (window.location.protocol === 'file:') {
-        alert("BŁĄD: Otwórz plik przez serwer lokalny.");
+        alert("BŁĄD: Otwórz plik przez serwer lokalny (np. Live Server).");
         return;
     }
 
@@ -386,44 +383,49 @@ function logout() {
 async function validateToken(token) {
     try {
         const res = await fetch('https://api.twitch.tv/helix/users', { headers: { 'Client-ID': CLIENT_ID, 'Authorization': `Bearer ${token}` } });
-        if(!res.ok) throw new Error("Token Invalid");
+        if(!res.ok) throw new Error("Błąd logowania (Token Expired lub zły ClientID): " + res.status);
         const data = await res.json();
+        if(!data.data || !data.data.length) throw new Error("Brak danych użytkownika");
         currentUser = data.data[0];
         enableApp();
     } catch(e) {
         console.error("Login fail:", e);
+        alert(e.message);
         localStorage.removeItem('twitch_token');
         setLoggedOutState();
     }
 }
 
 function enableApp() {
-    document.getElementById('loginBtnContainer').style.display = 'none';
-    document.getElementById('userProfile').style.display = 'flex';
-    document.getElementById('coinDisplay').style.display = 'flex';
-    document.querySelectorAll('.login-blocker').forEach(b => b.style.display = 'none');
-    document.querySelectorAll('.protected-content').forEach(c => c.style.display = 'block');
+    try {
+        document.getElementById('loginBtnContainer').style.display = 'none';
+        document.getElementById('userProfile').style.display = 'flex';
+        document.getElementById('coinDisplay').style.display = 'flex';
+        document.querySelectorAll('.login-blocker').forEach(b => b.style.display = 'none');
+        document.querySelectorAll('.protected-content').forEach(c => c.style.display = 'block');
 
-    document.getElementById('avatar').src = currentUser.profile_image_url;
-    document.getElementById('username').innerText = currentUser.display_name;
-    document.getElementById('previewUser').innerText = currentUser.display_name;
-    document.getElementById('emoAuthor').value = currentUser.display_name;
-    
-    loadUserData();
-    loadAllEmotes();
+        document.getElementById('avatar').src = currentUser.profile_image_url;
+        document.getElementById('username').innerText = currentUser.display_name;
+        document.getElementById('previewUser').innerText = currentUser.display_name;
+        document.getElementById('emoAuthor').value = currentUser.display_name;
+        
+        loadUserData();
+        loadAllEmotes();
+    } catch(e) {
+        console.error("Błąd w enableApp", e);
+    }
 }
 
 async function loadUserData() {
     try {
         const res = await fetch(`${DB_URL}/premium/${currentUser.login.toLowerCase()}.json`);
-        // POPRAWKA: Jeśli użytkownik nie istnieje, zwróć pusty obiekt {}, żeby reszta kodu nie wybuchła
+        // FIX: Dodano "|| {}" aby uniknąć błędu gdy user nie ma jeszcze danych
         const data = await res.json() || {}; 
         currentLoadout = data; 
         updatePreview(data);
         renderShop();
     } catch(e) {
-        console.error("Load Data Error", e);
-        // Fallback w razie błędu sieci
+        // Ignoruj błąd sieci, po prostu załaduj domyślne
         currentLoadout = {};
         renderShop();
     }
@@ -465,8 +467,6 @@ function updatePreview(data) {
     }
 }
 
-
-// SHOP LOGIC
 function renderShop() {
     const shopContent = document.getElementById("shopContent");
     const inv = document.getElementById("inventoryGrid");
