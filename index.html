@@ -10,13 +10,13 @@
 
 <style>
     :root {
-        --bg: #0b1120;       
-        --panel: #1e293b;    
+        --bg: #0b1120;
+        --panel: #1e293b;
         --accent: #38bdf8;
         --accent-glow: rgba(56, 189, 248, 0.5);
-        --twitch: #9146ff;   
-        --yellow: #facc15;   
-        --text: #f1f5f9;     
+        --twitch: #9146ff;
+        --yellow: #facc15;
+        --text: #f1f5f9;
         --text-muted: #94a3b8;
         --border: #334155;
         --danger: #ef4444;
@@ -24,22 +24,22 @@
     }
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top, #172554, var(--bg)); color: var(--text); min-height: 100vh; padding-bottom: 50px; }
-    
+   
     /* ANIMACJE */
     @keyframes gatoRainbow { 0%{color:#f00} 20%{color:#ff0} 40%{color:#0f0} 60%{color:#0ff} 80%{color:#00f} 100%{color:#f0f} }
     .gato-anim-rainbow { animation: gatoRainbow 4s linear infinite; font-weight: 800; }
     @keyframes gatoShine{0%{background-position:0% 50%}100%{background-position:200% 50%}}
-    
+   
     /* HEADER */
     header { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.3); }
     .header-left { display: flex; align-items: center; gap: 25px; }
     .logo { font-size: 28px; font-weight: 900; color: var(--accent); letter-spacing: -1px; text-transform: uppercase; text-shadow: 0 0 20px var(--accent-glow); cursor: pointer; display: flex; align-items: center; gap: 8px; }
     .beta-tag { font-size: 10px; background: var(--danger); color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700; transform: translateY(-2px); }
-    
+   
     .user-profile { display: none; align-items: center; gap: 10px; background: rgba(145, 70, 255, 0.15); padding: 4px 12px 4px 4px; border-radius: 50px; border: 1px solid var(--twitch); }
     .user-avatar { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--twitch); }
     .user-nick { font-weight: 700; font-size: 14px; color: #fff; }
-    
+   
     .btn-login { background: var(--twitch); color: white; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 0 15px rgba(145, 70, 255, 0.2); }
     .btn-login:hover { background: #772ce8; transform: translateY(-1px); }
     .btn-logout { background: transparent; border: none; cursor: pointer; padding: 5px 10px; border-radius: 8px; transition: 0.2s; font-size: 14px; display: flex; align-items: center; color: var(--text-muted); gap: 6px; font-weight: 600; }
@@ -64,19 +64,19 @@
     .protected-content { display: none; }
 
     /* CHAT PREVIEW - Sticky */
-    .chat-preview-container { 
-        background: #18181b; 
-        border: 1px solid #333; 
-        border-radius: 12px; 
-        padding: 15px 20px; 
-        margin-bottom: 30px; 
-        font-family: 'Inter', sans-serif; 
-        display: flex; 
-        align-items: center; 
-        justify-content: space-between; 
+    .chat-preview-container {
+        background: #18181b;
+        border: 1px solid #333;
+        border-radius: 12px;
+        padding: 15px 20px;
+        margin-bottom: 30px;
+        font-family: 'Inter', sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         position: sticky;
-        top: 80px; 
+        top: 80px;
         z-index: 90;
         backdrop-filter: blur(10px);
     }
@@ -110,7 +110,7 @@
     .btn-buy:hover { background: #fde047; }
     .btn-equip { background: var(--success); color: #fff; }
     .btn-equip:hover { background: #16a34a; }
-    .btn-unequip { background: #ef4444; color: #fff; } 
+    .btn-unequip { background: #ef4444; color: #fff; }
     .btn-unequip:hover { background: #dc2626; }
 
     .category-badge { position: absolute; top:8px; left:8px; padding:2px 6px; border-radius:4px; font-size:9px; font-weight:bold; text-transform:uppercase; color:white; z-index: 2; }
@@ -174,7 +174,7 @@
             <button onclick="logout()" class="btn-logout">🛑 Wyloguj</button>
         </div>
     </div>
-    
+   
     <div style="display:flex; align-items:center;">
         <div id="coinDisplay" class="coin-display" style="display:none;">
             <span>🪙</span> <span id="coinCount">10</span>
@@ -215,9 +215,9 @@
                 <button id="tabInv" class="active" onclick="switchPaintSubTab('inv')">EKWIPUNEK</button>
                 <button id="tabShop" onclick="switchPaintSubTab('shop')">SKLEP</button>
             </div>
-            
+           
             <div id="viewInventory"><div id="inventoryGrid" class="preset-grid"></div></div>
-            
+           
             <div id="viewShop" style="display:none;">
                 <p style="color:var(--text-muted); margin-bottom:20px;">Kupuj efekty. Zostaną one zapisane w bazie i obsłużone przez wtyczkę.</p>
                 <div id="shopContent"></div>
@@ -270,7 +270,7 @@
                             <input id="emoUrl" placeholder="https://..." style="font-family:monospace">
                         </div>
                     </div>
-                    
+                   
                     <img id="filePreview" src="">
                     <div style="height:20px"></div>
                     <button class="btn-primary" onclick="addEmote()">💾 Zapisz Emotkę</button>
@@ -305,21 +305,21 @@
 
 <script>
 // ==================== CONFIG ====================
-const CLIENT_ID = 'l0agnxl8yeto7wda5wvblpg1mr55db'; 
-const REDIRECT_URI = window.location.origin + window.location.pathname; 
+const CLIENT_ID = 'l0agnxl8yeto7wda5wvblpg1mr55db';
+const REDIRECT_URI = window.location.origin + window.location.pathname;
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
 // ================================================
 
-let currentUser = null; 
-let coins = 10; 
-let ownedItems = ["Classic Green", "Default Font"]; 
-let currentLoadout = {}; 
-let allEmotesData = {}; 
+let currentUser = null;
+let coins = 10;
+let ownedItems = ["Classic Green", "Default Font"];
+let currentLoadout = {};
+let allEmotesData = {};
 let confettiCooldown = false;
 
 const CATALOG = [
     { name: "Classic Green", category:"paint", price: 0, type: "color", value: "#00ff00", previewStyle: "color:#00ff00" },
-    { name: "Mana Potion", category:"paint", price: 10, type: "gradient", value: "linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%)", previewStyle: `background-image: linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%); filter: drop-shadow(rgb(215, 15, 255) 0px 0px 0.1px) drop-shadow(rgb(64, 0, 77) 1px 1px 0.1px); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: gatoShine 3s linear infinite; font-weight: 900;` },
+    { name: "Mana Potion", category:"paint", price: 10, type: "gradient", value: "linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%)", previewStyle: `background-image: linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: gatoShine 3s linear infinite; font-weight: 900;` },
     { name: "Fire Lord", category:"paint", price: 50, type: "gradient", value: "linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #ff0000)", previewStyle: "background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #ff0000); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: gatoShine 3s linear infinite; font-weight:900;" },
     { name: "Golden Legend", category:"paint", price: 100, type: "glow", value: "#ffd700", shadow: "#ffae00", previewStyle: "color:#ffd700;text-shadow:0 0 10px #ffae00; font-weight:800;" },
     { name: "RGB Master", category:"paint", price: 200, type: "animated-rainbow", previewStyle: "font-weight:900;", className: "gato-anim-rainbow" },
@@ -336,7 +336,8 @@ const CATALOG = [
 ];
 
 window.onload = async () => {
-    // 1. Sprawdź hasz URL (powrót z logowania)
+    renderShop();
+
     if (document.location.hash.includes('access_token')) {
         const params = new URLSearchParams(document.location.hash.substring(1));
         const token = params.get('access_token');
@@ -346,9 +347,8 @@ window.onload = async () => {
             await attemptLogin(token);
             return;
         }
-    } 
-    
-    // 2. Sprawdź zapisany token
+    }
+   
     const stored = localStorage.getItem('twitch_token');
     if(stored) {
         await attemptLogin(stored);
@@ -356,17 +356,16 @@ window.onload = async () => {
         setLoggedOutState();
     }
 
-    // Ładowanie stanu lokalnego (ekwipunek, monety)
     if(localStorage.getItem('gato_coins')) coins = parseInt(localStorage.getItem('gato_coins'));
     const storedOwned = localStorage.getItem('gato_owned');
     if(storedOwned) {
         try {
             const parsed = JSON.parse(storedOwned);
-            // Zabezpieczenie: jeśli to nie tablica, przywróć domyślne
             if(Array.isArray(parsed)) ownedItems = parsed;
         } catch(e) {}
     }
     updateCoinDisplay();
+    renderShop();
 };
 
 function setLoggedOutState() {
@@ -387,45 +386,37 @@ function logout() {
     location.reload();
 }
 
-// Zmiana nazwy z validateToken na attemptLogin żeby odróżnić
 async function attemptLogin(token) {
     try {
-        const res = await fetch('https://api.twitch.tv/helix/users', { 
-            headers: { 
-                'Client-ID': CLIENT_ID, 
-                'Authorization': `Bearer ${token}` 
-            } 
+        const res = await fetch('https://api.twitch.tv/helix/users', {
+            headers: {
+                'Client-ID': CLIENT_ID,
+                'Authorization': `Bearer ${token}`
+            }
         });
-        
+       
         if(!res.ok) {
-            // Tylko błąd autoryzacji (401) powoduje wylogowanie
             if(res.status === 401) {
-                console.warn("Token wygasł.");
                 localStorage.removeItem('twitch_token');
                 setLoggedOutState();
                 return;
             }
             throw new Error(`API Error: ${res.status}`);
         }
-        
+       
         const data = await res.json();
         if(!data.data || !data.data.length) throw new Error("Brak danych.");
-        
+       
         currentUser = data.data[0];
-        enableApp(); 
-        
+        enableApp();
+       
     } catch(e) {
         console.error("Błąd logowania:", e);
-        // Jeśli currentUser jest pusty, to znaczy że nie udało się zalogować
-        if(!currentUser) {
-            alert("Błąd logowania: " + e.message);
-            setLoggedOutState();
-        }
+        setLoggedOutState();
     }
 }
 
 function enableApp() {
-    // Odblokuj UI
     document.getElementById('loginBtnContainer').style.display = 'none';
     document.getElementById('userProfile').style.display = 'flex';
     document.getElementById('coinDisplay').style.display = 'flex';
@@ -435,30 +426,22 @@ function enableApp() {
     document.getElementById('avatar').src = currentUser.profile_image_url;
     document.getElementById('username').innerText = currentUser.display_name;
     document.getElementById('previewUser').innerText = currentUser.display_name;
-    document.getElementById('emoAuthor').value = currentUser.display_name;
-    
-    // WAŻNE: Najpierw wyrenderuj sklep (aby nie był pusty), potem dociągnij dane z bazy
-    // Renderowanie sklepu nie zależy od bazy danych, tylko od lokalnego stałego katalogu
-    try {
-        renderShop(); 
-    } catch(e) { console.error("Critical Shop Error", e); }
+    document.getElementById('emoChannel').value = currentUser.login;
 
-    // Potem załaduj dane z bazy (asynchronicznie)
     loadUserData();
     loadAllEmotes();
+    updatePreview(currentLoadout);
 }
 
 async function loadUserData() {
     try {
         const res = await fetch(`${DB_URL}/premium/${currentUser.login.toLowerCase()}.json`);
         const data = await res.json() || {};
-        currentLoadout = data; 
+        currentLoadout = data;
         updatePreview(data);
-        // Odśwież sklep, żeby zaktualizować przyciski "Zdejmij/Załóż"
         renderShop();
     } catch(e) {
-        console.log("Błąd bazy danych (może brak neta):", e);
-        // Nie czyścimy currentLoadout, żeby nie psuć stanu
+        console.log("Błąd ładowania loadout:", e);
     }
 }
 
@@ -469,7 +452,8 @@ function updatePreview(data) {
 
     if(!userEl) return;
 
-    userEl.style = ""; userEl.className = "chat-username";
+    userEl.style = ""; 
+    if(userEl.classList.contains('gato-anim-rainbow')) userEl.classList.remove('gato-anim-rainbow');
     msgEl.style = "";
     badgeContainer.innerHTML = "";
 
@@ -483,7 +467,7 @@ function updatePreview(data) {
              userEl.style.animation = "gatoShine 3s linear infinite";
              userEl.style.fontWeight = "900";
         }
-        if(p.type === 'glow') { userEl.style.color = p.value; userEl.style.textShadow = `0 0 10px ${p.shadow}`; }
+        if(p.type === 'glow') { userEl.style.color = p.value; userEl.style.textShadow = `0 0 10px ${p.shadow || '#ffae00'}`; }
         if(p.type === 'animated-rainbow') userEl.classList.add('gato-anim-rainbow');
     }
 
@@ -503,10 +487,10 @@ function updatePreview(data) {
 function renderShop() {
     const shopContent = document.getElementById("shopContent");
     const inv = document.getElementById("inventoryGrid");
-    
+   
     if(!shopContent || !inv) return;
 
-    shopContent.innerHTML = ""; 
+    shopContent.innerHTML = "";
     inv.innerHTML = "";
 
     const categories = [
@@ -517,22 +501,20 @@ function renderShop() {
         {id:'bg', name:'Tło (Backgrounds)'}
     ];
 
-    // EKWIPUNEK
     const ownedItemsList = CATALOG.filter(i => ownedItems.includes(i.name));
-    
+   
     if(ownedItemsList.length === 0) {
         inv.innerHTML = '<div class="empty-inv-msg">Twój ekwipunek jest pusty. Odwiedź sklep!</div>';
     } else {
-        ownedItemsList.forEach((item, index) => {
+        ownedItemsList.forEach((item) => {
              const originalIndex = CATALOG.findIndex(c => c.name === item.name);
              inv.appendChild(createItemCard(item, originalIndex, true));
         });
     }
 
-    // SKLEP
     categories.forEach(cat => {
         const catItems = CATALOG.filter(i => i.category === cat.id && !ownedItems.includes(i.name));
-        
+       
         if(catItems.length > 0) {
             const title = document.createElement('div');
             title.className = 'shop-section-title';
@@ -541,7 +523,7 @@ function renderShop() {
 
             const grid = document.createElement('div');
             grid.className = 'preset-grid';
-            
+           
             catItems.forEach(item => {
                 const originalIndex = CATALOG.findIndex(c => c.name === item.name);
                 grid.appendChild(createItemCard(item, originalIndex, false));
@@ -554,21 +536,28 @@ function renderShop() {
 function createItemCard(item, index, isOwned) {
     const card = document.createElement("div");
     card.className = isOwned ? "preset-card owned" : "preset-card";
-    
+   
     card.onmouseenter = () => {
-        if(item.category === 'paint') document.getElementById('previewUser').style.cssText = item.previewStyle + "; font-size:13px;";
-        else if(item.category === 'badge') document.getElementById('previewBadges').innerHTML = `<img src="${item.value}" class="gato-badge-preview">`;
-        else if(item.category === 'ink' || item.category === 'font' || item.category === 'bg') document.querySelector('.chat-msg').style.cssText = item.previewStyle;
+        if(item.category === 'paint') {
+            const el = document.getElementById('previewUser');
+            el.style.cssText = item.previewStyle;
+            if(item.className) el.classList.add(item.className);
+        } else if(item.category === 'badge') {
+            document.getElementById('previewBadges').innerHTML = `<img src="${item.value}" class="gato-badge-preview">`;
+        } else {
+            document.querySelector('.chat-msg').style.cssText = item.previewStyle;
+        }
     };
-    card.onmouseleave = () => { updatePreview(currentLoadout); } 
+    card.onmouseleave = () => { 
+        updatePreview(currentLoadout); 
+    };
 
     let preview = `<div style="${item.previewStyle}">NickName</div>`;
-    if(item.category === "badge") preview = `<img src="${item.value}" class="badge-preview-img">`;
-    if(item.category === "bg") preview = `<div style="width:100%;height:20px;${item.previewStyle}"></div>`;
+    if(item.category === "badge") preview = `<img src="${item.value}" style="height:60px;">`;
+    if(item.category === "bg") preview = `<div style="width:100%;height:40px;${item.previewStyle};border-radius:8px;"></div>`;
     if(item.category === "font") preview = `<div style="${item.previewStyle}">Abc</div>`;
     if(item.category === "ink") preview = `<div style="${item.previewStyle}">Tekst</div>`;
 
-    // SPRAWDZANIE CZY ZAŁOŻONE
     let isEquipped = false;
     if(currentLoadout && currentLoadout[item.category]) {
         const eq = currentLoadout[item.category];
@@ -582,12 +571,12 @@ function createItemCard(item, index, isOwned) {
     let btn = "";
     if(isOwned) {
         if(isEquipped) {
-            btn = `<button class="btn-action btn-unequip" onclick="unequipItem('${item.category}')">ZDEJMIJ</button>`;
+            btn = `<button class="btn-action btn-unequip" ${currentUser ? '' : 'disabled'} onclick="${currentUser ? `unequipItem('${item.category}')` : 'alert(\\'Zaloguj się!\\')'}">ZDEJMIJ</button>`;
         } else {
-            btn = `<button class="btn-action btn-equip" onclick="equipItem(${index})">Załóż</button>`;
+            btn = `<button class="btn-action btn-equip" ${currentUser ? '' : 'disabled'} onclick="${currentUser ? `equipItem(${index})` : 'alert(\\'Zaloguj się!\\')'}">ZAŁÓŻ</button>`;
         }
     } else {
-        btn = `<button class="btn-action btn-buy" onclick="buyItem(${index})">Kup ${item.price}</button>`;
+        btn = `<button class="btn-action btn-buy" ${coins < item.price ? 'disabled' : ''} onclick="buyItem(${index})">KUP ${item.price} 🪙</button>`;
     }
 
     card.innerHTML = `
@@ -609,16 +598,21 @@ function createItemCard(item, index, isOwned) {
 function buyItem(idx) {
     const item = CATALOG[idx];
     if(coins >= item.price) {
-        coins -= item.price; ownedItems.push(item.name);
-        updateCoinDisplay(); renderShop(); fireConfetti(true);
+        coins -= item.price;
+        ownedItems.push(item.name);
+        updateCoinDisplay();
+        renderShop();
+        fireConfetti(true);
+    } else {
+        alert("Za mało coinów!");
     }
 }
 
 async function equipItem(idx) {
     if(!currentUser) return;
     const item = CATALOG[idx];
-    const user = currentUser.login.toLowerCase(); 
-    
+    const user = currentUser.login.toLowerCase();
+   
     let payload = item.value;
     if(item.category === 'paint') {
         payload = { type: item.type, value: item.value };
@@ -626,19 +620,35 @@ async function equipItem(idx) {
     }
 
     await api(`premium/${user}/${item.category}`, "PUT", payload);
-    loadUserData(); 
+    await loadUserData();
 }
 
 async function unequipItem(category) {
     if(!currentUser) return;
     const user = currentUser.login.toLowerCase();
     await api(`premium/${user}/${category}`, "DELETE");
-    loadUserData(); 
+    await loadUserData();
 }
 
-function updateCoinDisplay() { document.getElementById('coinCount').innerText = coins; localStorage.setItem('gato_coins', coins); localStorage.setItem('gato_owned', JSON.stringify(ownedItems)); }
-function switchTab(id) { document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); document.querySelectorAll('nav button').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); if(event.target.tagName==='BUTTON') event.target.classList.add('active'); }
-function switchPaintSubTab(tab) { document.getElementById('viewInventory').style.display = tab==='inv'?'block':'none'; document.getElementById('viewShop').style.display = tab==='shop'?'block':'none'; document.getElementById('tabInv').className = tab==='inv'?'active':''; document.getElementById('tabShop').className = tab==='shop'?'active':''; }
+function updateCoinDisplay() { 
+    document.getElementById('coinCount').innerText = coins; 
+    localStorage.setItem('gato_coins', coins); 
+    localStorage.setItem('gato_owned', JSON.stringify(ownedItems)); 
+}
+
+function switchTab(id) { 
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); 
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active')); 
+    document.getElementById(id).classList.add('active'); 
+    document.querySelector(`nav button[onclick^="switchTab('${id}')"]`).classList.add('active');
+}
+
+function switchPaintSubTab(tab) { 
+    document.getElementById('viewInventory').style.display = tab==='inv'?'block':'none'; 
+    document.getElementById('viewShop').style.display = tab==='shop'?'block':'none'; 
+    document.getElementById('tabInv').className = tab==='inv'?'active':''; 
+    document.getElementById('tabShop').className = tab==='shop'?'active':''; 
+}
 function togglePreviewTheme() { document.getElementById('chatPreviewBox').classList.toggle('light'); }
 
 function fireDownloadConfetti() {
@@ -651,37 +661,94 @@ function fireDownloadConfetti() {
 }
 function fireConfetti(shopMode){ if(shopMode) confetti({particleCount:100, spread:70, origin: {x:0.5, y:0.5}, colors: ['#facc15', '#ffffff']}); }
 
-// EMOTES
-function openEmoteForm() { if(!currentUser) return; document.getElementById('emoChannel').value = currentUser.login; renderMyEmotes(); document.getElementById('emotesGalleryView').style.display='none'; document.getElementById('emotesFormView').style.display='block'; }
-function closeEmoteForm() { document.getElementById('emotesFormView').style.display='none'; document.getElementById('emotesGalleryView').style.display='block'; loadAllEmotes(); }
+function openEmoteForm() { 
+    if(!currentUser) return alert("Zaloguj się!"); 
+    document.getElementById('emoChannel').value = currentUser.login; 
+    renderMyEmotes(); 
+    document.getElementById('emotesGalleryView').style.display='none'; 
+    document.getElementById('emotesFormView').style.display='block'; 
+}
+function closeEmoteForm() { 
+    document.getElementById('emotesFormView').style.display='none'; 
+    document.getElementById('emotesGalleryView').style.display='block'; 
+    loadAllEmotes(); 
+}
 
 async function loadAllEmotes() {
-    if(currentUser) {
-        allEmotesData = await api('emotes') || {}; 
-        document.getElementById('emotesGrid').innerHTML = Object.keys(allEmotesData).reverse().map(k=>{
-            const e=allEmotesData[k];
-            let btn = (e.author === currentUser.display_name || e.channel === currentUser.login)
-                ? `<div class="action-overlay del-btn" onclick="del('emotes/${k}')">✖</div>` 
+    if(!currentUser) return;
+    try {
+        allEmotesData = await api('emotes') || {};
+        const entries = Object.entries(allEmotesData).reverse();
+        document.getElementById('emotesGrid').innerHTML = entries.map(([k, e]) => {
+            const btn = (e.author === currentUser.display_name || e.channel === currentUser.login)
+                ? `<div class="action-overlay del-btn" onclick="del('emotes/${k}')">✖</div>`
                 : `<div class="action-overlay add-btn" onclick="cloneEmote('${k}','${e.url}')">✚</div>`;
-            return `<div class="emote-card">${btn}<img src="${e.url}" class="emote-img"><div class="emote-info"><div class="emote-name">${k}</div><div class="channel-tag">#${e.channel}</div></div></div>`;
-        }).join('');
+            return `<div class="emote-card">${btn}<img src="${e.url}" class="emote-img"><div><div class="emote-name">${k}</div><div class="channel-tag">#${e.channel}</div></div></div>`;
+        }).join('') || '<p>Brak emotek</p>';
+    } catch(e) {
+        document.getElementById('emotesGrid').innerHTML = 'Błąd';
     }
 }
+
 function renderMyEmotes() {
-    const keys = Object.keys(allEmotesData).filter(k=>allEmotesData[k].channel===currentUser.login).reverse();
-    document.getElementById('myEmotesGrid').innerHTML = keys.length ? keys.map(k=>`<div class="emote-card"><img src="${allEmotesData[k].url}" class="emote-img"><div class="emote-name">${k}</div><div class="action-overlay del-btn" onclick="del('emotes/${k}', true)">✖</div></div>`).join('') : '<p style="color:#666; font-size:12px;">Brak emotek.</p>';
+    if(!currentUser) return;
+    const keys = Object.keys(allEmotesData).filter(k => allEmotesData[k].channel === currentUser.login).reverse();
+    document.getElementById('myEmotesGrid').innerHTML = keys.length ? keys.map(k => `<div class="emote-card"><img src="${allEmotesData[k].url}" class="emote-img"><div class="emote-name">${k}</div><div class="action-overlay del-btn" onclick="del('emotes/${k}', true)">✖</div></div>`).join('') : '<p style="color:#666;">Brak twoich emotek.</p>';
 }
+
 async function addEmote() {
-    const name = document.getElementById('emoName').value.trim(); 
+    if(!currentUser) return;
+    const name = document.getElementById('emoName').value.trim();
     const url = document.getElementById('emoUrl').value.trim();
-    if(!name || !url) return alert("Brakuje nazwy lub URL");
-    await api(`emotes/${name}`, "PUT", { url: url, author: currentUser.display_name, scope: 'channel', channel: currentUser.login });
-    closeEmoteForm();
+    if(!name || !url) return alert("Wypełnij pola!");
+    await api(`emotes/${name}`, "PUT", { url, author: currentUser.display_name, channel: currentUser.login });
+    document.getElementById('emoName').value = '';
+    document.getElementById('emoUrl').value = '';
+    document.getElementById('filePreview').style.display = 'none';
+    renderMyEmotes();
 }
-function cloneEmote(n,u) { openEmoteForm(); document.getElementById('emoName').value=n; document.getElementById('emoUrl').value=u; }
-async function del(p, r=false) { if(confirm("Usunąć?")) { await api(p, "DELETE"); loadAllEmotes(); if(r) setTimeout(()=>{loadAllEmotes(); openEmoteForm()}, 500); } }
-async function api(path, method="GET", body=null) { const opts={method}; if(body) opts.body=JSON.stringify(body); try{const r=await fetch(`${DB_URL}/${path}.json`,opts);return r.json()}catch(e){} }
-function previewFile() { const f = document.getElementById('emoFile').files[0]; if(f) { document.getElementById('emoUrl').disabled=true; const r=new FileReader(); r.onload=e=>{document.getElementById('filePreview').src=e.target.result; document.getElementById('filePreview').style.display='block'; document.getElementById('emoUrl').value = e.target.result;}; r.readAsDataURL(f); } }
+
+function cloneEmote(n,u) { 
+    openEmoteForm(); 
+    document.getElementById('emoName').value = n; 
+    document.getElementById('emoUrl').value = u; 
+}
+
+async function del(p, refreshMy = false) { 
+    if(confirm("Na pewno usunąć?")) { 
+        await api(p, "DELETE"); 
+        loadAllEmotes(); 
+        if(refreshMy) renderMyEmotes();
+    } 
+}
+
+async function api(path, method = "GET", body = null) { 
+    const opts = { method };
+    if(body) {
+        opts.headers = { 'Content-Type': 'application/json' };
+        opts.body = JSON.stringify(body);
+    }
+    try {
+        const r = await fetch(`${DB_URL}/${path}.json`, opts);
+        return await r.json();
+    } catch(e) {
+        console.error(e);
+        return null;
+    }
+}
+
+function previewFile() { 
+    const f = document.getElementById('emoFile').files[0]; 
+    if(f) { 
+        const r = new FileReader(); 
+        r.onload = e => {
+            document.getElementById('filePreview').src = e.target.result; 
+            document.getElementById('filePreview').style.display = 'block'; 
+            document.getElementById('emoUrl').value = e.target.result;
+        }; 
+        r.readAsDataURL(f); 
+    } 
+}
 </script>
 </body>
 </html>
