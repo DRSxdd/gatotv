@@ -191,7 +191,7 @@
 
     .empty-inv-msg { width: 100%; text-align: center; color: var(--text-muted); padding: 40px; border: 2px dashed var(--border); border-radius: 12px; font-weight: 600; grid-column: 1 / -1; }
 
-    /* MODS SECTION */
+    /* MODS SECTION (MOVED TO FORM) */
     .mods-container { border-top: 1px solid var(--border); padding-top: 20px; margin-top: 30px; }
     .mod-item { display: flex; justify-content: space-between; align-items: center; background: #131c2e; padding: 10px; border-radius: 8px; margin-bottom: 8px; font-size: 13px; font-weight: 600; }
     .btn-remove-mod { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; }
@@ -237,14 +237,13 @@
 
     <!-- TAB: SKLEP & EKWIPUNEK -->
     <div id="paints" class="panel active">
-        <div class="login-blocker" id="paintsBlocker">
+        <div class="login-blocker">
             <h2>🔒 Wymagane Logowanie</h2>
             <p style="color:#94a3b8; margin-bottom:20px;">Zaloguj się, aby konfigurować swój wygląd na czacie.</p>
             <button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button>
         </div>
 
-        <div class="protected-content" id="paintsContent">
-            <!-- LIVE PREVIEW BOX -->
+        <div class="protected-content">
             <div class="chat-preview-container" id="chatPreviewBox">
                 <div class="chat-line">
                     <span class="chat-time">12:30</span>
@@ -270,30 +269,19 @@
 
     <!-- TAB: EMOTES -->
     <div id="emotes" class="panel">
-        <div class="login-blocker" id="emotesBlocker">
+        <div class="login-blocker">
             <h2>🔒 Wymagane Logowanie</h2>
             <p style="color:#94a3b8; margin-bottom:20px;">Zaloguj się, aby dodawać emotki.</p>
             <button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button>
         </div>
 
-        <div class="protected-content" id="emotesContent">
+        <div class="protected-content">
             <div id="emotesGalleryView">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                     <h2>Emotki Globalne i Kanałowe</h2>
                     <button class="btn-primary small" style="width:auto;" onclick="openEmoteForm()">+ DODAJ SWOJĄ</button>
                 </div>
                 <div id="emotesGrid" class="emotes-grid">Ładowanie...</div>
-                
-                <!-- NOWA SEKCJA MODERATORÓW -->
-                <div class="mods-container">
-                    <h3>Zarządzaj Moderatorami</h3>
-                    <p style="color:#94a3b8; font-size:12px; margin-bottom:10px;">Osoby z tej listy mogą dodawać emotki do Twojego kanału.</p>
-                    <div style="display:flex; gap:10px; margin-bottom:15px;">
-                        <input id="newModNick" placeholder="Nick moderatora (np. xqc)" style="flex:1;">
-                        <button class="btn-primary" style="width:auto;" onclick="addModerator()">Dodaj</button>
-                    </div>
-                    <div id="modsList"></div>
-                </div>
             </div>
 
             <div id="emotesFormView" style="display:none;">
@@ -310,7 +298,6 @@
                         </div>
                         <div class="form-group">
                             <label>Kanał</label>
-                            <!-- ZMIANA: SELECT ZAMIAST INPUT -->
                             <select id="emoChannel">
                                 <option value="" disabled selected>Ładowanie...</option>
                             </select>
@@ -323,14 +310,24 @@
                             </div>
                         </div>
                         <div class="form-group full-width">
-                            <label>Lub Link Bezpośredni</label>
-                            <input id="emoUrl" placeholder="https://..." style="font-family:monospace">
+                            <label>Lub Link</label>
+                            <input id="emoUrl" placeholder="https://...">
                         </div>
                     </div>
                     
-                    <img id="filePreview" src="">
-                    <div style="height:20px"></div>
-                    <button class="btn-primary" onclick="addEmote()">💾 Zapisz Emotkę</button>
+                    <img id="filePreview" src="" style="display:none;">
+                    <button class="btn-primary" style="margin-top:20px" onclick="addEmote()">💾 Zapisz Emotkę</button>
+                </div>
+
+                <!-- NOWA LOKALIZACJA MODERATORÓW -->
+                <div class="mods-container">
+                    <h3>Zarządzaj Moderatorami</h3>
+                    <p style="color:#94a3b8; font-size:12px; margin-bottom:10px;">Osoby z tej listy mogą dodawać emotki do Twojego kanału.</p>
+                    <div style="display:flex; gap:10px; margin-bottom:15px;">
+                        <input id="newModNick" placeholder="Nick moderatora (np. xqc)" style="flex:1;">
+                        <button class="btn-primary" style="width:auto;" onclick="addModerator()">Dodaj</button>
+                    </div>
+                    <div id="modsList"></div>
                 </div>
 
                 <h3 style="margin-top:40px; border-top:1px solid var(--border); padding-top:20px; color:white;">Twoje Emotki</h3>
@@ -365,7 +362,7 @@ const CLIENT_ID = 'l0agnxl8yeto7wda5wvblpg1mr55db';
 const REDIRECT_URI = window.location.origin + window.location.pathname;
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
 
-// ==================== STATE (STAN APLIKACJI) ====================
+// ==================== STATE ====================
 const AppState = {
     user: null,
     token: null,
@@ -373,7 +370,7 @@ const AppState = {
     owned: ["Classic Green", "Default Font"],
     loadout: {},
     emotes: {},
-    allowedChannels: [] // Lista kanałów gdzie jestem modem
+    allowedChannels: []
 };
 
 // ==================== CATALOG ====================
@@ -446,6 +443,10 @@ function showDashboard(user) {
     document.getElementById('avatar').src = user.profile_image_url;
     document.getElementById('username').innerText = user.display_name;
     document.getElementById('previewUser').innerText = user.display_name;
+    
+    // Safety check for element existence
+    const emoAuthor = document.getElementById('emoAuthor');
+    if(emoAuthor) emoAuthor.value = user.display_name;
 }
 
 async function verifyToken(token) {
@@ -493,12 +494,10 @@ async function fetchCloudData() {
         updatePreview(data);
         renderShop(); 
         
-        // Pobierz moje uprawnienia (czyje kanały mogę edytować)
         const permsRes = await fetch(`${DB_URL}/users/${AppState.user.login.toLowerCase()}/allowed_channels.json`);
         const perms = permsRes.ok ? (await permsRes.json() || {}) : {};
-        AppState.allowedChannels = Object.keys(perms); // Lista nicków
+        AppState.allowedChannels = Object.keys(perms);
         
-        // Pobierz moich moderatorów (kto może edytować mój kanał)
         fetchMyMods();
 
     } catch(e) { console.warn("Cloud error", e); }
@@ -515,6 +514,7 @@ async function fetchMyMods() {
 
 function renderModsList(mods) {
     const list = document.getElementById('modsList');
+    if(!list) return;
     list.innerHTML = '';
     const keys = Object.keys(mods);
     if(keys.length === 0) list.innerHTML = '<div style="color:#666; font-size:12px;">Brak moderatorów.</div>';
@@ -668,9 +668,7 @@ window.addModerator = async function() {
     const nick = document.getElementById('newModNick').value.trim().toLowerCase();
     if(!nick || !AppState.user) return;
     
-    // 1. Dodaj do mojej listy modów
     await api(`channels/${AppState.user.login.toLowerCase()}/mods/${nick}`, "PUT", true);
-    // 2. Dodaj mnie do listy kanałów moda
     await api(`users/${nick}/allowed_channels/${AppState.user.login.toLowerCase()}`, "PUT", true);
     
     document.getElementById('newModNick').value = '';
@@ -688,17 +686,14 @@ window.removeModerator = async function(nick) {
 window.openEmoteForm = function() { 
     if(!AppState.user) return; 
     
-    // Populate Channel Select
     const select = document.getElementById('emoChannel');
     select.innerHTML = '';
     
-    // Opcja 1: Mój własny kanał
     const myOpt = document.createElement('option');
     myOpt.value = AppState.user.login;
     myOpt.text = AppState.user.display_name + " (Twój kanał)";
     select.appendChild(myOpt);
     
-    // Opcja 2: Kanały gdzie jestem modem
     if(AppState.allowedChannels && AppState.allowedChannels.length > 0) {
         AppState.allowedChannels.forEach(ch => {
             const opt = document.createElement('option');
@@ -714,11 +709,11 @@ window.openEmoteForm = function() {
 }
 window.closeEmoteForm = function() { document.getElementById('emotesFormView').style.display='none'; document.getElementById('emotesGalleryView').style.display='block'; loadAllEmotes(); }
 async function loadAllEmotes() { if(!AppState.user) return; const data = await api('emotes') || {}; AppState.emotes = data; document.getElementById('emotesGrid').innerHTML = Object.keys(data).reverse().map(k=>{ const e = data[k]; let btn = (e.author === AppState.user.display_name || e.channel === AppState.user.login) ? `<div class="action-overlay del-btn" onclick="delEmote('${k}')">✖</div>` : `<div class="action-overlay add-btn" onclick="cloneEmote('${k}','${e.url}')">✚</div>`; return `<div class="emote-card">${btn}<img src="${e.url}" class="emote-img"><div class="emote-name">${k}</div><div class="channel-tag">#${e.channel}</div></div>`; }).join(''); }
-function renderMyEmotes() { /* Can filter by my channel here if needed */ }
+function renderMyEmotes() { const keys = Object.keys(AppState.emotes).filter(k => AppState.emotes[k].channel === AppState.user.login).reverse(); document.getElementById('myEmotesGrid').innerHTML = keys.length ? keys.map(k=>`<div class="emote-card"><img src="${AppState.emotes[k].url}" class="emote-img"><div class="emote-name">${k}</div><div class="action-overlay del-btn" onclick="delEmote('${k}', true)">✖</div></div>`).join('') : '<p style="color:#666; font-size:12px;">Brak emotek.</p>'; }
 window.addEmote = async function() { 
     const name = document.getElementById('emoName').value.trim(); 
     const url = document.getElementById('emoUrl').value.trim();
-    const targetChannel = document.getElementById('emoChannel').value; // Get selected channel
+    const targetChannel = document.getElementById('emoChannel').value; 
     
     if(!name || !url || !targetChannel) return alert("Brakuje danych"); 
     
@@ -734,9 +729,6 @@ window.cloneEmote = function(n,u) { openEmoteForm(); document.getElementById('em
 window.delEmote = async function(p) { if(confirm("Usunąć?")) { await api(`emotes/${p}`, "DELETE"); loadAllEmotes(); } }
 window.previewFile = function() { const f = document.getElementById('emoFile').files[0]; if(f) { const r=new FileReader(); r.onload=e=>{document.getElementById('filePreview').src=e.target.result; document.getElementById('filePreview').style.display='block'; document.getElementById('emoUrl').value = e.target.result;}; r.readAsDataURL(f); } }
 async function api(path, method="GET", body=null) { const opts = { method }; if (body) opts.body = JSON.stringify(body); try { const r = await fetch(`${DB_URL}/${path}.json`, opts); return r.json(); } catch(e) { return null; } }
-let confettiCooldown = false;
-window.fireDownloadConfetti = function() { if(confettiCooldown) return; confettiCooldown = true; setTimeout(()=>confettiCooldown=false, 10000); const c=['#38bdf8','#facc15','#9146ff']; confetti({particleCount:100,spread:70,origin:{x:0,y:1},colors:c}); confetti({particleCount:100,spread:70,origin:{x:1,y:1},colors:c}); }
-function fireConfetti(shopMode){ if(shopMode) confetti({particleCount:100,spread:70,origin:{x:0.5,y:0.5},colors:['#facc15','#ffffff']}); }
 </script>
 </body>
 </html>
