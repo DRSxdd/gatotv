@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gato.TV Dashboard</title>
+<title>Gato.TV Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
 <!-- Czcionki używane przez wtyczkę -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Press+Start+2P&family=Permanent+Marker&family=Courier+Prime&display=swap" rel="stylesheet">
@@ -43,8 +43,8 @@
     
     .btn-login { background: var(--twitch); color: white; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 0 15px rgba(145, 70, 255, 0.2); }
     .btn-login:hover { background: #772ce8; transform: translateY(-1px); }
-    .btn-logout { background: transparent; border: none; cursor: pointer; padding: 5px; border-radius: 50%; transition: 0.2s; font-size: 14px; display: flex; align-items: center; }
-    .btn-logout:hover { background: rgba(239, 68, 68, 0.2); }
+    .btn-logout { background: transparent; border: none; cursor: pointer; padding: 5px 10px; border-radius: 8px; transition: 0.2s; font-size: 14px; display: flex; align-items: center; color: var(--text-muted); gap: 6px; font-weight: 600; }
+    .btn-logout:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
 
     .coin-display { display: flex; align-items: center; gap: 6px; background: rgba(250, 204, 21, 0.1); border: 1px solid var(--yellow); color: var(--yellow); padding: 6px 14px; border-radius: 10px; font-weight: 800; font-size: 14px; margin-right: 20px; }
 
@@ -70,8 +70,8 @@
     .chat-preview-container.light .chat-msg, .chat-preview-container.light .chat-colon, .chat-preview-container.light .chat-time { color: #0e0e10; }
     .chat-line { display: flex; align-items: center; font-size: 13px; }
     .chat-time { color: #adadb8; font-size: 11px; margin-right: 8px; }
-    .chat-badges { display: flex; gap: 4px; margin-right: 6px; }
-    .gato-badge-preview { width: 18px; height: 18px; border-radius: 3px; }
+    .chat-badges { display: flex; gap: 4px; margin-right: 6px; align-items: center; }
+    .gato-badge-preview { width: 18px; height: 18px; border-radius: 3px; vertical-align: middle; }
     .chat-username { font-weight: 700; color: #00ff00; margin-right: 2px; cursor: pointer; }
     .chat-colon { color: #efeff1; margin-right: 5px; }
     .chat-msg { color: #efeff1; }
@@ -100,6 +100,8 @@
     .badge-preview-img { width: 42px; height: 42px; object-fit: contain; }
     .category-badge { position: absolute; top:8px; left:8px; padding:2px 6px; border-radius:4px; font-size:9px; font-weight:bold; text-transform:uppercase; color:white; z-index: 2; }
     .cat-paint { background: #38bdf8; } .cat-badge { background: #9146ff; } .cat-ink { background: #f43f5e; } .cat-font { background: #10b981; } .cat-bg { background: #f59e0b; }
+    
+    .shop-section-title { width: 100%; font-size: 14px; font-weight: 700; color: var(--accent); margin: 30px 0 15px 0; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
 
     /* EMOTES */
     .input-row { display: flex; gap: 15px; margin-bottom: 30px; background: var(--panel); padding: 20px; border-radius: 12px; border: 1px solid var(--border); align-items: flex-end; flex-wrap: wrap; }
@@ -134,13 +136,16 @@
     .btn-download-big:hover { transform: scale(1.05); box-shadow: 0 10px 30px var(--yellow-glow); }
     .code-block { background: #000; padding: 15px; border-radius: 8px; text-align: left; font-family: monospace; color: #0f0; margin-top: 20px; overflow-x: auto; border: 1px solid #333; font-size: 12px; white-space: pre-wrap; }
 
+    .empty-inv-msg { width: 100%; text-align: center; color: var(--text-muted); padding: 40px; border: 2px dashed var(--border); border-radius: 12px; font-weight: 600; grid-column: 1 / -1; }
+
 </style>
 </head>
 <body>
 
 <header>
     <div class="header-left">
-        <div class="logo">Gato.TV <span class="beta-tag">DASHBOARD</span></div>
+        <!-- ZMIANA 1: Napis BETA w czerwonej ramce -->
+        <div class="logo">Gato.TV <span class="beta-tag">BETA</span></div>
         <div id="loginBtnContainer">
             <button class="btn-login" onclick="loginWithTwitch()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h2.998L22.286 11.57V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
@@ -150,7 +155,8 @@
         <div id="userProfile" class="user-profile">
             <img id="avatar" class="user-avatar" src="">
             <span id="username" class="user-nick">...</span>
-            <button onclick="logout()" class="btn-logout" title="Wyloguj">🛑</button>
+            <!-- ZMIANA 2: Przycisk wyloguj z napisem -->
+            <button onclick="logout()" class="btn-logout">🛑 Wyloguj</button>
         </div>
     </div>
     
@@ -159,9 +165,11 @@
             <span>🪙</span> <span id="coinCount">10</span>
         </div>
         <nav>
-            <button class="active" onclick="switchTab('paints')">Wygląd</button>
-            <button onclick="switchTab('emotes')">Emotki</button>
-            <button class="btn-yellow" onclick="switchTab('download')">Instalacja</button>
+            <!-- ZMIANA 5: Nazwy przycisków Paints, Emotes, Info, Download -->
+            <button class="active" onclick="switchTab('paints')">Paints</button>
+            <button onclick="switchTab('emotes')">Emotes</button>
+            <button onclick="switchTab('info')">Info</button>
+            <button class="btn-yellow" onclick="switchTab('download')">Download</button>
         </nav>
     </div>
 </header>
@@ -196,10 +204,13 @@
                 <button id="tabShop" onclick="switchPaintSubTab('shop')">SKLEP</button>
             </div>
             
+            <!-- ZMIANA 3: Obsługa pustego ekwipunku (w JS) -->
             <div id="viewInventory"><div id="inventoryGrid" class="preset-grid"></div></div>
+            
+            <!-- ZMIANA 4: Sklep podzielony na kategorie (w JS generowane dynamicznie) -->
             <div id="viewShop" style="display:none;">
                 <p style="color:var(--text-muted); margin-bottom:20px;">Kupuj efekty. Zostaną one zapisane w bazie i obsłużone przez wtyczkę.</p>
-                <div id="shopGrid" class="preset-grid"></div>
+                <div id="shopContent"></div>
             </div>
         </div>
     </div>
@@ -245,18 +256,27 @@
         </div>
     </div>
 
-    <!-- TAB: INSTALACJA -->
+    <!-- ZMIANA 7: TAB INFO -->
+    <div id="info" class="panel">
+        <div class="hero-card">
+            <h1>O Wtyczce</h1>
+            <h3 style="color:var(--accent); margin-top:10px;">Autor: GatoJestemFormaOstateczna</h3>
+            <p style="color:var(--text-muted); margin-top:20px; font-size:14px;">coming soon opis</p>
+        </div>
+    </div>
+
+    <!-- TAB: INSTALACJA / DOWNLOAD -->
     <div id="download" class="panel">
         <div class="hero-card download-style">
-            <h1>Instalacja Wtyczki</h1>
-            <p>Aby widzieć efekty na Twitchu, musisz zainstalować skrypt w Tampermonkey.</p>
+            <h1>Pobierz Wtyczkę</h1>
+            <p>Aby widzieć efekty na Twitchu, musisz zainstalować skrypt.</p>
             
+            <!-- ZMIANA 6: Ładny przycisk pobierania (Placeholder) -->
+            <button class="btn-download-big" onclick="alert('Pobieranie wkrótce dostępne!')">POBIERZ WTYCZKĘ</button>
+
             <div style="text-align:left; max-width:600px; margin: 30px auto;">
-                <h3 style="color:var(--accent)">Krok 1: Tampermonkey</h3>
-                <p style="color:#ccc; font-size:13px;">Zainstaluj rozszerzenie Tampermonkey w swojej przeglądarce.</p>
-                
-                <h3 style="color:var(--accent); margin-top:20px;">Krok 2: Kod Skryptu</h3>
-                <p style="color:#ccc; font-size:13px;">Utwórz nowy skrypt i wklej poniższy kod:</p>
+                <h3 style="color:var(--accent); border-top:1px solid var(--border); padding-top:20px; margin-top:30px;">Instalacja Ręczna</h3>
+                <p style="color:#ccc; font-size:13px;">Skopiuj poniższy kod do Tampermonkey:</p>
                 <div class="code-block">
 // ==UserScript==
 // @name         Gato.TV Plugin
@@ -430,7 +450,6 @@ new MutationObserver(() => {
                 </div>
             </div>
             
-            <button class="btn-download-big" onclick="fireConfetti()">GOTOWE!</button>
         </div>
     </div>
 
@@ -438,12 +457,8 @@ new MutationObserver(() => {
 
 <script>
 // ==================== CONFIG ====================
-// Twoje Client ID (wklejone)
 const CLIENT_ID = 'l0agnxl8yeto7wda5wvblpg1mr55db'; 
-
-// Automatyczne wykrywanie adresu powrotu (musi pasować do OAuth Redirect URL w konsoli Twitcha)
 const REDIRECT_URI = window.location.origin + window.location.pathname; 
-
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
 // ================================================
 
@@ -453,7 +468,7 @@ let ownedItems = ["Classic Green", "Default Font"];
 let allEmotesData = {}; 
 let confettiCooldown = false;
 
-// KATALOG (Dostosowany do logiki wtyczki JS)
+// KATALOG
 const CATALOG = [
     // PAINTS
     { name: "Classic Green", category:"paint", price: 0, type: "color", value: "#00ff00", previewStyle: "color:#00ff00" },
@@ -483,13 +498,11 @@ const CATALOG = [
 
 // INIT
 window.onload = () => {
-    // Sprawdzenie czy uruchomiono z pliku (blokada browsera)
     if (window.location.protocol === 'file:') {
-        alert("BŁĄD: Otwórz plik przez serwer lokalny (Live Server) lub hosting. Protokół file:// blokuje logowanie.");
+        alert("BŁĄD: Otwórz plik przez serwer lokalny (Live Server) lub hosting.");
         return;
     }
 
-    // Obsługa powrotu z logowania Twitch
     if (document.location.hash.includes('access_token')) {
         const params = new URLSearchParams(document.location.hash.substring(1));
         const token = params.get('access_token');
@@ -553,7 +566,6 @@ function enableApp() {
     document.getElementById('previewUser').innerText = currentUser.display_name;
     document.getElementById('emoAuthor').value = currentUser.display_name;
     
-    // Load User Data from DB to sync preview
     loadUserData();
     renderShop(); 
     loadAllEmotes();
@@ -572,12 +584,10 @@ function updatePreview(data) {
     const msgEl = document.querySelector('.chat-msg');
     const badgeContainer = document.getElementById('previewBadges');
 
-    // Reset styles
     userEl.style = ""; userEl.className = "chat-username";
     msgEl.style = "";
     badgeContainer.innerHTML = "";
 
-    // Apply Paint
     if(data.paint) {
         const p = data.paint;
         if(p.type === 'color') userEl.style.color = p.value;
@@ -592,12 +602,11 @@ function updatePreview(data) {
         if(p.type === 'animated-rainbow') userEl.classList.add('gato-anim-rainbow');
     }
 
-    // Apply Badge
+    // ZMIANA 8: Naprawa podglądu badge (sprawdzamy czy istnieje URL)
     if(data.badge) {
         badgeContainer.innerHTML = `<img src="${data.badge}" class="gato-badge-preview">`;
     }
 
-    // Apply Ink/Font/BG
     if(data.ink) msgEl.style.color = data.ink;
     if(data.font) msgEl.style.fontFamily = data.font;
     if(data.bg) {
@@ -610,46 +619,97 @@ function updatePreview(data) {
 
 // SHOP LOGIC
 function renderShop() {
-    const shop = document.getElementById("shopGrid");
+    // ZMIANA 4: Podział na kategorie w sklepie
+    const shopContent = document.getElementById("shopContent");
     const inv = document.getElementById("inventoryGrid");
-    shop.innerHTML = ""; inv.innerHTML = "";
+    
+    shopContent.innerHTML = ""; 
+    inv.innerHTML = "";
 
-    CATALOG.forEach((item, index) => {
-        const isOwned = ownedItems.includes(item.name);
-        const card = document.createElement("div");
-        card.className = isOwned ? "preset-card owned" : "preset-card";
+    // Kategorie do wyświetlenia w sklepie
+    const categories = [
+        {id:'paint', name:'Kolory (Paints)'},
+        {id:'badge', name:'Odznaki (Badges)'},
+        {id:'ink', name:'Kolor Tekstu (Ink)'},
+        {id:'font', name:'Czcionki (Fonts)'},
+        {id:'bg', name:'Tło (Backgrounds)'}
+    ];
+
+    // Renderowanie Ekwipunku (wszystkie posiadane razem)
+    const ownedItemsList = CATALOG.filter(i => ownedItems.includes(i.name));
+    
+    // ZMIANA 3: Komunikat gdy ekwipunek pusty
+    if(ownedItemsList.length === 0) {
+        inv.innerHTML = '<div class="empty-inv-msg">Twój ekwipunek jest pusty. Odwiedź sklep!</div>';
+    } else {
+        ownedItemsList.forEach((item, index) => {
+             // Znajdź oryginalny index w CATALOG, żeby przycisk działał poprawnie
+             const originalIndex = CATALOG.findIndex(c => c.name === item.name);
+             inv.appendChild(createItemCard(item, originalIndex, true));
+        });
+    }
+
+    // Renderowanie Sklepu z podziałem na kategorie
+    categories.forEach(cat => {
+        // Filtrujemy przedmioty z danej kategorii, których NIE posiadamy (lub posiadamy, ale w sklepie pokazujemy wszystko? 
+        // Zazwyczaj w sklepie pokazuje się wszystko, ale z oznaczeniem "Posiadane".
+        // Tutaj przefiltruję tylko te z danej kategorii do wyświetlenia w sekcji.
+        const catItems = CATALOG.filter(i => i.category === cat.id);
         
-        card.onmouseenter = () => {
-            if(item.category === 'paint') document.getElementById('previewUser').style.cssText = item.previewStyle + "; font-size:13px;";
-            else if(item.category === 'ink' || item.category === 'font' || item.category === 'bg') document.querySelector('.chat-msg').style.cssText = item.previewStyle;
-        };
-        card.onmouseleave = () => { loadUserData(); }
+        if(catItems.length > 0) {
+            // Tytuł sekcji
+            const title = document.createElement('div');
+            title.className = 'shop-section-title';
+            title.innerText = cat.name;
+            shopContent.appendChild(title);
 
-        let preview = `<div style="${item.previewStyle}">NickName</div>`;
-        if(item.category === "badge") preview = `<img src="${item.value}" class="badge-preview-img">`;
-        if(item.category === "bg") preview = `<div style="width:100%;height:20px;${item.previewStyle}"></div>`;
-        if(item.category === "font") preview = `<div style="${item.previewStyle}">Abc</div>`;
-        if(item.category === "ink") preview = `<div style="${item.previewStyle}">Tekst</div>`;
-
-        let btn = isOwned 
-            ? `<button class="btn-action btn-equip" onclick="equipItem(${index})">Załóż</button>`
-            : `<button class="btn-action btn-buy" onclick="buyItem(${index})">Kup ${item.price}</button>`;
-
-        card.innerHTML = `
-            <span class="category-badge cat-${item.category}">${item.category}</span>
-            <div class="card-preview">${preview}</div>
-            <div class="card-info">
-                <div>
-                    <span class="preset-name">${item.name}</span>
-                    <span class="preset-price" style="color:${item.category==='badge'?'#9146ff':'#facc15'}">
-                        ${isOwned ? "POSIADANE" : item.price + " 🪙"}
-                    </span>
-                </div>
-                ${btn}
-            </div>
-        `;
-        (isOwned ? inv : shop).appendChild(card);
+            // Grid dla kategorii
+            const grid = document.createElement('div');
+            grid.className = 'preset-grid';
+            
+            catItems.forEach(item => {
+                const originalIndex = CATALOG.findIndex(c => c.name === item.name);
+                grid.appendChild(createItemCard(item, originalIndex, ownedItems.includes(item.name)));
+            });
+            shopContent.appendChild(grid);
+        }
     });
+}
+
+function createItemCard(item, index, isOwned) {
+    const card = document.createElement("div");
+    card.className = isOwned ? "preset-card owned" : "preset-card";
+    
+    card.onmouseenter = () => {
+        if(item.category === 'paint') document.getElementById('previewUser').style.cssText = item.previewStyle + "; font-size:13px;";
+        else if(item.category === 'ink' || item.category === 'font' || item.category === 'bg') document.querySelector('.chat-msg').style.cssText = item.previewStyle;
+    };
+    card.onmouseleave = () => { loadUserData(); }
+
+    let preview = `<div style="${item.previewStyle}">NickName</div>`;
+    if(item.category === "badge") preview = `<img src="${item.value}" class="badge-preview-img">`;
+    if(item.category === "bg") preview = `<div style="width:100%;height:20px;${item.previewStyle}"></div>`;
+    if(item.category === "font") preview = `<div style="${item.previewStyle}">Abc</div>`;
+    if(item.category === "ink") preview = `<div style="${item.previewStyle}">Tekst</div>`;
+
+    let btn = isOwned 
+        ? `<button class="btn-action btn-equip" onclick="equipItem(${index})">Załóż</button>`
+        : `<button class="btn-action btn-buy" onclick="buyItem(${index})">Kup ${item.price}</button>`;
+
+    card.innerHTML = `
+        <span class="category-badge cat-${item.category}">${item.category}</span>
+        <div class="card-preview">${preview}</div>
+        <div class="card-info">
+            <div>
+                <span class="preset-name">${item.name}</span>
+                <span class="preset-price" style="color:${item.category==='badge'?'#9146ff':'#facc15'}">
+                    ${isOwned ? "POSIADANE" : item.price + " 🪙"}
+                </span>
+            </div>
+            ${btn}
+        </div>
+    `;
+    return card;
 }
 
 function buyItem(idx) {
@@ -665,7 +725,6 @@ async function equipItem(idx) {
     const item = CATALOG[idx];
     const user = currentUser.login.toLowerCase(); 
     
-    // Konstrukcja payloadu dla wtyczki
     let payload = item.value;
     if(item.category === 'paint') {
         payload = { type: item.type, value: item.value };
@@ -673,11 +732,10 @@ async function equipItem(idx) {
     }
 
     await api(`premium/${user}/${item.category}`, "PUT", payload);
-    loadUserData(); // Odśwież podgląd
+    loadUserData(); 
     alert(`Założono: ${item.name}`);
 }
 
-// HELPERS
 function updateCoinDisplay() { document.getElementById('coinCount').innerText = coins; localStorage.setItem('gato_coins', coins); localStorage.setItem('gato_owned', JSON.stringify(ownedItems)); }
 function switchTab(id) { document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); document.querySelectorAll('nav button').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); if(event.target.tagName==='BUTTON') event.target.classList.add('active'); }
 function switchPaintSubTab(tab) { document.getElementById('viewInventory').style.display = tab==='inv'?'block':'none'; document.getElementById('viewShop').style.display = tab==='shop'?'block':'none'; document.getElementById('tabInv').className = tab==='inv'?'active':''; document.getElementById('tabShop').className = tab==='shop'?'active':''; }
