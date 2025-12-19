@@ -312,6 +312,7 @@ const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.ap
 
 let currentUser = null; 
 let coins = 10; 
+// Zabezpieczenie: Domyślny ekwipunek
 let ownedItems = ["Classic Green", "Default Font"]; 
 let currentLoadout = {}; 
 let allEmotesData = {}; 
@@ -337,6 +338,7 @@ const CATALOG = [
 ];
 
 window.onload = () => {
+    // 1. Sprawdź hasz URL (powrót z logowania)
     if (document.location.hash.includes('access_token')) {
         const params = new URLSearchParams(document.location.hash.substring(1));
         const token = params.get('access_token');
@@ -344,17 +346,27 @@ window.onload = () => {
             localStorage.setItem('twitch_token', token);
             window.history.replaceState({}, document.title, window.location.pathname);
             validateToken(token);
+            return;
         }
+    } 
+    
+    // 2. Sprawdź zapisany token
+    const stored = localStorage.getItem('twitch_token');
+    if(stored) {
+        validateToken(stored);
     } else {
-        const stored = localStorage.getItem('twitch_token');
-        if(stored) validateToken(stored);
-        else setLoggedOutState();
+        setLoggedOutState();
     }
 
+    // Ładowanie stanu lokalnego (ekwipunek, monety)
     if(localStorage.getItem('gato_coins')) coins = parseInt(localStorage.getItem('gato_coins'));
     const storedOwned = localStorage.getItem('gato_owned');
     if(storedOwned) {
-        try { ownedItems = JSON.parse(storedOwned); } catch(e) {}
+        try {
+            const parsed = JSON.parse(storedOwned);
+            // Zabezpieczenie: jeśli to nie tablica, przywróć domyślne
+            if(Array.isArray(parsed)) ownedItems = parsed;
+        } catch(e) {}
     }
     updateCoinDisplay();
 };
@@ -379,20 +391,40 @@ function logout() {
 
 async function validateToken(token) {
     try {
-        const res = await fetch('https://api.twitch.tv/helix/users', { headers: { 'Client-ID': CLIENT_ID, 'Authorization': `Bearer ${token}` } });
-        if(!res.ok) throw new Error("Token Invalid");
+        const res = await fetch('https://api.twitch.tv/helix/users', { 
+            headers: { 
+                'Client-ID': CLIENT_ID, 
+                'Authorization': `Bearer ${token}` 
+            } 
+        });
+        
+        if(!res.ok) {
+            // Tylko błąd autoryzacji (401) powoduje wylogowanie
+            if(res.status === 401) {
+                localStorage.removeItem('twitch_token');
+                setLoggedOutState();
+                return;
+            }
+            throw new Error("API Error");
+        }
+        
         const data = await res.json();
-        if(!data.data || !data.data.length) throw new Error("Brak danych użytkownika");
+        if(!data.data || !data.data.length) throw new Error("No Data");
+        
         currentUser = data.data[0];
-        enableApp();
+        // Logowanie udane -> włącz UI
+        enableApp(); 
+        
     } catch(e) {
-        console.error("Login fail:", e);
-        localStorage.removeItem('twitch_token');
+        console.error(e);
+        // Jeśli to nie był twardy błąd 401, a np. sieć padła, 
+        // to w ostateczności wyloguj, żeby nie blokować UI w stanie zawieszenia
         setLoggedOutState();
     }
 }
 
 function enableApp() {
+    // Odblokuj interfejs
     document.getElementById('loginBtnContainer').style.display = 'none';
     document.getElementById('userProfile').style.display = 'flex';
     document.getElementById('coinDisplay').style.display = 'flex';
@@ -404,11 +436,11 @@ function enableApp() {
     document.getElementById('previewUser').innerText = currentUser.display_name;
     document.getElementById('emoAuthor').value = currentUser.display_name;
     
-    // Ważne: Wyrenderuj sklep OD RAZU, zanim załadują się dane z bazy
-    // To zapobiega "znikaniu" sklepu
-    renderShop(); 
-    
-    // Potem załaduj dane z bazy (asynchronicznie)
+    // WAŻNE: Najpierw wyrenderuj sklep (aby nie był pusty), potem dociągnij dane z bazy
+    try {
+        renderShop(); 
+    } catch(e) { console.error("Błąd renderowania sklepu:", e); }
+
     loadUserData();
     loadAllEmotes();
 }
@@ -416,12 +448,13 @@ function enableApp() {
 async function loadUserData() {
     try {
         const res = await fetch(`${DB_URL}/premium/${currentUser.login.toLowerCase()}.json`);
-        const data = await res.json() || {}; 
+        const data = await res.json() || {};
         currentLoadout = data; 
         updatePreview(data);
-        renderShop(); // Odśwież sklep po załadowaniu "założonych" itemów
+        // Odśwież sklep, żeby zaktualizować przyciski "Zdejmij/Załóż"
+        renderShop();
     } catch(e) {
-        // Jeśli błąd, po prostu zostaw sklep w stanie domyślnym
+        currentLoadout = {};
     }
 }
 
@@ -467,6 +500,7 @@ function renderShop() {
     const shopContent = document.getElementById("shopContent");
     const inv = document.getElementById("inventoryGrid");
     
+    // Safety check
     if(!shopContent || !inv) return;
 
     shopContent.innerHTML = ""; 
@@ -480,16 +514,15 @@ function renderShop() {
         {id:'bg', name:'Tło (Backgrounds)'}
     ];
 
-    // Upewnij się, że ownedItems to tablica
-    if(!Array.isArray(ownedItems)) ownedItems = ["Classic Green", "Default Font"];
-
     // EKWIPUNEK
+    // Filtrujemy tylko itemy, które istnieją w katalogu (dla bezpieczeństwa)
     const ownedItemsList = CATALOG.filter(i => ownedItems.includes(i.name));
     
     if(ownedItemsList.length === 0) {
         inv.innerHTML = '<div class="empty-inv-msg">Twój ekwipunek jest pusty. Odwiedź sklep!</div>';
     } else {
         ownedItemsList.forEach((item, index) => {
+             // Musimy znaleźć oryginalny index w CATALOGu dla funkcji kupowania/zakładania
              const originalIndex = CATALOG.findIndex(c => c.name === item.name);
              inv.appendChild(createItemCard(item, originalIndex, true));
         });
