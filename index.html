@@ -337,31 +337,20 @@ const CATALOG = [
 ];
 
 window.onload = () => {
-    // 1. Sprawdź, czy wracamy z Twitcha (jest hasz w URL)
     if (document.location.hash.includes('access_token')) {
         const params = new URLSearchParams(document.location.hash.substring(1));
         const token = params.get('access_token');
         if(token) {
-            console.log("Token znaleziony w URL, zapisuję...");
             localStorage.setItem('twitch_token', token);
-            // Usuń hasz z paska adresu, żeby było ładnie
             window.history.replaceState({}, document.title, window.location.pathname);
             validateToken(token);
-            return; // Ważne: nie wykonuj dalszej logiki onload
         }
-    } 
-    
-    // 2. Jeśli nie ma hasza, sprawdź LocalStorage
-    const stored = localStorage.getItem('twitch_token');
-    if(stored) {
-        console.log("Token znaleziony w pamięci, walidacja...");
-        validateToken(stored);
     } else {
-        console.log("Brak tokenu, pokazuję ekran logowania.");
-        setLoggedOutState();
+        const stored = localStorage.getItem('twitch_token');
+        if(stored) validateToken(stored);
+        else setLoggedOutState();
     }
 
-    // Ładowanie itemów (niezależne od logowania użytkownika)
     if(localStorage.getItem('gato_coins')) coins = parseInt(localStorage.getItem('gato_coins'));
     const storedOwned = localStorage.getItem('gato_owned');
     if(storedOwned) {
@@ -379,9 +368,7 @@ function setLoggedOutState() {
 }
 
 function loginWithTwitch() {
-    // Upewnij się, że REDIRECT_URI jest zgodne z tym w konsoli Twitcha
     const url = `https://id.twitch.tv/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=user:read:email`;
-    console.log("Przekierowanie do:", url);
     window.location.href = url;
 }
 
@@ -392,57 +379,36 @@ function logout() {
 
 async function validateToken(token) {
     try {
-        const res = await fetch('https://api.twitch.tv/helix/users', { 
-            headers: { 
-                'Client-ID': CLIENT_ID, 
-                'Authorization': `Bearer ${token}` 
-            } 
-        });
-        
-        if(!res.ok) {
-            // Jeśli token wygasł (401), musimy wylogować. Inne błędy to może być awaria Twitcha.
-            if(res.status === 401) {
-                console.warn("Token wygasł, wylogowywanie...");
-                localStorage.removeItem('twitch_token');
-                setLoggedOutState();
-                return;
-            }
-            throw new Error(`Błąd Twitch API: ${res.status}`);
-        }
-        
+        const res = await fetch('https://api.twitch.tv/helix/users', { headers: { 'Client-ID': CLIENT_ID, 'Authorization': `Bearer ${token}` } });
+        if(!res.ok) throw new Error("Token Invalid");
         const data = await res.json();
         if(!data.data || !data.data.length) throw new Error("Brak danych użytkownika");
-        
         currentUser = data.data[0];
-        console.log("Zalogowano pomyślnie jako:", currentUser.display_name);
-        enableApp(); // Odblokuj interfejs
-        
+        enableApp();
     } catch(e) {
-        console.error("Błąd logowania:", e);
-        // Jeśli mamy błąd sieci, nie wylogowuj od razu, może internet wróci.
-        // Ale jeśli nie mamy usera, musimy pokazać stan wylogowania.
-        if(!currentUser) {
-            alert("Nie udało się zalogować: " + e.message);
-            setLoggedOutState();
-        }
+        console.error("Login fail:", e);
+        localStorage.removeItem('twitch_token');
+        setLoggedOutState();
     }
 }
 
 function enableApp() {
-    // Przełącz widok UI
     document.getElementById('loginBtnContainer').style.display = 'none';
     document.getElementById('userProfile').style.display = 'flex';
     document.getElementById('coinDisplay').style.display = 'flex';
     document.querySelectorAll('.login-blocker').forEach(b => b.style.display = 'none');
     document.querySelectorAll('.protected-content').forEach(c => c.style.display = 'block');
 
-    // Wstaw dane
     document.getElementById('avatar').src = currentUser.profile_image_url;
     document.getElementById('username').innerText = currentUser.display_name;
     document.getElementById('previewUser').innerText = currentUser.display_name;
     document.getElementById('emoAuthor').value = currentUser.display_name;
     
-    // Załaduj dane asynchronicznie (żeby nie blokować UI)
+    // Ważne: Wyrenderuj sklep OD RAZU, zanim załadują się dane z bazy
+    // To zapobiega "znikaniu" sklepu
+    renderShop(); 
+    
+    // Potem załaduj dane z bazy (asynchronicznie)
     loadUserData();
     loadAllEmotes();
 }
@@ -450,17 +416,12 @@ function enableApp() {
 async function loadUserData() {
     try {
         const res = await fetch(`${DB_URL}/premium/${currentUser.login.toLowerCase()}.json`);
-        // Jeśli fetch się uda, ale user nie ma danych, zwróć pusty obiekt {}
-        // Jeśli fetch się nie uda (błąd sieci), wejdzie w catch
-        const data = res.ok ? (await res.json() || {}) : {};
+        const data = await res.json() || {}; 
         currentLoadout = data; 
         updatePreview(data);
+        renderShop(); // Odśwież sklep po załadowaniu "założonych" itemów
     } catch(e) {
-        console.error("Błąd pobierania danych użytkownika (Firebase):", e);
-        currentLoadout = {};
-    } finally {
-        // Zawsze rysuj sklep, nawet jak nie udało się pobrać loadoutu
-        renderShop();
+        // Jeśli błąd, po prostu zostaw sklep w stanie domyślnym
     }
 }
 
@@ -469,7 +430,7 @@ function updatePreview(data) {
     const msgEl = document.querySelector('.chat-msg');
     const badgeContainer = document.getElementById('previewBadges');
 
-    if(!userEl || !msgEl || !badgeContainer) return;
+    if(!userEl) return;
 
     userEl.style = ""; userEl.className = "chat-username";
     msgEl.style = "";
@@ -519,6 +480,9 @@ function renderShop() {
         {id:'bg', name:'Tło (Backgrounds)'}
     ];
 
+    // Upewnij się, że ownedItems to tablica
+    if(!Array.isArray(ownedItems)) ownedItems = ["Classic Green", "Default Font"];
+
     // EKWIPUNEK
     const ownedItemsList = CATALOG.filter(i => ownedItems.includes(i.name));
     
@@ -562,7 +526,7 @@ function createItemCard(item, index, isOwned) {
         else if(item.category === 'badge') document.getElementById('previewBadges').innerHTML = `<img src="${item.value}" class="gato-badge-preview">`;
         else if(item.category === 'ink' || item.category === 'font' || item.category === 'bg') document.querySelector('.chat-msg').style.cssText = item.previewStyle;
     };
-    card.onmouseleave = () => { updatePreview(currentLoadout); } 
+    card.onmouseleave = () => { updatePreview(currentLoadout); }
 
     let preview = `<div style="${item.previewStyle}">NickName</div>`;
     if(item.category === "badge") preview = `<img src="${item.value}" class="badge-preview-img">`;
