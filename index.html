@@ -4,10 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gato.TV Panel</title>
-<!-- Dodano FontAwesome dla ikon -->
+<!-- FontAwesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Press+Start+2P&family=Permanent+Marker&family=Courier+Prime&display=swap" rel="stylesheet">
+<!-- Confetti -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
@@ -42,7 +44,6 @@
     .btn-logout { background: transparent; border: none; cursor: pointer; padding: 5px 10px; border-radius: 8px; transition: 0.2s; font-size: 14px; display: flex; align-items: center; color: var(--text-muted); gap: 6px; font-weight: 600; }
     .btn-logout:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
 
-    /* Poprawiona ikonka monet */
     .coin-display { display: flex; align-items: center; gap: 8px; background: rgba(250, 204, 21, 0.1); border: 1px solid var(--yellow); color: var(--yellow); padding: 6px 14px; border-radius: 10px; font-weight: 800; font-size: 14px; margin-right: 20px; }
     .coin-display i { font-size: 16px; filter: drop-shadow(0 0 5px rgba(250,204,21,0.6)); }
 
@@ -52,7 +53,7 @@
     nav button.active { background: var(--accent); color: #0b1120; font-weight: 800; box-shadow: 0 0 15px var(--accent-glow); }
     nav button.btn-yellow { color: var(--yellow); }
     nav button.btn-yellow.active { background: var(--yellow); color: #000; box-shadow: 0 0 15px rgba(250, 204, 21, 0.5); }
-    nav button.btn-purple { color: #d8b4fe; } /* Styl dla Premium */
+    nav button.btn-purple { color: #d8b4fe; } 
     nav button.btn-purple.active { background: var(--twitch); color: white; box-shadow: 0 0 15px rgba(145, 70, 255, 0.5); }
 
     .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
@@ -64,24 +65,9 @@
     .login-blocker h2 { font-size: 28px; margin-bottom: 10px; color: white; }
     .protected-content { display: none; }
 
-    /* ROLE BADGE (Lewy dolny róg) */
+    /* ROLE BADGE */
     .role-badge-container {
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-        display: none; /* Pokazujemy po zalogowaniu */
-        align-items: center;
-        gap: 8px;
-        background: rgba(15, 23, 42, 0.9);
-        border: 1px solid var(--border);
-        padding: 8px 16px;
-        border-radius: 50px;
-        font-size: 12px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        z-index: 1000;
+        position: fixed; bottom: 20px; left: 20px; display: none; align-items: center; gap: 8px; background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border); padding: 8px 16px; border-radius: 50px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); z-index: 1000;
     }
     .role-user { border-color: var(--success); color: var(--success); }
     .role-admin { border-color: var(--danger); color: var(--danger); }
@@ -172,24 +158,19 @@
     .sub-nav button.active { color: white; }
     .sub-nav button.active::after { content: ''; position: absolute; bottom: -11px; left: 0; width: 100%; height: 3px; background: var(--accent); border-radius: 10px 10px 0 0; }
     
-    /* --- NOWE STYLE (PREMIUM & INFO & REDEEM) --- */
-    
-    /* Pricing Grid */
-    .pricing-grid { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
-    .price-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 30px; width: 280px; text-align: center; position: relative; transition: 0.2s; display: flex; flex-direction: column; }
+    /* PRICING GRID (SINGLE OPTION) */
+    .pricing-grid { display: flex; justify-content: center; margin-top: 40px; }
+    .price-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 40px; width: 100%; max-width: 400px; text-align: center; position: relative; transition: 0.2s; display: flex; flex-direction: column; }
     .price-card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
     .price-card.featured { border: 2px solid var(--twitch); box-shadow: 0 0 30px rgba(145, 70, 255, 0.15); }
-    .price-title { font-size: 20px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
-    .price-amount { font-size: 32px; font-weight: 900; color: white; margin-bottom: 20px; }
-    .price-features { list-style: none; padding: 0; text-align: left; margin-bottom: 20px; color: var(--text-muted); font-size: 13px; flex: 1; }
-    .price-features li { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 8px; }
-    .price-features i { color: var(--success); }
-    .price-features li.disabled { opacity: 0.5; }
-    .price-features li.disabled i { color: var(--danger); }
+    .price-title { font-size: 24px; font-weight: 800; text-transform: uppercase; color: var(--twitch); margin-bottom: 10px; letter-spacing: 1px; }
+    .price-amount { font-size: 40px; font-weight: 900; color: white; margin-bottom: 30px; }
+    .price-features { list-style: none; padding: 0; text-align: left; margin-bottom: 30px; color: var(--text-muted); font-size: 15px; }
+    .price-features li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 12px; }
+    .price-features i { font-size: 18px; width: 20px; text-align: center; }
     
-    .btn-buy-plan { background: #334155; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 700; cursor: not-allowed; width: 100%; margin-top: auto; }
-    .price-card.featured .btn-buy-plan { background: var(--twitch); cursor: pointer; }
-    .price-card.featured .btn-buy-plan:hover { background: #772ce8; }
+    .btn-buy-plan { background: var(--twitch); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; }
+    .btn-buy-plan:hover { background: #772ce8; transform: translateY(-2px); box-shadow: 0 5px 20px rgba(145, 70, 255, 0.4); }
 
     /* Info moved to download */
     .info-block { margin-top: 60px; border-top: 1px solid var(--border); padding-top: 40px; text-align: left; }
@@ -199,9 +180,15 @@
     .info-item h3 { color: var(--accent); margin-top: 0; display: flex; align-items: center; gap: 10px; font-size: 16px; text-transform: uppercase; letter-spacing: 0.5px; }
     .info-item ul { padding-left: 20px; margin-bottom: 0; color: var(--text-muted); font-size: 14px; line-height: 1.6; }
 
-    /* Redeem Floater */
-    .redeem-floater { position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, #ef4444, #f43f5e); color: white; padding: 12px 24px; border-radius: 50px; font-weight: 800; font-size: 14px; cursor: pointer; box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4); transition: 0.3s; z-index: 999; display: flex; align-items: center; gap: 10px; border: 2px solid rgba(255,255,255,0.2); }
-    .redeem-floater:hover { transform: scale(1.05) rotate(-2deg); box-shadow: 0 15px 40px rgba(239, 68, 68, 0.6); }
+    /* Redeem Floater - ZMNIEJSZONY GLOW (50%) */
+    .redeem-floater { position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, #ef4444, #f43f5e); color: white; padding: 12px 24px; border-radius: 50px; font-weight: 800; font-size: 14px; cursor: pointer; box-shadow: 0 5px 15px rgba(239, 68, 68, 0.2); transition: 0.3s; z-index: 999; display: flex; align-items: center; gap: 10px; border: 2px solid rgba(255,255,255,0.2); }
+    .redeem-floater:hover { transform: scale(1.05) rotate(-2deg); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); }
+
+    /* Pusty sklep */
+    .shop-empty-msg { text-align:center; padding:50px; opacity:0.7; width: 100%; grid-column: 1 / -1; }
+    .shop-empty-msg i { font-size:40px; color:#94a3b8; margin-bottom:15px; }
+    .shop-empty-msg h3 { color:white; margin:0; }
+    .shop-empty-msg p { color:#94a3b8; margin-top:5px; }
 
     .hidden { display: none !important; }
     .flex { display: flex !important; }
@@ -228,14 +215,13 @@
     </div>
     
     <div style="display:flex; align-items:center;">
-        <!-- ZMIANA: Ikonka monety fa-coins -->
         <div id="coinDisplay" class="coin-display" style="display:none;">
             <i class="fas fa-coins"></i> <span id="coinCount">10</span>
         </div>
         <nav>
             <button class="active" onclick="switchTab('paints')">Paints</button>
             <button onclick="switchTab('emotes')">Emotes</button>
-            <button class="btn-purple" onclick="switchTab('premium')">Premium</button> <!-- ZMIANA NA PREMIUM -->
+            <button class="btn-purple" onclick="switchTab('premium')">Premium</button>
             <button class="btn-yellow" onclick="switchTab('download')">Download</button>
         </nav>
     </div>
@@ -340,39 +326,25 @@
         </div>
     </div>
 
-    <!-- NOWA ZAKŁADKA PREMIUM (ZAMIAST INFO) -->
+    <!-- ZAKŁADKA PREMIUM (SINGLE OPTION) -->
     <div id="premium" class="panel">
         <div class="hero-card" style="margin-bottom:20px;">
             <h1>Zostań Legendą Gato.TV</h1>
-            <p style="color:var(--text-muted); margin-top:10px;">Odblokuj ekskluzywne kolory, odznaki i funkcje.</p>
+            <p style="color:var(--text-muted); margin-top:10px;">Odblokuj pełny potencjał i wyróżnij się na czacie.</p>
         </div>
 
         <div class="pricing-grid">
-            <!-- Free -->
-            <div class="price-card">
-                <div class="price-title">Starter</div>
-                <div class="price-amount">0 PLN</div>
-                <ul class="price-features">
-                    <li><i class="fas fa-check"></i> Menu Emotek</li>
-                    <li><i class="fas fa-check"></i> Historia Czatu</li>
-                    <li><i class="fas fa-check"></i> Auto-Punkty</li>
-                    <li class="disabled"><i class="fas fa-times"></i> Kolorowy Nick</li>
-                    <li class="disabled"><i class="fas fa-times"></i> Odznaka</li>
-                </ul>
-                <button class="btn-buy-plan" disabled>AKTYWNY</button>
-            </div>
-            <!-- Premium -->
             <div class="price-card featured">
-                <div class="price-title" style="color:var(--twitch)">Gato GOD</div>
+                <div class="price-title">Gato GOD</div>
                 <div class="price-amount">20 PLN</div>
                 <ul class="price-features">
-                    <li><i class="fas fa-check"></i> <b>Wszystko z Free</b></li>
-                    <li><i class="fas fa-check"></i> Gradientowe Nicki</li>
-                    <li><i class="fas fa-check"></i> Złota Odznaka Gato</li>
-                    <li><i class="fas fa-check"></i> Dostęp do wszystkich stylów</li>
+                    <li><i class="fas fa-coins" style="color:#ffd700"></i> <b>Mnożnik Coins x5</b></li>
+                    <li><i class="fas fa-certificate" style="color:#38bdf8"></i> <b>Specjalna Odznaka</b></li>
+                    <li><i class="fas fa-magic" style="color:#f43f5e"></i> <b>Animowany Kolor Nicku</b></li>
                     <li><i class="fas fa-check"></i> Priorytetowe wsparcie</li>
+                    <li><i class="fas fa-check"></i> Dostęp do wszystkich stylów</li>
                 </ul>
-                <button class="btn-buy-plan" onclick="alert('Płatności wkrótce!')">WYBIERZ PLAN</button>
+                <button class="btn-buy-plan" onclick="alert('Płatności wkrótce!')">KUP TERAZ</button>
             </div>
         </div>
     </div>
@@ -384,7 +356,6 @@
             <button class="btn-download-big" onclick="fireDownloadConfetti()">POBIERZ WTYCZKĘ</button>
         </div>
 
-        <!-- PRZENIESIONE INFO -->
         <div class="info-block">
             <h2>Dlaczego Warto?</h2>
             <div class="info-grid-box">
@@ -649,10 +620,13 @@ function renderShop() {
     if(myItems.length === 0) invDiv.innerHTML = '<div class="empty-inv-msg">Pusto :(</div>';
     else myItems.forEach((item, idx) => invDiv.appendChild(createCard(item, true)));
 
+    let itemsAvailable = false;
     const categories = ['paint', 'badge', 'ink', 'font', 'bg'];
+    
     categories.forEach(cat => {
         const items = CATALOG.filter(i => i.category === cat && !AppState.owned.includes(i.name));
         if(items.length > 0) {
+            itemsAvailable = true;
             const title = document.createElement('div');
             title.className = 'shop-section-title';
             title.innerText = cat.toUpperCase();
@@ -664,6 +638,17 @@ function renderShop() {
             shopDiv.appendChild(grid);
         }
     });
+
+    // Pusty stan sklepu
+    if (!itemsAvailable) {
+        shopDiv.innerHTML = `
+            <div class="shop-empty-msg">
+                <i class="fas fa-store-slash"></i>
+                <h3>Sklep cały wykupiony!</h3>
+                <p>Wróć później po nowości.</p>
+            </div>
+        `;
+    }
 }
 
 function createCard(item, isOwned) {
@@ -748,7 +733,6 @@ window.doUnequip = async function(cat) {
     await api(`premium/${AppState.user.login.toLowerCase()}/${cat}`, "DELETE");
 }
 
-// Funkcja obsługująca przycisk Redeem Code
 window.redeemCode = function() {
     const code = prompt("Wpisz kod promocyjny:");
     if (!code) return;
