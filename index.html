@@ -191,7 +191,7 @@
 
     .empty-inv-msg { width: 100%; text-align: center; color: var(--text-muted); padding: 40px; border: 2px dashed var(--border); border-radius: 12px; font-weight: 600; grid-column: 1 / -1; }
 
-    /* MODS SECTION (MOVED TO FORM) */
+    /* MODS SECTION */
     .mods-container { border-top: 1px solid var(--border); padding-top: 20px; margin-top: 30px; }
     .mod-item { display: flex; justify-content: space-between; align-items: center; background: #131c2e; padding: 10px; border-radius: 8px; margin-bottom: 8px; font-size: 13px; font-weight: 600; }
     .btn-remove-mod { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; }
@@ -319,7 +319,6 @@
                     <button class="btn-primary" style="margin-top:20px" onclick="addEmote()">💾 Zapisz Emotkę</button>
                 </div>
 
-                <!-- NOWA LOKALIZACJA MODERATORÓW -->
                 <div class="mods-container">
                     <h3>Zarządzaj Moderatorami</h3>
                     <p style="color:#94a3b8; font-size:12px; margin-bottom:10px;">Osoby z tej listy mogą dodawać emotki do Twojego kanału.</p>
@@ -362,12 +361,12 @@ const CLIENT_ID = 'l0agnxl8yeto7wda5wvblpg1mr55db';
 const REDIRECT_URI = window.location.origin + window.location.pathname;
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
 
-// ==================== STATE ====================
+// ==================== STATE (STAN APLIKACJI) ====================
 const AppState = {
     user: null,
     token: null,
-    coins: 10,
-    owned: ["Classic Green", "Default Font"],
+    coins: 100, // Zmiana 1: Startowe 100 coins
+    owned: [], // Zmiana 2: Pusty ekwipunek na start
     loadout: {},
     emotes: {},
     allowedChannels: []
@@ -375,16 +374,24 @@ const AppState = {
 
 // ==================== CATALOG ====================
 const CATALOG = [
-    { name: "Classic Green", category:"paint", price: 0, type: "color", value: "#00ff00", previewStyle: "color:#00ff00" },
     { name: "Mana Potion", category:"paint", price: 10, type: "gradient", value: "linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%)", previewStyle: `background-image: linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%); filter: drop-shadow(rgb(215, 15, 255) 0px 0px 0.1px) drop-shadow(rgb(64, 0, 77) 1px 1px 0.1px); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: gatoShine 3s linear infinite; font-weight: 900;` },
     { name: "Fire Lord", category:"paint", price: 50, type: "gradient", value: "linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #ff0000)", previewStyle: "background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #ff0000); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: gatoShine 3s linear infinite; font-weight:900;" },
     { name: "Golden Legend", category:"paint", price: 100, type: "glow", value: "#ffd700", shadow: "#ffae00", previewStyle: "color:#ffd700;text-shadow:0 0 10px #ffae00; font-weight:800;" },
-    { name: "RGB Master", category:"paint", price: 200, type: "animated-rainbow", previewStyle: "font-weight:900;", className: "gato-anim-rainbow" },
+    
+    // NOWE PAINTY (Zmiana 4 i 5)
+    { name: "Hellfire", category:"paint", price: 10, type: "gradient", value: "linear-gradient(0deg, rgb(255, 241, 168) 25%, rgb(250, 229, 41) 35%, rgb(253, 151, 35) 55%, rgb(242, 86, 32) 70%, rgb(227, 22, 22) 100%)", filter: "drop-shadow(rgb(221, 34, 81) 0px 0px 0.1px) drop-shadow(rgb(227, 22, 22) 0px 0px 4px)", previewStyle: "background-image: linear-gradient(0deg, rgb(255, 241, 168) 25%, rgb(250, 229, 41) 35%, rgb(253, 151, 35) 55%, rgb(242, 86, 32) 70%, rgb(227, 22, 22) 100%); filter: drop-shadow(rgb(221, 34, 81) 0px 0px 0.1px) drop-shadow(rgb(227, 22, 22) 0px 0px 4px); -webkit-background-clip: text; color: transparent; font-weight: 900;" },
+    { name: "Impish Blush", category:"paint", price: 10, type: "gradient", value: "linear-gradient(135deg, rgb(128, 0, 255) 27%, rgb(182, 71, 255) 40%, rgb(255, 255, 255) 53%, rgb(255, 133, 163) 62%, rgb(219, 0, 77) 82%)", filter: "drop-shadow(rgb(219, 0, 77) 0px 0px 0.1px)", previewStyle: "background-image: linear-gradient(135deg, rgb(128, 0, 255) 27%, rgb(182, 71, 255) 40%, rgb(255, 255, 255) 53%, rgb(255, 133, 163) 62%, rgb(219, 0, 77) 82%); filter: drop-shadow(rgb(219, 0, 77) 0px 0px 0.1px); -webkit-background-clip: text; color: transparent; font-weight: 900;" },
+    { name: "Wrapped", category:"paint", price: 10, type: "gradient", value: "repeating-linear-gradient(112deg, rgb(221, 54, 54) 0%, rgb(208, 70, 57) 11%, rgb(55, 174, 79) 12%, rgb(59, 176, 88) 22%, rgb(255, 255, 255) 23%, rgb(255, 255, 255) 33%)", filter: "drop-shadow(rgb(85, 171, 82) 0px 0px 0.1px)", previewStyle: "background-image: repeating-linear-gradient(112deg, rgb(221, 54, 54) 0%, rgb(208, 70, 57) 11%, rgb(55, 174, 79) 12%, rgb(59, 176, 88) 22%, rgb(255, 255, 255) 23%, rgb(255, 255, 255) 33%); filter: drop-shadow(rgb(85, 171, 82) 0px 0px 0.1px); -webkit-background-clip: text; color: transparent; font-weight: 900;" },
+    { name: "Disco Classic", category:"paint", price: 10, type: "gradient", value: "radial-gradient(circle, rgb(252, 232, 215) 0%, rgb(255, 232, 215) 25%, rgb(240, 83, 70) 25%, rgb(240, 83, 70) 50%, rgb(244, 173, 23) 50%, rgb(244, 173, 23) 75%, rgb(41, 162, 205) 75%, rgb(41, 162, 205) 100%)", filter: "drop-shadow(rgb(227, 94, 73) 0px 0px 0.1px)", previewStyle: "background-image: radial-gradient(circle, rgb(252, 232, 215) 0%, rgb(255, 232, 215) 25%, rgb(240, 83, 70) 25%, rgb(240, 83, 70) 50%, rgb(244, 173, 23) 50%, rgb(244, 173, 23) 75%, rgb(41, 162, 205) 75%, rgb(41, 162, 205) 100%); filter: drop-shadow(rgb(227, 94, 73) 0px 0px 0.1px); -webkit-background-clip: text; color: transparent; font-weight: 900;" },
+    { name: "Pastelween", category:"paint", price: 10, type: "gradient", value: "linear-gradient(90deg, rgb(255, 151, 82) 0%, rgb(255, 151, 82) 16%, rgb(244, 183, 98) 16%, rgb(244, 183, 98) 33%, rgb(248, 240, 217) 33%, rgb(248, 240, 217) 50%, rgb(148, 255, 182) 50%, rgb(148, 255, 182) 66%, rgb(196, 142, 251) 66%, rgb(196, 142, 251) 83%, rgb(255, 133, 165) 83%, rgb(255, 133, 165) 100%)", filter: "drop-shadow(rgb(255, 138, 167) 0px 0px 0.1px)", previewStyle: "background-image: linear-gradient(90deg, rgb(255, 151, 82) 0%, rgb(255, 151, 82) 16%, rgb(244, 183, 98) 16%, rgb(244, 183, 98) 33%, rgb(248, 240, 217) 33%, rgb(248, 240, 217) 50%, rgb(148, 255, 182) 50%, rgb(148, 255, 182) 66%, rgb(196, 142, 251) 66%, rgb(196, 142, 251) 83%, rgb(255, 133, 165) 83%, rgb(255, 133, 165) 100%); filter: drop-shadow(rgb(255, 138, 167) 0px 0px 0.1px); -webkit-background-clip: text; color: transparent; font-weight: 900;" },
+
+    // Zmiana 3: Usunięto Shield Badge i RGB Master
     { name: "Star Badge", category:"badge", price: 20, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/1828/1828884.png", previewStyle: "" },
-    { name: "Shield Badge", category:"badge", price: 30, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/343/343053.png", previewStyle: "" },
     { name: "King Crown", category:"badge", price: 50, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/2545/2545603.png", previewStyle: "" },
     { name: "Golden Ink", category:"ink", price: 50, type: "ink", value: "#ffd700", previewStyle: "color:#ffd700" },
     { name: "Hot Pink", category:"ink", price: 50, type: "ink", value: "#ff0066", previewStyle: "color:#ff0066" },
+    // Zmiana 2: Classic Green i Default Font są w katalogu (cena 0), ale nie są domyślnie w inventory
+    { name: "Classic Green", category:"paint", price: 0, type: "color", value: "#00ff00", previewStyle: "color:#00ff00" },
     { name: "Default Font", category:"font", price: 0, type: "font", value: "inherit", previewStyle: "" },
     { name: "Retro Pixel", category:"font", price: 30, type: "font", value: "'Press Start 2P', cursive", previewStyle: "font-family:'Press Start 2P'" },
     { name: "Marker", category:"font", price: 30, type: "font", value: "'Permanent Marker', cursive", previewStyle: "font-family:'Permanent Marker'" },
@@ -397,12 +404,16 @@ window.onload = async () => {
     try {
         const storedCoins = localStorage.getItem('gato_coins');
         if(storedCoins) AppState.coins = parseInt(storedCoins);
+        else AppState.coins = 100; // Zmiana 1: Domyślnie 100
+
         const storedOwned = localStorage.getItem('gato_owned');
         if(storedOwned) {
             const p = JSON.parse(storedOwned);
             if(Array.isArray(p)) AppState.owned = p;
+        } else {
+            AppState.owned = []; // Zmiana 2: Domyślny ekwipunek pusty
         }
-    } catch(e) { AppState.owned = ["Classic Green", "Default Font"]; }
+    } catch(e) { AppState.owned = []; }
     updateCoinDisplay();
     renderShop();
 
@@ -444,7 +455,6 @@ function showDashboard(user) {
     document.getElementById('username').innerText = user.display_name;
     document.getElementById('previewUser').innerText = user.display_name;
     
-    // Safety check for element existence
     const emoAuthor = document.getElementById('emoAuthor');
     if(emoAuthor) emoAuthor.value = user.display_name;
 }
@@ -540,7 +550,14 @@ function updatePreview(data) {
     if(data.paint) {
         const p = data.paint;
         if(p.type === 'color') userEl.style.color = p.value;
-        if(p.type === 'gradient') { userEl.style.backgroundImage = p.value; userEl.style.webkitBackgroundClip = "text"; userEl.style.webkitTextFillColor = "transparent"; userEl.style.animation = "gatoShine 3s linear infinite"; userEl.style.fontWeight = "900"; }
+        if(p.type === 'gradient') { 
+            userEl.style.backgroundImage = p.value; 
+            userEl.style.webkitBackgroundClip = "text"; 
+            userEl.style.webkitTextFillColor = "transparent"; 
+            userEl.style.fontWeight = "900"; 
+            // Obsługa filtra (drop-shadow) dla nowych paintów
+            if(p.filter) userEl.style.filter = p.filter;
+        }
         if(p.type === 'glow') { userEl.style.color = p.value; userEl.style.textShadow = `0 0 10px ${p.shadow}`; }
         if(p.type === 'animated-rainbow') userEl.classList.add('gato-anim-rainbow');
     }
@@ -559,7 +576,7 @@ function renderShop() {
     invDiv.innerHTML = "";
 
     const myItems = CATALOG.filter(i => AppState.owned.includes(i.name));
-    if(myItems.length === 0) invDiv.innerHTML = '<div class="empty-inv-msg">Pusto :(</div>';
+    if(myItems.length === 0) invDiv.innerHTML = '<div class="empty-inv-msg">Pusty ekwipunek.</div>';
     else myItems.forEach((item, idx) => invDiv.appendChild(createCard(item, true)));
 
     const categories = ['paint', 'badge', 'ink', 'font', 'bg'];
@@ -584,7 +601,9 @@ function createCard(item, isOwned) {
     card.className = isOwned ? "preset-card owned" : "preset-card";
     
     card.onmouseenter = () => {
-        if(item.category==='paint') document.getElementById('previewUser').style.cssText = item.previewStyle + "; font-size:13px;";
+        if(item.category==='paint') {
+            document.getElementById('previewUser').style.cssText = item.previewStyle + "; font-size:13px;";
+        }
         else if(item.category==='badge') document.getElementById('previewBadges').innerHTML = `<img src="${item.value}" class="gato-badge-preview">`;
         else if(['ink','font','bg'].includes(item.category)) document.querySelector('.chat-msg').style.cssText = item.previewStyle;
     };
@@ -642,7 +661,12 @@ window.doEquip = async function(idx) {
     if(!AppState.user) return;
     const item = CATALOG[idx];
     let payload = item.value;
-    if(item.category === 'paint') { payload = { type: item.type, value: item.value }; if(item.shadow) payload.shadow = item.shadow; }
+    // Update logic to include filter in payload if present
+    if(item.category === 'paint') { 
+        payload = { type: item.type, value: item.value }; 
+        if(item.shadow) payload.shadow = item.shadow; 
+        if(item.filter) payload.filter = item.filter;
+    }
     
     AppState.loadout[item.category] = (item.category==='paint') ? payload : item.value;
     renderShop(); updatePreview(AppState.loadout);
