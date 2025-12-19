@@ -246,6 +246,7 @@
 
 <script>
 // ==================== CONFIG ====================
+// WAZNE: Upewnij się, że CLIENT_ID i REDIRECT_URI są poprawne!
 const CLIENT_ID = 'l0agnxl8yeto7wda5wvblpg1mr55db'; 
 const REDIRECT_URI = 'https://drsxdd.github.io/gatotv/'; 
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
@@ -282,18 +283,26 @@ const CATALOG = [
 
 // INIT
 window.onload = () => {
-    setLoggedOutState(); // Force logout UI first
-
+    // 1. Check for token in URL (Hash)
     if (document.location.hash.includes('access_token')) {
-        const token = new URLSearchParams(document.location.hash.substring(1)).get('access_token');
+        // Extract token
+        const params = new URLSearchParams(document.location.hash.substring(1));
+        const token = params.get('access_token');
+        
         if(token) {
             localStorage.setItem('twitch_token', token);
-            validateToken(token);
+            // Clear URL hash to look cleaner
             window.history.replaceState({}, document.title, window.location.pathname);
+            validateToken(token);
         }
     } else {
+        // 2. Check for stored token
         const stored = localStorage.getItem('twitch_token');
-        if(stored) validateToken(stored);
+        if(stored) {
+            validateToken(stored);
+        } else {
+            setLoggedOutState();
+        }
     }
 
     if(localStorage.getItem('gato_coins')) coins = parseInt(localStorage.getItem('gato_coins'));
@@ -310,7 +319,9 @@ function setLoggedOutState() {
 }
 
 function loginWithTwitch() {
-    window.location.href = `https://id.twitch.tv/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=user:read:email`;
+    // Generowanie URL do logowania
+    const url = `https://id.twitch.tv/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=user:read:email`;
+    window.location.href = url;
 }
 
 function logout() {
@@ -320,11 +331,22 @@ function logout() {
 
 async function validateToken(token) {
     try {
-        const res = await fetch('https://api.twitch.tv/helix/users', { headers: { 'Client-ID': CLIENT_ID, 'Authorization': `Bearer ${token}` } });
+        const res = await fetch('https://api.twitch.tv/helix/users', { 
+            headers: { 
+                'Client-ID': CLIENT_ID, 
+                'Authorization': `Bearer ${token}` 
+            } 
+        });
+        
         if(!res.ok) throw new Error("Token Invalid");
+        
         const data = await res.json();
-        currentUser = data.data[0];
-        enableApp();
+        if(data.data && data.data.length > 0) {
+            currentUser = data.data[0];
+            enableApp();
+        } else {
+            throw new Error("No user data");
+        }
     } catch(e) {
         console.error("Login fail:", e);
         localStorage.removeItem('twitch_token');
@@ -343,8 +365,10 @@ function enableApp() {
     document.getElementById('username').innerText = currentUser.display_name;
     document.getElementById('previewUser').innerText = currentUser.display_name;
     document.getElementById('emoAuthor').value = currentUser.display_name;
+    
+    // IMPORTANT: Render items after we know who the user is
+    renderShop(); 
     loadAll();
-    renderShop(); // IMPORTANT: Render shop after login confirm
 }
 
 // SHOP LOGIC
@@ -374,6 +398,7 @@ function renderShop() {
         if(item.category === "font") preview = `<div style="${item.previewStyle}">Abc</div>`;
         if(item.category === "ink") preview = `<div style="${item.previewStyle}">Tekst</div>`;
 
+        // FIXED: Changed ${actionBtn} to ${btn}
         let btn = isOwned 
             ? `<button class="btn-action btn-equip" onclick="equipItem(${index})">Załóż</button>`
             : `<button class="btn-action btn-buy" onclick="buyItem(${index})">Kup ${item.price}</button>`;
@@ -388,7 +413,7 @@ function renderShop() {
                         ${isOwned ? "POSIADANE" : item.price + " 🪙"}
                     </span>
                 </div>
-                ${actionBtn}
+                ${btn}
             </div>
         `;
         (isOwned ? inv : shop).appendChild(card);
@@ -459,7 +484,6 @@ function cloneEmote(n,u) { openEmoteForm(); document.getElementById('emoName').v
 async function del(p, r=false) { if(confirm("Usunąć?")) { await api(p, "DELETE"); loadAll(); if(r) setTimeout(()=>{loadAll(); openEmoteForm()}, 500); } }
 async function api(path, method="GET", body=null) { const opts={method}; if(body) opts.body=JSON.stringify(body); try{const r=await fetch(`${DB_URL}/${path}.json`,opts);return r.json()}catch(e){} }
 function previewFile() { const f = document.getElementById('emoFile').files[0]; if(f) { document.getElementById('emoUrl').disabled=true; const r=new FileReader(); r.onload=e=>{document.getElementById('filePreview').src=e.target.result; document.getElementById('filePreview').style.display='block'}; r.readAsDataURL(f); } }
-const toBase64=f=>new Promise((res,rej)=>{const r=new FileReader();r.readAsDataURL(f);r.onload=()=>res(r.result);r.onerror=e=>rej(e)});
 </script>
 </body>
 </html>
