@@ -153,7 +153,7 @@
     .mod-item { display: flex; justify-content: space-between; align-items: center; background: #131c2e; padding: 10px; border-radius: 8px; margin-bottom: 8px; font-size: 13px; font-weight: 600; }
     .btn-remove-mod { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; }
     .btn-remove-mod:hover { background: var(--danger); color: white; }
-    .sub-nav { display: flex; gap: 20px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+    .sub-nav { display: flex; gap: 20px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; align-items: center; }
     .sub-nav button { background: none; border: none; color: var(--text-muted); font-size: 16px; font-weight: 700; cursor: pointer; padding: 5px 0; position: relative; }
     .sub-nav button.active { color: white; }
     .sub-nav button.active::after { content: ''; position: absolute; bottom: -11px; left: 0; width: 100%; height: 3px; background: var(--accent); border-radius: 10px 10px 0 0; }
@@ -189,6 +189,29 @@
     .shop-empty-msg i { font-size:40px; color:#94a3b8; margin-bottom:15px; }
     .shop-empty-msg h3 { color:white; margin:0; }
     .shop-empty-msg p { color:#94a3b8; margin-top:5px; }
+
+    /* DAILY BUTTON */
+    .btn-daily {
+        margin-left: auto; /* Push right */
+        background: linear-gradient(45deg, #facc15, #f59e0b);
+        color: #000;
+        border: none;
+        border-radius: 50px;
+        padding: 6px 16px;
+        font-size: 12px;
+        font-weight: 900;
+        cursor: pointer;
+        box-shadow: 0 0 15px rgba(250, 204, 21, 0.4);
+        transition: 0.3s;
+        display: flex; align-items: center; gap: 6px;
+        animation: pulseGold 2s infinite;
+    }
+    .btn-daily:hover { transform: scale(1.05); }
+    .btn-daily:disabled {
+        background: #334155; color: #94a3b8;
+        cursor: not-allowed; animation: none; box-shadow: none;
+    }
+    @keyframes pulseGold { 0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); } 100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); } }
 
     .hidden { display: none !important; }
     .flex { display: flex !important; }
@@ -251,6 +274,10 @@
             <div class="sub-nav">
                 <button id="tabInv" class="active" onclick="switchPaintSubTab('inv')">EKWIPUNEK</button>
                 <button id="tabShop" onclick="switchPaintSubTab('shop')">SKLEP</button>
+                <!-- DZIENNY BONUS -->
+                <button id="btnDaily" class="btn-daily" onclick="claimDailyBonus()">
+                    <i class="fas fa-gift"></i> ODBIERZ +10
+                </button>
             </div>
             
             <div id="viewInventory"><div id="inventoryGrid" class="preset-grid"></div></div>
@@ -449,6 +476,7 @@ window.onload = async () => {
     } catch(e) { AppState.owned = []; }
     updateCoinDisplay();
     renderShop();
+    checkDailyBonus(); // Init timer
 
     if (document.location.hash.includes('access_token')) {
         const params = new URLSearchParams(document.location.hash.substring(1));
@@ -534,6 +562,45 @@ function loginWithTwitch() {
 function logout() {
     localStorage.removeItem('twitch_token');
     window.location.reload();
+}
+
+// ==================== DAILY BONUS LOGIC ====================
+const DAILY_COOLDOWN = 24 * 60 * 60 * 1000;
+
+function checkDailyBonus() {
+    const btn = document.getElementById('btnDaily');
+    if(!btn) return;
+    
+    const lastClaim = localStorage.getItem('gato_last_daily');
+    const now = Date.now();
+
+    if (lastClaim && (now - lastClaim < DAILY_COOLDOWN)) {
+        // Zablokowany
+        btn.disabled = true;
+        const timeLeft = DAILY_COOLDOWN - (now - lastClaim);
+        const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+        btn.innerHTML = `<i class="fas fa-clock"></i> ${hours}h ${minutes}m`;
+        
+        // Odświeżaj co minutę
+        setTimeout(checkDailyBonus, 60000);
+    } else {
+        // Dostępny
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fas fa-gift"></i> ODBIERZ +10`;
+    }
+}
+
+window.claimDailyBonus = function() {
+    const btn = document.getElementById('btnDaily');
+    btn.disabled = true;
+    
+    AppState.coins += 10;
+    updateCoinDisplay();
+    fireConfetti(true);
+    
+    localStorage.setItem('gato_last_daily', Date.now());
+    checkDailyBonus();
 }
 
 // ==================== DATA LOGIC ====================
