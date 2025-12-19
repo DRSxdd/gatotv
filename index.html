@@ -25,6 +25,11 @@
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top, #172554, var(--bg)); color: var(--text); min-height: 100vh; padding-bottom: 50px; }
     
+    /* ANIMACJE */
+    @keyframes gatoRainbow { 0%{color:#f00} 20%{color:#ff0} 40%{color:#0f0} 60%{color:#0ff} 80%{color:#00f} 100%{color:#f0f} }
+    .gato-anim-rainbow { animation: gatoRainbow 4s linear infinite; font-weight: 800; }
+    @keyframes gatoShine{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+    
     /* HEADER */
     header { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.3); }
     .header-left { display: flex; align-items: center; gap: 25px; }
@@ -58,7 +63,7 @@
     .login-blocker h2 { font-size: 28px; margin-bottom: 10px; color: white; }
     .protected-content { display: none; }
 
-    /* CHAT PREVIEW */
+    /* CHAT PREVIEW - Sticky */
     .chat-preview-container { 
         background: #18181b; 
         border: 1px solid #333; 
@@ -166,7 +171,7 @@
         <div id="userProfile" class="user-profile">
             <img id="avatar" class="user-avatar" src="">
             <span id="username" class="user-nick">...</span>
-            <button onclick="logout()" class="btn-logout">🛑 Wyloguj</button>
+            <button onclick="window.logout()" class="btn-logout">🛑 Wyloguj</button>
         </div>
     </div>
     
