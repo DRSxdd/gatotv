@@ -383,49 +383,45 @@ function logout() {
 async function validateToken(token) {
     try {
         const res = await fetch('https://api.twitch.tv/helix/users', { headers: { 'Client-ID': CLIENT_ID, 'Authorization': `Bearer ${token}` } });
-        if(!res.ok) throw new Error("Błąd logowania (Token Expired lub zły ClientID): " + res.status);
+        if(!res.ok) throw new Error("Token Invalid");
         const data = await res.json();
         if(!data.data || !data.data.length) throw new Error("Brak danych użytkownika");
         currentUser = data.data[0];
         enableApp();
     } catch(e) {
         console.error("Login fail:", e);
-        alert(e.message);
         localStorage.removeItem('twitch_token');
         setLoggedOutState();
     }
 }
 
 function enableApp() {
-    try {
-        document.getElementById('loginBtnContainer').style.display = 'none';
-        document.getElementById('userProfile').style.display = 'flex';
-        document.getElementById('coinDisplay').style.display = 'flex';
-        document.querySelectorAll('.login-blocker').forEach(b => b.style.display = 'none');
-        document.querySelectorAll('.protected-content').forEach(c => c.style.display = 'block');
+    document.getElementById('loginBtnContainer').style.display = 'none';
+    document.getElementById('userProfile').style.display = 'flex';
+    document.getElementById('coinDisplay').style.display = 'flex';
+    document.querySelectorAll('.login-blocker').forEach(b => b.style.display = 'none');
+    document.querySelectorAll('.protected-content').forEach(c => c.style.display = 'block');
 
-        document.getElementById('avatar').src = currentUser.profile_image_url;
-        document.getElementById('username').innerText = currentUser.display_name;
-        document.getElementById('previewUser').innerText = currentUser.display_name;
-        document.getElementById('emoAuthor').value = currentUser.display_name;
-        
-        loadUserData();
-        loadAllEmotes();
-    } catch(e) {
-        console.error("Błąd w enableApp", e);
-    }
+    document.getElementById('avatar').src = currentUser.profile_image_url;
+    document.getElementById('username').innerText = currentUser.display_name;
+    document.getElementById('previewUser').innerText = currentUser.display_name;
+    document.getElementById('emoAuthor').value = currentUser.display_name;
+    
+    // Ważne: Wywołujemy to po zalogowaniu
+    loadUserData();
+    loadAllEmotes();
 }
 
 async function loadUserData() {
     try {
+        // Pobierz dane z Firebase
         const res = await fetch(`${DB_URL}/premium/${currentUser.login.toLowerCase()}.json`);
-        // FIX: Dodano "|| {}" aby uniknąć błędu gdy user nie ma jeszcze danych
+        // Zabezpieczenie przed nullem
         const data = await res.json() || {}; 
         currentLoadout = data; 
         updatePreview(data);
-        renderShop();
+        renderShop(); // To renderuje sklep i ekwipunek
     } catch(e) {
-        // Ignoruj błąd sieci, po prostu załaduj domyślne
         currentLoadout = {};
         renderShop();
     }
@@ -467,6 +463,7 @@ function updatePreview(data) {
     }
 }
 
+// LOGIKA SKLEPU (Ta która działała)
 function renderShop() {
     const shopContent = document.getElementById("shopContent");
     const inv = document.getElementById("inventoryGrid");
@@ -482,6 +479,7 @@ function renderShop() {
         {id:'bg', name:'Tło (Backgrounds)'}
     ];
 
+    // 1. EKWIPUNEK
     const ownedItemsList = CATALOG.filter(i => ownedItems.includes(i.name));
     
     if(ownedItemsList.length === 0) {
@@ -493,15 +491,20 @@ function renderShop() {
         });
     }
 
+    // 2. SKLEP
     categories.forEach(cat => {
+        // Pokaż tylko te, których NIE mamy
         const catItems = CATALOG.filter(i => i.category === cat.id && !ownedItems.includes(i.name));
+        
         if(catItems.length > 0) {
             const title = document.createElement('div');
             title.className = 'shop-section-title';
             title.innerText = cat.name;
             shopContent.appendChild(title);
+
             const grid = document.createElement('div');
             grid.className = 'preset-grid';
+            
             catItems.forEach(item => {
                 const originalIndex = CATALOG.findIndex(c => c.name === item.name);
                 grid.appendChild(createItemCard(item, originalIndex, false));
@@ -528,6 +531,7 @@ function createItemCard(item, index, isOwned) {
     if(item.category === "font") preview = `<div style="${item.previewStyle}">Abc</div>`;
     if(item.category === "ink") preview = `<div style="${item.previewStyle}">Tekst</div>`;
 
+    // SPRAWDZANIE CZY ZAŁOŻONE
     let isEquipped = false;
     if(currentLoadout && currentLoadout[item.category]) {
         const eq = currentLoadout[item.category];
