@@ -25,6 +25,11 @@
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top, #172554, var(--bg)); color: var(--text); min-height: 100vh; padding-bottom: 50px; }
     
+    /* ANIMACJE */
+    @keyframes gatoRainbow { 0%{color:#f00} 20%{color:#ff0} 40%{color:#0f0} 60%{color:#0ff} 80%{color:#00f} 100%{color:#f0f} }
+    .gato-anim-rainbow { animation: gatoRainbow 4s linear infinite; font-weight: 800; }
+    @keyframes gatoShine{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+    
     /* HEADER */
     header { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.3); }
     .header-left { display: flex; align-items: center; gap: 25px; }
@@ -58,11 +63,22 @@
     .login-blocker h2 { font-size: 28px; margin-bottom: 10px; color: white; }
     .protected-content { display: none; }
 
-    /* CHAT PREVIEW */
+    /* CHAT PREVIEW - Sticky */
     .chat-preview-container { 
-        background: #18181b; border: 1px solid #333; border-radius: 12px; padding: 15px 20px; margin-bottom: 30px; 
-        font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: space-between; 
-        box-shadow: 0 4px 20px rgba(0,0,0,0.3); position: sticky; top: 80px; z-index: 90; backdrop-filter: blur(10px);
+        background: #18181b; 
+        border: 1px solid #333; 
+        border-radius: 12px; 
+        padding: 15px 20px; 
+        margin-bottom: 30px; 
+        font-family: 'Inter', sans-serif; 
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between; 
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        position: sticky;
+        top: 80px; 
+        z-index: 90;
+        backdrop-filter: blur(10px);
     }
     .chat-preview-container.light { background: #ffffff; border-color: #e5e5e5; }
     .chat-preview-container.light .chat-msg, .chat-preview-container.light .chat-colon, .chat-preview-container.light .chat-time { color: #0e0e10; }
@@ -120,7 +136,65 @@
     button.btn-secondary { background: transparent; color: var(--text-muted); padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border); font-weight: 700; cursor: pointer; font-size: 12px; transition: 0.2s; }
     button.btn-secondary:hover { color: white; border-color: white; }
 
+    /* EMOTES GRID (POPRAWIONE) */
+    .emotes-grid { 
+        display: grid; 
+        /* Gęstsza siatka: min 90px szerokości */
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); 
+        gap: 10px; 
+        margin-top: 20px; 
+    }
+    .emote-card { 
+        background: #131c2e; 
+        border: 1px solid var(--border); 
+        border-radius: 8px; 
+        padding: 10px; 
+        text-align: center; 
+        position: relative; 
+        transition: 0.2s; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: space-between; 
+        min-height: 100px;
+    }
+    .emote-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+    .emote-img { 
+        height: 40px; /* Sztywna wysokość */
+        width: auto;
+        max-width: 100%;
+        object-fit: contain; 
+        margin-bottom: 8px; 
+        display: block;
+    }
+    .emote-name { font-weight: 700; font-size: 11px; color: white; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; }
+    .channel-tag { color: var(--accent); font-weight: 700; text-transform: uppercase; background: rgba(56, 189, 248, 0.1); padding: 2px 4px; border-radius: 4px; margin-top: 2px; display: inline-block; font-size: 9px; }
+    .action-overlay { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; opacity: 0; transition: 0.2s; font-size: 10px; color: white; z-index: 2; }
+    .emote-card:hover .action-overlay { opacity: 1; }
+    .del-btn { background: var(--danger); }
+    .add-btn { background: var(--success); color: #000; }
+
+    /* HERO CARD (POPRAWIONE) */
+    .hero-card { 
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(0,0,0,0)); 
+        border: 1px solid var(--border); 
+        border-radius: 20px; 
+        padding: 60px 40px; 
+        text-align: center; 
+        margin-top: 40px;
+        box-shadow: 0 10px 50px rgba(0,0,0,0.2);
+    }
+    .hero-card h1 { font-size: 32px; margin-bottom: 10px; background: linear-gradient(90deg, #fff, var(--text-muted)); -webkit-background-clip: text; color: transparent; }
+    .download-style { border-color: rgba(250, 204, 21, 0.3); box-shadow: 0 0 50px rgba(250, 204, 21, 0.05); }
+    .btn-download-big { background: var(--yellow); color: #000; font-size: 18px; font-weight: 900; padding: 15px 40px; border: none; border-radius: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin-top: 20px; transition: 0.2s; }
+    .btn-download-big:hover { transform: scale(1.05); box-shadow: 0 10px 30px var(--yellow-glow); }
+    .btn-download-big:active { transform: scale(0.98); }
+
     .empty-inv-msg { width: 100%; text-align: center; color: var(--text-muted); padding: 40px; border: 2px dashed var(--border); border-radius: 12px; font-weight: 600; grid-column: 1 / -1; }
+
+    /* HELPER CLASSES */
+    .hidden { display: none !important; }
+    .flex { display: flex !important; }
 </style>
 </head>
 <body>
@@ -129,12 +203,15 @@
     <div class="header-left">
         <div class="logo">Gato.TV <span class="beta-tag">BETA</span></div>
         <div id="loginBtnContainer">
-            <button class="btn-login" onclick="loginWithTwitch()">Zaloguj</button>
+            <button class="btn-login" onclick="loginWithTwitch()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h2.998L22.286 11.57V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+                Zaloguj
+            </button>
         </div>
         <div id="userProfile" class="user-profile">
             <img id="avatar" class="user-avatar" src="">
             <span id="username" class="user-nick">...</span>
-            <button onclick="logout()" class="btn-logout">🛑</button>
+            <button onclick="logout()" class="btn-logout">🛑 Wyloguj</button>
         </div>
     </div>
     
@@ -153,11 +230,11 @@
 
 <div class="container">
 
-    <!-- TAB PAINTS -->
+    <!-- TAB: SKLEP & EKWIPUNEK -->
     <div id="paints" class="panel active">
         <div class="login-blocker">
             <h2>🔒 Wymagane Logowanie</h2>
-            <p style="color:#94a3b8; margin-bottom:20px;">Zaloguj się, aby zarządzać wyglądem.</p>
+            <p style="color:#94a3b8; margin-bottom:20px;">Zaloguj się, aby konfigurować swój wygląd na czacie.</p>
             <button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button>
         </div>
 
@@ -183,10 +260,11 @@
         </div>
     </div>
 
-    <!-- TAB EMOTES -->
+    <!-- TAB: EMOTES -->
     <div id="emotes" class="panel">
         <div class="login-blocker">
             <h2>🔒 Wymagane Logowanie</h2>
+            <p style="color:#94a3b8; margin-bottom:20px;">Zaloguj się, aby dodawać emotki.</p>
             <button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button>
         </div>
 
@@ -206,53 +284,65 @@
                 </div>
                 <div class="emote-form-container">
                     <div class="emote-form-grid">
-                        <div class="form-group">
-                            <label>Kod Emotki (np. xdd)</label>
-                            <input id="emoName" placeholder="Co wpisać na czacie?">
-                        </div>
-                        <div class="form-group">
-                            <label>Kanał</label>
-                            <input id="emoChannel" disabled>
-                        </div>
-                        <div class="form-group full-width">
-                            <label>Obrazek</label>
+                        <div class="form-group"><label>Kod Emotki</label><input id="emoName" placeholder="Co wpisać na czacie?"></div>
+                        <div class="form-group"><label>Kanał</label><input id="emoChannel" disabled></div>
+                        <div class="form-group full-width"><label>Obrazek</label>
                             <div class="file-drop-zone">
                                 <span class="file-info" id="fileBtnText">📂 Przeciągnij plik</span>
                                 <input type="file" id="emoFile" accept="image/*" onchange="previewFile()">
                             </div>
                         </div>
-                        <div class="form-group full-width">
-                            <label>Lub Link</label>
-                            <input id="emoUrl" placeholder="https://...">
-                        </div>
+                        <div class="form-group full-width"><label>Lub Link</label><input id="emoUrl" placeholder="https://..."></div>
                     </div>
-                    <img id="filePreview" style="display:none; max-height:80px; margin-top:20px;">
-                    <button class="btn-primary" style="margin-top:20px;" onclick="addEmote()">💾 Zapisz Emotkę</button>
+                    <img id="filePreview" src="" style="display:none;">
+                    <button class="btn-primary" style="margin-top:20px" onclick="addEmote()">💾 Zapisz Emotkę</button>
                 </div>
-                <h3 style="margin-top:40px; border-top:1px solid var(--border); padding-top:20px;">Twoje Emotki</h3>
+                <h3 style="margin-top:40px; border-top:1px solid var(--border); padding-top:20px; color:white;">Twoje Emotki</h3>
                 <div id="myEmotesGrid" class="emotes-grid"></div>
             </div>
         </div>
     </div>
 
-    <!-- OTHER TABS -->
-    <div id="info" class="panel"><div class="hero-card"><h1>O Wtyczce</h1><h3 style="color:var(--accent)">Autor: GatoJestemFormaOstateczna</h3></div></div>
-    <div id="download" class="panel"><div class="hero-card download-style"><h1>Pobierz Wtyczkę</h1><button class="btn-download-big" onclick="fireDownloadConfetti()">POBIERZ WTYCZKĘ</button></div></div>
+    <!-- TAB INFO -->
+    <div id="info" class="panel">
+        <div class="hero-card">
+            <h1>O Wtyczce</h1>
+            <h3 style="color:var(--accent); margin-top:10px;">Autor: GatoJestemFormaOstateczna</h3>
+            <p style="color:var(--text-muted); margin-top:20px; font-size:14px;">
+                Gato.TV to innowacyjna wtyczka zmieniająca wygląd czatu Twitch.tv.<br>
+                Zmieniaj kolory, dodawaj emotki i baw się dobrze!
+            </p>
+        </div>
+    </div>
+
+    <!-- TAB DOWNLOAD -->
+    <div id="download" class="panel">
+        <div class="hero-card download-style">
+            <h1>Pobierz Wtyczkę</h1>
+            <p style="color:#94a3b8; margin: 10px 0 20px;">Wersja 1.0 Beta</p>
+            <button class="btn-download-big" onclick="fireDownloadConfetti()">POBIERZ WTYCZKĘ</button>
+        </div>
+    </div>
 
 </div>
 
 <script>
 // ==================== CONFIG ====================
-const CLIENT_ID = 'l0agnxl8yeto7wda5wvblpg1mr55db'; 
-const REDIRECT_URI = window.location.origin + window.location.pathname; 
+const CLIENT_ID = 'l0agnxl8yeto7wda5wvblpg1mr55db';
+const REDIRECT_URI = window.location.origin + window.location.pathname;
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
 
-let currentUser = null; 
-let coins = 10; 
-let ownedItems = ["Classic Green", "Default Font"]; 
-let currentLoadout = {}; 
-let confettiCooldown = false;
+// ==================== STATE (STAN APLIKACJI) ====================
+const AppState = {
+    user: null,
+    token: null,
+    coins: 10,
+    owned: ["Classic Green", "Default Font"],
+    loadout: {},
+    emotes: {}
+};
 
+// ==================== CATALOG ====================
 const CATALOG = [
     { name: "Classic Green", category:"paint", price: 0, type: "color", value: "#00ff00", previewStyle: "color:#00ff00" },
     { name: "Mana Potion", category:"paint", price: 10, type: "gradient", value: "linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%)", previewStyle: `background-image: linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%); filter: drop-shadow(rgb(215, 15, 255) 0px 0px 0.1px) drop-shadow(rgb(64, 0, 77) 1px 1px 0.1px); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: gatoShine 3s linear infinite; font-weight: 900;` },
@@ -271,25 +361,28 @@ const CATALOG = [
     { name: "Toxic Mist", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(0, 255, 0, 0.2), transparent)", previewStyle: "background:rgba(0,255,0,0.2)" }
 ];
 
-window.onload = async () => {
+// === INIT ===
+window.addEventListener('DOMContentLoaded', async () => {
+    // 1. Ładuj lokalne dane
     try {
         const storedCoins = localStorage.getItem('gato_coins');
-        if(storedCoins) coins = parseInt(storedCoins);
+        if(storedCoins) AppState.coins = parseInt(storedCoins);
         const storedOwned = localStorage.getItem('gato_owned');
         if(storedOwned) {
             const p = JSON.parse(storedOwned);
-            if(Array.isArray(p)) ownedItems = p;
+            if(Array.isArray(p)) AppState.owned = p;
         }
-    } catch(e) {}
-    
-    // Rysujemy sklep OD RAZU, niezależnie od logowania
-    renderShop();
+    } catch(e) { AppState.owned = ["Classic Green", "Default Font"]; }
     updateCoinDisplay();
 
+    // 2. Renderuj sklep NATYCHMIAST
+    renderShop();
+
+    // 3. Sprawdź Auth
     if (document.location.hash.includes('access_token')) {
         const params = new URLSearchParams(document.location.hash.substring(1));
         const token = params.get('access_token');
-        if(token) {
+        if (token) {
             localStorage.setItem('twitch_token', token);
             window.history.replaceState({}, document.title, window.location.pathname);
             await verifyToken(token);
@@ -298,11 +391,14 @@ window.onload = async () => {
     } 
     
     const storedToken = localStorage.getItem('twitch_token');
-    if(storedToken) await verifyToken(storedToken);
-    else showLogin();
-};
+    if (storedToken) {
+        await verifyToken(storedToken);
+    } else {
+        showLoginScreen();
+    }
+});
 
-function showLogin() {
+function showLoginScreen() {
     document.getElementById('loginBtnContainer').style.display = 'block';
     document.getElementById('userProfile').style.display = 'none';
     document.getElementById('coinDisplay').style.display = 'none';
@@ -310,23 +406,20 @@ function showLogin() {
     document.querySelectorAll('.protected-content').forEach(c => c.style.display = 'none');
 }
 
-function showApp() {
+function showDashboard(user) {
     document.getElementById('loginBtnContainer').style.display = 'none';
     document.getElementById('userProfile').style.display = 'flex';
     document.getElementById('coinDisplay').style.display = 'flex';
-    document.querySelectorAll('.login-blocker').forEach(b => b.style.display = 'none');
-    document.querySelectorAll('.protected-content').forEach(c => c.style.display = 'block');
+    
+    document.querySelectorAll('.login-blocker').forEach(b => b.setAttribute('style', 'display:none !important'));
+    document.querySelectorAll('.protected-content').forEach(c => c.setAttribute('style', 'display:block !important'));
 
-    document.getElementById('avatar').src = currentUser.profile_image_url;
-    document.getElementById('username').innerText = currentUser.display_name;
-    document.getElementById('previewUser').innerText = currentUser.display_name;
+    document.getElementById('avatar').src = user.profile_image_url;
+    document.getElementById('username').innerText = user.display_name;
+    document.getElementById('previewUser').innerText = user.display_name;
     
-    // BEZPIECZNE WSTAWIANIE (Naprawa błędu null)
-    const emoAuthor = document.getElementById('emoAuthor');
-    if(emoAuthor) emoAuthor.value = currentUser.display_name;
-    
-    loadUserData();
-    loadAllEmotes();
+    const authorInput = document.getElementById('emoAuthor'); // FIX: Bezpieczny dostęp
+    if(authorInput) authorInput.value = user.display_name;
 }
 
 async function verifyToken(token) {
@@ -335,25 +428,24 @@ async function verifyToken(token) {
             headers: { 'Client-ID': CLIENT_ID, 'Authorization': `Bearer ${token}` } 
         });
         
-        if(!res.ok) {
-            if(res.status === 401) {
-                localStorage.removeItem('twitch_token');
-                showLogin();
-                return;
-            }
+        if (!res.ok) {
+            if (res.status === 401) throw new Error("Token wygasł");
             throw new Error(`API Error ${res.status}`);
         }
         
         const data = await res.json();
-        if(data.data && data.data.length > 0) {
-            currentUser = data.data[0];
-            showApp();
+        if (data.data && data.data.length > 0) {
+            AppState.user = data.data[0];
+            AppState.token = token;
+            showDashboard(AppState.user);
+            fetchCloudData();
         } else {
-            showLogin();
+            throw new Error("No User Data");
         }
-    } catch(e) {
-        console.error(e);
-        showLogin();
+    } catch (e) {
+        console.error("Auth Error:", e);
+        localStorage.removeItem('twitch_token');
+        showLoginScreen();
     }
 }
 
@@ -366,14 +458,17 @@ function logout() {
     window.location.reload();
 }
 
-async function loadUserData() {
+// === DATA LOGIC ===
+async function fetchCloudData() {
+    if(!AppState.user) return;
     try {
-        const res = await fetch(`${DB_URL}/premium/${currentUser.login.toLowerCase()}.json`);
+        const res = await fetch(`${DB_URL}/premium/${AppState.user.login.toLowerCase()}.json`);
         const data = res.ok ? (await res.json() || {}) : {};
-        currentLoadout = data; 
+        AppState.loadout = data;
         updatePreview(data);
         renderShop(); 
-    } catch(e) { currentLoadout = {}; renderShop(); }
+    } catch(e) { console.warn("Cloud error", e); }
+    loadAllEmotes();
 }
 
 function updatePreview(data) {
@@ -384,12 +479,13 @@ function updatePreview(data) {
 
     userEl.style = ""; userEl.className = "chat-username"; msgEl.style = ""; badgeContainer.innerHTML = "";
 
+    if(!data) return;
+
     if(data.paint) {
-        const p = data.paint;
-        if(p.type === 'color') userEl.style.color = p.value;
-        if(p.type === 'gradient') { userEl.style.backgroundImage = p.value; userEl.style.webkitBackgroundClip = "text"; userEl.style.webkitTextFillColor = "transparent"; userEl.style.animation = "gatoShine 3s linear infinite"; userEl.style.fontWeight = "900"; }
-        if(p.type === 'glow') { userEl.style.color = p.value; userEl.style.textShadow = `0 0 10px ${p.shadow}`; }
-        if(p.type === 'animated-rainbow') userEl.classList.add('gato-anim-rainbow');
+        if(data.paint.type === 'color') userEl.style.color = data.paint.value;
+        if(data.paint.type === 'gradient') { userEl.style.backgroundImage = data.paint.value; userEl.style.webkitBackgroundClip = "text"; userEl.style.webkitTextFillColor = "transparent"; userEl.style.fontWeight = "900"; }
+        if(data.paint.type === 'glow') { userEl.style.color = data.paint.value; userEl.style.textShadow = `0 0 10px ${data.paint.shadow}`; }
+        if(data.paint.type === 'animated-rainbow') userEl.classList.add('gato-anim-rainbow');
     }
     if(data.badge) badgeContainer.innerHTML = `<img src="${data.badge}" class="gato-badge-preview">`;
     if(data.ink) msgEl.style.color = data.ink;
@@ -398,132 +494,128 @@ function updatePreview(data) {
 }
 
 function renderShop() {
-    const shopContent = document.getElementById("shopContent");
-    const inv = document.getElementById("inventoryGrid");
-    if(!shopContent || !inv) return;
+    const shopDiv = document.getElementById("shopContent");
+    const invDiv = document.getElementById("inventoryGrid");
+    if(!shopDiv || !invDiv) return;
 
-    shopContent.innerHTML = ""; 
-    inv.innerHTML = "";
+    shopDiv.innerHTML = ""; 
+    invDiv.innerHTML = "";
 
-    const categories = [
-        {id:'paint', name:'Kolory (Paints)'},
-        {id:'badge', name:'Odznaki (Badges)'},
-        {id:'ink', name:'Kolor Tekstu (Ink)'},
-        {id:'font', name:'Czcionki (Fonts)'},
-        {id:'bg', name:'Tło (Backgrounds)'}
-    ];
+    const myItems = CATALOG.filter(i => AppState.owned.includes(i.name));
+    if(myItems.length === 0) invDiv.innerHTML = '<div class="empty-inv-msg">Pusto :(</div>';
+    else myItems.forEach((item, idx) => invDiv.appendChild(createCard(item, true)));
 
-    const ownedList = CATALOG.filter(i => ownedItems.includes(i.name));
-    if(ownedList.length === 0) inv.innerHTML = '<div class="empty-inv-msg">Pusty ekwipunek.</div>';
-    else ownedList.forEach((item, index) => {
-         const originalIndex = CATALOG.findIndex(c => c.name === item.name);
-         inv.appendChild(createItemCard(item, originalIndex, true));
-    });
-
+    const categories = ['paint', 'badge', 'ink', 'font', 'bg'];
     categories.forEach(cat => {
-        const items = CATALOG.filter(i => i.category === cat.id && !ownedItems.includes(i.name));
+        const items = CATALOG.filter(i => i.category === cat && !AppState.owned.includes(i.name));
         if(items.length > 0) {
             const title = document.createElement('div');
             title.className = 'shop-section-title';
-            title.innerText = cat.name;
-            shopContent.appendChild(title);
+            title.innerText = cat.toUpperCase();
+            shopDiv.appendChild(title);
+            
             const grid = document.createElement('div');
             grid.className = 'preset-grid';
-            items.forEach(item => {
-                const originalIndex = CATALOG.findIndex(c => c.name === item.name);
-                grid.appendChild(createItemCard(item, originalIndex, false));
-            });
-            shopContent.appendChild(grid);
+            items.forEach(item => grid.appendChild(createCard(item, false)));
+            shopDiv.appendChild(grid);
         }
     });
 }
 
-function createItemCard(item, index, isOwned) {
+function createCard(item, isOwned) {
     const card = document.createElement("div");
     card.className = isOwned ? "preset-card owned" : "preset-card";
     
     card.onmouseenter = () => {
-        if(item.category === 'paint') document.getElementById('previewUser').style.cssText = item.previewStyle + "; font-size:13px;";
-        else if(item.category === 'badge') document.getElementById('previewBadges').innerHTML = `<img src="${item.value}" class="gato-badge-preview">`;
-        else if(item.category === 'ink' || item.category === 'font' || item.category === 'bg') document.querySelector('.chat-msg').style.cssText = item.previewStyle;
+        if(item.category==='paint') document.getElementById('previewUser').style.cssText = item.previewStyle + "; font-size:13px;";
+        else if(item.category==='badge') document.getElementById('previewBadges').innerHTML = `<img src="${item.value}" class="gato-badge-preview">`;
+        else if(['ink','font','bg'].includes(item.category)) document.querySelector('.chat-msg').style.cssText = item.previewStyle;
     };
-    card.onmouseleave = () => { updatePreview(currentLoadout); }
+    card.onmouseleave = () => { updatePreview(AppState.loadout); };
 
-    let preview = `<div style="${item.previewStyle}">NickName</div>`;
-    if(item.category === "badge") preview = `<img src="${item.value}" class="badge-preview-img">`;
-    if(item.category === "bg") preview = `<div style="width:100%;height:20px;${item.previewStyle}"></div>`;
-    if(item.category === "font") preview = `<div style="${item.previewStyle}">Abc</div>`;
-    if(item.category === "ink") preview = `<div style="${item.previewStyle}">Tekst</div>`;
-
-    let isEquipped = false;
-    if(currentLoadout && currentLoadout[item.category]) {
-        const eq = currentLoadout[item.category];
-        if(item.category === 'paint') { if(eq.value === item.value) isEquipped = true; }
-        else { if(eq === item.value) isEquipped = true; }
-    }
-
-    let btn = "";
-    if(isOwned) {
-        if(isEquipped) btn = `<button class="btn-action btn-unequip" onclick="doUnequip('${item.category}')">ZDEJMIJ</button>`;
-        else btn = `<button class="btn-action btn-equip" onclick="doEquip(${index})">ZAŁÓŻ</button>`;
+    let btnHtml = "";
+    if (isOwned) {
+        let isEquipped = false;
+        if(AppState.loadout && AppState.loadout[item.category]) {
+            const eq = AppState.loadout[item.category];
+            const valToCheck = (item.category === 'paint') ? eq.value : eq;
+            if(valToCheck === item.value) isEquipped = true;
+        }
+        
+        if (isEquipped) {
+            btnHtml = `<button class="btn-action btn-unequip" onclick="doUnequip('${item.category}')">ZDEJMIJ</button>`;
+        } else {
+            const gIdx = CATALOG.findIndex(x => x.name === item.name);
+            btnHtml = `<button class="btn-action btn-equip" onclick="doEquip(${gIdx})">ZAŁÓŻ</button>`;
+        }
     } else {
-        btn = `<button class="btn-action btn-buy" onclick="doBuy(${index})">Kup ${item.price}</button>`;
+        const gIdx = CATALOG.findIndex(x => x.name === item.name);
+        btnHtml = `<button class="btn-action btn-buy" onclick="doBuy(${gIdx})">KUP ${item.price}</button>`;
     }
+
+    let previewHtml = `<div style="${item.previewStyle}">Aa</div>`;
+    if(item.category === 'badge') previewHtml = `<img src="${item.value}" class="badge-preview-img">`;
 
     card.innerHTML = `
         <span class="category-badge cat-${item.category}">${item.category}</span>
-        <div class="card-preview">${preview}</div>
+        <div class="card-preview">${previewHtml}</div>
         <div class="card-info">
-            <div><span class="preset-name">${item.name}</span><span class="preset-price">${isOwned ? "POSIADANE" : item.price + " 🪙"}</span></div>
-            ${btn}
+            <div><span class="preset-name">${item.name}</span></div>
+            ${btnHtml}
         </div>
     `;
     return card;
 }
 
+// === ACTIONS ===
 window.doBuy = function(idx) {
     const item = CATALOG[idx];
-    if(coins >= item.price) {
-        coins -= item.price; ownedItems.push(item.name);
-        updateCoinDisplay(); renderShop(); fireConfetti(true);
-    }
+    if (AppState.coins >= item.price) {
+        AppState.coins -= item.price;
+        AppState.owned.push(item.name);
+        localStorage.setItem('gato_coins', AppState.coins);
+        localStorage.setItem('gato_owned', JSON.stringify(AppState.owned));
+        document.getElementById('coinCount').innerText = AppState.coins;
+        renderShop();
+        fireConfetti(true);
+    } else { alert("Za mało monet!"); }
 }
 
 window.doEquip = async function(idx) {
-    if(!currentUser) return;
+    if(!AppState.user) return;
     const item = CATALOG[idx];
     let payload = item.value;
     if(item.category === 'paint') { payload = { type: item.type, value: item.value }; if(item.shadow) payload.shadow = item.shadow; }
     
-    currentLoadout[item.category] = (item.category==='paint') ? payload : item.value;
-    renderShop(); updatePreview(currentLoadout);
-    await api(`premium/${currentUser.login.toLowerCase()}/${item.category}`, "PUT", payload);
+    AppState.loadout[item.category] = (item.category==='paint') ? payload : item.value;
+    renderShop(); updatePreview(AppState.loadout);
+    await api(`premium/${AppState.user.login.toLowerCase()}/${item.category}`, "PUT", payload);
 }
 
 window.doUnequip = async function(cat) {
-    if(!currentUser) return;
-    delete currentLoadout[cat];
-    renderShop(); updatePreview(currentLoadout);
-    await api(`premium/${currentUser.login.toLowerCase()}/${cat}`, "DELETE");
+    if(!AppState.user) return;
+    delete AppState.loadout[cat];
+    renderShop(); updatePreview(AppState.loadout);
+    await api(`premium/${AppState.user.login.toLowerCase()}/${cat}`, "DELETE");
 }
 
-function updateCoinDisplay() { document.getElementById('coinCount').innerText = coins; localStorage.setItem('gato_coins', coins); localStorage.setItem('gato_owned', JSON.stringify(ownedItems)); }
+function updateCoinDisplay() { document.getElementById('coinCount').innerText = AppState.coins; localStorage.setItem('gato_coins', AppState.coins); localStorage.setItem('gato_owned', JSON.stringify(AppState.owned)); }
 window.switchTab = function(id) { document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); document.querySelectorAll('nav button').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); if(event.target.tagName==='BUTTON') event.target.classList.add('active'); }
 window.switchPaintSubTab = function(tab) { document.getElementById('viewInventory').style.display = tab==='inv'?'block':'none'; document.getElementById('viewShop').style.display = tab==='shop'?'block':'none'; document.getElementById('tabInv').className = tab==='inv'?'active':''; document.getElementById('tabShop').className = tab==='shop'?'active':''; }
 window.togglePreviewTheme = function() { document.getElementById('chatPreviewBox').classList.toggle('light'); }
 window.fireDownloadConfetti = function() { if(confettiCooldown) return; confettiCooldown = true; setTimeout(()=>confettiCooldown=false, 10000); const c=['#38bdf8','#facc15','#9146ff']; confetti({particleCount:100,spread:70,origin:{x:0,y:1},colors:c}); confetti({particleCount:100,spread:70,origin:{x:1,y:1},colors:c}); }
 function fireConfetti(shopMode){ if(shopMode) confetti({particleCount:100,spread:70,origin:{x:0.5,y:0.5},colors:['#facc15','#ffffff']}); }
 
-// EMOTES
-window.openEmoteForm = function() { if(!currentUser) return; document.getElementById('emoChannel').value = currentUser.login; renderMyEmotes(); document.getElementById('emotesGalleryView').style.display='none'; document.getElementById('emotesFormView').style.display='block'; }
+// === EMOTES ===
+window.openEmoteForm = function() { if(!AppState.user) return; document.getElementById('emoChannel').value = AppState.user.login; renderMyEmotes(); document.getElementById('emotesGalleryView').style.display='none'; document.getElementById('emotesFormView').style.display='block'; }
 window.closeEmoteForm = function() { document.getElementById('emotesFormView').style.display='none'; document.getElementById('emotesGalleryView').style.display='block'; loadAllEmotes(); }
-async function loadAllEmotes() { if(!currentUser) return; const data = await api('emotes') || {}; document.getElementById('emotesGrid').innerHTML = Object.keys(data).reverse().map(k=>{ const e = data[k]; let btn = (e.author === currentUser.display_name || e.channel === currentUser.login) ? `<div class="action-overlay del-btn" onclick="delEmote('${k}')">✖</div>` : `<div class="action-overlay add-btn" onclick="cloneEmote('${k}','${e.url}')">✚</div>`; return `<div class="emote-card">${btn}<img src="${e.url}" class="emote-img"><div class="emote-info"><div class="emote-name">${k}</div><div class="channel-tag">#${e.channel}</div></div></div>`; }).join(''); }
-function renderMyEmotes() { /* Not used in this simplified flow but kept for structure */ }
-window.addEmote = async function() { const name = document.getElementById('emoName').value.trim(); const url = document.getElementById('emoUrl').value.trim(); if(!name || !url) return alert("Brakuje danych"); await api(`emotes/${name}`, "PUT", { url: url, author: currentUser.display_name, scope: 'channel', channel: currentUser.login }); closeEmoteForm(); }
+async function loadAllEmotes() { if(!AppState.user) return; const data = await api('emotes') || {}; AppState.emotes = data; document.getElementById('emotesGrid').innerHTML = Object.keys(data).reverse().map(k=>{ const e = data[k]; let btn = (e.author === AppState.user.display_name || e.channel === AppState.user.login) ? `<div class="action-overlay del-btn" onclick="delEmote('${k}')">✖</div>` : `<div class="action-overlay add-btn" onclick="cloneEmote('${k}','${e.url}')">✚</div>`; return `<div class="emote-card">${btn}<img src="${e.url}" class="emote-img"><div class="emote-name">${k}</div><div class="channel-tag">#${e.channel}</div></div>`; }).join(''); }
+function renderMyEmotes() { const keys = Object.keys(AppState.emotes).filter(k => AppState.emotes[k].channel === AppState.user.login).reverse(); document.getElementById('myEmotesGrid').innerHTML = keys.length ? keys.map(k=>`<div class="emote-card"><img src="${AppState.emotes[k].url}" class="emote-img"><div class="emote-name">${k}</div><div class="action-overlay del-btn" onclick="delEmote('${k}', true)">✖</div></div>`).join('') : '<p style="color:#666; font-size:12px;">Brak emotek.</p>'; }
+window.addEmote = async function() { const name = document.getElementById('emoName').value.trim(); const url = document.getElementById('emoUrl').value.trim(); if(!name || !url) return alert("Brakuje danych"); await api(`emotes/${name}`, "PUT", { url: url, author: AppState.user.display_name, scope: 'channel', channel: AppState.user.login }); closeEmoteForm(); }
 window.cloneEmote = function(n,u) { openEmoteForm(); document.getElementById('emoName').value=n; document.getElementById('emoUrl').value=u; }
 window.delEmote = async function(p) { if(confirm("Usunąć?")) { await api(`emotes/${p}`, "DELETE"); loadAllEmotes(); } }
 window.previewFile = function() { const f = document.getElementById('emoFile').files[0]; if(f) { const r=new FileReader(); r.onload=e=>{document.getElementById('filePreview').src=e.target.result; document.getElementById('filePreview').style.display='block'; document.getElementById('emoUrl').value = e.target.result;}; r.readAsDataURL(f); } }
-async function api(path, method="GET", body=null) { const opts={method}; if(body) opts.body=JSON.stringify(body); try{const r=await fetch(`${DB_URL}/${path}.json`,opts);return r.json()}catch(e){} }
+async function api(path, method="GET", body=null) { const opts = { method }; if (body) opts.body = JSON.stringify(body); try { const r = await fetch(`${DB_URL}/${path}.json`, opts); return r.json(); } catch(e) { return null; } }
 </script>
 </body>
 </html>
