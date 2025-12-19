@@ -62,10 +62,7 @@
     .login-blocker h2 { font-size: 28px; margin-bottom: 10px; color: white; }
     .protected-content { display: none; }
 
-    /* ROLE BADGE */
-    .role-badge-container {
-        position: fixed; bottom: 20px; left: 20px; display: none; align-items: center; gap: 8px; background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border); padding: 8px 16px; border-radius: 50px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); z-index: 1000;
-    }
+    .role-badge-container { position: fixed; bottom: 20px; left: 20px; display: none; align-items: center; gap: 8px; background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border); padding: 8px 16px; border-radius: 50px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); z-index: 1000; }
     .role-user { border-color: var(--success); color: var(--success); }
     .role-admin { border-color: var(--danger); color: var(--danger); }
 
@@ -80,7 +77,7 @@
     .btn-daily:disabled { background: #334155; color: #94a3b8; cursor: not-allowed; animation: none; box-shadow: none; }
     @keyframes pulseGold { 0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); } 100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); } }
 
-    /* --- EMOTES NEW STYLES --- */
+    /* --- EMOTES --- */
     .emote-sub-nav { display:flex; gap:10px; margin-bottom:20px; }
     .emote-sub-nav button { background: var(--panel); border: 1px solid var(--border); color: var(--text-muted); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; transition: 0.2s; }
     .emote-sub-nav button:hover { border-color: var(--accent); color: white; }
@@ -92,28 +89,37 @@
     .emote-card img { height: 48px; width: auto; max-width: 100%; object-fit: contain; margin-bottom: 10px; display: block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
     .emote-card .name { font-weight: 700; font-size: 12px; color: white; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; }
     .emote-card .author { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+    .action-overlay { position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; opacity: 0; transition: 0.2s; font-size: 11px; color: white; z-index: 2; }
+    .emote-card:hover .action-overlay { opacity: 1; }
+    .del-btn { background: var(--danger); box-shadow: 0 2px 5px rgba(239,68,68,0.4); }
 
-    /* EMOTE DETAIL MODAL */
+    /* MODAL */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); z-index: 2000; display: none; align-items: center; justify-content: center; animation: fadeIn 0.2s; }
     .modal-content { background: #1e293b; border: 1px solid var(--border); width: 90%; max-width: 450px; border-radius: 20px; padding: 0; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); overflow: hidden; animation: slideUpModal 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     @keyframes slideUpModal { from { transform: translateY(20px) scale(0.9); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
-    
     .modal-header { background: #0f172a; padding: 40px 20px; text-align: center; border-bottom: 1px solid var(--border); position: relative; }
     .modal-close { position: absolute; top: 15px; right: 20px; background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; transition: 0.2s; }
     .modal-close:hover { color: white; }
     .modal-img { height: 100px; width: auto; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); transition: 0.3s; }
     .modal-img:hover { transform: scale(1.1); filter: drop-shadow(0 0 30px var(--accent-glow)); }
-    
     .modal-body { padding: 30px; text-align: center; }
     .modal-code { font-size: 24px; font-weight: 900; color: white; margin-bottom: 5px; }
     .modal-meta { color: var(--text-muted); font-size: 13px; margin-bottom: 25px; display: flex; justify-content: center; gap: 15px; }
-    .modal-meta span { display: flex; align-items: center; gap: 5px; }
-    
     .btn-modal-action { width: 100%; padding: 15px; border-radius: 12px; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border: none; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
     .btn-assign { background: var(--success); color: white; box-shadow: 0 5px 20px rgba(34, 197, 94, 0.3); }
     .btn-assign:hover { background: #16a34a; transform: translateY(-2px); }
     .btn-delete { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); margin-top: 10px; }
     .btn-delete:hover { background: var(--danger); color: white; }
+
+    /* MANAGED VIEW (NEW) */
+    .manage-section { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 25px; margin-bottom: 25px; }
+    .manage-header { font-size: 18px; font-weight: 700; color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+    .manage-header i { color: var(--accent); }
+    
+    .mods-list-container { display: flex; flex-direction: column; gap: 8px; }
+    .mod-item { display: flex; justify-content: space-between; align-items: center; background: #131c2e; padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 14px; font-weight: 600; }
+    .btn-remove-mod { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 700; transition: 0.2s; }
+    .btn-remove-mod:hover { background: var(--danger); color: white; }
 
     /* Other Styles */
     .emote-form-container { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
@@ -200,6 +206,8 @@
     button.btn-secondary { background: transparent; color: var(--text-muted); padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border); font-weight: 700; cursor: pointer; font-size: 12px; transition: 0.2s; }
     button.btn-secondary:hover { color: white; border-color: white; }
     button.btn-primary.small { padding: 8px 16px; font-size: 11px; }
+    button.btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 11px; transition: 0.2s; }
+    button.btn-outline:hover { background: rgba(56, 189, 248, 0.1); }
 </style>
 </head>
 <body>
@@ -315,7 +323,10 @@
                             <button id="tabUsers" onclick="setEmoteTab('users')">USERS</button>
                         </div>
                     </div>
-                    <button class="btn-primary small" style="width:auto;" onclick="openEmoteForm()">+ DODAJ SWOJĄ</button>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-outline" onclick="openManageView()"><i class="fas fa-user-cog"></i> MOJE EMOTKI</button>
+                        <button class="btn-primary small" style="width:auto;" onclick="openEmoteForm()">+ DODAJ SWOJĄ</button>
+                    </div>
                 </div>
 
                 <!-- Sort Nav (Visible only for Users tab) -->
@@ -369,6 +380,32 @@
                     <button class="btn-primary" style="margin-top:20px" onclick="addEmote()">💾 Zapisz Emotkę</button>
                 </div>
             </div>
+
+            <!-- MANAGE VIEW (MY EMOTES & EDITORS) -->
+            <div id="emotesManageView" style="display:none;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h2>Zarządzanie Kanałem</h2>
+                    <button class="btn-secondary" onclick="closeManageView()">Powrót</button>
+                </div>
+
+                <!-- Editors Section -->
+                <div class="manage-section">
+                    <div class="manage-header"><i class="fas fa-users-cog"></i> Editorzy Emotek</div>
+                    <p style="color:#94a3b8; font-size:12px; margin-bottom:15px;">Osoby z tej listy mogą dodawać emotki do Twojego kanału.</p>
+                    <div style="display:flex; gap:10px; margin-bottom:15px;">
+                        <input id="newModNick" placeholder="Nick moderatora (np. xqc)" style="flex:1;">
+                        <button class="btn-primary" style="width:auto;" onclick="addModerator()">Dodaj</button>
+                    </div>
+                    <div id="modsList" class="mods-list-container"></div>
+                </div>
+
+                <!-- My Emotes List -->
+                <div class="manage-section">
+                    <div class="manage-header"><i class="fas fa-images"></i> Twoje Emotki</div>
+                    <div id="myManageEmotesGrid" class="emotes-grid">Ładowanie...</div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -848,7 +885,7 @@ window.removeModerator = async function(nick) {
     fetchMyMods();
 }
 
-// === NEW EMOTES LOGIC (TABS, SORTING, MODAL) ===
+// === NEW EMOTES LOGIC (TABS, SORTING, MODAL, MANAGE) ===
 window.setEmoteTab = function(tab) {
     AppState.emoteTab = tab;
     document.getElementById('tabGlobal').classList.toggle('active', tab==='global');
@@ -864,7 +901,6 @@ window.setEmoteSort = function(sort) {
     renderEmotesGallery();
 }
 
-// === LOAD ALL EMOTES & FILTER ===
 async function loadAllEmotes() { 
     if(!AppState.user) return; 
     const data = await api('emotes') || {}; 
@@ -881,17 +917,9 @@ function renderEmotesGallery() {
     if(AppState.emoteTab === 'global') {
         filteredKeys = keys.filter(k => all[k].scope === 'global');
     } else {
-        // Users emotes
         filteredKeys = keys.filter(k => all[k].scope !== 'global');
-        
-        // Sorting logic
-        if(AppState.emoteSort === 'new') {
-            filteredKeys.reverse(); // Assuming firebase keys are roughly chronological or inserted in order
-        } else {
-            // Trending - simulation: random or alphabet shuffle for demo
-            // In real app, check usage count
-            filteredKeys.sort((a,b) => 0.5 - Math.random());
-        }
+        if(AppState.emoteSort === 'new') filteredKeys.reverse(); 
+        else filteredKeys.sort((a,b) => 0.5 - Math.random());
     }
 
     if(filteredKeys.length === 0) {
@@ -911,6 +939,47 @@ function renderEmotesGallery() {
     }).join('');
 }
 
+// === MY MANAGE VIEW ===
+window.openManageView = function() {
+    document.getElementById('emotesGalleryView').style.display='none';
+    document.getElementById('emotesFormView').style.display='none';
+    document.getElementById('emotesManageView').style.display='block';
+    
+    // Render My Emotes
+    const all = AppState.emotes;
+    const myKeys = Object.keys(all).filter(k => all[k].channel === AppState.user.login || all[k].author === AppState.user.display_name).reverse();
+    const grid = document.getElementById('myManageEmotesGrid');
+    
+    if(myKeys.length === 0) {
+        grid.innerHTML = '<p style="color:#666; font-size:12px;">Nie masz jeszcze żadnych emotek.</p>';
+    } else {
+        grid.innerHTML = myKeys.map(k => {
+            const e = all[k];
+            return `
+                <div class="emote-card">
+                    <div class="action-overlay del-btn" onclick="delEmote('${k}')">✖</div>
+                    <img src="${e.url}" loading="lazy">
+                    <div class="name">${k}</div>
+                </div>
+            `;
+        }).join('');
+    }
+}
+
+window.closeManageView = function() {
+    document.getElementById('emotesManageView').style.display='none';
+    document.getElementById('emotesGalleryView').style.display='block';
+    loadAllEmotes();
+}
+
+window.delEmote = async function(p) { 
+    if(confirm("Usunąć emotkę " + p + "?")) { 
+        await api(`emotes/${p}`, "DELETE"); 
+        await loadAllEmotes(); // refresh data
+        openManageView(); // re-render view
+    } 
+}
+
 // === EMOTE MODAL ===
 window.openEmoteDetail = function(key) {
     const e = AppState.emotes[key];
@@ -924,7 +993,6 @@ window.openEmoteDetail = function(key) {
     document.getElementById('detailAuthor').innerHTML = `<i class="fas fa-user"></i> ${e.author || '?'}`;
     document.getElementById('detailScope').innerHTML = `<i class="fas fa-globe"></i> ${e.scope === 'global' ? 'Global' : 'Channel'}`;
     
-    // Show admin controls if admin
     const isAdmin = AppState.role === 'ADMIN';
     const isOwner = e.author === AppState.user.display_name;
     document.getElementById('adminControls').style.display = (isAdmin || isOwner) ? 'block' : 'none';
@@ -938,23 +1006,16 @@ window.closeEmoteDetail = function() {
 
 window.addToMyChannel = async function() {
     if(!AppState.user || !AppState.currentEmoteData) return;
-    
-    // Clone emote to current user's channel
     const key = AppState.currentEmoteKey;
     const data = AppState.currentEmoteData;
-    
-    // Check if user already has this emote code defined?
-    // Simplified: Just overwrite or add
     await api(`emotes/${key}`, "PUT", { 
         url: data.url, 
-        author: data.author, // Keep original author credit
+        author: data.author, 
         scope: 'channel', 
         channel: AppState.user.login 
     }); 
-    
     alert(`Emotka ${key} przypisana do Twojego kanału!`);
     closeEmoteDetail();
-    // Refresh if we are in a view that shows my emotes (not implemented in this view, but good practice)
 }
 
 window.deleteCurrentEmote = async function() {
@@ -1000,7 +1061,6 @@ window.addEmote = async function() {
 
     if(!name || !url || !targetChannel) return alert("Brakuje danych"); 
     
-    // Logic for Global
     let scope = 'channel';
     if(AppState.role === 'ADMIN' && isGlobal) {
         scope = 'global';
