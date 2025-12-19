@@ -25,11 +25,6 @@
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top, #172554, var(--bg)); color: var(--text); min-height: 100vh; padding-bottom: 50px; }
     
-    /* ANIMACJE */
-    @keyframes gatoRainbow { 0%{color:#f00} 20%{color:#ff0} 40%{color:#0f0} 60%{color:#0ff} 80%{color:#00f} 100%{color:#f0f} }
-    .gato-anim-rainbow { animation: gatoRainbow 4s linear infinite; font-weight: 800; }
-    @keyframes gatoShine{0%{background-position:0% 50%}100%{background-position:200% 50%}}
-    
     /* HEADER */
     header { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.3); }
     .header-left { display: flex; align-items: center; gap: 25px; }
@@ -190,6 +185,7 @@
 
 <div class="container">
 
+    <!-- TAB: SKLEP & EKWIPUNEK -->
     <div id="paints" class="panel active">
         <div class="login-blocker" id="paintsBlocker">
             <h2>🔒 Wymagane Logowanie</h2>
@@ -223,6 +219,7 @@
         </div>
     </div>
 
+    <!-- TAB: EMOTES -->
     <div id="emotes" class="panel">
         <div class="login-blocker" id="emotesBlocker">
             <h2>🔒 Wymagane Logowanie</h2>
@@ -279,6 +276,7 @@
         </div>
     </div>
 
+    <!-- TAB INFO -->
     <div id="info" class="panel">
         <div class="hero-card">
             <h1>O Wtyczce</h1>
@@ -287,6 +285,7 @@
         </div>
     </div>
 
+    <!-- TAB: DOWNLOAD -->
     <div id="download" class="panel">
         <div class="hero-card download-style">
             <h1>Pobierz Wtyczkę</h1>
@@ -305,6 +304,7 @@ const REDIRECT_URI = window.location.origin + window.location.pathname;
 const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
 // ================================================
 
+// ZMIENNE GLOBALNE
 let currentUser = null; 
 let coins = 10; 
 let ownedItems = ["Classic Green", "Default Font"]; 
@@ -331,8 +331,28 @@ const CATALOG = [
     { name: "Toxic Mist", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(0, 255, 0, 0.2), transparent)", previewStyle: "background:rgba(0,255,0,0.2)" }
 ];
 
-window.onload = async () => {
-    // 1. Sprawdź, czy wracamy z logowania Twitch
+// INIT APLIKACJI
+window.addEventListener('DOMContentLoaded', async () => {
+    // 1. Bezpieczne ładowanie ownedItems (żeby nie było pustego sklepu)
+    try {
+        const stored = JSON.parse(localStorage.getItem('gato_owned'));
+        if (Array.isArray(stored) && stored.length > 0) {
+            ownedItems = stored;
+        } else {
+            ownedItems = ["Classic Green", "Default Font"];
+        }
+    } catch(e) {
+        ownedItems = ["Classic Green", "Default Font"];
+    }
+
+    if(localStorage.getItem('gato_coins')) coins = parseInt(localStorage.getItem('gato_coins'));
+    updateCoinDisplay();
+
+    // 2. Renderuj sklep NATYCHMIAST (nawet jak user nie jest zalogowany)
+    // To zapobiega pustym divom
+    try { renderShop(); } catch(e) { console.error("Critical Shop Error:", e); }
+
+    // 3. Sprawdź logowanie
     if (document.location.hash.includes('access_token')) {
         const params = new URLSearchParams(document.location.hash.substring(1));
         const token = params.get('access_token');
@@ -340,29 +360,16 @@ window.onload = async () => {
             localStorage.setItem('twitch_token', token);
             window.history.replaceState({}, document.title, window.location.pathname);
             await attemptLogin(token);
-            return;
         }
-    } 
-    
-    // 2. Sprawdź, czy już jesteśmy zalogowani
-    const stored = localStorage.getItem('twitch_token');
-    if(stored) {
-        await attemptLogin(stored);
     } else {
-        setLoggedOutState();
+        const storedToken = localStorage.getItem('twitch_token');
+        if(storedToken) {
+            await attemptLogin(storedToken);
+        } else {
+            setLoggedOutState();
+        }
     }
-
-    // Ładowanie stanu lokalnego (działa niezależnie od logowania)
-    if(localStorage.getItem('gato_coins')) coins = parseInt(localStorage.getItem('gato_coins'));
-    const storedOwned = localStorage.getItem('gato_owned');
-    if(storedOwned) {
-        try {
-            const parsed = JSON.parse(storedOwned);
-            if(Array.isArray(parsed)) ownedItems = parsed;
-        } catch(e) {}
-    }
-    updateCoinDisplay();
-};
+});
 
 function setLoggedOutState() {
     document.getElementById('loginBtnContainer').style.display = 'block';
@@ -370,6 +377,18 @@ function setLoggedOutState() {
     document.getElementById('coinDisplay').style.display = 'none';
     document.querySelectorAll('.login-blocker').forEach(b => b.style.display = 'flex');
     document.querySelectorAll('.protected-content').forEach(c => c.style.display = 'none');
+}
+
+// Globalnie dostępna funkcja wylogowania
+window.logout = function() {
+    console.log("Wylogowywanie...");
+    localStorage.removeItem('twitch_token');
+    window.location.reload();
+}
+
+function loginWithTwitch() {
+    const url = `https://id.twitch.tv/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=user:read:email`;
+    window.location.href = url;
 }
 
 async function attemptLogin(token) {
@@ -383,31 +402,27 @@ async function attemptLogin(token) {
         
         if(!res.ok) {
             if(res.status === 401) {
-                // Token wygasł - tylko wtedy wyloguj
                 localStorage.removeItem('twitch_token');
                 setLoggedOutState();
                 return;
             }
-            throw new Error(`Błąd Twitch API: ${res.status}`);
+            throw new Error(`API Error: ${res.status}`);
         }
         
         const data = await res.json();
-        if(!data.data || !data.data.length) throw new Error("Brak danych użytkownika");
+        if(!data.data || !data.data.length) throw new Error("No Data");
         
         currentUser = data.data[0];
         enableApp(); 
         
     } catch(e) {
         console.error("Login Error:", e);
-        if(!currentUser) {
-            alert("Nie udało się zalogować: " + e.message);
-            setLoggedOutState();
-        }
+        setLoggedOutState();
     }
 }
 
 function enableApp() {
-    // 1. Odblokuj UI
+    // Odblokuj UI
     document.getElementById('loginBtnContainer').style.display = 'none';
     document.getElementById('userProfile').style.display = 'flex';
     document.getElementById('coinDisplay').style.display = 'flex';
@@ -419,12 +434,7 @@ function enableApp() {
     document.getElementById('previewUser').innerText = currentUser.display_name;
     document.getElementById('emoAuthor').value = currentUser.display_name;
     
-    // 2. Wyrenderuj sklep OD RAZU (bazując na lokalnych danych)
-    try {
-        renderShop(); 
-    } catch(e) { console.error("Render Shop Error:", e); }
-
-    // 3. Pobierz dane z bazy w tle
+    // Pobierz dane z bazy w tle
     loadUserData();
     loadAllEmotes();
 }
@@ -432,15 +442,13 @@ function enableApp() {
 async function loadUserData() {
     try {
         const res = await fetch(`${DB_URL}/premium/${currentUser.login.toLowerCase()}.json`);
-        // Jeśli fetch się uda, ale user nie ma danych, zwróć pusty obiekt {}
         const data = res.ok ? (await res.json() || {}) : {};
         currentLoadout = data; 
         
-        // Zaktualizuj widok po pobraniu danych
         updatePreview(data);
-        renderShop();
+        renderShop(); // Odśwież sklep z nowymi danymi "założone"
     } catch(e) {
-        console.warn("Błąd pobierania danych użytkownika (Firebase offline?):", e);
+        console.warn("Błąd bazy:", e);
         currentLoadout = {};
         renderShop();
     }
@@ -553,14 +561,11 @@ function createItemCard(item, index, isOwned) {
     if(item.category === "ink") preview = `<div style="${item.previewStyle}">Tekst</div>`;
 
     let isEquipped = false;
-    // Sprawdzanie czy przedmiot jest w currentLoadout
     if(currentLoadout && currentLoadout[item.category]) {
         const eq = currentLoadout[item.category];
         if(item.category === 'paint') {
-            // Paints to obiekty {type, value}, trzeba sprawdzić value
             if(eq.value === item.value) isEquipped = true;
         } else {
-            // Reszta to proste wartości (url, string)
             if(eq === item.value) isEquipped = true;
         }
     }
@@ -592,7 +597,8 @@ function createItemCard(item, index, isOwned) {
     return card;
 }
 
-function buyItem(idx) {
+// Upewniamy się, że funkcje są dostępne w oknie
+window.buyItem = function(idx) {
     const item = CATALOG[idx];
     if(coins >= item.price) {
         coins -= item.price; ownedItems.push(item.name);
@@ -600,7 +606,7 @@ function buyItem(idx) {
     }
 }
 
-async function equipItem(idx) {
+window.equipItem = async function(idx) {
     if(!currentUser) return;
     const item = CATALOG[idx];
     const user = currentUser.login.toLowerCase(); 
@@ -611,37 +617,34 @@ async function equipItem(idx) {
         if(item.shadow) payload.shadow = item.shadow;
     }
 
-    // Aktualizacja lokalna (optymistyczna)
-    if(!currentLoadout) currentLoadout = {};
+    // Update local immediately
+    if (!currentLoadout) currentLoadout = {};
     currentLoadout[item.category] = payload;
     updatePreview(currentLoadout);
     renderShop();
 
-    // Zapis do bazy
     await api(`premium/${user}/${item.category}`, "PUT", payload);
     loadUserData(); 
 }
 
-async function unequipItem(category) {
+window.unequipItem = async function(category) {
     if(!currentUser) return;
     const user = currentUser.login.toLowerCase();
     
-    // Usuń lokalnie
     if(currentLoadout) delete currentLoadout[category];
     updatePreview(currentLoadout);
     renderShop();
 
-    // Usuń z bazy
     await api(`premium/${user}/${category}`, "DELETE");
     loadUserData(); 
 }
 
 function updateCoinDisplay() { document.getElementById('coinCount').innerText = coins; localStorage.setItem('gato_coins', coins); localStorage.setItem('gato_owned', JSON.stringify(ownedItems)); }
-function switchTab(id) { document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); document.querySelectorAll('nav button').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); if(event.target.tagName==='BUTTON') event.target.classList.add('active'); }
-function switchPaintSubTab(tab) { document.getElementById('viewInventory').style.display = tab==='inv'?'block':'none'; document.getElementById('viewShop').style.display = tab==='shop'?'block':'none'; document.getElementById('tabInv').className = tab==='inv'?'active':''; document.getElementById('tabShop').className = tab==='shop'?'active':''; }
-function togglePreviewTheme() { document.getElementById('chatPreviewBox').classList.toggle('light'); }
+window.switchTab = function(id) { document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); document.querySelectorAll('nav button').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); if(event.target.tagName==='BUTTON') event.target.classList.add('active'); }
+window.switchPaintSubTab = function(tab) { document.getElementById('viewInventory').style.display = tab==='inv'?'block':'none'; document.getElementById('viewShop').style.display = tab==='shop'?'block':'none'; document.getElementById('tabInv').className = tab==='inv'?'active':''; document.getElementById('tabShop').className = tab==='shop'?'active':''; }
+window.togglePreviewTheme = function() { document.getElementById('chatPreviewBox').classList.toggle('light'); }
 
-function fireDownloadConfetti() {
+window.fireDownloadConfetti = function() {
     if(confettiCooldown) return;
     confettiCooldown = true;
     setTimeout(()=>confettiCooldown=false, 10000);
@@ -651,14 +654,9 @@ function fireDownloadConfetti() {
 }
 function fireConfetti(shopMode){ if(shopMode) confetti({particleCount:100, spread:70, origin: {x:0.5, y:0.5}, colors: ['#facc15', '#ffffff']}); }
 
-function loginWithTwitch() {
-    const url = `https://id.twitch.tv/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=user:read:email`;
-    window.location.href = url;
-}
-
 // EMOTES
-function openEmoteForm() { if(!currentUser) return; document.getElementById('emoChannel').value = currentUser.login; renderMyEmotes(); document.getElementById('emotesGalleryView').style.display='none'; document.getElementById('emotesFormView').style.display='block'; }
-function closeEmoteForm() { document.getElementById('emotesFormView').style.display='none'; document.getElementById('emotesGalleryView').style.display='block'; loadAllEmotes(); }
+window.openEmoteForm = function() { if(!currentUser) return; document.getElementById('emoChannel').value = currentUser.login; renderMyEmotes(); document.getElementById('emotesGalleryView').style.display='none'; document.getElementById('emotesFormView').style.display='block'; }
+window.closeEmoteForm = function() { document.getElementById('emotesFormView').style.display='none'; document.getElementById('emotesGalleryView').style.display='block'; loadAllEmotes(); }
 
 async function loadAllEmotes() {
     if(currentUser) {
@@ -676,17 +674,17 @@ function renderMyEmotes() {
     const keys = Object.keys(allEmotesData).filter(k=>allEmotesData[k].channel===currentUser.login).reverse();
     document.getElementById('myEmotesGrid').innerHTML = keys.length ? keys.map(k=>`<div class="emote-card"><img src="${allEmotesData[k].url}" class="emote-img"><div class="emote-name">${k}</div><div class="action-overlay del-btn" onclick="del('emotes/${k}', true)">✖</div></div>`).join('') : '<p style="color:#666; font-size:12px;">Brak emotek.</p>';
 }
-async function addEmote() {
+window.addEmote = async function() {
     const name = document.getElementById('emoName').value.trim(); 
     const url = document.getElementById('emoUrl').value.trim();
     if(!name || !url) return alert("Brakuje nazwy lub URL");
     await api(`emotes/${name}`, "PUT", { url: url, author: currentUser.display_name, scope: 'channel', channel: currentUser.login });
     closeEmoteForm();
 }
-function cloneEmote(n,u) { openEmoteForm(); document.getElementById('emoName').value=n; document.getElementById('emoUrl').value=u; }
-async function del(p, r=false) { if(confirm("Usunąć?")) { await api(p, "DELETE"); loadAllEmotes(); if(r) setTimeout(()=>{loadAllEmotes(); openEmoteForm()}, 500); } }
+window.cloneEmote = function(n,u) { openEmoteForm(); document.getElementById('emoName').value=n; document.getElementById('emoUrl').value=u; }
+window.del = async function(p, r=false) { if(confirm("Usunąć?")) { await api(p, "DELETE"); loadAllEmotes(); if(r) setTimeout(()=>{loadAllEmotes(); openEmoteForm()}, 500); } }
 async function api(path, method="GET", body=null) { const opts={method}; if(body) opts.body=JSON.stringify(body); try{const r=await fetch(`${DB_URL}/${path}.json`,opts);return r.json()}catch(e){} }
-function previewFile() { const f = document.getElementById('emoFile').files[0]; if(f) { document.getElementById('emoUrl').disabled=true; const r=new FileReader(); r.onload=e=>{document.getElementById('filePreview').src=e.target.result; document.getElementById('filePreview').style.display='block'; document.getElementById('emoUrl').value = e.target.result;}; r.readAsDataURL(f); } }
+window.previewFile = function() { const f = document.getElementById('emoFile').files[0]; if(f) { document.getElementById('emoUrl').disabled=true; const r=new FileReader(); r.onload=e=>{document.getElementById('filePreview').src=e.target.result; document.getElementById('filePreview').style.display='block'; document.getElementById('emoUrl').value = e.target.result;}; r.readAsDataURL(f); } }
 </script>
 </body>
 </html>
