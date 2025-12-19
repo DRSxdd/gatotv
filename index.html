@@ -26,7 +26,7 @@
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top, #172554, var(--bg)); color: var(--text); min-height: 100vh; padding-bottom: 50px; }
     
-    /* STYLE ZGODNE Z WTYCZKĄ (DO PODGLĄDU) */
+    /* STYLE ZGODNE Z WTYCZKĄ */
     @keyframes gatoRainbow { 0%{color:#f00} 20%{color:#ff0} 40%{color:#0f0} 60%{color:#0ff} 80%{color:#00f} 100%{color:#f0f} }
     .gato-anim-rainbow { animation: gatoRainbow 4s linear infinite; font-weight: 800; }
     @keyframes gatoShine{0%{background-position:0% 50%}100%{background-position:200% 50%}}
@@ -64,8 +64,24 @@
     .login-blocker h2 { font-size: 28px; margin-bottom: 10px; color: white; }
     .protected-content { display: none; }
 
-    /* CHAT PREVIEW */
-    .chat-preview-container { background: #18181b; border: 1px solid #333; border-radius: 12px; padding: 15px 20px; margin-bottom: 30px; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    /* CHAT PREVIEW - POPRAWKA: Sticky */
+    .chat-preview-container { 
+        background: #18181b; 
+        border: 1px solid #333; 
+        border-radius: 12px; 
+        padding: 15px 20px; 
+        margin-bottom: 30px; 
+        font-family: 'Inter', sans-serif; 
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between; 
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        /* Sticky Logic */
+        position: sticky;
+        top: 80px; 
+        z-index: 90;
+        backdrop-filter: blur(5px);
+    }
     .chat-preview-container.light { background: #ffffff; border-color: #e5e5e5; }
     .chat-preview-container.light .chat-msg, .chat-preview-container.light .chat-colon, .chat-preview-container.light .chat-time { color: #0e0e10; }
     .chat-line { display: flex; align-items: center; font-size: 13px; }
@@ -134,7 +150,7 @@
     .download-style { border-color: rgba(250, 204, 21, 0.3); box-shadow: 0 0 50px rgba(250, 204, 21, 0.05); }
     .btn-download-big { background: var(--yellow); color: #000; font-size: 18px; font-weight: 900; padding: 15px 40px; border: none; border-radius: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin-top: 20px; transition: 0.2s; }
     .btn-download-big:hover { transform: scale(1.05); box-shadow: 0 10px 30px var(--yellow-glow); }
-    .code-block { background: #000; padding: 15px; border-radius: 8px; text-align: left; font-family: monospace; color: #0f0; margin-top: 20px; overflow-x: auto; border: 1px solid #333; font-size: 12px; white-space: pre-wrap; }
+    .btn-download-big:active { transform: scale(0.98); }
 
     .empty-inv-msg { width: 100%; text-align: center; color: var(--text-muted); padding: 40px; border: 2px dashed var(--border); border-radius: 12px; font-weight: 600; grid-column: 1 / -1; }
 
@@ -144,7 +160,6 @@
 
 <header>
     <div class="header-left">
-        <!-- ZMIANA 1: Napis BETA w czerwonej ramce -->
         <div class="logo">Gato.TV <span class="beta-tag">BETA</span></div>
         <div id="loginBtnContainer">
             <button class="btn-login" onclick="loginWithTwitch()">
@@ -155,7 +170,6 @@
         <div id="userProfile" class="user-profile">
             <img id="avatar" class="user-avatar" src="">
             <span id="username" class="user-nick">...</span>
-            <!-- ZMIANA 2: Przycisk wyloguj z napisem -->
             <button onclick="logout()" class="btn-logout">🛑 Wyloguj</button>
         </div>
     </div>
@@ -165,7 +179,6 @@
             <span>🪙</span> <span id="coinCount">10</span>
         </div>
         <nav>
-            <!-- ZMIANA 5: Nazwy przycisków Paints, Emotes, Info, Download -->
             <button class="active" onclick="switchTab('paints')">Paints</button>
             <button onclick="switchTab('emotes')">Emotes</button>
             <button onclick="switchTab('info')">Info</button>
@@ -204,10 +217,8 @@
                 <button id="tabShop" onclick="switchPaintSubTab('shop')">SKLEP</button>
             </div>
             
-            <!-- ZMIANA 3: Obsługa pustego ekwipunku (w JS) -->
             <div id="viewInventory"><div id="inventoryGrid" class="preset-grid"></div></div>
             
-            <!-- ZMIANA 4: Sklep podzielony na kategorie (w JS generowane dynamicznie) -->
             <div id="viewShop" style="display:none;">
                 <p style="color:var(--text-muted); margin-bottom:20px;">Kupuj efekty. Zostaną one zapisane w bazie i obsłużone przez wtyczkę.</p>
                 <div id="shopContent"></div>
@@ -256,7 +267,7 @@
         </div>
     </div>
 
-    <!-- ZMIANA 7: TAB INFO -->
+    <!-- TAB INFO -->
     <div id="info" class="panel">
         <div class="hero-card">
             <h1>O Wtyczce</h1>
@@ -265,191 +276,14 @@
         </div>
     </div>
 
-    <!-- TAB: INSTALACJA / DOWNLOAD -->
+    <!-- TAB: DOWNLOAD (POPRAWKA: Brak kodu, konfetti cooldown) -->
     <div id="download" class="panel">
         <div class="hero-card download-style">
             <h1>Pobierz Wtyczkę</h1>
             <p>Aby widzieć efekty na Twitchu, musisz zainstalować skrypt.</p>
             
-            <!-- ZMIANA 6: Ładny przycisk pobierania (Placeholder) -->
-            <button class="btn-download-big" onclick="alert('Pobieranie wkrótce dostępne!')">POBIERZ WTYCZKĘ</button>
-
-            <div style="text-align:left; max-width:600px; margin: 30px auto;">
-                <h3 style="color:var(--accent); border-top:1px solid var(--border); padding-top:20px; margin-top:30px;">Instalacja Ręczna</h3>
-                <p style="color:#ccc; font-size:13px;">Skopiuj poniższy kod do Tampermonkey:</p>
-                <div class="code-block">
-// ==UserScript==
-// @name         Gato.TV Plugin
-// @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  Efekty wizualne Gato.TV
-// @match        https://www.twitch.tv/*
-// @grant        none
-// ==/UserScript==
-
-const FIREBASE_BASE = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.app";
-
-let PREMIUM = {};
-let EMOTES = {};
-let EMOTE_REGEX = null;
-let CURRENT_CHANNEL = "";
-
-const style = document.createElement("style");
-style.textContent = `
-.gato-emote { height: 28px; vertical-align: middle; margin: -3px 2px 0 2px; display: inline-block; transition: transform 0.1s; }
-.gato-emote:hover { transform: scale(1.4); z-index:10; position:relative; }
-.gato-badge { width: 18px; height: 18px; vertical-align: middle; margin-right: 4px; border-radius: 3px; }
-span[data-a-target="chat-message-username"]:not([data-gato-premium]) { color: #00ff00 !important; }
-@keyframes gatoRainbow { 0%{color:#f00} 20%{color:#ff0} 40%{color:#0f0} 60%{color:#0ff} 80%{color:#00f} 100%{color:#f0f} }
-.gato-anim-rainbow { animation: gatoRainbow 4s linear infinite; font-weight: 800; }
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Permanent+Marker&family=Courier+Prime&display=swap');
-`;
-document.head.appendChild(style);
-
-function updateCurrentChannel() {
-    const parts = window.location.pathname.toLowerCase().split('/').filter(p => p.length > 0);
-    if(parts.length > 0 && !['popout','moderator'].includes(parts[0])) CURRENT_CHANNEL = parts[0];
-}
-
-async function fetchData() {
-    try {
-        updateCurrentChannel();
-        const [premRes, emoRes] = await Promise.all([ fetch(`${FIREBASE_BASE}/premium.json`), fetch(`${FIREBASE_BASE}/emotes.json`) ]);
-        PREMIUM = await premRes.json() || {};
-        const newEmotes = await emoRes.json() || {};
-        if(JSON.stringify(newEmotes) !== JSON.stringify(EMOTES)) { EMOTES = newEmotes; buildEmoteRegex(); }
-    } catch(e) {}
-}
-
-function buildEmoteRegex() {
-    const keys = Object.keys(EMOTES).sort((a,b)=>b.length-a.length);
-    if(keys.length===0) { EMOTE_REGEX=null; return; }
-    EMOTE_REGEX = new RegExp(`\\b(${keys.map(k=>k.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\\\$&')).join('|')})\\b`,"g");
-}
-
-setInterval(fetchData, 5000);
-fetchData();
-
-function scan() {
-    updateCurrentChannel();
-    const lines = document.querySelectorAll('.chat-line__message');
-    
-    lines.forEach(line => {
-        if(line.dataset.gatoProcessed) return;
-        
-        const userEl = line.querySelector('span[data-a-target="chat-message-username"]');
-        if(!userEl) return;
-        
-        const username = userEl.textContent.trim().toLowerCase();
-        const userData = PREMIUM[username];
-        
-        line.dataset.gatoProcessed = "true";
-
-        if(userData) {
-            userEl.setAttribute("data-gato-premium", "true"); 
-
-            if(userData.badge && !line.querySelector('.gato-badge')) {
-                const badge = document.createElement('img');
-                badge.src = userData.badge;
-                badge.className = 'gato-badge';
-                const badgeContainer = line.querySelector('.chat-line__message-container span') || userEl;
-                badgeContainer.parentNode.insertBefore(badge, badgeContainer);
-            }
-
-            if(userData.paint) applyPaint(userEl, userData.paint);
-
-            const msgBody = line.querySelector('span[data-a-target="chat-message-text"]');
-            if(msgBody) {
-                if(userData.ink) msgBody.style.color = userData.ink;
-                if(userData.font) msgBody.style.fontFamily = userData.font;
-                if(userData.bg) {
-                    msgBody.style.background = userData.bg;
-                    msgBody.style.padding = "2px 5px";
-                    msgBody.style.borderRadius = "4px";
-                }
-            }
-        }
-
-        const msgBody = line.querySelector('span[data-a-target="chat-message-text"]');
-        if(msgBody) processEmotes(msgBody);
-    });
-}
-
-function applyPaint(el, p) {
-    el.style.color = ""; el.style.backgroundImage = ""; el.style.webkitTextFillColor = "";
-    if (p.type === "color") {
-        el.style.setProperty("color", p.value, "important");
-    } else if (p.type === "gradient") {
-        el.style.backgroundImage = p.value;
-        el.style.backgroundClip = "text";
-        el.style.webkitBackgroundClip = "text";
-        el.style.webkitTextFillColor = "transparent";
-        el.style.fontWeight = "900";
-        el.style.backgroundSize = "200% auto";
-        if(!document.getElementById('gato-anim')) {
-            const s=document.createElement('style'); s.id='gato-anim';
-            s.textContent=`@keyframes gatoShine{0%{background-position:0% 50%}100%{background-position:200% 50%}}`;
-            document.head.appendChild(s);
-        }
-        el.style.animation = "gatoShine 3s linear infinite";
-    } else if (p.type === "glow") {
-        el.style.color = p.value;
-        el.style.textShadow = `0 0 10px ${p.shadow}`;
-    } else if (p.type === "animated-rainbow") {
-        el.classList.add("gato-anim-rainbow");
-    }
-}
-
-function processEmotes(el) {
-    if(!EMOTE_REGEX) return;
-    Array.from(el.childNodes).forEach(node => {
-        if(node.nodeType !== 3) return; 
-        const text = node.textContent;
-        if(!EMOTE_REGEX.test(text)) return;
-
-        EMOTE_REGEX.lastIndex = 0;
-        const fragment = document.createDocumentFragment();
-        let lastIdx = 0;
-        let match;
-
-        while ((match = EMOTE_REGEX.exec(text)) !== null) {
-            const name = match[0];
-            const data = EMOTES[name];
-            if(data.scope === 'channel' && data.channel !== CURRENT_CHANNEL) continue;
-
-            if (match.index > lastIdx) fragment.appendChild(document.createTextNode(text.slice(lastIdx, match.index)));
-            
-            const img = document.createElement('img');
-            img.src = data.url;
-            img.className = 'gato-emote';
-            img.title = name;
-            fragment.appendChild(img);
-            
-            lastIdx = EMOTE_REGEX.lastIndex;
-        }
-        if (lastIdx < text.length) fragment.appendChild(document.createTextNode(text.slice(lastIdx)));
-        if(lastIdx > 0) node.replaceWith(fragment);
-    });
-}
-
-const observer = new MutationObserver(scan);
-const wait = setInterval(() => {
-    const chat = document.querySelector('.chat-scrollable-area__message-container');
-    if (chat) {
-        observer.observe(chat, { childList: true, subtree: true });
-        updateCurrentChannel();
-        scan();
-        clearInterval(wait);
-    }
-}, 500);
-
-let lastUrl = location.href;
-new MutationObserver(() => {
-    if(location.href !== lastUrl) { lastUrl = location.href; updateCurrentChannel(); }
-}).observe(document, {subtree:true, childList:true});
-                </div>
-            </div>
-            
+            <button class="btn-download-big" onclick="fireDownloadConfetti()">POBIERZ WTYCZKĘ</button>
+            <p style="font-size:12px; color:var(--text-muted); margin-top:10px;">Wersja 1.0 Beta</p>
         </div>
     </div>
 
@@ -602,7 +436,6 @@ function updatePreview(data) {
         if(p.type === 'animated-rainbow') userEl.classList.add('gato-anim-rainbow');
     }
 
-    // ZMIANA 8: Naprawa podglądu badge (sprawdzamy czy istnieje URL)
     if(data.badge) {
         badgeContainer.innerHTML = `<img src="${data.badge}" class="gato-badge-preview">`;
     }
@@ -619,14 +452,12 @@ function updatePreview(data) {
 
 // SHOP LOGIC
 function renderShop() {
-    // ZMIANA 4: Podział na kategorie w sklepie
     const shopContent = document.getElementById("shopContent");
     const inv = document.getElementById("inventoryGrid");
     
     shopContent.innerHTML = ""; 
     inv.innerHTML = "";
 
-    // Kategorie do wyświetlenia w sklepie
     const categories = [
         {id:'paint', name:'Kolory (Paints)'},
         {id:'badge', name:'Odznaki (Badges)'},
@@ -635,41 +466,33 @@ function renderShop() {
         {id:'bg', name:'Tło (Backgrounds)'}
     ];
 
-    // Renderowanie Ekwipunku (wszystkie posiadane razem)
     const ownedItemsList = CATALOG.filter(i => ownedItems.includes(i.name));
     
-    // ZMIANA 3: Komunikat gdy ekwipunek pusty
     if(ownedItemsList.length === 0) {
         inv.innerHTML = '<div class="empty-inv-msg">Twój ekwipunek jest pusty. Odwiedź sklep!</div>';
     } else {
         ownedItemsList.forEach((item, index) => {
-             // Znajdź oryginalny index w CATALOG, żeby przycisk działał poprawnie
              const originalIndex = CATALOG.findIndex(c => c.name === item.name);
              inv.appendChild(createItemCard(item, originalIndex, true));
         });
     }
 
-    // Renderowanie Sklepu z podziałem na kategorie
     categories.forEach(cat => {
-        // Filtrujemy przedmioty z danej kategorii, których NIE posiadamy (lub posiadamy, ale w sklepie pokazujemy wszystko? 
-        // Zazwyczaj w sklepie pokazuje się wszystko, ale z oznaczeniem "Posiadane".
-        // Tutaj przefiltruję tylko te z danej kategorii do wyświetlenia w sekcji.
-        const catItems = CATALOG.filter(i => i.category === cat.id);
+        // POPRAWKA: Filtrowanie sklepu - pokazuj tylko NIE posiadane
+        const catItems = CATALOG.filter(i => i.category === cat.id && !ownedItems.includes(i.name));
         
         if(catItems.length > 0) {
-            // Tytuł sekcji
             const title = document.createElement('div');
             title.className = 'shop-section-title';
             title.innerText = cat.name;
             shopContent.appendChild(title);
 
-            // Grid dla kategorii
             const grid = document.createElement('div');
             grid.className = 'preset-grid';
             
             catItems.forEach(item => {
                 const originalIndex = CATALOG.findIndex(c => c.name === item.name);
-                grid.appendChild(createItemCard(item, originalIndex, ownedItems.includes(item.name)));
+                grid.appendChild(createItemCard(item, originalIndex, false));
             });
             shopContent.appendChild(grid);
         }
@@ -682,6 +505,7 @@ function createItemCard(item, index, isOwned) {
     
     card.onmouseenter = () => {
         if(item.category === 'paint') document.getElementById('previewUser').style.cssText = item.previewStyle + "; font-size:13px;";
+        else if(item.category === 'badge') document.getElementById('previewBadges').innerHTML = `<img src="${item.value}" class="gato-badge-preview">`; // POPRAWKA: Podgląd badge
         else if(item.category === 'ink' || item.category === 'font' || item.category === 'bg') document.querySelector('.chat-msg').style.cssText = item.previewStyle;
     };
     card.onmouseleave = () => { loadUserData(); }
@@ -740,14 +564,25 @@ function updateCoinDisplay() { document.getElementById('coinCount').innerText = 
 function switchTab(id) { document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); document.querySelectorAll('nav button').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); if(event.target.tagName==='BUTTON') event.target.classList.add('active'); }
 function switchPaintSubTab(tab) { document.getElementById('viewInventory').style.display = tab==='inv'?'block':'none'; document.getElementById('viewShop').style.display = tab==='shop'?'block':'none'; document.getElementById('tabInv').className = tab==='inv'?'active':''; document.getElementById('tabShop').className = tab==='shop'?'active':''; }
 function togglePreviewTheme() { document.getElementById('chatPreviewBox').classList.toggle('light'); }
+
 function fireConfetti(shopMode){
-    if(!shopMode && confettiCooldown) return;
-    if(!shopMode) { confettiCooldown = true; setTimeout(()=>confettiCooldown=false, 10000); }
-    const colors = shopMode ? ['#facc15', '#ffffff'] : ['#38bdf8','#facc15','#9146ff'];
-    const origin = shopMode ? {x:0.5, y:0.5} : {x:0, y:1};
-    confetti({particleCount:100, spread:70, origin: origin, colors: colors});
-    if(!shopMode) confetti({particleCount:100, spread:70, origin: {x:1, y:1}, colors: colors});
+    // Shop mode confetti always works, no cooldown
+    if(shopMode) {
+        confetti({particleCount:100, spread:70, origin: {x:0.5, y:0.5}, colors: ['#facc15', '#ffffff']});
+    }
 }
+
+// POPRAWKA: Download Confetti 10s Cooldown
+function fireDownloadConfetti() {
+    if(confettiCooldown) return;
+    confettiCooldown = true;
+    setTimeout(()=>confettiCooldown=false, 10000);
+    
+    const colors = ['#38bdf8','#facc15','#9146ff'];
+    confetti({particleCount:100, spread:70, origin: {x:0, y:1}, colors: colors});
+    confetti({particleCount:100, spread:70, origin: {x:1, y:1}, colors: colors});
+}
+
 
 // EMOTES LOGIC
 function openEmoteForm() { if(!currentUser) return; document.getElementById('emoChannel').value = currentUser.login; renderMyEmotes(); document.getElementById('emotesGalleryView').style.display='none'; document.getElementById('emotesFormView').style.display='block'; }
