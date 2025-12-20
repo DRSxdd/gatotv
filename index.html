@@ -38,7 +38,7 @@
     .coin-display { display: flex; align-items: center; gap: 8px; background: rgba(250, 204, 21, 0.1); border: 1px solid var(--yellow); color: var(--yellow); padding: 6px 14px; border-radius: 10px; font-weight: 800; font-size: 14px; margin-right: 20px; white-space: nowrap; }
     .coin-display i { font-size: 16px; filter: drop-shadow(0 0 5px rgba(250,204,21,0.6)); }
 
-    /* SEARCH BAR */
+    /* SEARCH BAR (FIXED WIDTH) */
     .search-container { position: relative; width: 280px; margin-left: 20px; }
     .search-input { width: 100%; background: #0f172a; border: 1px solid var(--border); color: white; padding: 10px 15px 10px 40px; border-radius: 50px; font-family: 'Outfit', sans-serif; font-size: 13px; transition: 0.2s; outline: none; }
     .search-input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
@@ -84,7 +84,7 @@
 
     /* ROLE BADGE */
     .role-badge-container {
-        position: fixed; bottom: 95px; left: 25px;
+        position: fixed; bottom: 90px; left: 25px;
         display: none; align-items: center; gap: 8px;
         background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border);
         padding: 4px 10px; border-radius: 20px;
@@ -241,45 +241,6 @@
 </head>
 <body>
 
-<div id="userRoleBadge" class="role-badge-container">
-    <span>USER</span>
-</div>
-
-<div id="userProfileFloater" class="user-profile-floater">
-    <img id="floaterAvatar" class="floater-avatar" src="">
-    <div class="floater-info">
-        <span id="floaterName" class="floater-name">...</span>
-        <button class="btn-logout-mini" onclick="logout()">Wyloguj</button>
-    </div>
-</div>
-
-<!-- EMOTE DETAIL MODAL (MOVED TO BOTTOM TO FIX GLITCH) -->
-<div id="emoteModal" class="modal-overlay">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button class="modal-close" onclick="closeEmoteDetail()">×</button>
-            <img id="detailImg" src="" class="modal-img">
-        </div>
-        <div class="modal-body">
-            <div id="detailCode" class="modal-code">EMOTE_CODE</div>
-            <div class="modal-meta">
-                <span id="detailAuthor"><i class="fas fa-user"></i> Autor</span>
-                <span id="detailScope"><i class="fas fa-globe"></i> Scope</span>
-            </div>
-            
-            <button id="btnAssign" class="btn-modal-action btn-assign" onclick="addToMyChannel()">
-                <i class="fas fa-plus-circle"></i> PRZYPISZ DO KANAŁU
-            </button>
-            
-            <div id="adminControls" style="display:none;">
-                <button class="btn-modal-action btn-delete" onclick="deleteCurrentEmote()">
-                    <i class="fas fa-trash"></i> USUŃ EMOTKĘ
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <header>
     <div class="header-left">
         <div class="logo">Gato.TV <span class="beta-tag">BETA</span></div>
@@ -299,8 +260,8 @@
             <i class="fas fa-coins"></i> <span id="coinCount">10</span>
         </div>
         <nav>
-            <button class="active" onclick="switchTab('profile')">Profile</button> <!-- Domyślna -->
-            <button onclick="switchTab('shop')">Shop</button> <!-- Sklep ma swoją zakładkę -->
+            <button class="active" onclick="switchTab('profile')">Profile</button>
+            <button onclick="switchTab('shop')">Shop</button>
             <button onclick="switchTab('emotes')">Emotes</button>
             <button class="btn-purple" onclick="switchTab('premium')">Premium</button>
             <button class="btn-yellow" onclick="switchTab('download')">Download</button>
@@ -352,7 +313,7 @@
                     <button class="toggle-theme-btn" onclick="togglePreviewTheme()">🌗</button>
                 </div>
 
-                <!-- INVENTORY (INTERACTIVE FOR SELF, READONLY FOR OTHERS) -->
+                <!-- INVENTORY (INTERACTIVE FOR SELF) -->
                 <div id="profileInventory" style="display:block;">
                     <div class="profile-section-title"><i class="fas fa-paint-brush"></i> Twoje Przedmioty</div>
                     <div id="profileInvGrid" class="preset-grid"></div>
@@ -373,7 +334,7 @@
         </div>
     </div>
 
-    <!-- SHOP TAB (SEPARATE) -->
+    <!-- SHOP TAB -->
     <div id="shop" class="panel">
         <div class="protected-content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -524,6 +485,46 @@
 
 </div>
 
+<!-- BOTTOM ELEMENTS (MOVED TO END TO PREVENT GLITCH) -->
+<div id="userRoleBadge" class="role-badge-container" style="display:none;">
+    <span>USER</span>
+</div>
+
+<div id="userProfileFloater" class="user-profile-floater" style="display:none;">
+    <img id="floaterAvatar" class="floater-avatar" src="">
+    <div class="floater-info">
+        <span id="floaterName" class="floater-name">...</span>
+        <button class="btn-logout-mini" onclick="logout()">Wyloguj</button>
+    </div>
+</div>
+
+<!-- EMOTE DETAIL MODAL -->
+<div id="emoteModal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="modal-close" onclick="closeEmoteDetail()">×</button>
+            <img id="detailImg" src="" class="modal-img">
+        </div>
+        <div class="modal-body">
+            <div id="detailCode" class="modal-code">EMOTE_CODE</div>
+            <div class="modal-meta">
+                <span id="detailAuthor"><i class="fas fa-user"></i> Autor</span>
+                <span id="detailScope"><i class="fas fa-globe"></i> Scope</span>
+            </div>
+            
+            <button id="btnAssign" class="btn-modal-action btn-assign" onclick="addToMyChannel()">
+                <i class="fas fa-plus-circle"></i> PRZYPISZ DO KANAŁU
+            </button>
+            
+            <div id="adminControls" style="display:none;">
+                <button class="btn-modal-action btn-delete" onclick="deleteCurrentEmote()">
+                    <i class="fas fa-trash"></i> USUŃ EMOTKĘ
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="redeem-floater" onclick="redeemCode()">
     <i class="fas fa-gift"></i> REDEEM CODE
 </div>
@@ -591,6 +592,7 @@ window.onload = async () => {
 
 function showLoginScreen() {
     document.getElementById('loginBtnContainer').style.display = 'block';
+    // Hide all user specific UI
     document.getElementById('userProfileFloater').style.display = 'none';
     document.getElementById('coinDisplay').style.display = 'none';
     document.getElementById('searchContainer').style.display = 'none';
@@ -601,21 +603,24 @@ function showLoginScreen() {
 
 function showDashboard(user) {
     document.getElementById('loginBtnContainer').style.display = 'none';
+    // Show UI
     document.getElementById('userProfileFloater').style.display = 'flex';
     document.getElementById('coinDisplay').style.display = 'flex';
     document.getElementById('searchContainer').style.display = 'block';
+    
     document.querySelectorAll('.login-blocker').forEach(b => b.setAttribute('style', 'display:none !important'));
     document.querySelectorAll('.protected-content').forEach(c => c.setAttribute('style', 'display:block !important'));
 
+    // Populate data
     document.getElementById('floaterAvatar').src = user.profile_image_url;
     document.getElementById('floaterName').innerText = user.display_name;
-
     document.getElementById('profileAvatarBig').src = user.profile_image_url;
     document.getElementById('profileNameBig').innerText = user.display_name;
     document.getElementById('previewUser').innerText = user.display_name;
 
     const isAdm = ADMINS.includes(user.login.toLowerCase());
     AppState.role = isAdm ? 'ADMIN' : 'USER';
+    
     const badge = document.getElementById('userRoleBadge');
     badge.style.display = 'flex';
     badge.className = 'role-badge-container ' + (isAdm ? 'role-admin' : 'role-user');
@@ -661,7 +666,6 @@ async function searchUserProfile(username) {
 async function fetchProfileDataFor(username) {
     const res = await fetch(`${DB_URL}/premium/${username}.json`);
     const loadout = res.ok ? (await res.json() || {}) : {};
-    // Mock inventory view for others
     const fakeInventory = [];
     if(loadout.paint) fakeInventory.push({name: "Active Paint", category: "paint", value: loadout.paint.value, previewStyle: ""}); 
     if(loadout.badge) fakeInventory.push({name: "Active Badge", category: "badge", value: loadout.badge, previewStyle: ""});
@@ -697,11 +701,11 @@ async function verifyToken(token) {
 function loginWithTwitch() { window.location.href = `https://id.twitch.tv/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=user:read:email`; }
 function logout() { localStorage.removeItem('twitch_token'); window.location.reload(); }
 
+// ==================== PROFILE LOGIC ====================
 window.switchProfileSubTab = function(tab) {
     document.getElementById('profileInventory').style.display = tab==='inventory'?'block':'none';
     document.getElementById('profileUploaded').style.display = tab==='uploaded'?'block':'none';
     document.getElementById('profileChannel').style.display = tab==='channel'?'block':'none';
-    
     document.getElementById('pTabInv').className = tab==='inventory'?'active':'';
     document.getElementById('pTabUp').className = tab==='uploaded'?'active':'';
     document.getElementById('pTabCh').className = tab==='channel'?'active':'';
@@ -720,7 +724,7 @@ function renderProfileInventory(overrideItems = null) {
     grid.innerHTML = "";
     
     let itemsToShow = [];
-    let mode = 'inventory'; // Default: Interactive equip/unequip
+    let mode = 'inventory'; 
     if(AppState.viewingUser || overrideItems) { mode = 'profile'; itemsToShow = overrideItems || []; } 
     else { itemsToShow = CATALOG.filter(i => AppState.owned.includes(i.name)); }
 
@@ -742,6 +746,7 @@ function renderProfileEmotes(type, targetUserLogin) {
     grid.innerHTML = keys.map(k => `<div class="emote-card" onclick="openEmoteDetail('${k}')"><img src="${all[k].url}" loading="lazy"><div class="name">${k}</div><div class="author">by ${all[k].author||'Unknown'}</div></div>`).join('');
 }
 
+// ==================== SHOP LOGIC ====================
 function renderShop() {
     const shopDiv = document.getElementById("shopContent");
     if(!shopDiv) return;
@@ -764,7 +769,9 @@ function renderShop() {
     if (!itemsAvailable) shopDiv.innerHTML = '<div class="shop-empty-msg"><i class="fas fa-store-slash"></i><h3>Sklep pusty!</h3><p>Wróć później.</p></div>';
 }
 
+// ==================== UNIVERSAL CARD CREATOR ====================
 function createCard(item, mode) {
+    // mode: 'shop' (buy), 'inventory' (equip/unequip), 'profile' (view only)
     const card = document.createElement("div");
     card.className = (mode === 'inventory' || mode === 'profile') ? "preset-card owned" : "preset-card";
     
@@ -809,14 +816,14 @@ window.doEquip = async function(idx) {
     let payload = item.value;
     if(item.category === 'paint') { payload = { type: item.type, value: item.value }; if(item.shadow) payload.shadow = item.shadow; if(item.filter) payload.filter = item.filter; }
     AppState.loadout[item.category] = (item.category==='paint') ? payload : item.value;
-    renderShop(); renderProfileInventory(); updatePreview(AppState.loadout);
+    renderProfileInventory(); updatePreview(AppState.loadout);
     await api(`premium/${AppState.user.login.toLowerCase()}/${item.category}`, "PUT", payload);
 }
 
 window.doUnequip = async function(cat) {
     if(!AppState.user) return;
     delete AppState.loadout[cat];
-    renderShop(); renderProfileInventory(); updatePreview(AppState.loadout);
+    renderProfileInventory(); updatePreview(AppState.loadout);
     await api(`premium/${AppState.user.login.toLowerCase()}/${cat}`, "DELETE");
 }
 
@@ -832,7 +839,35 @@ window.togglePreviewTheme = function() { document.getElementById('chatPreviewBox
 window.fireDownloadConfetti = function() { if(confettiCooldown) return; confettiCooldown = true; setTimeout(()=>confettiCooldown=false, 10000); const c=['#38bdf8','#facc15','#9146ff']; confetti({particleCount:100,spread:70,origin:{x:0,y:1},colors:c}); confetti({particleCount:100,spread:70,origin:{x:1,y:1},colors:c}); }
 function fireConfetti(shopMode){ if(shopMode) confetti({particleCount:100,spread:70,origin:{x:0.5,y:0.5},colors:['#facc15','#ffffff']}); }
 
-// === MANAGE & EMOTES LOGIC ===
+// === DAILY ===
+const DAILY_COOLDOWN = 24 * 60 * 60 * 1000;
+function checkDailyBonus() {
+    const btn = document.getElementById('btnDaily');
+    if(!btn) return;
+    const lastClaim = localStorage.getItem('gato_last_daily');
+    const now = Date.now();
+    if (lastClaim && (now - lastClaim < DAILY_COOLDOWN)) {
+        btn.disabled = true;
+        const timeLeft = DAILY_COOLDOWN - (now - lastClaim);
+        const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+        btn.innerHTML = `<i class="fas fa-clock"></i> ${hours}h`;
+        setTimeout(checkDailyBonus, 60000);
+    } else {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fas fa-gift"></i> ODBIERZ +10`;
+    }
+}
+window.claimDailyBonus = function() {
+    const btn = document.getElementById('btnDaily');
+    btn.disabled = true;
+    AppState.coins += 10;
+    updateCoinDisplay();
+    fireConfetti(true);
+    localStorage.setItem('gato_last_daily', Date.now());
+    checkDailyBonus();
+}
+
+// === EMOTE MANAGEMENT ===
 window.openManageView = function() { document.getElementById('emotesGalleryView').style.display='none'; document.getElementById('emotesFormView').style.display='none'; document.getElementById('emotesManageView').style.display='block'; renderMyManageEmotes(); }
 window.closeManageView = function() { document.getElementById('emotesManageView').style.display='none'; document.getElementById('emotesGalleryView').style.display='block'; loadAllEmotes(); }
 function renderMyManageEmotes() {
@@ -855,17 +890,13 @@ function renderEmotesGallery() {
     else if(AppState.emoteTab !== 'global') keys.sort((a,b) => 0.5 - Math.random());
     grid.innerHTML = keys.length ? keys.map(k => `<div class="emote-card" onclick="openEmoteDetail('${k}')"><img src="${all[k].url}" loading="lazy"><div class="name">${k}</div><div class="author">by ${all[k].author||'?'}</div></div>`).join('') : '<p style="color:#666; font-size:12px;">Brak emotek.</p>';
 }
-
 window.openEmoteDetail = function(key) {
-    const e = AppState.emotes[key];
-    if(!e) return;
+    const e = AppState.emotes[key]; if(!e) return;
     AppState.currentEmoteKey = key; AppState.currentEmoteData = e;
-    document.getElementById('detailImg').src = e.url;
-    document.getElementById('detailCode').innerText = key;
+    document.getElementById('detailImg').src = e.url; document.getElementById('detailCode').innerText = key;
     document.getElementById('detailAuthor').innerHTML = `<i class="fas fa-user"></i> ${e.author || '?'}`;
     document.getElementById('detailScope').innerHTML = `<i class="fas fa-globe"></i> ${e.scope === 'global' ? 'Global' : 'Channel'}`;
-    const isAdmin = AppState.role === 'ADMIN';
-    const isOwner = e.author === AppState.user.display_name;
+    const isAdmin = AppState.role === 'ADMIN'; const isOwner = e.author === AppState.user.display_name;
     document.getElementById('adminControls').style.display = (isAdmin || isOwner) ? 'block' : 'none';
     document.getElementById('emoteModal').style.display = 'flex';
 }
@@ -876,7 +907,6 @@ window.addToMyChannel = async function() {
     alert("Przypisano!"); closeEmoteDetail();
 }
 window.deleteCurrentEmote = async function() { if(confirm("Usunąć?")) { await api(`emotes/${AppState.currentEmoteKey}`, "DELETE"); closeEmoteDetail(); loadAllEmotes(); } }
-
 window.openEmoteForm = function() { 
     if(!AppState.user) return; 
     const select = document.getElementById('emoChannel'); select.innerHTML = '';
@@ -894,11 +924,7 @@ window.addEmote = async function() {
 window.previewFile = function() { const f = document.getElementById('emoFile').files[0]; if(f) { const r=new FileReader(); r.onload=e=>{document.getElementById('filePreview').src=e.target.result; document.getElementById('filePreview').style.display='block'; document.getElementById('emoUrl').value = e.target.result;}; r.readAsDataURL(f); } }
 window.addModerator = async function() { const nick = document.getElementById('newModNick').value.trim().toLowerCase(); if(nick) { await api(`channels/${AppState.user.login.toLowerCase()}/mods/${nick}`, "PUT", true); await api(`users/${nick}/allowed_channels/${AppState.user.login.toLowerCase()}`, "PUT", true); fetchMyMods(); } }
 window.removeModerator = async function(nick) { if(confirm("Usunąć moda?")) { await api(`channels/${AppState.user.login.toLowerCase()}/mods/${nick}`, "DELETE"); await api(`users/${nick}/allowed_channels/${AppState.user.login.toLowerCase()}`, "DELETE"); fetchMyMods(); } }
-
 async function api(path, method="GET", body=null) { const opts = { method }; if (body) opts.body = JSON.stringify(body); try { const r = await fetch(`${DB_URL}/${path}.json`, opts); return r.json(); } catch(e) { return null; } }
-let confettiCooldown = false;
-window.fireDownloadConfetti = function() { if(confettiCooldown) return; confettiCooldown = true; setTimeout(()=>confettiCooldown=false, 10000); const c=['#38bdf8','#facc15','#9146ff']; confetti({particleCount:100,spread:70,origin:{x:0,y:1},colors:c}); confetti({particleCount:100,spread:70,origin:{x:1,y:1},colors:c}); }
-function fireConfetti(shopMode){ if(shopMode) confetti({particleCount:100,spread:70,origin:{x:0.5,y:0.5},colors:['#facc15','#ffffff']}); }
 </script>
 </body>
 </html>
