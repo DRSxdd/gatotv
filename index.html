@@ -44,6 +44,12 @@
     .coin-display { display: flex; align-items: center; gap: 8px; background: rgba(250, 204, 21, 0.1); border: 1px solid var(--yellow); color: var(--yellow); padding: 6px 14px; border-radius: 10px; font-weight: 800; font-size: 14px; margin-right: 20px; }
     .coin-display i { font-size: 16px; filter: drop-shadow(0 0 5px rgba(250,204,21,0.6)); }
 
+    /* SEARCH BAR */
+    .search-container { position: relative; width: 250px; margin: 0 20px; }
+    .search-input { width: 100%; background: #0f172a; border: 1px solid var(--border); color: white; padding: 8px 12px 8px 35px; border-radius: 50px; font-family: 'Outfit', sans-serif; font-size: 13px; transition: 0.2s; outline: none; }
+    .search-input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); width: 280px; }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 12px; pointer-events: none; }
+
     nav { display: flex; gap: 5px; background: #0f172a; padding: 4px; border-radius: 10px; border: 1px solid var(--border); }
     nav button { background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 600; padding: 8px 16px; cursor: pointer; border-radius: 6px; transition: 0.2s; }
     nav button:hover { color: #fff; background: rgba(255,255,255,0.05); }
@@ -75,7 +81,7 @@
     .profile-avatar-big { width: 110px; height: 110px; border-radius: 50%; border: 5px solid #131c2e; background: #000; box-shadow: 0 5px 20px rgba(0,0,0,0.5); z-index: 2; flex-shrink: 0; }
     
     .profile-info-block { margin-left: 20px; margin-bottom: 45px; z-index: 2; flex: 1; }
-    .profile-name-big { font-size: 28px; font-weight: 900; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.8); line-height: 1.2; }
+    .profile-name-big { font-size: 28px; font-weight: 900; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.8); line-height: 1.2; display: flex; align-items: center; gap: 10px; }
     .profile-role-tag { font-size: 11px; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; background: rgba(56, 189, 248, 0.1); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-top: 5px; }
 
     .profile-nav { display: flex; gap: 10px; margin-bottom: 10px; }
@@ -86,6 +92,11 @@
     .profile-content-area { padding: 20px 10px; }
     .profile-section-title { font-size: 18px; font-weight: 800; color: white; margin-bottom: 20px; border-left: 4px solid var(--twitch); padding-left: 15px; display: flex; align-items: center; gap: 10px; }
     .empty-state { text-align: center; padding: 40px; color: var(--text-muted); border: 2px dashed var(--border); border-radius: 12px; grid-column: 1 / -1; width: 100%; }
+
+    /* Viewing Mode Badge */
+    .viewing-badge { font-size: 10px; background: var(--yellow); color: black; padding: 2px 8px; border-radius: 20px; vertical-align: middle; }
+    .back-to-me-btn { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; backdrop-filter: blur(5px); transition: 0.2s; z-index: 10; display: none; }
+    .back-to-me-btn:hover { background: var(--accent); border-color: var(--accent); }
 
     /* UI ELEMENTS */
     .sub-nav { display: flex; gap: 20px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; align-items: center; }
@@ -132,7 +143,7 @@
     .btn-delete { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); margin-top: 10px; }
     .btn-delete:hover { background: var(--danger); color: white; }
 
-    /* MANAGED VIEW */
+    /* MANAGED VIEW (NEW) */
     .manage-section { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 25px; margin-bottom: 25px; }
     .manage-header { font-size: 18px; font-weight: 700; color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
     .manage-header i { color: var(--accent); }
@@ -270,6 +281,13 @@
         <div id="loginBtnContainer">
             <button class="btn-login" onclick="loginWithTwitch()">Zaloguj</button>
         </div>
+        
+        <!-- SEARCH BAR ADDED HERE -->
+        <div class="search-container" style="display:none;" id="searchContainer">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="userSearchInput" class="search-input" placeholder="Szukaj profilu...">
+        </div>
+
         <div id="userProfile" class="user-profile">
             <img id="avatar" class="user-avatar" src="">
             <span id="username" class="user-nick">...</span>
@@ -282,9 +300,9 @@
             <i class="fas fa-coins"></i> <span id="coinCount">10</span>
         </div>
         <nav>
-            <button class="active" onclick="switchTab('paints')">Paints</button> <!-- Domyślna aktywna -->
+            <button class="active" onclick="switchTab('paints')">Paints</button>
             <button onclick="switchTab('emotes')">Emotes</button>
-            <button onclick="switchTab('profile')">Profile</button>
+            <button onclick="switchTab('profile')">Profile</button> <!-- Moved Here -->
             <button class="btn-purple" onclick="switchTab('premium')">Premium</button>
             <button class="btn-yellow" onclick="switchTab('download')">Download</button>
         </nav>
@@ -328,7 +346,7 @@
         </div>
     </div>
 
-    <!-- NEW PROFILE TAB -->
+    <!-- NEW PROFILE TAB (SEARCH & VIEW) -->
     <div id="profile" class="panel">
         <div class="login-blocker">
             <h2>🔒 Wymagane Logowanie</h2>
@@ -338,11 +356,15 @@
 
         <div class="protected-content">
             <div class="profile-header">
+                <button id="btnBackToMe" class="back-to-me-btn" onclick="returnToMyProfile()">WRÓĆ DO SIEBIE</button>
                 <div class="profile-banner"></div>
                 <div class="profile-meta-container">
                     <img id="profileAvatarBig" class="profile-avatar-big" src="">
                     <div class="profile-info-block">
-                        <div id="profileNameBig" class="profile-name-big">...</div>
+                        <div class="profile-name-row" style="display:flex; align-items:center; gap:10px;">
+                            <div id="profileNameBig" class="profile-name-big">...</div>
+                            <span id="viewingBadge" class="viewing-badge" style="display:none;">PODGLĄD</span>
+                        </div>
                         <div id="profileRoleTag" class="profile-role-tag">USER</div>
                     </div>
                     <div class="profile-nav">
@@ -356,19 +378,19 @@
             <div class="profile-content-area">
                 <!-- INVENTORY (READ ONLY) -->
                 <div id="profileInventory" style="display:block;">
-                    <div class="profile-section-title"><i class="fas fa-paint-brush"></i> Twoje Przedmioty</div>
+                    <div class="profile-section-title"><i class="fas fa-paint-brush"></i> Przedmioty</div>
                     <div id="profileInvGrid" class="preset-grid"></div>
                 </div>
 
                 <!-- UPLOADED -->
                 <div id="profileUploaded" style="display:none;">
-                    <div class="profile-section-title"><i class="fas fa-pen-nib"></i> Stworzone przez Ciebie</div>
+                    <div class="profile-section-title"><i class="fas fa-pen-nib"></i> Stworzone przez użytkownika</div>
                     <div id="profileUploadedGrid" class="emotes-grid"></div>
                 </div>
 
                 <!-- CHANNEL -->
                 <div id="profileChannel" style="display:none;">
-                    <div class="profile-section-title"><i class="fas fa-hashtag"></i> Przypisane do Kanału</div>
+                    <div class="profile-section-title"><i class="fas fa-hashtag"></i> Kanał użytkownika</div>
                     <div id="profileChannelGrid" class="emotes-grid"></div>
                 </div>
             </div>
@@ -551,7 +573,8 @@ const ADMINS = ["twoj_nick_z_małych_liter", "gatojestemformaostateczna"];
 // ==================== STATE ====================
 const AppState = {
     user: null, token: null, coins: 100, owned: [], loadout: {}, emotes: {}, allowedChannels: [], role: "USER",
-    emoteTab: 'global', emoteSort: 'new', currentEmoteKey: null, currentEmoteData: null
+    emoteTab: 'global', emoteSort: 'new', currentEmoteKey: null, currentEmoteData: null,
+    viewingUser: null // If browsing other profile
 };
 
 // ==================== CATALOG ====================
@@ -606,6 +629,7 @@ function showLoginScreen() {
     document.getElementById('loginBtnContainer').style.display = 'block';
     document.getElementById('userProfile').style.display = 'none';
     document.getElementById('coinDisplay').style.display = 'none';
+    document.getElementById('searchContainer').style.display = 'none';
     document.querySelectorAll('.login-blocker').forEach(b => b.style.display = 'flex');
     document.querySelectorAll('.protected-content').forEach(c => c.style.display = 'none');
     document.getElementById('userRoleBadge').style.display = 'none';
@@ -615,6 +639,7 @@ function showDashboard(user) {
     document.getElementById('loginBtnContainer').style.display = 'none';
     document.getElementById('userProfile').style.display = 'flex';
     document.getElementById('coinDisplay').style.display = 'flex';
+    document.getElementById('searchContainer').style.display = 'block';
     document.querySelectorAll('.login-blocker').forEach(b => b.setAttribute('style', 'display:none !important'));
     document.querySelectorAll('.protected-content').forEach(c => c.setAttribute('style', 'display:block !important'));
 
@@ -622,9 +647,8 @@ function showDashboard(user) {
     document.getElementById('username').innerText = user.display_name;
     document.getElementById('previewUser').innerText = user.display_name;
     
-    // Profile Elements
-    document.getElementById('profileAvatarBig').src = user.profile_image_url;
-    document.getElementById('profileNameBig').innerText = user.display_name;
+    // Set Profile Tab Data (for logged in user)
+    setProfileData(user.display_name, user.profile_image_url, "USER"); // Default view is self
 
     const isAdm = ADMINS.includes(user.login.toLowerCase());
     AppState.role = isAdm ? 'ADMIN' : 'USER';
@@ -635,6 +659,86 @@ function showDashboard(user) {
     
     if(isAdm) document.getElementById('adminScopeOption').style.display = 'block';
 }
+
+function setProfileData(name, avatar, role) {
+    document.getElementById('profileAvatarBig').src = avatar;
+    document.getElementById('profileNameBig').innerText = name;
+    document.getElementById('profileRoleTag').innerText = role;
+}
+
+// SEARCH PROFILE LOGIC
+document.getElementById('userSearchInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') searchUserProfile(e.target.value);
+});
+
+async function searchUserProfile(username) {
+    if(!username) return;
+    username = username.toLowerCase();
+    
+    // Switch to profile tab to show loading/result
+    switchTab('profile');
+    
+    // Fetch Basic Info (Mocking Twitch API via simple name, in real app needs backend proxy or client ID call)
+    // Here we assume if user exists in our DB, we show what we have.
+    // If we want real avatar for searched user, we need Twitch API "Get Users" call.
+    
+    try {
+        // 1. Get Twitch Data (Using our valid token)
+        const twitchRes = await fetch(`https://api.twitch.tv/helix/users?login=${username}`, {
+            headers: { 'Client-ID': CLIENT_ID, 'Authorization': `Bearer ${AppState.token}` }
+        });
+        const twitchData = await twitchRes.json();
+        
+        if(twitchData.data && twitchData.data.length > 0) {
+            const targetUser = twitchData.data[0];
+            AppState.viewingUser = targetUser; // Set viewing mode
+            
+            // UI Update
+            setProfileData(targetUser.display_name, targetUser.profile_image_url, "VIEWING");
+            document.getElementById('viewingBadge').style.display = 'inline-block';
+            document.getElementById('btnBackToMe').style.display = 'block';
+            
+            // 2. Fetch Their Gato Data
+            await fetchProfileDataFor(targetUser.login.toLowerCase());
+            
+        } else {
+            alert("Użytkownik nie znaleziony na Twitchu.");
+        }
+    } catch(e) { console.error(e); alert("Błąd wyszukiwania."); }
+}
+
+async function fetchProfileDataFor(username) {
+    // Inventory (from LocalStorage logic... usually this should be DB. Here we mock from DB "premium" entry)
+    // Since we don't store "owned items" list in DB in this simple version (only loadout), 
+    // we can only show their ACTIVE loadout or just emotes.
+    // Let's show their EMOTES and ACTIVE PAINTS.
+    
+    // Get Loadout
+    const res = await fetch(`${DB_URL}/premium/${username}.json`);
+    const loadout = res.ok ? (await res.json() || {}) : {};
+    
+    // Convert loadout to "inventory items" for display
+    const fakeInventory = [];
+    if(loadout.paint) fakeInventory.push({name: "Active Paint", category: "paint", value: loadout.paint.value, previewStyle: ""}); 
+    // This is a simplification. Ideally you fetch "owned" list from DB.
+    
+    renderProfileInventory(fakeInventory, true); // True = Viewing mode (readonly)
+    renderProfileEmotes('uploaded', username);
+    renderProfileEmotes('channel', username);
+}
+
+function returnToMyProfile() {
+    AppState.viewingUser = null;
+    document.getElementById('viewingBadge').style.display = 'none';
+    document.getElementById('btnBackToMe').style.display = 'none';
+    setProfileData(AppState.user.display_name, AppState.user.profile_image_url, AppState.role);
+    
+    // Reload my data
+    renderProfileInventory();
+    renderProfileEmotes('uploaded');
+    renderProfileEmotes('channel');
+}
+
 
 async function verifyToken(token) {
     try {
@@ -663,30 +767,50 @@ window.switchProfileSubTab = function(tab) {
     document.getElementById('pTabUp').className = tab==='uploaded'?'active':'';
     document.getElementById('pTabCh').className = tab==='channel'?'active':'';
     
-    if(tab === 'inventory') renderProfileInventory();
-    if(tab === 'uploaded') renderProfileEmotes('uploaded');
-    if(tab === 'channel') renderProfileEmotes('channel');
+    // Refresh current view based on who we are viewing
+    const targetUser = AppState.viewingUser ? AppState.viewingUser.login.toLowerCase() : (AppState.user ? AppState.user.login.toLowerCase() : null);
+    
+    if(targetUser) {
+        if(tab === 'inventory') {
+             if(AppState.viewingUser) fetchProfileDataFor(targetUser); // Reload restricted
+             else renderProfileInventory(); 
+        }
+        if(tab === 'uploaded') renderProfileEmotes('uploaded', targetUser);
+        if(tab === 'channel') renderProfileEmotes('channel', targetUser);
+    }
 }
 
-function renderProfileInventory() {
+function renderProfileInventory(overrideItems = null, isReadOnly = false) {
     const grid = document.getElementById('profileInvGrid');
     if(!grid) return;
     grid.innerHTML = "";
     
-    const myItems = CATALOG.filter(i => AppState.owned.includes(i.name));
-    if(myItems.length === 0) grid.innerHTML = '<div class="empty-inv-msg">Twój ekwipunek jest pusty :(</div>';
-    else myItems.forEach(item => grid.appendChild(createCard(item, 'profile')));
+    let itemsToShow = [];
+    if(overrideItems) {
+        itemsToShow = overrideItems; // For viewing others (mocked)
+    } else {
+        itemsToShow = CATALOG.filter(i => AppState.owned.includes(i.name)); // My items
+    }
+
+    if(itemsToShow.length === 0) grid.innerHTML = '<div class="empty-inv-msg">Pusty ekwipunek :(</div>';
+    else itemsToShow.forEach(item => grid.appendChild(createCard(item, 'profile'))); // MODE: profile (read only)
 }
 
-function renderProfileEmotes(type) {
+function renderProfileEmotes(type, targetUserLogin) {
     const grid = document.getElementById(type === 'uploaded' ? 'profileUploadedGrid' : 'profileChannelGrid');
     if(!grid) return;
     
+    const userLogin = targetUserLogin || (AppState.user ? AppState.user.login : '');
+    // For uploaded, we match by author display name usually, but here simplicity logic:
+    // If viewing self, author = display_name. If viewing other, we need their display name.
+    
+    const authorName = AppState.viewingUser ? AppState.viewingUser.display_name : (AppState.user ? AppState.user.display_name : '');
+
     const all = AppState.emotes;
     let keys = [];
     
-    if (type === 'uploaded') keys = Object.keys(all).filter(k => all[k].author === AppState.user.display_name);
-    else if (type === 'channel') keys = Object.keys(all).filter(k => all[k].channel === AppState.user.login);
+    if (type === 'uploaded') keys = Object.keys(all).filter(k => all[k].author === authorName);
+    else if (type === 'channel') keys = Object.keys(all).filter(k => all[k].channel === userLogin);
     
     if(keys.length === 0) {
         grid.innerHTML = '<div class="empty-inv-msg">Brak emotek w tej sekcji.</div>';
