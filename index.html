@@ -28,7 +28,7 @@
     
     /* HEADER */
     header { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.3); }
-    .header-left { display: flex; align-items: center; gap: 25px; flex: 1; } /* Added flex:1 to handle search bar layout */
+    .header-left { display: flex; align-items: center; gap: 25px; flex: 1; }
     .logo { font-size: 28px; font-weight: 900; color: var(--accent); letter-spacing: -1px; text-transform: uppercase; text-shadow: 0 0 20px var(--accent-glow); cursor: pointer; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
     .beta-tag { font-size: 10px; background: var(--danger); color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700; transform: translateY(-2px); }
     
@@ -38,11 +38,11 @@
     .coin-display { display: flex; align-items: center; gap: 8px; background: rgba(250, 204, 21, 0.1); border: 1px solid var(--yellow); color: var(--yellow); padding: 6px 14px; border-radius: 10px; font-weight: 800; font-size: 14px; margin-right: 20px; white-space: nowrap; }
     .coin-display i { font-size: 16px; filter: drop-shadow(0 0 5px rgba(250,204,21,0.6)); }
 
-    /* SEARCH BAR (FIXED) */
-    .search-container { position: relative; width: 300px; margin-left: 20px; }
-    .search-input { width: 100%; background: #0f172a; border: 1px solid var(--border); color: white; padding: 10px 15px 10px 40px; border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 13px; transition: 0.2s; outline: none; }
+    /* SEARCH BAR (NAPRAWIONA) */
+    .search-container { position: relative; width: 280px; margin-left: 20px; }
+    .search-input { width: 100%; background: #0f172a; border: 1px solid var(--border); color: white; padding: 10px 15px 10px 40px; border-radius: 50px; font-family: 'Outfit', sans-serif; font-size: 13px; transition: 0.2s; outline: none; }
     .search-input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
-    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; pointer-events: none; }
+    .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; pointer-events: none; }
 
     nav { display: flex; gap: 5px; background: #0f172a; padding: 4px; border-radius: 10px; border: 1px solid var(--border); }
     nav button { background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 600; padding: 8px 16px; cursor: pointer; border-radius: 6px; transition: 0.2s; }
@@ -62,11 +62,10 @@
     .login-blocker h2 { font-size: 28px; margin-bottom: 10px; color: white; }
     .protected-content { display: none; }
 
-    /* FLOATING USER PROFILE */
+    /* FLOATING USER PROFILE (LEFT BOTTOM) */
     .user-profile-floater {
         position: fixed; bottom: 20px; left: 20px;
-        display: none; /* Flex when logged in */
-        align-items: center; gap: 12px;
+        display: none; align-items: center; gap: 12px;
         background: rgba(15, 23, 42, 0.95);
         border: 1px solid var(--border);
         padding: 10px 15px 10px 10px;
@@ -83,9 +82,9 @@
     .btn-logout-mini { background: none; border: none; color: var(--text-muted); font-size: 11px; cursor: pointer; padding: 0; text-align: left; font-weight: 600; }
     .btn-logout-mini:hover { color: var(--danger); }
 
-    /* ROLE BADGE (MOVED HIGHER AS REQUESTED) */
+    /* ROLE BADGE (MOVED HIGHER) */
     .role-badge-container {
-        position: fixed; bottom: 90px; left: 25px; /* Troszkę wyżej */
+        position: fixed; bottom: 95px; left: 25px; /* Wyżej niż poprzednio */
         display: none; align-items: center; gap: 8px;
         background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border);
         padding: 4px 10px; border-radius: 20px;
@@ -146,7 +145,6 @@
     .btn-equip:hover { background: #16a34a; }
     .btn-unequip { background: #ef4444; color: #fff; } 
     .btn-unequip:hover { background: #dc2626; }
-
     .category-badge { position: absolute; top:8px; left:8px; padding:2px 6px; border-radius:4px; font-size:9px; font-weight:bold; text-transform:uppercase; color:white; z-index: 2; }
     .cat-paint { background: #38bdf8; } .cat-badge { background: #9146ff; } .cat-ink { background: #f43f5e; } .cat-font { background: #10b981; } .cat-bg { background: #f59e0b; }
     
@@ -283,7 +281,7 @@
             <button class="btn-login" onclick="loginWithTwitch()">Zaloguj</button>
         </div>
         
-        <!-- SEARCH BAR (FIXED) -->
+        <!-- SEARCH BAR -->
         <div class="search-container" style="display:none;" id="searchContainer">
             <i class="fas fa-search search-icon"></i>
             <input type="text" id="userSearchInput" class="search-input" placeholder="Szukaj profilu...">
@@ -295,9 +293,9 @@
             <i class="fas fa-coins"></i> <span id="coinCount">10</span>
         </div>
         <nav>
-            <button class="active" onclick="switchTab('paints')">Paints</button> <!-- Domyślna -->
+            <button class="active" onclick="switchTab('profile')">Profile</button>
+            <button onclick="switchTab('shop')">Shop</button>
             <button onclick="switchTab('emotes')">Emotes</button>
-            <button onclick="switchTab('profile')">Profile</button>
             <button class="btn-purple" onclick="switchTab('premium')">Premium</button>
             <button class="btn-yellow" onclick="switchTab('download')">Download</button>
         </nav>
@@ -306,32 +304,80 @@
 
 <div class="container">
 
-    <!-- PAINTS (MAIN TAB) -->
-    <div id="paints" class="panel active">
+    <!-- PROFILE TAB (MAIN) -->
+    <div id="profile" class="panel active">
         <div class="login-blocker">
             <h2>🔒 Wymagane Logowanie</h2>
-            <p style="color:#94a3b8; margin-bottom:20px;">Zaloguj się, aby konfigurować swój wygląd na czacie.</p>
+            <p style="color:#94a3b8; margin-bottom:20px;">Zaloguj się, aby zobaczyć swój profil.</p>
             <button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button>
         </div>
 
         <div class="protected-content">
-            <div class="chat-preview-container" id="chatPreviewBox">
-                <div class="chat-line">
-                    <span class="chat-time">12:30</span>
-                    <span class="chat-badges" id="previewBadges"></span>
-                    <span class="chat-username" id="previewUser">TwójNick</span>
-                    <span class="chat-colon">:</span>
-                    <span class="chat-msg">Gato.TV zmienia Twój czat! 🐱</span>
+            <div class="profile-header">
+                <button id="btnBackToMe" class="back-to-me-btn" onclick="returnToMyProfile()">WRÓĆ DO SIEBIE</button>
+                <div class="profile-banner"></div>
+                <div class="profile-meta-container">
+                    <img id="profileAvatarBig" class="profile-avatar-big" src="">
+                    <div class="profile-info-block">
+                        <div class="profile-name-row" style="display:flex; align-items:center; gap:10px;">
+                            <div id="profileNameBig" class="profile-name-big">...</div>
+                            <span id="viewingBadge" class="viewing-badge" style="display:none;">PODGLĄD</span>
+                        </div>
+                        <div id="profileRoleTag" class="profile-role-tag">USER</div>
+                    </div>
+                    <div class="profile-nav">
+                        <button id="pTabInv" class="active" onclick="switchProfileSubTab('inventory')"><i class="fas fa-backpack"></i> Ekwipunek</button>
+                        <button id="pTabUp" onclick="switchProfileSubTab('uploaded')"><i class="fas fa-cloud-upload-alt"></i> Uploaded</button>
+                        <button id="pTabCh" onclick="switchProfileSubTab('channel')"><i class="fas fa-tv"></i> Channel</button>
+                    </div>
                 </div>
-                <button class="toggle-theme-btn" onclick="togglePreviewTheme()">🌗</button>
             </div>
 
-            <!-- PAINTS only shows Inventory (Interactive) -->
-            <div class="sub-nav">
-                <button id="tabInv" class="active">EKWIPUNEK</button>
+            <div class="profile-content-area">
+                <!-- PREVIEW -->
+                <div class="chat-preview-container" id="chatPreviewBox">
+                    <div class="chat-line">
+                        <span class="chat-time">12:30</span>
+                        <span class="chat-badges" id="previewBadges"></span>
+                        <span class="chat-username" id="previewUser">TwójNick</span>
+                        <span class="chat-colon">:</span>
+                        <span class="chat-msg">Gato.TV zmienia Twój czat! 🐱</span>
+                    </div>
+                    <button class="toggle-theme-btn" onclick="togglePreviewTheme()">🌗</button>
+                </div>
+
+                <!-- INVENTORY (INTERACTIVE FOR SELF) -->
+                <div id="profileInventory" style="display:block;">
+                    <div class="profile-section-title"><i class="fas fa-paint-brush"></i> Twoje Przedmioty</div>
+                    <div id="profileInvGrid" class="preset-grid"></div>
+                </div>
+
+                <!-- UPLOADED -->
+                <div id="profileUploaded" style="display:none;">
+                    <div class="profile-section-title"><i class="fas fa-pen-nib"></i> Stworzone przez Ciebie</div>
+                    <div id="profileUploadedGrid" class="emotes-grid"></div>
+                </div>
+
+                <!-- CHANNEL -->
+                <div id="profileChannel" style="display:none;">
+                    <div class="profile-section-title"><i class="fas fa-hashtag"></i> Przypisane do Kanału</div>
+                    <div id="profileChannelGrid" class="emotes-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SHOP TAB -->
+    <div id="shop" class="panel">
+        <div class="protected-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 style="margin:0;">Sklep Gato.TV</h2>
+                <button id="btnDaily" class="btn-daily" onclick="claimDailyBonus()">
+                    <i class="fas fa-gift"></i> ODBIERZ +10
+                </button>
             </div>
             
-            <div id="inventoryGrid" class="preset-grid"></div>
+            <div id="shopContent"></div>
         </div>
     </div>
 
@@ -367,7 +413,6 @@
                 <div id="emotesGrid" class="emotes-grid">Ładowanie...</div>
             </div>
 
-            <!-- ADD FORM -->
             <div id="emotesFormView" style="display:none;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                     <h2>Dodaj Nową Emotkę</h2>
@@ -376,7 +421,7 @@
                 <div class="emote-form-container">
                     <div class="emote-form-grid">
                         <div class="form-group">
-                            <label>Kod Emotki (np. xdd)</label>
+                            <label>Kod Emotki</label>
                             <input id="emoName" placeholder="Co wpisać na czacie?">
                         </div>
                         <div class="form-group">
@@ -424,76 +469,11 @@
         </div>
     </div>
 
-    <!-- PROFILE TAB (VIEW/SEARCH/EQUIP) -->
-    <div id="profile" class="panel">
-        <div class="login-blocker">
-            <h2>🔒 Wymagane Logowanie</h2>
-            <p style="color:#94a3b8; margin-bottom:20px;">Zaloguj się, aby zobaczyć profil.</p>
-            <button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button>
-        </div>
-
-        <div class="protected-content">
-            <div class="profile-header">
-                <button id="btnBackToMe" class="back-to-me-btn" onclick="returnToMyProfile()">WRÓĆ DO SIEBIE</button>
-                <div class="profile-banner"></div>
-                <div class="profile-meta-container">
-                    <img id="profileAvatarBig" class="profile-avatar-big" src="">
-                    <div class="profile-info-block">
-                        <div class="profile-name-row" style="display:flex; align-items:center; gap:10px;">
-                            <div id="profileNameBig" class="profile-name-big">...</div>
-                            <span id="viewingBadge" class="viewing-badge" style="display:none;">PODGLĄD</span>
-                        </div>
-                        <div id="profileRoleTag" class="profile-role-tag">USER</div>
-                    </div>
-                    <div class="profile-nav">
-                        <button id="pTabInv" class="active" onclick="switchProfileSubTab('inventory')"><i class="fas fa-backpack"></i> Ekwipunek</button>
-                        <button id="pTabUp" onclick="switchProfileSubTab('uploaded')"><i class="fas fa-cloud-upload-alt"></i> Uploaded</button>
-                        <button id="pTabCh" onclick="switchProfileSubTab('channel')"><i class="fas fa-tv"></i> Channel</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="profile-content-area">
-                <!-- INVENTORY (INTERACTIVE FOR SELF, READONLY FOR OTHERS) -->
-                <div id="profileInventory" style="display:block;">
-                    <div class="profile-section-title"><i class="fas fa-paint-brush"></i> Przedmioty</div>
-                    <div id="profileInvGrid" class="preset-grid"></div>
-                </div>
-
-                <!-- UPLOADED -->
-                <div id="profileUploaded" style="display:none;">
-                    <div class="profile-section-title"><i class="fas fa-pen-nib"></i> Stworzone przez użytkownika</div>
-                    <div id="profileUploadedGrid" class="emotes-grid"></div>
-                </div>
-
-                <!-- CHANNEL -->
-                <div id="profileChannel" style="display:none;">
-                    <div class="profile-section-title"><i class="fas fa-hashtag"></i> Kanał użytkownika</div>
-                    <div id="profileChannelGrid" class="emotes-grid"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- SHOP TAB (NEW) -->
-    <div id="shop" class="panel">
-        <div class="protected-content">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <h2 style="margin:0;">Sklep Gato.TV</h2>
-                <button id="btnDaily" class="btn-daily" onclick="claimDailyBonus()">
-                    <i class="fas fa-gift"></i> ODBIERZ +10
-                </button>
-            </div>
-            
-            <div id="shopContent"></div>
-        </div>
-    </div>
-
     <!-- PREMIUM -->
     <div id="premium" class="panel">
         <div class="hero-card" style="margin-bottom:20px;">
             <h1>Zostań Legendą Gato.TV</h1>
-            <p style="color:var(--text-muted); margin-top:10px;">Odblokuj pełny potencjał i wyróżnij się na czacie.</p>
+            <p style="color:var(--text-muted); margin-top:10px;">Odblokuj pełny potencjał.</p>
         </div>
         <div class="pricing-grid">
             <div class="price-card featured">
@@ -502,9 +482,9 @@
                 <ul class="price-features">
                     <li><i class="fas fa-coins" style="color:#ffd700"></i> <b>Mnożnik Coins x5</b></li>
                     <li><i class="fas fa-certificate" style="color:#38bdf8"></i> <b>Specjalna Odznaka</b></li>
-                    <li><i class="fas fa-magic" style="color:#f43f5e"></i> <b>Animowany Kolor Nicku</b></li>
+                    <li><i class="fas fa-magic" style="color:#f43f5e"></i> <b>Animowany Kolor</b></li>
                     <li><i class="fas fa-check"></i> Priorytetowe wsparcie</li>
-                    <li><i class="fas fa-check"></i> Dostęp do wszystkich stylów</li>
+                    <li><i class="fas fa-check"></i> Wszystkie style</li>
                 </ul>
                 <button class="btn-buy-plan" onclick="alert('Płatności wkrótce!')">KUP TERAZ</button>
             </div>
@@ -518,27 +498,17 @@
             <p style="color:#94a3b8; margin: 10px 0 20px;">Wersja 1.0 Beta</p>
             <button class="btn-download-big" onclick="fireDownloadConfetti()">POBIERZ WTYCZKĘ</button>
         </div>
-
         <div class="info-block">
-            <h2>Dlaczego Warto?</h2>
+            <h2>Możliwości</h2>
             <div class="info-grid-box">
                 <div class="info-item">
-                    <h3><i class="fas fa-bolt"></i> Możliwości</h3>
+                    <h3><i class="fas fa-bolt"></i> Funkcje</h3>
                     <ul>
-                        <li>Menu emotek Gato.TV wbudowane w czat</li>
-                        <li>Historia wiadomości (strzałka w górę)</li>
-                        <li>Automatyczne zbieranie punktów kanału</li>
+                        <li>Menu emotek Gato.TV</li>
+                        <li>Historia wiadomości</li>
+                        <li>Auto-Punkty</li>
                         <li>Wyszukiwarka emotek</li>
-                        <li>Personalizacja nicku (Kolory, Gradienty)</li>
-                    </ul>
-                </div>
-                <div class="info-item">
-                    <h3><i class="fas fa-terminal"></i> Instalacja</h3>
-                    <ul>
-                        <li>1. Zainstaluj Tampermonkey w przeglądarce.</li>
-                        <li>2. Kliknij przycisk "POBIERZ WTYCZKĘ" powyżej.</li>
-                        <li>3. Zatwierdź instalację skryptu.</li>
-                        <li>4. Odśwież Twitcha i ciesz się nowymi funkcjami!</li>
+                        <li>Personalizacja</li>
                     </ul>
                 </div>
             </div>
@@ -630,11 +600,9 @@ function showDashboard(user) {
     document.querySelectorAll('.login-blocker').forEach(b => b.setAttribute('style', 'display:none !important'));
     document.querySelectorAll('.protected-content').forEach(c => c.setAttribute('style', 'display:block !important'));
 
-    // Floater
     document.getElementById('floaterAvatar').src = user.profile_image_url;
     document.getElementById('floaterName').innerText = user.display_name;
 
-    // Profile Tab
     document.getElementById('profileAvatarBig').src = user.profile_image_url;
     document.getElementById('profileNameBig').innerText = user.display_name;
     document.getElementById('previewUser').innerText = user.display_name;
@@ -656,7 +624,6 @@ function setProfileData(name, avatar, role) {
     document.getElementById('profileRoleTag').innerText = role;
 }
 
-// SEARCH PROFILE LOGIC
 document.getElementById('userSearchInput').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') searchUserProfile(e.target.value);
 });
@@ -674,7 +641,6 @@ async function searchUserProfile(username) {
         if(twitchData.data && twitchData.data.length > 0) {
             const targetUser = twitchData.data[0];
             AppState.viewingUser = targetUser;
-            
             setProfileData(targetUser.display_name, targetUser.profile_image_url, "VIEWING");
             document.getElementById('viewingBadge').style.display = 'inline-block';
             document.getElementById('btnBackToMe').style.display = 'block';
@@ -688,12 +654,10 @@ async function searchUserProfile(username) {
 async function fetchProfileDataFor(username) {
     const res = await fetch(`${DB_URL}/premium/${username}.json`);
     const loadout = res.ok ? (await res.json() || {}) : {};
-    
     const fakeInventory = [];
     if(loadout.paint) fakeInventory.push({name: "Active Paint", category: "paint", value: loadout.paint.value, previewStyle: ""}); 
     if(loadout.badge) fakeInventory.push({name: "Active Badge", category: "badge", value: loadout.badge, previewStyle: ""});
-    
-    renderProfileInventory(fakeInventory, true); 
+    renderProfileInventory(fakeInventory); 
     renderProfileEmotes('uploaded', username);
     renderProfileEmotes('channel', username);
 }
@@ -725,45 +689,30 @@ async function verifyToken(token) {
 function loginWithTwitch() { window.location.href = `https://id.twitch.tv/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=user:read:email`; }
 function logout() { localStorage.removeItem('twitch_token'); window.location.reload(); }
 
-// ==================== PROFILE LOGIC ====================
 window.switchProfileSubTab = function(tab) {
     document.getElementById('profileInventory').style.display = tab==='inventory'?'block':'none';
     document.getElementById('profileUploaded').style.display = tab==='uploaded'?'block':'none';
     document.getElementById('profileChannel').style.display = tab==='channel'?'block':'none';
-    
     document.getElementById('pTabInv').className = tab==='inventory'?'active':'';
     document.getElementById('pTabUp').className = tab==='uploaded'?'active':'';
     document.getElementById('pTabCh').className = tab==='channel'?'active':'';
-    
     const targetUser = AppState.viewingUser ? AppState.viewingUser.login.toLowerCase() : (AppState.user ? AppState.user.login.toLowerCase() : null);
     if(targetUser) {
-        if(tab === 'inventory') {
-             if(AppState.viewingUser) fetchProfileDataFor(targetUser); 
-             else renderProfileInventory(); 
-        }
+        if(tab === 'inventory') { if(AppState.viewingUser) fetchProfileDataFor(targetUser); else renderProfileInventory(); }
         if(tab === 'uploaded') renderProfileEmotes('uploaded', targetUser);
         if(tab === 'channel') renderProfileEmotes('channel', targetUser);
     }
 }
 
-function renderProfileInventory(overrideItems = null, isReadOnly = false) {
+function renderProfileInventory(overrideItems = null) {
     const grid = document.getElementById('profileInvGrid');
     if(!grid) return;
     grid.innerHTML = "";
     
-    // Logic: In profile tab, if it's MY profile, I want to equip/unequip.
-    // If it's OTHER profile (viewingUser), I want read-only.
-    // Based on user request: "z zakładki "profile" w ekwipunku moim mogę wybierać painty do zakładania"
-    
     let itemsToShow = [];
-    let mode = 'inventory'; // Default interactive
-    
-    if(AppState.viewingUser) {
-        mode = 'profile'; // Read only for others
-        itemsToShow = overrideItems || [];
-    } else {
-        itemsToShow = CATALOG.filter(i => AppState.owned.includes(i.name)); 
-    }
+    let mode = 'inventory'; 
+    if(AppState.viewingUser || overrideItems) { mode = 'profile'; itemsToShow = overrideItems || []; } 
+    else { itemsToShow = CATALOG.filter(i => AppState.owned.includes(i.name)); }
 
     if(itemsToShow.length === 0) grid.innerHTML = '<div class="empty-inv-msg">Pusty ekwipunek :(</div>';
     else itemsToShow.forEach(item => grid.appendChild(createCard(item, mode)));
@@ -772,34 +721,18 @@ function renderProfileInventory(overrideItems = null, isReadOnly = false) {
 function renderProfileEmotes(type, targetUserLogin) {
     const grid = document.getElementById(type === 'uploaded' ? 'profileUploadedGrid' : 'profileChannelGrid');
     if(!grid) return;
-    
     const userLogin = targetUserLogin || (AppState.user ? AppState.user.login : '');
     const authorName = AppState.viewingUser ? AppState.viewingUser.display_name : (AppState.user ? AppState.user.display_name : '');
-
     const all = AppState.emotes;
     let keys = [];
-    
     if (type === 'uploaded') keys = Object.keys(all).filter(k => all[k].author === authorName);
     else if (type === 'channel') keys = Object.keys(all).filter(k => all[k].channel === userLogin);
     
-    if(keys.length === 0) {
-        grid.innerHTML = '<div class="empty-inv-msg">Brak emotek w tej sekcji.</div>';
-        return;
-    }
-    
-    grid.innerHTML = keys.map(k => {
-        const e = all[k];
-        return `
-            <div class="emote-card" onclick="openEmoteDetail('${k}')">
-                <img src="${e.url}" loading="lazy">
-                <div class="name">${k}</div>
-                <div class="author">by ${e.author || 'Unknown'}</div>
-            </div>
-        `;
-    }).join('');
+    if(keys.length === 0) { grid.innerHTML = '<div class="empty-inv-msg">Brak emotek.</div>'; return; }
+    grid.innerHTML = keys.map(k => `<div class="emote-card" onclick="openEmoteDetail('${k}')"><img src="${all[k].url}" loading="lazy"><div class="name">${k}</div><div class="author">by ${all[k].author||'Unknown'}</div></div>`).join('');
 }
 
-// ==================== DAILY & MISC ====================
+// DAILY
 const DAILY_COOLDOWN = 24 * 60 * 60 * 1000;
 function checkDailyBonus() {
     const btn = document.getElementById('btnDaily');
@@ -898,7 +831,7 @@ function renderShop() {
             shopDiv.appendChild(title);
             const grid = document.createElement('div');
             grid.className = 'preset-grid';
-            items.forEach(item => grid.appendChild(createCard(item, 'shop'))); // MODE: shop
+            items.forEach(item => grid.appendChild(createCard(item, 'shop')));
             shopDiv.appendChild(grid);
         }
     });
@@ -908,10 +841,8 @@ function renderShop() {
 function createCard(item, mode) {
     const card = document.createElement("div");
     card.className = (mode === 'inventory' || mode === 'profile') ? "preset-card owned" : "preset-card";
-    
     card.onmouseenter = () => { if(item.category==='paint') document.getElementById('previewUser').style.cssText = item.previewStyle + "; font-size:13px;"; else if(item.category==='badge') document.getElementById('previewBadges').innerHTML = `<img src="${item.value}" class="gato-badge-preview">`; else if(['ink','font','bg'].includes(item.category)) document.querySelector('.chat-msg').style.cssText = item.previewStyle; };
     card.onmouseleave = () => { updatePreview(AppState.loadout); };
-    
     let btnHtml = "";
     if (mode === 'shop') {
         btnHtml = `<button class="btn-action btn-buy" onclick="doBuy(${CATALOG.findIndex(x => x.name === item.name)})">KUP ${item.price}</button>`;
@@ -924,10 +855,8 @@ function createCard(item, mode) {
         }
         btnHtml = isEquipped ? `<button class="btn-action btn-unequip" onclick="doUnequip('${item.category}')">ZDEJMIJ</button>` : `<button class="btn-action btn-equip" onclick="doEquip(${CATALOG.findIndex(x => x.name === item.name)})">ZAŁÓŻ</button>`;
     } else if (mode === 'profile') {
-        // Here we behave like inventory ONLY if viewing self
         btnHtml = `<span style="font-size:10px; color:#94a3b8; font-weight:700;">POSIADASZ</span>`;
     }
-
     let previewHtml = item.category === 'badge' ? `<img src="${item.value}" class="badge-preview-img" style="width:24px;">` : `<div style="${item.previewStyle}">Aa</div>`;
     card.innerHTML = `<span class="category-badge cat-${item.category}">${item.category}</span><div class="card-preview">${previewHtml}</div><div class="card-info"><div><span class="preset-name">${item.name}</span></div>${btnHtml}</div>`;
     return card;
@@ -940,14 +869,6 @@ window.doBuy = function(idx) {
         AppState.owned.push(item.name);
         updateCoinDisplay();
         renderShop();
-        // Update both inventory views
-        if(document.getElementById('inventoryGrid')) {
-             const invGrid = document.getElementById('inventoryGrid');
-             invGrid.innerHTML = "";
-             const myItems = CATALOG.filter(i => AppState.owned.includes(i.name));
-             if(myItems.length === 0) invGrid.innerHTML = '<div class="empty-inv-msg">Pusto :(</div>';
-             else myItems.forEach(item => invGrid.appendChild(createCard(item, 'inventory')));
-        }
         renderProfileInventory();
         fireConfetti(true);
     } else { alert("Za mało monet!"); }
@@ -959,34 +880,14 @@ window.doEquip = async function(idx) {
     let payload = item.value;
     if(item.category === 'paint') { payload = { type: item.type, value: item.value }; if(item.shadow) payload.shadow = item.shadow; if(item.filter) payload.filter = item.filter; }
     AppState.loadout[item.category] = (item.category==='paint') ? payload : item.value;
-    renderShop(); 
-    
-    // Refresh Inventory Views to update button state
-    if(document.getElementById('inventoryGrid')) {
-         const invGrid = document.getElementById('inventoryGrid');
-         invGrid.innerHTML = "";
-         CATALOG.filter(i => AppState.owned.includes(i.name)).forEach(item => invGrid.appendChild(createCard(item, 'inventory')));
-    }
-    renderProfileInventory();
-    
-    updatePreview(AppState.loadout);
+    renderShop(); renderProfileInventory(); updatePreview(AppState.loadout);
     await api(`premium/${AppState.user.login.toLowerCase()}/${item.category}`, "PUT", payload);
 }
 
 window.doUnequip = async function(cat) {
     if(!AppState.user) return;
     delete AppState.loadout[cat];
-    renderShop(); 
-    
-    // Refresh Inventory Views
-    if(document.getElementById('inventoryGrid')) {
-         const invGrid = document.getElementById('inventoryGrid');
-         invGrid.innerHTML = "";
-         CATALOG.filter(i => AppState.owned.includes(i.name)).forEach(item => invGrid.appendChild(createCard(item, 'inventory')));
-    }
-    renderProfileInventory();
-
-    updatePreview(AppState.loadout);
+    renderShop(); renderProfileInventory(); updatePreview(AppState.loadout);
     await api(`premium/${AppState.user.login.toLowerCase()}/${cat}`, "DELETE");
 }
 
@@ -998,7 +899,6 @@ window.redeemCode = function() {
 
 function updateCoinDisplay() { document.getElementById('coinCount').innerText = AppState.coins; localStorage.setItem('gato_coins', AppState.coins); localStorage.setItem('gato_owned', JSON.stringify(AppState.owned)); }
 window.switchTab = function(id) { document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); document.querySelectorAll('nav button').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); if(event.target.tagName==='BUTTON') event.target.classList.add('active'); }
-window.switchPaintSubTab = function(tab) { document.getElementById('viewInventory').style.display = tab==='inv'?'block':'none'; document.getElementById('viewShop').style.display = tab==='shop'?'block':'none'; document.getElementById('tabInv').className = tab==='inv'?'active':''; document.getElementById('tabShop').className = tab==='shop'?'active':''; }
 window.togglePreviewTheme = function() { document.getElementById('chatPreviewBox').classList.toggle('light'); }
 window.fireDownloadConfetti = function() { if(confettiCooldown) return; confettiCooldown = true; setTimeout(()=>confettiCooldown=false, 10000); const c=['#38bdf8','#facc15','#9146ff']; confetti({particleCount:100,spread:70,origin:{x:0,y:1},colors:c}); confetti({particleCount:100,spread:70,origin:{x:1,y:1},colors:c}); }
 function fireConfetti(shopMode){ if(shopMode) confetti({particleCount:100,spread:70,origin:{x:0.5,y:0.5},colors:['#facc15','#ffffff']}); }
