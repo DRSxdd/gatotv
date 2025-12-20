@@ -38,7 +38,7 @@
     .coin-display { display: flex; align-items: center; gap: 8px; background: rgba(250, 204, 21, 0.1); border: 1px solid var(--yellow); color: var(--yellow); padding: 6px 14px; border-radius: 10px; font-weight: 800; font-size: 14px; margin-right: 20px; white-space: nowrap; }
     .coin-display i { font-size: 16px; filter: drop-shadow(0 0 5px rgba(250,204,21,0.6)); }
 
-    /* SEARCH BAR (NAPRAWIONA) */
+    /* SEARCH BAR */
     .search-container { position: relative; width: 280px; margin-left: 20px; }
     .search-input { width: 100%; background: #0f172a; border: 1px solid var(--border); color: white; padding: 10px 15px 10px 40px; border-radius: 50px; font-family: 'Outfit', sans-serif; font-size: 13px; transition: 0.2s; outline: none; }
     .search-input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
@@ -82,9 +82,9 @@
     .btn-logout-mini { background: none; border: none; color: var(--text-muted); font-size: 11px; cursor: pointer; padding: 0; text-align: left; font-weight: 600; }
     .btn-logout-mini:hover { color: var(--danger); }
 
-    /* ROLE BADGE (MOVED HIGHER) */
+    /* ROLE BADGE */
     .role-badge-container {
-        position: fixed; bottom: 95px; left: 25px; /* Wyżej niż poprzednio */
+        position: fixed; bottom: 95px; left: 25px;
         display: none; align-items: center; gap: 8px;
         background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border);
         padding: 4px 10px; border-radius: 20px;
@@ -165,6 +165,12 @@
     .emote-card:hover .action-overlay { opacity: 1; }
     .del-btn { background: var(--danger); box-shadow: 0 2px 5px rgba(239,68,68,0.4); }
     .add-btn { background: var(--success); color: #000; }
+    
+    /* --- FIXED: EMOTE NAV BUTTONS --- */
+    .emote-sub-nav { display:flex; gap:10px; margin-bottom:20px; }
+    .emote-sub-nav button { background: var(--panel); border: 1px solid var(--border); color: var(--text-muted); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; transition: 0.2s; }
+    .emote-sub-nav button:hover { border-color: var(--accent); color: white; }
+    .emote-sub-nav button.active { background: var(--accent); color: #0b1120; border-color: var(--accent); font-weight: 800; box-shadow: 0 0 15px var(--accent-glow); }
 
     /* DAILY BUTTON */
     .btn-daily { margin-left: auto; background: linear-gradient(45deg, #facc15, #f59e0b); color: #000; border: none; border-radius: 50px; padding: 6px 16px; font-size: 12px; font-weight: 900; cursor: pointer; box-shadow: 0 0 15px rgba(250, 204, 21, 0.4); transition: 0.3s; display: flex; align-items: center; gap: 6px; animation: pulseGold 2s infinite; }
@@ -247,7 +253,7 @@
     </div>
 </div>
 
-<!-- EMOTE DETAIL MODAL -->
+<!-- EMOTE DETAIL MODAL (MOVED TO BOTTOM TO FIX GLITCH) -->
 <div id="emoteModal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
@@ -281,7 +287,7 @@
             <button class="btn-login" onclick="loginWithTwitch()">Zaloguj</button>
         </div>
         
-        <!-- SEARCH BAR -->
+        <!-- SEARCH BAR (FIXED) -->
         <div class="search-container" style="display:none;" id="searchContainer">
             <i class="fas fa-search search-icon"></i>
             <input type="text" id="userSearchInput" class="search-input" placeholder="Szukaj profilu...">
@@ -293,8 +299,8 @@
             <i class="fas fa-coins"></i> <span id="coinCount">10</span>
         </div>
         <nav>
-            <button class="active" onclick="switchTab('profile')">Profile</button>
-            <button onclick="switchTab('shop')">Shop</button>
+            <button class="active" onclick="switchTab('profile')">Profile</button> <!-- Domyślna -->
+            <button onclick="switchTab('shop')">Shop</button> <!-- Sklep ma swoją zakładkę -->
             <button onclick="switchTab('emotes')">Emotes</button>
             <button class="btn-purple" onclick="switchTab('premium')">Premium</button>
             <button class="btn-yellow" onclick="switchTab('download')">Download</button>
@@ -334,7 +340,7 @@
             </div>
 
             <div class="profile-content-area">
-                <!-- PREVIEW -->
+                <!-- PREVIEW IN PROFILE -->
                 <div class="chat-preview-container" id="chatPreviewBox">
                     <div class="chat-line">
                         <span class="chat-time">12:30</span>
@@ -346,7 +352,7 @@
                     <button class="toggle-theme-btn" onclick="togglePreviewTheme()">🌗</button>
                 </div>
 
-                <!-- INVENTORY (INTERACTIVE FOR SELF) -->
+                <!-- INVENTORY (INTERACTIVE FOR SELF, READONLY FOR OTHERS) -->
                 <div id="profileInventory" style="display:block;">
                     <div class="profile-section-title"><i class="fas fa-paint-brush"></i> Twoje Przedmioty</div>
                     <div id="profileInvGrid" class="preset-grid"></div>
@@ -367,7 +373,7 @@
         </div>
     </div>
 
-    <!-- SHOP TAB -->
+    <!-- SHOP TAB (SEPARATE) -->
     <div id="shop" class="panel">
         <div class="protected-content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -413,6 +419,7 @@
                 <div id="emotesGrid" class="emotes-grid">Ładowanie...</div>
             </div>
 
+            <!-- ADD FORM -->
             <div id="emotesFormView" style="display:none;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                     <h2>Dodaj Nową Emotkę</h2>
@@ -654,6 +661,7 @@ async function searchUserProfile(username) {
 async function fetchProfileDataFor(username) {
     const res = await fetch(`${DB_URL}/premium/${username}.json`);
     const loadout = res.ok ? (await res.json() || {}) : {};
+    // Mock inventory view for others
     const fakeInventory = [];
     if(loadout.paint) fakeInventory.push({name: "Active Paint", category: "paint", value: loadout.paint.value, previewStyle: ""}); 
     if(loadout.badge) fakeInventory.push({name: "Active Badge", category: "badge", value: loadout.badge, previewStyle: ""});
@@ -693,9 +701,11 @@ window.switchProfileSubTab = function(tab) {
     document.getElementById('profileInventory').style.display = tab==='inventory'?'block':'none';
     document.getElementById('profileUploaded').style.display = tab==='uploaded'?'block':'none';
     document.getElementById('profileChannel').style.display = tab==='channel'?'block':'none';
+    
     document.getElementById('pTabInv').className = tab==='inventory'?'active':'';
     document.getElementById('pTabUp').className = tab==='uploaded'?'active':'';
     document.getElementById('pTabCh').className = tab==='channel'?'active':'';
+    
     const targetUser = AppState.viewingUser ? AppState.viewingUser.login.toLowerCase() : (AppState.user ? AppState.user.login.toLowerCase() : null);
     if(targetUser) {
         if(tab === 'inventory') { if(AppState.viewingUser) fetchProfileDataFor(targetUser); else renderProfileInventory(); }
@@ -710,11 +720,11 @@ function renderProfileInventory(overrideItems = null) {
     grid.innerHTML = "";
     
     let itemsToShow = [];
-    let mode = 'inventory'; 
+    let mode = 'inventory'; // Default: Interactive equip/unequip
     if(AppState.viewingUser || overrideItems) { mode = 'profile'; itemsToShow = overrideItems || []; } 
     else { itemsToShow = CATALOG.filter(i => AppState.owned.includes(i.name)); }
 
-    if(itemsToShow.length === 0) grid.innerHTML = '<div class="empty-inv-msg">Pusty ekwipunek :(</div>';
+    if(itemsToShow.length === 0) grid.innerHTML = '<div class="empty-inv-msg">Pusto :(</div>';
     else itemsToShow.forEach(item => grid.appendChild(createCard(item, mode)));
 }
 
@@ -730,90 +740,6 @@ function renderProfileEmotes(type, targetUserLogin) {
     
     if(keys.length === 0) { grid.innerHTML = '<div class="empty-inv-msg">Brak emotek.</div>'; return; }
     grid.innerHTML = keys.map(k => `<div class="emote-card" onclick="openEmoteDetail('${k}')"><img src="${all[k].url}" loading="lazy"><div class="name">${k}</div><div class="author">by ${all[k].author||'Unknown'}</div></div>`).join('');
-}
-
-// DAILY
-const DAILY_COOLDOWN = 24 * 60 * 60 * 1000;
-function checkDailyBonus() {
-    const btn = document.getElementById('btnDaily');
-    if(!btn) return;
-    const lastClaim = localStorage.getItem('gato_last_daily');
-    const now = Date.now();
-    if (lastClaim && (now - lastClaim < DAILY_COOLDOWN)) {
-        btn.disabled = true;
-        const timeLeft = DAILY_COOLDOWN - (now - lastClaim);
-        const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
-        btn.innerHTML = `<i class="fas fa-clock"></i> ${hours}h`;
-        setTimeout(checkDailyBonus, 60000);
-    } else {
-        btn.disabled = false;
-        btn.innerHTML = `<i class="fas fa-gift"></i> ODBIERZ +10`;
-    }
-}
-window.claimDailyBonus = function() {
-    const btn = document.getElementById('btnDaily');
-    btn.disabled = true;
-    AppState.coins += 10;
-    updateCoinDisplay();
-    fireConfetti(true);
-    localStorage.setItem('gato_last_daily', Date.now());
-    checkDailyBonus();
-}
-
-async function fetchCloudData() {
-    if(!AppState.user) return;
-    try {
-        const res = await fetch(`${DB_URL}/premium/${AppState.user.login.toLowerCase()}.json`);
-        const data = res.ok ? (await res.json() || {}) : {};
-        AppState.loadout = data;
-        updatePreview(data);
-        renderShop();
-        renderProfileInventory();
-        const permsRes = await fetch(`${DB_URL}/users/${AppState.user.login.toLowerCase()}/allowed_channels.json`);
-        const perms = permsRes.ok ? (await permsRes.json() || {}) : {};
-        AppState.allowedChannels = Object.keys(perms);
-        fetchMyMods();
-    } catch(e) {}
-    loadAllEmotes();
-}
-
-async function fetchMyMods() {
-    try {
-        const res = await fetch(`${DB_URL}/channels/${AppState.user.login.toLowerCase()}/mods.json`);
-        renderModsList(res.ok ? (await res.json() || {}) : {});
-    } catch(e) {}
-}
-
-function renderModsList(mods) {
-    const list = document.getElementById('modsList');
-    if(!list) return;
-    list.innerHTML = '';
-    Object.keys(mods).forEach(modNick => {
-        const div = document.createElement('div');
-        div.className = 'mod-item';
-        div.innerHTML = `<span>${modNick}</span> <button class="btn-remove-mod" onclick="removeModerator('${modNick}')">Usuń</button>`;
-        list.appendChild(div);
-    });
-}
-
-function updatePreview(data) {
-    const userEl = document.getElementById('previewUser');
-    const msgEl = document.querySelector('.chat-msg');
-    const badgeContainer = document.getElementById('previewBadges');
-    if(!userEl) return;
-    userEl.style = ""; userEl.className = "chat-username"; msgEl.style = ""; badgeContainer.innerHTML = "";
-    if(!data) return;
-    if(data.paint) {
-        const p = data.paint;
-        if(p.type === 'color') userEl.style.color = p.value;
-        if(p.type === 'gradient') { userEl.style.backgroundImage = p.value; userEl.style.webkitBackgroundClip = "text"; userEl.style.webkitTextFillColor = "transparent"; userEl.style.fontWeight = "900"; if(p.filter) userEl.style.filter = p.filter; }
-        if(p.type === 'glow') { userEl.style.color = p.value; userEl.style.textShadow = `0 0 10px ${p.shadow}`; }
-        if(p.type === 'animated-rainbow') userEl.classList.add('gato-anim-rainbow');
-    }
-    if(data.badge) badgeContainer.innerHTML = `<img src="${data.badge}" class="gato-badge-preview">`;
-    if(data.ink) msgEl.style.color = data.ink;
-    if(data.font) msgEl.style.fontFamily = data.font;
-    if(data.bg) { msgEl.style.background = data.bg; msgEl.style.padding = "2px 5px"; msgEl.style.borderRadius = "4px"; }
 }
 
 function renderShop() {
@@ -841,8 +767,10 @@ function renderShop() {
 function createCard(item, mode) {
     const card = document.createElement("div");
     card.className = (mode === 'inventory' || mode === 'profile') ? "preset-card owned" : "preset-card";
+    
     card.onmouseenter = () => { if(item.category==='paint') document.getElementById('previewUser').style.cssText = item.previewStyle + "; font-size:13px;"; else if(item.category==='badge') document.getElementById('previewBadges').innerHTML = `<img src="${item.value}" class="gato-badge-preview">`; else if(['ink','font','bg'].includes(item.category)) document.querySelector('.chat-msg').style.cssText = item.previewStyle; };
     card.onmouseleave = () => { updatePreview(AppState.loadout); };
+    
     let btnHtml = "";
     if (mode === 'shop') {
         btnHtml = `<button class="btn-action btn-buy" onclick="doBuy(${CATALOG.findIndex(x => x.name === item.name)})">KUP ${item.price}</button>`;
@@ -857,6 +785,7 @@ function createCard(item, mode) {
     } else if (mode === 'profile') {
         btnHtml = `<span style="font-size:10px; color:#94a3b8; font-weight:700;">POSIADASZ</span>`;
     }
+
     let previewHtml = item.category === 'badge' ? `<img src="${item.value}" class="badge-preview-img" style="width:24px;">` : `<div style="${item.previewStyle}">Aa</div>`;
     card.innerHTML = `<span class="category-badge cat-${item.category}">${item.category}</span><div class="card-preview">${previewHtml}</div><div class="card-info"><div><span class="preset-name">${item.name}</span></div>${btnHtml}</div>`;
     return card;
