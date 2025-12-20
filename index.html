@@ -24,19 +24,25 @@
         --success: #22c55e;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top, #172554, var(--bg)); color: var(--text); min-height: 100vh; padding-bottom: 80px; }
+    body { margin: 0; font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top, #172554, var(--bg)); color: var(--text); min-height: 100vh; padding-bottom: 50px; }
     
     /* HEADER */
     header { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.3); }
-    .header-left { display: flex; align-items: center; gap: 25px; }
-    .logo { font-size: 28px; font-weight: 900; color: var(--accent); letter-spacing: -1px; text-transform: uppercase; text-shadow: 0 0 20px var(--accent-glow); cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .header-left { display: flex; align-items: center; gap: 25px; flex: 1; } /* Added flex:1 to handle search bar layout */
+    .logo { font-size: 28px; font-weight: 900; color: var(--accent); letter-spacing: -1px; text-transform: uppercase; text-shadow: 0 0 20px var(--accent-glow); cursor: pointer; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
     .beta-tag { font-size: 10px; background: var(--danger); color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700; transform: translateY(-2px); }
     
     .btn-login { background: var(--twitch); color: white; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 0 15px rgba(145, 70, 255, 0.2); }
     .btn-login:hover { background: #772ce8; transform: translateY(-1px); }
 
-    .coin-display { display: flex; align-items: center; gap: 8px; background: rgba(250, 204, 21, 0.1); border: 1px solid var(--yellow); color: var(--yellow); padding: 6px 14px; border-radius: 10px; font-weight: 800; font-size: 14px; margin-right: 20px; }
+    .coin-display { display: flex; align-items: center; gap: 8px; background: rgba(250, 204, 21, 0.1); border: 1px solid var(--yellow); color: var(--yellow); padding: 6px 14px; border-radius: 10px; font-weight: 800; font-size: 14px; margin-right: 20px; white-space: nowrap; }
     .coin-display i { font-size: 16px; filter: drop-shadow(0 0 5px rgba(250,204,21,0.6)); }
+
+    /* SEARCH BAR (FIXED) */
+    .search-container { position: relative; width: 300px; margin-left: 20px; }
+    .search-input { width: 100%; background: #0f172a; border: 1px solid var(--border); color: white; padding: 10px 15px 10px 40px; border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 13px; transition: 0.2s; outline: none; }
+    .search-input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; pointer-events: none; }
 
     nav { display: flex; gap: 5px; background: #0f172a; padding: 4px; border-radius: 10px; border: 1px solid var(--border); }
     nav button { background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 600; padding: 8px 16px; cursor: pointer; border-radius: 6px; transition: 0.2s; }
@@ -56,7 +62,7 @@
     .login-blocker h2 { font-size: 28px; margin-bottom: 10px; color: white; }
     .protected-content { display: none; }
 
-    /* --- NEW FLOATING USER PROFILE (BOTTOM LEFT) --- */
+    /* FLOATING USER PROFILE */
     .user-profile-floater {
         position: fixed; bottom: 20px; left: 20px;
         display: none; /* Flex when logged in */
@@ -77,11 +83,11 @@
     .btn-logout-mini { background: none; border: none; color: var(--text-muted); font-size: 11px; cursor: pointer; padding: 0; text-align: left; font-weight: 600; }
     .btn-logout-mini:hover { color: var(--danger); }
 
-    /* ROLE BADGE (MOVED UP) */
+    /* ROLE BADGE (MOVED HIGHER AS REQUESTED) */
     .role-badge-container {
-        position: fixed; bottom: 85px; left: 30px; /* Moved above profile */
+        position: fixed; bottom: 90px; left: 25px; /* Troszkę wyżej */
         display: none; align-items: center; gap: 8px;
-        background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border);
+        background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border);
         padding: 4px 10px; border-radius: 20px;
         font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 999;
@@ -89,7 +95,7 @@
     .role-user { border-color: var(--success); color: var(--success); }
     .role-admin { border-color: var(--danger); color: var(--danger); }
 
-    /* --- PROFILE MAIN CONTENT --- */
+    /* --- PROFILE SPECIFIC --- */
     .profile-header { position: relative; margin-bottom: 20px; background: #131c2e; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; margin-top: 20px; }
     .profile-banner { height: 180px; background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2072&auto=format&fit=crop') center/cover; position: relative; }
     .profile-banner::after { content:''; position: absolute; bottom:0; left:0; width:100%; height:100%; background: linear-gradient(to top, #131c2e 0%, transparent 80%); }
@@ -99,31 +105,32 @@
     
     .profile-info-block { margin-left: 20px; margin-bottom: 45px; z-index: 2; flex: 1; }
     .profile-name-big { font-size: 28px; font-weight: 900; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.8); line-height: 1.2; display: flex; align-items: center; gap: 10px; }
-    
-    .profile-nav { display: flex; gap: 10px; margin-bottom: 20px; margin-left: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-    .profile-nav button { background: transparent; border: none; color: var(--text-muted); font-size: 14px; font-weight: 700; cursor: pointer; padding: 8px 16px; border-radius: 8px; transition: 0.2s; position: relative; }
-    .profile-nav button:hover { color: white; background: rgba(255,255,255,0.05); }
-    .profile-nav button.active { color: white; }
-    .profile-nav button.active::after { content:''; position:absolute; bottom:-11px; left:0; width:100%; height:3px; background:var(--accent); border-radius:10px 10px 0 0; }
+    .profile-role-tag { font-size: 11px; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; background: rgba(56, 189, 248, 0.1); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-top: 5px; }
 
-    /* CHAT PREVIEW IN PROFILE */
-    .chat-preview-container { 
-        background: #18181b; border: 1px solid #333; border-radius: 12px; padding: 15px 20px; margin-bottom: 30px; 
-        font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: space-between; 
-        position: relative; z-index: 10;
-    }
+    .profile-nav { display: flex; gap: 10px; margin-bottom: 20px; margin-left: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+    .profile-nav button { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); font-size: 13px; font-weight: 700; cursor: pointer; padding: 8px 16px; border-radius: 8px; transition: 0.2s; backdrop-filter: blur(5px); }
+    .profile-nav button:hover { color: white; background: rgba(255,255,255,0.1); }
+    .profile-nav button.active { background: var(--twitch); color: white; border-color: var(--twitch); box-shadow: 0 5px 15px rgba(145, 70, 255, 0.3); }
+
+    .profile-content-area { padding: 20px 10px; }
+    .profile-section-title { font-size: 18px; font-weight: 800; color: white; margin-bottom: 20px; border-left: 4px solid var(--twitch); padding-left: 15px; display: flex; align-items: center; gap: 10px; }
+    .empty-state { text-align: center; padding: 40px; color: var(--text-muted); border: 2px dashed var(--border); border-radius: 12px; grid-column: 1 / -1; width: 100%; }
+
+    /* Viewing Mode Badge */
+    .viewing-badge { font-size: 10px; background: var(--yellow); color: black; padding: 2px 8px; border-radius: 20px; vertical-align: middle; }
+    .back-to-me-btn { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; backdrop-filter: blur(5px); transition: 0.2s; z-index: 10; display: none; }
+    .back-to-me-btn:hover { background: var(--accent); border-color: var(--accent); }
+
+    /* CHAT PREVIEW */
+    .chat-preview-container { background: #18181b; border: 1px solid #333; border-radius: 12px; padding: 15px 20px; margin-bottom: 30px; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 10; }
     .chat-preview-container.light { background: #ffffff; border-color: #e5e5e5; }
-    .chat-preview-container.light .chat-msg, .chat-preview-container.light .chat-colon, .chat-preview-container.light .chat-time { color: #0e0e10; }
     .chat-line { display: flex; align-items: center; font-size: 13px; }
-    .chat-time { color: #adadb8; font-size: 11px; margin-right: 8px; }
-    .chat-badges { display: flex; gap: 4px; margin-right: 6px; align-items: center; }
-    .gato-badge-preview { width: 18px; height: 18px; border-radius: 3px; vertical-align: middle; }
-    .chat-username { font-weight: 700; color: #00ff00; margin-right: 2px; cursor: pointer; }
-    .chat-colon { color: #efeff1; margin-right: 5px; }
+    .chat-username { font-weight: 700; color: #00ff00; margin-right: 2px; }
     .chat-msg { color: #efeff1; }
+    .gato-badge-preview { width: 18px; height: 18px; border-radius: 3px; vertical-align: middle; }
     .toggle-theme-btn { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 5px 10px; border-radius: 6px; cursor: pointer; }
 
-    /* SHOP GRID */
+    /* GRID & CARDS */
     .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
     .preset-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 6px; cursor: pointer; text-align: center; transition: 0.2s; position: relative; overflow: hidden; display: flex; flex-direction: column; }
     .preset-card:hover { border-color: var(--text-muted); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
@@ -139,6 +146,7 @@
     .btn-equip:hover { background: #16a34a; }
     .btn-unequip { background: #ef4444; color: #fff; } 
     .btn-unequip:hover { background: #dc2626; }
+
     .category-badge { position: absolute; top:8px; left:8px; padding:2px 6px; border-radius:4px; font-size:9px; font-weight:bold; text-transform:uppercase; color:white; z-index: 2; }
     .cat-paint { background: #38bdf8; } .cat-badge { background: #9146ff; } .cat-ink { background: #f43f5e; } .cat-font { background: #10b981; } .cat-bg { background: #f59e0b; }
     
@@ -159,6 +167,12 @@
     .emote-card:hover .action-overlay { opacity: 1; }
     .del-btn { background: var(--danger); box-shadow: 0 2px 5px rgba(239,68,68,0.4); }
     .add-btn { background: var(--success); color: #000; }
+
+    /* DAILY BUTTON */
+    .btn-daily { margin-left: auto; background: linear-gradient(45deg, #facc15, #f59e0b); color: #000; border: none; border-radius: 50px; padding: 6px 16px; font-size: 12px; font-weight: 900; cursor: pointer; box-shadow: 0 0 15px rgba(250, 204, 21, 0.4); transition: 0.3s; display: flex; align-items: center; gap: 6px; animation: pulseGold 2s infinite; }
+    .btn-daily:hover { transform: scale(1.05); }
+    .btn-daily:disabled { background: #334155; color: #94a3b8; cursor: not-allowed; animation: none; box-shadow: none; }
+    @keyframes pulseGold { 0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); } 100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); } }
 
     /* PREMIUM */
     .pricing-grid { display: flex; justify-content: center; margin-top: 40px; }
@@ -189,46 +203,7 @@
     .redeem-floater { position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, #ef4444, #f43f5e); color: white; padding: 12px 24px; border-radius: 50px; font-weight: 800; font-size: 14px; cursor: pointer; box-shadow: 0 5px 15px rgba(239, 68, 68, 0.2); transition: 0.3s; z-index: 999; display: flex; align-items: center; gap: 10px; border: 2px solid rgba(255,255,255,0.2); }
     .redeem-floater:hover { transform: scale(1.05) rotate(-2deg); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); }
 
-    /* Daily Button */
-    .btn-daily { margin-left: auto; background: linear-gradient(45deg, #facc15, #f59e0b); color: #000; border: none; border-radius: 50px; padding: 6px 16px; font-size: 12px; font-weight: 900; cursor: pointer; box-shadow: 0 0 15px rgba(250, 204, 21, 0.4); transition: 0.3s; display: flex; align-items: center; gap: 6px; animation: pulseGold 2s infinite; }
-    .btn-daily:hover { transform: scale(1.05); }
-    .btn-daily:disabled { background: #334155; color: #94a3b8; cursor: not-allowed; animation: none; box-shadow: none; }
-    @keyframes pulseGold { 0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); } 100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); } }
-
-    /* EMOTE DETAIL MODAL */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); z-index: 2000; display: none; align-items: center; justify-content: center; animation: fadeIn 0.2s; }
-    .modal-content { background: #1e293b; border: 1px solid var(--border); width: 90%; max-width: 450px; border-radius: 20px; padding: 0; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); overflow: hidden; animation: slideUpModal 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    @keyframes slideUpModal { from { transform: translateY(20px) scale(0.9); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
-    .modal-header { background: #0f172a; padding: 40px 20px; text-align: center; border-bottom: 1px solid var(--border); position: relative; }
-    .modal-close { position: absolute; top: 15px; right: 20px; background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; transition: 0.2s; }
-    .modal-close:hover { color: white; }
-    .modal-img { height: 100px; width: auto; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); transition: 0.3s; }
-    .modal-img:hover { transform: scale(1.1); filter: drop-shadow(0 0 30px var(--accent-glow)); }
-    .modal-body { padding: 30px; text-align: center; }
-    .modal-code { font-size: 24px; font-weight: 900; color: white; margin-bottom: 5px; }
-    .modal-meta { color: var(--text-muted); font-size: 13px; margin-bottom: 25px; display: flex; justify-content: center; gap: 15px; }
-    .btn-modal-action { width: 100%; padding: 15px; border-radius: 12px; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border: none; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .btn-assign { background: var(--success); color: white; box-shadow: 0 5px 20px rgba(34, 197, 94, 0.3); }
-    .btn-assign:hover { background: #16a34a; transform: translateY(-2px); }
-    .btn-delete { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); margin-top: 10px; }
-    .btn-delete:hover { background: var(--danger); color: white; }
-
-    /* EMOTE SUB NAV & TABS */
-    .emote-sub-nav { display:flex; gap:10px; margin-bottom:20px; }
-    .emote-sub-nav button { background: var(--panel); border: 1px solid var(--border); color: var(--text-muted); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; transition: 0.2s; }
-    .emote-sub-nav button:hover { border-color: var(--accent); color: white; }
-    .emote-sub-nav button.active { background: var(--accent); color: #0b1120; border-color: var(--accent); font-weight: 800; box-shadow: 0 0 15px var(--accent-glow); }
-
-    /* MANAGED VIEW */
-    .manage-section { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 25px; margin-bottom: 25px; }
-    .manage-header { font-size: 18px; font-weight: 700; color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-    .manage-header i { color: var(--accent); }
-    .mods-list-container { display: flex; flex-direction: column; gap: 8px; }
-    .mod-item { display: flex; justify-content: space-between; align-items: center; background: #131c2e; padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 14px; font-weight: 600; }
-    .btn-remove-mod { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 700; transition: 0.2s; }
-    .btn-remove-mod:hover { background: var(--danger); color: white; }
-
-    /* EMOTE ADD FORM */
+    /* Emote Form & Managed */
     .emote-form-container { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
     .emote-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
     .form-group { display: flex; flex-direction: column; gap: 8px; }
@@ -239,7 +214,17 @@
     .file-drop-zone { border: 2px dashed var(--border); background: rgba(15, 23, 42, 0.5); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: 0.2s; position: relative; }
     .file-drop-zone:hover { border-color: var(--accent); background: rgba(56, 189, 248, 0.05); }
     .file-drop-zone input[type=file] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .manage-section { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 25px; margin-bottom: 25px; }
+    .manage-header { font-size: 18px; font-weight: 700; color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+    .manage-header i { color: var(--accent); }
+    .mods-list-container { display: flex; flex-direction: column; gap: 8px; }
+    .mod-item { display: flex; justify-content: space-between; align-items: center; background: #131c2e; padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 14px; font-weight: 600; }
+    .btn-remove-mod { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 700; transition: 0.2s; }
+    .btn-remove-mod:hover { background: var(--danger); color: white; }
 
+    .hidden { display: none !important; }
+    .flex { display: flex !important; }
+    
     /* UTILS */
     button.btn-primary { padding: 14px 24px; background: linear-gradient(135deg, var(--accent), #0ea5e9); border: none; color: #0f172a; font-weight: 900; border-radius: 10px; cursor: pointer; transition: 0.2s; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; width: 100%; }
     button.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 20px var(--accent-glow); }
@@ -248,9 +233,6 @@
     button.btn-primary.small { padding: 8px 16px; font-size: 11px; }
     button.btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 11px; transition: 0.2s; }
     button.btn-outline:hover { background: rgba(56, 189, 248, 0.1); }
-
-    .hidden { display: none !important; }
-    .flex { display: flex !important; }
 </style>
 </head>
 <body>
@@ -280,9 +262,11 @@
                 <span id="detailAuthor"><i class="fas fa-user"></i> Autor</span>
                 <span id="detailScope"><i class="fas fa-globe"></i> Scope</span>
             </div>
+            
             <button id="btnAssign" class="btn-modal-action btn-assign" onclick="addToMyChannel()">
                 <i class="fas fa-plus-circle"></i> PRZYPISZ DO KANAŁU
             </button>
+            
             <div id="adminControls" style="display:none;">
                 <button class="btn-modal-action btn-delete" onclick="deleteCurrentEmote()">
                     <i class="fas fa-trash"></i> USUŃ EMOTKĘ
@@ -299,7 +283,7 @@
             <button class="btn-login" onclick="loginWithTwitch()">Zaloguj</button>
         </div>
         
-        <!-- SEARCH BAR -->
+        <!-- SEARCH BAR (FIXED) -->
         <div class="search-container" style="display:none;" id="searchContainer">
             <i class="fas fa-search search-icon"></i>
             <input type="text" id="userSearchInput" class="search-input" placeholder="Szukaj profilu...">
@@ -311,9 +295,9 @@
             <i class="fas fa-coins"></i> <span id="coinCount">10</span>
         </div>
         <nav>
-            <button class="active" onclick="switchTab('profile')">Profile</button> <!-- Main Tab -->
-            <button onclick="switchTab('shop')">Shop</button> <!-- Separate Shop Tab -->
+            <button class="active" onclick="switchTab('paints')">Paints</button> <!-- Domyślna -->
             <button onclick="switchTab('emotes')">Emotes</button>
+            <button onclick="switchTab('profile')">Profile</button>
             <button class="btn-purple" onclick="switchTab('premium')">Premium</button>
             <button class="btn-yellow" onclick="switchTab('download')">Download</button>
         </nav>
@@ -322,80 +306,32 @@
 
 <div class="container">
 
-    <!-- PROFILE TAB (MAIN) -->
-    <div id="profile" class="panel active">
+    <!-- PAINTS (MAIN TAB) -->
+    <div id="paints" class="panel active">
         <div class="login-blocker">
             <h2>🔒 Wymagane Logowanie</h2>
-            <p style="color:#94a3b8; margin-bottom:20px;">Zaloguj się, aby zarządzać profilem.</p>
+            <p style="color:#94a3b8; margin-bottom:20px;">Zaloguj się, aby konfigurować swój wygląd na czacie.</p>
             <button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button>
         </div>
 
         <div class="protected-content">
-            <div class="profile-header">
-                <button id="btnBackToMe" class="back-to-me-btn" onclick="returnToMyProfile()">WRÓĆ DO SIEBIE</button>
-                <div class="profile-banner"></div>
-                <div class="profile-meta-container">
-                    <img id="profileAvatarBig" class="profile-avatar-big" src="">
-                    <div class="profile-info-block">
-                        <div class="profile-name-row" style="display:flex; align-items:center; gap:10px;">
-                            <div id="profileNameBig" class="profile-name-big">...</div>
-                            <span id="viewingBadge" class="viewing-badge" style="display:none;">PODGLĄD</span>
-                        </div>
-                        <div id="profileRoleTag" class="profile-role-tag">USER</div>
-                    </div>
-                    <div class="profile-nav">
-                        <button id="pTabInv" class="active" onclick="switchProfileSubTab('inventory')"><i class="fas fa-backpack"></i> Ekwipunek</button>
-                        <button id="pTabUp" onclick="switchProfileSubTab('uploaded')"><i class="fas fa-cloud-upload-alt"></i> Uploaded</button>
-                        <button id="pTabCh" onclick="switchProfileSubTab('channel')"><i class="fas fa-tv"></i> Channel</button>
-                    </div>
+            <div class="chat-preview-container" id="chatPreviewBox">
+                <div class="chat-line">
+                    <span class="chat-time">12:30</span>
+                    <span class="chat-badges" id="previewBadges"></span>
+                    <span class="chat-username" id="previewUser">TwójNick</span>
+                    <span class="chat-colon">:</span>
+                    <span class="chat-msg">Gato.TV zmienia Twój czat! 🐱</span>
                 </div>
+                <button class="toggle-theme-btn" onclick="togglePreviewTheme()">🌗</button>
             </div>
 
-            <div class="profile-content-area">
-                <!-- CHAT PREVIEW (Moved to Profile) -->
-                <div class="chat-preview-container" id="chatPreviewBox">
-                    <div class="chat-line">
-                        <span class="chat-time">12:30</span>
-                        <span class="chat-badges" id="previewBadges"></span>
-                        <span class="chat-username" id="previewUser">TwójNick</span>
-                        <span class="chat-colon">:</span>
-                        <span class="chat-msg">Gato.TV zmienia Twój czat! 🐱</span>
-                    </div>
-                    <button class="toggle-theme-btn" onclick="togglePreviewTheme()">🌗</button>
-                </div>
-
-                <!-- INVENTORY (Interactive) -->
-                <div id="profileInventory" style="display:block;">
-                    <div class="profile-section-title"><i class="fas fa-paint-brush"></i> Twoje Przedmioty</div>
-                    <div id="profileInvGrid" class="preset-grid"></div>
-                </div>
-
-                <!-- UPLOADED -->
-                <div id="profileUploaded" style="display:none;">
-                    <div class="profile-section-title"><i class="fas fa-pen-nib"></i> Stworzone przez Ciebie</div>
-                    <div id="profileUploadedGrid" class="emotes-grid"></div>
-                </div>
-
-                <!-- CHANNEL -->
-                <div id="profileChannel" style="display:none;">
-                    <div class="profile-section-title"><i class="fas fa-hashtag"></i> Przypisane do Kanału</div>
-                    <div id="profileChannelGrid" class="emotes-grid"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- SHOP TAB (SEPARATE) -->
-    <div id="shop" class="panel">
-        <div class="protected-content">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <h2 style="margin:0;">Sklep Gato.TV</h2>
-                <button id="btnDaily" class="btn-daily" onclick="claimDailyBonus()">
-                    <i class="fas fa-gift"></i> ODBIERZ +10
-                </button>
+            <!-- PAINTS only shows Inventory (Interactive) -->
+            <div class="sub-nav">
+                <button id="tabInv" class="active">EKWIPUNEK</button>
             </div>
             
-            <div id="shopContent"></div>
+            <div id="inventoryGrid" class="preset-grid"></div>
         </div>
     </div>
 
@@ -431,7 +367,7 @@
                 <div id="emotesGrid" class="emotes-grid">Ładowanie...</div>
             </div>
 
-            <!-- ADD FORM & MANAGE VIEW (Same as before) -->
+            <!-- ADD FORM -->
             <div id="emotesFormView" style="display:none;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                     <h2>Dodaj Nową Emotkę</h2>
@@ -440,7 +376,7 @@
                 <div class="emote-form-container">
                     <div class="emote-form-grid">
                         <div class="form-group">
-                            <label>Kod Emotki</label>
+                            <label>Kod Emotki (np. xdd)</label>
                             <input id="emoName" placeholder="Co wpisać na czacie?">
                         </div>
                         <div class="form-group">
@@ -488,11 +424,76 @@
         </div>
     </div>
 
+    <!-- PROFILE TAB (VIEW/SEARCH/EQUIP) -->
+    <div id="profile" class="panel">
+        <div class="login-blocker">
+            <h2>🔒 Wymagane Logowanie</h2>
+            <p style="color:#94a3b8; margin-bottom:20px;">Zaloguj się, aby zobaczyć profil.</p>
+            <button class="btn-login" style="margin:0 auto" onclick="loginWithTwitch()">Zaloguj przez Twitch</button>
+        </div>
+
+        <div class="protected-content">
+            <div class="profile-header">
+                <button id="btnBackToMe" class="back-to-me-btn" onclick="returnToMyProfile()">WRÓĆ DO SIEBIE</button>
+                <div class="profile-banner"></div>
+                <div class="profile-meta-container">
+                    <img id="profileAvatarBig" class="profile-avatar-big" src="">
+                    <div class="profile-info-block">
+                        <div class="profile-name-row" style="display:flex; align-items:center; gap:10px;">
+                            <div id="profileNameBig" class="profile-name-big">...</div>
+                            <span id="viewingBadge" class="viewing-badge" style="display:none;">PODGLĄD</span>
+                        </div>
+                        <div id="profileRoleTag" class="profile-role-tag">USER</div>
+                    </div>
+                    <div class="profile-nav">
+                        <button id="pTabInv" class="active" onclick="switchProfileSubTab('inventory')"><i class="fas fa-backpack"></i> Ekwipunek</button>
+                        <button id="pTabUp" onclick="switchProfileSubTab('uploaded')"><i class="fas fa-cloud-upload-alt"></i> Uploaded</button>
+                        <button id="pTabCh" onclick="switchProfileSubTab('channel')"><i class="fas fa-tv"></i> Channel</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-content-area">
+                <!-- INVENTORY (INTERACTIVE FOR SELF, READONLY FOR OTHERS) -->
+                <div id="profileInventory" style="display:block;">
+                    <div class="profile-section-title"><i class="fas fa-paint-brush"></i> Przedmioty</div>
+                    <div id="profileInvGrid" class="preset-grid"></div>
+                </div>
+
+                <!-- UPLOADED -->
+                <div id="profileUploaded" style="display:none;">
+                    <div class="profile-section-title"><i class="fas fa-pen-nib"></i> Stworzone przez użytkownika</div>
+                    <div id="profileUploadedGrid" class="emotes-grid"></div>
+                </div>
+
+                <!-- CHANNEL -->
+                <div id="profileChannel" style="display:none;">
+                    <div class="profile-section-title"><i class="fas fa-hashtag"></i> Kanał użytkownika</div>
+                    <div id="profileChannelGrid" class="emotes-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SHOP TAB (NEW) -->
+    <div id="shop" class="panel">
+        <div class="protected-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 style="margin:0;">Sklep Gato.TV</h2>
+                <button id="btnDaily" class="btn-daily" onclick="claimDailyBonus()">
+                    <i class="fas fa-gift"></i> ODBIERZ +10
+                </button>
+            </div>
+            
+            <div id="shopContent"></div>
+        </div>
+    </div>
+
     <!-- PREMIUM -->
     <div id="premium" class="panel">
         <div class="hero-card" style="margin-bottom:20px;">
             <h1>Zostań Legendą Gato.TV</h1>
-            <p style="color:var(--text-muted); margin-top:10px;">Odblokuj pełny potencjał.</p>
+            <p style="color:var(--text-muted); margin-top:10px;">Odblokuj pełny potencjał i wyróżnij się na czacie.</p>
         </div>
         <div class="pricing-grid">
             <div class="price-card featured">
@@ -501,9 +502,9 @@
                 <ul class="price-features">
                     <li><i class="fas fa-coins" style="color:#ffd700"></i> <b>Mnożnik Coins x5</b></li>
                     <li><i class="fas fa-certificate" style="color:#38bdf8"></i> <b>Specjalna Odznaka</b></li>
-                    <li><i class="fas fa-magic" style="color:#f43f5e"></i> <b>Animowany Kolor</b></li>
+                    <li><i class="fas fa-magic" style="color:#f43f5e"></i> <b>Animowany Kolor Nicku</b></li>
                     <li><i class="fas fa-check"></i> Priorytetowe wsparcie</li>
-                    <li><i class="fas fa-check"></i> Wszystkie style</li>
+                    <li><i class="fas fa-check"></i> Dostęp do wszystkich stylów</li>
                 </ul>
                 <button class="btn-buy-plan" onclick="alert('Płatności wkrótce!')">KUP TERAZ</button>
             </div>
@@ -517,17 +518,27 @@
             <p style="color:#94a3b8; margin: 10px 0 20px;">Wersja 1.0 Beta</p>
             <button class="btn-download-big" onclick="fireDownloadConfetti()">POBIERZ WTYCZKĘ</button>
         </div>
+
         <div class="info-block">
-            <h2>Możliwości</h2>
+            <h2>Dlaczego Warto?</h2>
             <div class="info-grid-box">
                 <div class="info-item">
-                    <h3><i class="fas fa-bolt"></i> Funkcje</h3>
+                    <h3><i class="fas fa-bolt"></i> Możliwości</h3>
                     <ul>
-                        <li>Menu emotek Gato.TV</li>
-                        <li>Historia wiadomości</li>
-                        <li>Auto-Punkty</li>
+                        <li>Menu emotek Gato.TV wbudowane w czat</li>
+                        <li>Historia wiadomości (strzałka w górę)</li>
+                        <li>Automatyczne zbieranie punktów kanału</li>
                         <li>Wyszukiwarka emotek</li>
-                        <li>Personalizacja</li>
+                        <li>Personalizacja nicku (Kolory, Gradienty)</li>
+                    </ul>
+                </div>
+                <div class="info-item">
+                    <h3><i class="fas fa-terminal"></i> Instalacja</h3>
+                    <ul>
+                        <li>1. Zainstaluj Tampermonkey w przeglądarce.</li>
+                        <li>2. Kliknij przycisk "POBIERZ WTYCZKĘ" powyżej.</li>
+                        <li>3. Zatwierdź instalację skryptu.</li>
+                        <li>4. Odśwież Twitcha i ciesz się nowymi funkcjami!</li>
                     </ul>
                 </div>
             </div>
@@ -603,8 +614,7 @@ window.onload = async () => {
 
 function showLoginScreen() {
     document.getElementById('loginBtnContainer').style.display = 'block';
-    document.getElementById('userProfile').style.display = 'none'; // OLD HEADER PROFILE
-    document.getElementById('userProfileFloater').style.display = 'none'; // NEW FLOATER
+    document.getElementById('userProfileFloater').style.display = 'none';
     document.getElementById('coinDisplay').style.display = 'none';
     document.getElementById('searchContainer').style.display = 'none';
     document.querySelectorAll('.login-blocker').forEach(b => b.style.display = 'flex');
@@ -614,8 +624,7 @@ function showLoginScreen() {
 
 function showDashboard(user) {
     document.getElementById('loginBtnContainer').style.display = 'none';
-    // document.getElementById('userProfile').style.display = 'flex'; // HIDE OLD HEADER
-    document.getElementById('userProfileFloater').style.display = 'flex'; // SHOW NEW FLOATER
+    document.getElementById('userProfileFloater').style.display = 'flex';
     document.getElementById('coinDisplay').style.display = 'flex';
     document.getElementById('searchContainer').style.display = 'block';
     document.querySelectorAll('.login-blocker').forEach(b => b.setAttribute('style', 'display:none !important'));
@@ -637,6 +646,7 @@ function showDashboard(user) {
     badge.className = 'role-badge-container ' + (isAdm ? 'role-admin' : 'role-user');
     badge.innerHTML = `<span>${isAdm ? 'ADMIN' : 'USER'}</span>`;
     
+    document.getElementById('profileRoleTag').innerText = isAdm ? "ADMIN" : "USER";
     if(isAdm) document.getElementById('adminScopeOption').style.display = 'block';
 }
 
@@ -679,7 +689,6 @@ async function fetchProfileDataFor(username) {
     const res = await fetch(`${DB_URL}/premium/${username}.json`);
     const loadout = res.ok ? (await res.json() || {}) : {};
     
-    // Fake inventory for display (active items only)
     const fakeInventory = [];
     if(loadout.paint) fakeInventory.push({name: "Active Paint", category: "paint", value: loadout.paint.value, previewStyle: ""}); 
     if(loadout.badge) fakeInventory.push({name: "Active Badge", category: "badge", value: loadout.badge, previewStyle: ""});
@@ -742,15 +751,22 @@ function renderProfileInventory(overrideItems = null, isReadOnly = false) {
     if(!grid) return;
     grid.innerHTML = "";
     
+    // Logic: In profile tab, if it's MY profile, I want to equip/unequip.
+    // If it's OTHER profile (viewingUser), I want read-only.
+    // Based on user request: "z zakładki "profile" w ekwipunku moim mogę wybierać painty do zakładania"
+    
     let itemsToShow = [];
-    if(overrideItems) {
-        itemsToShow = overrideItems; 
+    let mode = 'inventory'; // Default interactive
+    
+    if(AppState.viewingUser) {
+        mode = 'profile'; // Read only for others
+        itemsToShow = overrideItems || [];
     } else {
         itemsToShow = CATALOG.filter(i => AppState.owned.includes(i.name)); 
     }
 
-    if(itemsToShow.length === 0) grid.innerHTML = '<div class="empty-inv-msg">Pusto :(</div>';
-    else itemsToShow.forEach(item => grid.appendChild(createCard(item, 'profile'))); // Always 'profile' mode (read-only)
+    if(itemsToShow.length === 0) grid.innerHTML = '<div class="empty-inv-msg">Pusty ekwipunek :(</div>';
+    else itemsToShow.forEach(item => grid.appendChild(createCard(item, mode)));
 }
 
 function renderProfileEmotes(type, targetUserLogin) {
@@ -869,14 +885,8 @@ function updatePreview(data) {
 
 function renderShop() {
     const shopDiv = document.getElementById("shopContent");
-    const invDiv = document.getElementById("inventoryGrid");
-    if(!shopDiv || !invDiv) return;
+    if(!shopDiv) return;
     shopDiv.innerHTML = ""; 
-    invDiv.innerHTML = "";
-    const myItems = CATALOG.filter(i => AppState.owned.includes(i.name));
-    if(myItems.length === 0) invDiv.innerHTML = '<div class="empty-inv-msg">Pusto :(</div>';
-    else myItems.forEach(item => invDiv.appendChild(createCard(item, 'inventory'))); 
-
     let itemsAvailable = false;
     ['paint', 'badge', 'ink', 'font', 'bg'].forEach(cat => {
         const items = CATALOG.filter(i => i.category === cat && !AppState.owned.includes(i.name));
@@ -888,7 +898,7 @@ function renderShop() {
             shopDiv.appendChild(title);
             const grid = document.createElement('div');
             grid.className = 'preset-grid';
-            items.forEach(item => grid.appendChild(createCard(item, 'shop')));
+            items.forEach(item => grid.appendChild(createCard(item, 'shop'))); // MODE: shop
             shopDiv.appendChild(grid);
         }
     });
@@ -914,6 +924,7 @@ function createCard(item, mode) {
         }
         btnHtml = isEquipped ? `<button class="btn-action btn-unequip" onclick="doUnequip('${item.category}')">ZDEJMIJ</button>` : `<button class="btn-action btn-equip" onclick="doEquip(${CATALOG.findIndex(x => x.name === item.name)})">ZAŁÓŻ</button>`;
     } else if (mode === 'profile') {
+        // Here we behave like inventory ONLY if viewing self
         btnHtml = `<span style="font-size:10px; color:#94a3b8; font-weight:700;">POSIADASZ</span>`;
     }
 
@@ -929,6 +940,14 @@ window.doBuy = function(idx) {
         AppState.owned.push(item.name);
         updateCoinDisplay();
         renderShop();
+        // Update both inventory views
+        if(document.getElementById('inventoryGrid')) {
+             const invGrid = document.getElementById('inventoryGrid');
+             invGrid.innerHTML = "";
+             const myItems = CATALOG.filter(i => AppState.owned.includes(i.name));
+             if(myItems.length === 0) invGrid.innerHTML = '<div class="empty-inv-msg">Pusto :(</div>';
+             else myItems.forEach(item => invGrid.appendChild(createCard(item, 'inventory')));
+        }
         renderProfileInventory();
         fireConfetti(true);
     } else { alert("Za mało monet!"); }
@@ -940,14 +959,34 @@ window.doEquip = async function(idx) {
     let payload = item.value;
     if(item.category === 'paint') { payload = { type: item.type, value: item.value }; if(item.shadow) payload.shadow = item.shadow; if(item.filter) payload.filter = item.filter; }
     AppState.loadout[item.category] = (item.category==='paint') ? payload : item.value;
-    renderShop(); renderProfileInventory(); updatePreview(AppState.loadout);
+    renderShop(); 
+    
+    // Refresh Inventory Views to update button state
+    if(document.getElementById('inventoryGrid')) {
+         const invGrid = document.getElementById('inventoryGrid');
+         invGrid.innerHTML = "";
+         CATALOG.filter(i => AppState.owned.includes(i.name)).forEach(item => invGrid.appendChild(createCard(item, 'inventory')));
+    }
+    renderProfileInventory();
+    
+    updatePreview(AppState.loadout);
     await api(`premium/${AppState.user.login.toLowerCase()}/${item.category}`, "PUT", payload);
 }
 
 window.doUnequip = async function(cat) {
     if(!AppState.user) return;
     delete AppState.loadout[cat];
-    renderShop(); renderProfileInventory(); updatePreview(AppState.loadout);
+    renderShop(); 
+    
+    // Refresh Inventory Views
+    if(document.getElementById('inventoryGrid')) {
+         const invGrid = document.getElementById('inventoryGrid');
+         invGrid.innerHTML = "";
+         CATALOG.filter(i => AppState.owned.includes(i.name)).forEach(item => invGrid.appendChild(createCard(item, 'inventory')));
+    }
+    renderProfileInventory();
+
+    updatePreview(AppState.loadout);
     await api(`premium/${AppState.user.login.toLowerCase()}/${cat}`, "DELETE");
 }
 
