@@ -16,6 +16,7 @@
         --accent: #38bdf8;
         --accent-glow: rgba(56, 189, 248, 0.5);
         --twitch: #9146ff;   
+        --kick: #53fc18;
         --yellow: #facc15;   
         --text: #f1f5f9;     
         --text-muted: #94a3b8;
@@ -92,6 +93,12 @@
     .profile-nav { display: flex; gap: 10px; margin-bottom: 20px; margin-left: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
     .profile-nav button { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); font-size: 13px; font-weight: 700; cursor: pointer; padding: 8px 16px; border-radius: 8px; transition: 0.2s; backdrop-filter: blur(5px); }
     .profile-nav button.active { background: var(--twitch); color: white; border-color: var(--twitch); box-shadow: 0 5px 15px rgba(145, 70, 255, 0.3); }
+
+    /* KICK INTEGRATION */
+    .kick-link-container { margin-top: 10px; display: flex; align-items: center; gap: 10px; background: rgba(83, 252, 24, 0.1); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(83, 252, 24, 0.3); width: fit-content; }
+    .kick-input { background: transparent; border: none; border-bottom: 1px solid #53fc18; color: #fff; font-family: 'Outfit', sans-serif; font-size: 12px; padding: 4px; width: 120px; outline: none; }
+    .kick-input::placeholder { color: #aaa; }
+    .kick-save-btn { background: #53fc18; color: #000; border: none; padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: 800; cursor: pointer; }
 
     .profile-content-area { padding: 20px 10px; }
     .profile-section-title { font-size: 18px; font-weight: 800; color: white; margin-bottom: 20px; border-left: 4px solid var(--twitch); padding-left: 15px; display: flex; align-items: center; gap: 10px; }
@@ -239,7 +246,15 @@
                             <div id="profileNameBig" class="profile-name-big">...</div>
                             <span id="viewingBadge" class="viewing-badge" style="display:none;">PODGLĄD</span>
                         </div>
-                        <div id="profileRoleTag" class="profile-role-tag">USER</div>
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <div id="profileRoleTag" class="profile-role-tag">USER</div>
+                            <!-- KICK INTEGRATION -->
+                            <div class="kick-link-container" id="kickLinkBox">
+                                <i class="fas fa-link" style="color:#53fc18; font-size:10px;"></i>
+                                <input id="kickNickInput" class="kick-input" placeholder="Wpisz nick Kick...">
+                                <button class="kick-save-btn" onclick="saveKickNick()">ZAPISZ</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="profile-nav">
                         <button id="pTabInv" class="active" onclick="switchProfileSubTab('inventory')"><i class="fas fa-backpack"></i> Ekwipunek</button>
@@ -321,7 +336,7 @@
                         <div class="form-group"><label>Kod Emotki</label><input id="emoName" placeholder="Co wpisać na czacie?"></div>
                         <div class="form-group"><label>Kanał</label><select id="emoChannel"><option value="" disabled selected>Ładowanie...</option></select></div>
                         <div class="form-group full-width"><label>Obrazek</label><div class="file-drop-zone"><span class="file-info">📂 Przeciągnij plik lub kliknij</span><input type="file" id="emoFile" accept="image/*" onchange="previewFile()"></div></div>
-                        <div class="form-group full-width"><label>Lub Link</label><input id="emoUrl" placeholder="https://..."></div>
+                        <div class="form-group full-width"><label>Obrazek (Link)</label><input id="emoUrl" placeholder="https://..."></div>
                         <div id="adminScopeOption" class="form-group full-width" style="display:none;"><label style="color:var(--accent);">Opcja Admina: <input type="checkbox" id="chkGlobal"> GLOBAL</label></div>
                     </div>
                     <img id="filePreview" src="" style="display:none; margin-top:10px; max-height:80px;">
@@ -385,9 +400,9 @@ const DB_URL = "https://test-be375-default-rtdb.europe-west1.firebasedatabase.ap
 const ADMINS = ["gatojestemformaostateczna"]; 
 
 // STATE
-let AppState = { user: null, token: null, coins: 100, owned: [], loadout: {}, emotes: {}, allowedChannels: [], role: "USER", emoteTab: 'global', emoteSort: 'new', currentEmoteKey: null, currentEmoteData: null, viewingUser: null };
+let AppState = { user: null, token: null, coins: 100, owned: [], loadout: {}, emotes: {}, allowedChannels: [], role: "USER", emoteTab: 'global', emoteSort: 'new', currentEmoteKey: null, currentEmoteData: null, viewingUser: null, kickNick: null };
 
-// CATALOG (ROZSZERZONY)
+// CATALOG
 const CATALOG = [
     { name: "Mana Potion", category:"paint", price: 10, type: "gradient", value: "linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%)", previewStyle: `background-image: linear-gradient(270deg, rgb(255, 0, 217) 12%, rgb(0, 221, 255) 100%); filter: drop-shadow(rgb(215, 15, 255) 0px 0px 0.1px) drop-shadow(rgb(64, 0, 77) 1px 1px 0.1px); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: gatoShine 3s linear infinite; font-weight: 900;` },
     { name: "Fire Lord", category:"paint", price: 50, type: "gradient", value: "linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #ff0000)", previewStyle: "background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #ff0000); -webkit-background-clip: text; color: transparent; background-size: 200% auto; animation: gatoShine 3s linear infinite; font-weight:900;" },
@@ -412,6 +427,7 @@ window.onload = async () => {
     try {
         const c = localStorage.getItem('gato_coins'); AppState.coins = c ? parseInt(c) : 100;
         const o = localStorage.getItem('gato_owned'); AppState.owned = o ? JSON.parse(o) : [];
+        const kn = localStorage.getItem('gato_kick_nick'); if(kn) AppState.kickNick = kn;
     } catch(e) {}
     updateCoinDisplay(); renderShop(); checkDailyBonus(); setInterval(checkDailyBonus, 60000);
 
@@ -463,6 +479,8 @@ function showDashboard(u) {
     document.getElementById('profileAvatarBig').src = u.profile_image_url;
     document.getElementById('profileNameBig').innerText = u.display_name;
     document.getElementById('previewUser').innerText = u.display_name;
+    
+    if(AppState.kickNick) document.getElementById('kickNickInput').value = AppState.kickNick;
 
     const isAdm = ADMINS.includes(u.login.toLowerCase()); AppState.role = isAdm ? 'ADMIN' : 'USER';
     const badge = document.getElementById('userRoleBadge');
@@ -479,6 +497,23 @@ function setProfileData(name, avatar, role) {
     document.getElementById('profileRoleTag').innerText = role;
 }
 
+// KICK INTEGRATION
+window.saveKickNick = async function() {
+    const val = document.getElementById('kickNickInput').value.trim().toLowerCase();
+    if(!val) { alert("Wpisz nick!"); return; }
+    
+    AppState.kickNick = val;
+    localStorage.setItem('gato_kick_nick', val);
+    
+    // Auto-sync current loadout
+    if(AppState.loadout && Object.keys(AppState.loadout).length > 0) {
+        await api(`premium/${val}`, "PUT", AppState.loadout);
+        alert(`Nick Kick zapisany: ${val}.\nTwój ekwipunek został skopiowany na Kicka!`);
+    } else {
+        alert(`Nick Kick zapisany: ${val}`);
+    }
+}
+
 // SEARCH
 document.getElementById('userSearchInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') searchUserProfile(e.target.value); });
 async function searchUserProfile(username) {
@@ -493,6 +528,7 @@ async function searchUserProfile(username) {
             setProfileData(t.display_name, t.profile_image_url, "VIEWING");
             document.getElementById('viewingBadge').style.display='inline-block';
             document.getElementById('btnBackToMe').style.display='block';
+            document.getElementById('kickLinkBox').style.display='none'; // Hide kick box when viewing others
             await fetchProfileDataFor(t.login.toLowerCase());
         } else alert("Nie znaleziono");
     } catch(e) { console.log(e); }
@@ -513,6 +549,7 @@ function returnToMyProfile() {
     AppState.viewingUser = null;
     document.getElementById('viewingBadge').style.display='none';
     document.getElementById('btnBackToMe').style.display='none';
+    document.getElementById('kickLinkBox').style.display='flex';
     if(AppState.user) setProfileData(AppState.user.display_name, AppState.user.profile_image_url, AppState.role);
     renderProfileInventory(); renderProfileEmotes('uploaded'); renderProfileEmotes('channel');
 }
@@ -586,7 +623,6 @@ function createCard(item, mode) {
     let btn = "";
     if(mode==='shop') btn = `<button class="btn-action btn-buy" onclick="doBuy('${item.name}')">KUP ${item.price}</button>`;
     else if(mode==='inventory') {
-        // Sprawdź czy założone (porównanie wartości lub obiektu)
         let isEquipped = false;
         const current = AppState.loadout[item.category];
         if(current) {
@@ -617,19 +653,30 @@ window.doEquip = async function(name) {
     let pl = item.value;
     if(item.category==='paint') { pl = {type:item.type, value:item.value}; if(item.shadow) pl.shadow=item.shadow; if(item.filter) pl.filter=item.filter; }
     
-    // Nadpisz slot w local state (automatycznie "zdejmuje" poprzedni)
+    // Nadpisz slot
     AppState.loadout[item.category] = (item.category==='paint') ? pl : item.value;
     
-    renderProfileInventory(); // Odśwież UI, żeby pokazać zmianę przycisków
+    renderProfileInventory();
     updatePreview(AppState.loadout);
+    
+    // Zapisz na Twitch Nick
     await api(`premium/${AppState.user.login.toLowerCase()}/${item.category}`, "PUT", pl);
+    
+    // Zapisz na Kick Nick (jeśli podany)
+    if(AppState.kickNick) {
+        await api(`premium/${AppState.kickNick}/${item.category}`, "PUT", pl);
+    }
 }
 
 window.doUnequip = async function(cat) {
     delete AppState.loadout[cat]; 
     renderProfileInventory(); 
     updatePreview(AppState.loadout);
+    
     await api(`premium/${AppState.user.login.toLowerCase()}/${cat}`, "DELETE");
+    if(AppState.kickNick) {
+        await api(`premium/${AppState.kickNick}/${cat}`, "DELETE");
+    }
 }
 
 function updatePreview(d) {
