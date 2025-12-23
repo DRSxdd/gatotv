@@ -43,19 +43,15 @@
     .floater-info { display: flex; flex-direction: column; line-height: 1.2; }
     .floater-name { font-weight: 700; color: white; font-size: 14px; }
     .btn-logout-mini { background: none; border: none; color: var(--text-muted); font-size: 11px; cursor: pointer; padding: 0; text-align: left; font-weight: 600; transition: color 0.2s; }
-    .btn-logout-mini:hover { color: var(--danger); } /* POPRAWKA: HOVER CZERWONY */
+    .btn-logout-mini:hover { color: var(--danger); }
     
+    /* LEFT BOTTOM BUTTONS */
     .role-badge-container { position: fixed; bottom: 90px; left: 25px; display: none; align-items: center; gap: 8px; background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 999; }
     .role-user { border-color: var(--success); color: var(--success); }
     .role-admin { border-color: var(--danger); color: var(--danger); }
 
-    /* NOWY BOX CONNECTIONS */
-    .connections-container { position: fixed; bottom: 90px; left: 110px; display: none; align-items: center; gap: 8px; background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 999; }
-    .connections-label { color: var(--text-muted); margin-right: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .kick-input-mini { background: transparent; border: none; border-bottom: 1px solid #53fc18; color: #fff; font-family: 'Outfit', sans-serif; font-size: 11px; width: 80px; outline: none; padding-bottom: 2px; }
-    .kick-btn-mini { background: none; border: none; cursor: pointer; font-size: 10px; color: var(--text-muted); padding: 2px 5px; transition: 0.2s; }
-    .kick-btn-mini.save:hover { color: #53fc18; }
-    .kick-btn-mini.del:hover { color: var(--danger); }
+    .connections-btn { position: fixed; bottom: 90px; left: 110px; display: none; align-items: center; gap: 8px; background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border); color: var(--text-muted); padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 999; cursor: pointer; transition: 0.2s; }
+    .connections-btn:hover { border-color: var(--accent); color: white; }
 
     .btn-login { background: var(--twitch); color: white; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 0 15px rgba(145, 70, 255, 0.2); }
     .btn-login:hover { background: #772ce8; transform: translateY(-1px); }
@@ -91,19 +87,33 @@
     .btn-secondary { background: #334155; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; }
     .btn-secondary:hover { background: #475569; }
 
-    /* POPRAWKI GRID DLA EKWIPUNKU I SKLEPU */
-    .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; margin-bottom: 30px; } /* SZERSZE BOXY, WIĘCEJ W RZĘDZIE */
-    .preset-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 5px; cursor: pointer; transition: 0.2s; position: relative; overflow: hidden; display: flex; flex-direction: row; height: 70px; align-items: center; } /* MNIEJSZA WYSOKOŚĆ O >50%, UKŁAD POZIOMY */
-    .preset-card:hover { border-color: var(--text-muted); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+    /* ---- SHOP STYLES (Old Big Cards) ---- */
+    .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+    .preset-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 6px; cursor: pointer; text-align: center; transition: 0.2s; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+    .preset-card:hover { border-color: var(--text-muted); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
     .preset-card.owned { border-color: var(--success); background: rgba(34, 197, 94, 0.05); }
-    .card-preview { height: 100%; width: 70px; padding: 5px; font-size: 14px; font-weight: 900; display:flex; align-items:center; justify-content:center; border-right: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; }
-    .card-info { background: transparent; padding: 0 0 0 10px; display: flex; flex-direction: column; justify-content: center; flex: 1; align-items: flex-start; height: 100%; }
-    .preset-name { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 5px; text-align: left; }
-    .btn-action { width: auto; padding: 4px 12px; border-radius: 4px; border: none; font-weight: 700; cursor: pointer; font-size: 10px; text-transform: uppercase; }
+    .preset-card .card-preview { padding: 30px 10px; font-size: 20px; font-weight: 900; display:flex; align-items:center; justify-content:center; height: 100px; }
+    .preset-card .card-info { background: #131c2e; padding: 12px; border-radius: 0 0 8px 8px; display: flex; flex-direction: column; gap: 8px; flex: 1; justify-content: flex-end; }
+    .preset-card .preset-name { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; display: block; }
+
+    /* ---- INVENTORY STYLES (New Compact 6-per-row) ---- */
+    /* 160px min ensures 6 items in ~1000px+ space */
+    .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-bottom: 30px; } 
+    .inventory-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 5px; cursor: pointer; transition: 0.2s; position: relative; overflow: hidden; display: flex; flex-direction: row; height: 70px; align-items: center; }
+    .inventory-card:hover { border-color: var(--text-muted); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+    .inventory-card.owned { border-color: var(--success); background: rgba(34, 197, 94, 0.05); }
+    .inventory-card .card-preview { height: 100%; width: 50px; padding: 5px; font-size: 14px; font-weight: 900; display:flex; align-items:center; justify-content:center; border-right: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; }
+    .inventory-card .card-info { background: transparent; padding: 0 0 0 10px; display: flex; flex-direction: column; justify-content: center; flex: 1; align-items: flex-start; height: 100%; }
+    .inventory-card .preset-name { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 5px; text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 90px; }
+
+    .btn-action { width: 100%; padding: 8px; border-radius: 6px; border: none; font-weight: 700; cursor: pointer; font-size: 11px; text-transform: uppercase; }
+    /* Override for inventory buttons to fit */
+    .inventory-card .btn-action { width: auto; padding: 4px 8px; font-size: 9px; }
+
     .btn-buy { background: var(--yellow); color: #000; }
     .btn-equip { background: var(--success); color: #fff; }
     .btn-unequip { background: var(--danger); color: #fff; }
-    .category-badge { position: absolute; top:3px; left:3px; padding:1px 4px; border-radius:3px; font-size:8px; font-weight:bold; text-transform:uppercase; color:white; z-index: 2; pointer-events: none; }
+    .category-badge { position: absolute; top:3px; left:3px; padding:2px 4px; border-radius:3px; font-size:8px; font-weight:bold; text-transform:uppercase; color:white; z-index: 2; pointer-events: none; }
     
     .cat-paint { background: #38bdf8; } .cat-badge { background: #9146ff; } .cat-ink { background: #f43f5e; } .cat-font { background: #10b981; } .cat-bg { background: #f59e0b; }
     .shop-section-title { width: 100%; font-size: 14px; font-weight: 700; color: var(--accent); margin: 30px 0 15px 0; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
@@ -228,7 +238,7 @@
 
                 <div id="profileInventory" style="display:block;">
                     <div class="profile-section-title"><i class="fas fa-paint-brush"></i> Twoje Przedmioty</div>
-                    <div id="profileInvGrid" class="preset-grid"></div>
+                    <div id="profileInvGrid" class="inventory-grid"></div>
                 </div>
                 <div id="profileUploaded" style="display:none;">
                     <div class="profile-section-title"><i class="fas fa-pen-nib"></i> Stworzone przez Ciebie</div>
@@ -332,21 +342,37 @@
 
 <!-- BOTTOM ELEMENTS -->
 <div id="userRoleBadge" class="role-badge-container" style="display:none;"><span>USER</span></div>
-<div id="connectionsBox" class="connections-container" style="display:none;">
-    <span class="connections-label">Connections</span>
-    <input id="kickNickInput" class="kick-input-mini" placeholder="Kick Nick...">
-    <button class="kick-btn-mini save" onclick="saveKickNick()"><i class="fas fa-save"></i></button>
-    <button class="kick-btn-mini del" onclick="deleteKickNick()"><i class="fas fa-trash"></i></button>
-</div>
+<button id="btnConnections" class="connections-btn" style="display:none;" onclick="openConnectionsModal()">CONNECTIONS</button>
 
 <div id="userProfileFloater" class="user-profile-floater" style="display:none;"><img id="floaterAvatar" class="floater-avatar" src=""><div class="floater-info"><span id="floaterName" class="floater-name">...</span><button class="btn-logout-mini" onclick="logout()">Wyloguj</button></div></div>
 <div id="redeemBtn" class="redeem-btn" onclick="redeemCode()">🎁 REDEEM CODE</div>
 
-<!-- MODAL -->
+<!-- EMOTE MODAL -->
 <div id="modalWrap" class="modal-wrap" style="display:none;">
     <div class="modal-box">
         <div class="modal-head"><button class="modal-close" onclick="closeModal()">×</button><img id="mImg" src="" style="height:80px;"></div>
         <div class="modal-content"><h2 id="mCode" style="color:white; margin:0;">CODE</h2><p id="mAuth" style="color:#888; font-size:12px;">Author</p><button class="modal-btn" style="background:#22c55e; color:#fff;" onclick="assignEmote()">PRZYPISZ DO KANAŁU</button></div>
+    </div>
+</div>
+
+<!-- CONNECTIONS MODAL -->
+<div id="modalConnections" class="modal-wrap" style="display:none;">
+    <div class="modal-box" style="max-width: 350px;">
+        <div class="modal-head" style="padding: 20px;">
+            <button class="modal-close" onclick="closeConnectionsModal()" style="top:15px; right:15px;">×</button>
+            <h2 style="margin:0; font-size:18px; color:white;">CONNECTIONS</h2>
+        </div>
+        <div class="modal-content" style="padding: 20px; text-align: left;">
+            <div style="margin-bottom: 15px;">
+                <label style="display:block; margin-bottom:5px; color:#53fc18;">Kick Integration</label>
+                <input id="kickNickInputModal" placeholder="Twój nick na Kick..." style="padding:10px; font-size:13px;">
+                <p style="font-size:10px; color:#666; margin-top:5px;">Po wpisaniu nicku Twój ekwipunek będzie synchronizowany.</p>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-primary small" style="flex:1; background:#53fc18; color:black;" onclick="saveKickNick()">ZAPISZ</button>
+                <button class="btn-secondary small" style="flex:1; background:var(--danger);" onclick="deleteKickNick()">USUŃ</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -418,7 +444,7 @@ function showLoginScreen() {
     document.getElementById('coinDisplay').style.display='none';
     document.getElementById('searchContainer').style.display='none';
     document.getElementById('redeemBtn').style.display='none';
-    document.getElementById('connectionsBox').style.display='none';
+    document.getElementById('btnConnections').style.display='none';
     document.querySelectorAll('.login-blocker').forEach(e=>e.style.display='flex');
     document.querySelectorAll('.protected-content').forEach(e=>e.style.display='none');
     document.getElementById('userRoleBadge').style.display='none';
@@ -439,7 +465,7 @@ function showDashboard(u) {
     document.getElementById('profileNameBig').innerText = u.display_name;
     document.getElementById('previewUser').innerText = u.display_name;
     
-    if(AppState.kickNick) document.getElementById('kickNickInput').value = AppState.kickNick;
+    if(AppState.kickNick) document.getElementById('kickNickInputModal').value = AppState.kickNick;
 
     const isAdm = ADMINS.includes(u.login.toLowerCase()); AppState.role = isAdm ? 'ADMIN' : 'USER';
     const badge = document.getElementById('userRoleBadge');
@@ -449,7 +475,7 @@ function showDashboard(u) {
     document.getElementById('profileRoleTag').innerText = isAdm ? "ADMIN" : "USER";
     if(isAdm) document.getElementById('adminScopeOption').style.display = 'block';
     
-    document.getElementById('connectionsBox').style.display = 'flex';
+    document.getElementById('btnConnections').style.display = 'flex';
 }
 
 function setProfileData(name, avatar, role) {
@@ -458,9 +484,17 @@ function setProfileData(name, avatar, role) {
     document.getElementById('profileRoleTag').innerText = role;
 }
 
-// KICK INTEGRATION
+// CONNECTIONS & KICK INTEGRATION
+window.openConnectionsModal = function() {
+    document.getElementById('modalConnections').style.display = 'flex';
+    if(AppState.kickNick) document.getElementById('kickNickInputModal').value = AppState.kickNick;
+}
+window.closeConnectionsModal = function() {
+    document.getElementById('modalConnections').style.display = 'none';
+}
+
 window.saveKickNick = async function() {
-    const val = document.getElementById('kickNickInput').value.trim().toLowerCase();
+    const val = document.getElementById('kickNickInputModal').value.trim().toLowerCase();
     if(!val) { alert("Wpisz nick!"); return; }
     
     AppState.kickNick = val;
@@ -472,6 +506,7 @@ window.saveKickNick = async function() {
     } else {
         alert(`Nick Kick zapisany: ${val}`);
     }
+    closeConnectionsModal();
 }
 
 window.deleteKickNick = async function() {
@@ -480,8 +515,9 @@ window.deleteKickNick = async function() {
         await api(`premium/${AppState.kickNick}`, "DELETE");
         localStorage.removeItem('gato_kick_nick');
         AppState.kickNick = null;
-        document.getElementById('kickNickInput').value = "";
+        document.getElementById('kickNickInputModal').value = "";
         alert("Usunięto powiązanie.");
+        closeConnectionsModal();
     }
 }
 
@@ -499,7 +535,7 @@ async function searchUserProfile(username) {
             setProfileData(t.display_name, t.profile_image_url, "VIEWING");
             document.getElementById('viewingBadge').style.display='inline-block';
             document.getElementById('btnBackToMe').style.display='block';
-            document.getElementById('connectionsBox').style.display='none'; // Hide when viewing others
+            document.getElementById('btnConnections').style.display='none'; // Hide when viewing others
             await fetchProfileDataFor(t.login.toLowerCase());
         } else alert("Nie znaleziono");
     } catch(e) { console.log(e); }
@@ -520,7 +556,7 @@ function returnToMyProfile() {
     AppState.viewingUser = null;
     document.getElementById('viewingBadge').style.display='none';
     document.getElementById('btnBackToMe').style.display='none';
-    document.getElementById('connectionsBox').style.display='flex';
+    document.getElementById('btnConnections').style.display='flex';
     if(AppState.user) setProfileData(AppState.user.display_name, AppState.user.profile_image_url, AppState.role);
     renderProfileInventory(); renderProfileEmotes('uploaded'); renderProfileEmotes('channel');
 }
@@ -580,7 +616,7 @@ function renderShop() {
         const items = CATALOG.filter(i => i.category === cat && !AppState.owned.includes(i.name));
         if(items.length > 0) {
             const title = document.createElement('div'); title.className='shop-section-title'; title.innerText=cat.toUpperCase(); div.appendChild(title);
-            const grid = document.createElement('div'); grid.className='preset-grid';
+            const grid = document.createElement('div'); grid.className='preset-grid'; // Use OLD big grid style
             items.forEach(i => grid.appendChild(createCard(i, 'shop')));
             div.appendChild(grid);
         }
@@ -588,11 +624,18 @@ function renderShop() {
 }
 
 function createCard(item, mode) {
-    const d = document.createElement("div"); d.className = (mode==='shop') ? "preset-card" : "preset-card owned";
+    const isShop = (mode === 'shop');
+    const className = isShop ? "preset-card" : "inventory-card owned";
+    
+    const d = document.createElement("div"); 
+    d.className = className;
+    
+    // Add hover effects for both shop and inventory
     d.onmouseenter = () => updatePreviewUI(item);
     d.onmouseleave = () => updatePreview(AppState.loadout);
+    
     let btn = "";
-    if(mode==='shop') btn = `<button class="btn-action btn-buy" onclick="doBuy('${item.name}')">KUP ${item.price}</button>`;
+    if(isShop) btn = `<button class="btn-action btn-buy" onclick="doBuy('${item.name}')">KUP ${item.price}</button>`;
     else if(mode==='inventory') {
         let isEquipped = false;
         const current = AppState.loadout[item.category];
@@ -607,7 +650,7 @@ function createCard(item, mode) {
     } else btn = `<span style="font-size:10px; color:#aaa">POSIADASZ</span>`;
     
     let view = item.category === 'badge' ? `<img src="${item.value}" class="gato-badge-preview">` : `<div style="${item.previewStyle}">Aa</div>`;
-    // New horizontal layout structure
+    
     d.innerHTML = `<span class="category-badge cat-${item.category}">${item.category}</span><div class="card-preview">${view}</div><div class="card-info"><div class="preset-name">${item.name}</div>${btn}</div>`;
     return d;
 }
