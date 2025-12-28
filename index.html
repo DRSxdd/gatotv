@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gato.TV</title>
+<title>Gato.TV Panel</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Press+Start+2P&family=Permanent+Marker&family=Courier+Prime&display=swap" rel="stylesheet">
@@ -87,10 +87,9 @@
     nav button.btn-purple.active { background: var(--twitch); color: white; border-color: var(--twitch); box-shadow: 0 0 20px rgba(145, 70, 255, 0.25); }
     nav button.btn-yellow.active { background: var(--yellow); color: black; border-color: var(--yellow); box-shadow: 0 0 20px rgba(250, 204, 21, 0.25); }
     
-    /* ZMIANA 1: Szerszy kontener, prawie od lewej do prawej */
     .container { 
         width: 100%; 
-        max-width: 96%; /* Prawie cała szerokość */
+        max-width: 96%;
         margin: 30px auto; 
         padding: 0 15px; 
     }
@@ -102,7 +101,7 @@
     .login-blocker { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 20px; margin-top: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; background-image: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%); }
     .login-blocker h2 { font-size: 32px; margin-bottom: 15px; color: white; letter-spacing: -1px; }
     
-    /* ZMIANA 2: Nowy Layout Profile Header */
+    /* ZMIANA 1: Banner niższy o 40% (z 280px na 170px) */
     .profile-header { 
         position: relative; 
         margin-bottom: 20px; 
@@ -114,13 +113,13 @@
         box-shadow: 0 10px 30px rgba(0,0,0,0.25); 
     }
     .profile-banner { 
-        height: 280px; /* Wyższy banner, aby pomieścić przyciski */
+        height: 170px; /* Reduced height */
         background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2072&auto=format&fit=crop') center/cover; 
         position: relative; 
     }
     .profile-banner::after { 
         content:''; position: absolute; bottom:0; left:0; width:100%; height:100%; 
-        background: linear-gradient(to top, var(--panel) 0%, rgba(15, 23, 42, 0.8) 20%, transparent 100%); 
+        background: linear-gradient(to top, var(--panel) 0%, rgba(15, 23, 42, 0.5) 50%, transparent 100%); 
     }
 
     .profile-meta-container { 
@@ -134,13 +133,14 @@
         width: auto;
     }
     
+    /* Avatar mniejszy, żeby pasował do niższego bannera */
     .profile-avatar-big { 
-        width: 100px; 
-        height: 100px; 
+        width: 80px; 
+        height: 80px; 
         border-radius: 50%; 
-        border: 4px solid var(--panel); 
+        border: 3px solid var(--panel); 
         background: #000; 
-        box-shadow: 0 5px 25px rgba(0,0,0,0.5); 
+        box-shadow: 0 5px 20px rgba(0,0,0,0.5); 
     }
     
     .profile-info-block { 
@@ -149,21 +149,21 @@
         justify-content: center;
         margin: 0;
     }
-    .profile-name-big { font-size: 32px; font-weight: 900; color: white; text-shadow: 0 2px 20px rgba(0,0,0,0.8); line-height: 1.1; display: flex; align-items: center; gap: 10px; letter-spacing: -1px; }
-    .profile-role-tag { font-size: 11px; color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; background: rgba(56, 189, 248, 0.15); padding: 4px 10px; border-radius: 6px; display: inline-block; margin-top: 6px; border: 1px solid rgba(56, 189, 248, 0.3); backdrop-filter: blur(4px); }
+    .profile-name-big { font-size: 26px; font-weight: 900; color: white; text-shadow: 0 2px 20px rgba(0,0,0,0.8); line-height: 1.1; display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; }
+    .profile-role-tag { font-size: 10px; color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; background: rgba(56, 189, 248, 0.15); padding: 3px 8px; border-radius: 6px; display: inline-block; margin-top: 4px; border: 1px solid rgba(56, 189, 248, 0.3); backdrop-filter: blur(4px); }
     .viewing-badge { font-size: 10px; background: var(--yellow); color: black; padding: 2px 8px; border-radius: 20px; vertical-align: middle; font-weight: 800; }
     
     /* Przyciski na bannerze - ŚRODEK DÓŁ */
     .profile-nav-centered {
         position: absolute;
-        bottom: 20px;
+        bottom: 15px;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
         gap: 8px;
-        background: rgba(2, 6, 23, 0.6);
-        padding: 6px;
-        border-radius: 16px;
+        background: rgba(2, 6, 23, 0.7);
+        padding: 5px;
+        border-radius: 14px;
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255,255,255,0.05);
         z-index: 20;
@@ -172,15 +172,15 @@
         background: transparent;
         border: none;
         color: #cbd5e1;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 600;
-        padding: 8px 20px;
+        padding: 6px 16px;
         border-radius: 10px;
         cursor: pointer;
         transition: 0.2s;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
     }
     .profile-nav-centered button:hover {
         background: rgba(255,255,255,0.1);
@@ -193,13 +193,30 @@
         font-weight: 800;
     }
 
-    .back-to-me-btn { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; backdrop-filter: blur(5px); transition: 0.2s; z-index: 10; display: none; }
+    .back-to-me-btn { position: absolute; top: 15px; right: 20px; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; backdrop-filter: blur(5px); transition: 0.2s; z-index: 10; display: none; font-size: 11px; }
     .back-to-me-btn:hover { background: var(--twitch); border-color: var(--twitch); }
 
     .profile-content-area { padding: 30px; }
     .profile-section-title { font-size: 18px; font-weight: 800; color: white; margin-bottom: 20px; border-left: 4px solid var(--twitch); padding-left: 15px; display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; }
     
-    .chat-preview-container { background: #020617; border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 30px; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 10; flex-wrap: wrap; gap: 10px; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
+    /* ZMIANA 2: Podgląd nie jest na całą szerokość */
+    .chat-preview-container { 
+        max-width: 600px;
+        margin: 0 auto 30px auto; /* Centrowanie */
+        background: #020617; 
+        border: 1px solid var(--border); 
+        border-radius: 12px; 
+        padding: 15px 25px; 
+        font-family: 'Inter', sans-serif; 
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between; 
+        position: relative; 
+        z-index: 10; 
+        flex-wrap: wrap; 
+        gap: 10px; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
     .chat-preview-container.light { background: #f8fafc; border-color: #cbd5e1; }
     .chat-preview-container.light .chat-msg { color: #0f172a; }
     .chat-preview-container.light .chat-time { color: #64748b; }
@@ -238,6 +255,22 @@
     .inventory-card .card-preview { height: 100%; width: 55px; padding: 5px; font-size: 16px; font-weight: 900; display:flex; align-items:center; justify-content:center; border-right: 1px solid var(--border); flex-shrink: 0; background: rgba(0,0,0,0.2); border-radius: 8px 0 0 8px; }
     .inventory-card .card-info { background: transparent; padding: 0 0 0 12px; display: flex; flex-direction: column; justify-content: center; flex: 1; align-items: flex-start; height: 100%; }
     .inventory-card .preset-name { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 6px; text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 90px; }
+
+    /* ZMIANA 3: Styl dla pustego ekwipunku */
+    .empty-state-styled {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+        color: var(--text-muted);
+        gap: 15px;
+        border: 2px dashed var(--border);
+        border-radius: 12px;
+        background: rgba(15, 23, 42, 0.3);
+    }
+    .empty-state-styled i { font-size: 32px; color: var(--border-hover); }
+    .empty-state-styled span { font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
 
     .btn-action { width: 100%; padding: 10px; border-radius: 8px; border: none; font-weight: 800; cursor: pointer; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
     .inventory-card .btn-action { width: auto; padding: 5px 10px; font-size: 10px; border-radius: 6px; }
@@ -316,12 +349,11 @@
     .btn-remove-mod { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; transition: 0.2s; }
     .btn-remove-mod:hover { background: rgba(239, 68, 68, 0.2); }
     
-    /* LEFT BOTTOM BUTTONS GROUP */
     .fixed-bottom-controls {
         position: fixed;
         bottom: 90px;
         left: 25px;
-        display: none; /* Flex when active */
+        display: none;
         gap: 10px;
         z-index: 999;
         align-items: center;
@@ -368,7 +400,6 @@
 
 <header>
     <div class="header-left">
-        <!-- LOGO Z KLIKNIĘCIEM I STAŁYM GLOW -->
         <div class="logo" onclick="location.reload()">Gato.TV <span class="beta-tag">BETA</span></div>
         <div id="loginBtnContainer">
             <button class="btn-login-header" onclick="loginWithTwitch()">Zaloguj</button>
@@ -401,11 +432,10 @@
             <div class="profile-header">
                 <button id="btnBackToMe" class="back-to-me-btn" onclick="returnToMyProfile()">WRÓĆ DO SIEBIE</button>
                 <div class="profile-banner">
-                    <!-- PRZYCISKI NA BANNERZE, WYŚRODKOWANE NA DOLE -->
+                    <!-- PRZYCISKI NA BANNERZE, WYŚRODKOWANE NA DOLE (ZMIANA 5 i 6) -->
                     <div class="profile-nav-centered">
                         <button id="pTabInv" class="active" onclick="switchProfileSubTab('inventory')"><i class="fas fa-backpack"></i> Ekwipunek</button>
-                        <button id="pTabUp" onclick="switchProfileSubTab('uploaded')"><i class="fas fa-cloud-upload-alt"></i> Uploaded</button>
-                        <button id="pTabCh" onclick="switchProfileSubTab('channel')"><i class="fas fa-tv"></i> Channel</button>
+                        <button id="pTabCh" onclick="switchProfileSubTab('channel')"><i class="fas fa-tv"></i> My Channel Emotes</button>
                     </div>
                 </div>
                 <div class="profile-meta-container">
@@ -423,23 +453,22 @@
             </div>
 
             <div class="profile-content-area">
-                <div class="chat-preview-container" id="chatPreviewBox">
+                <!-- PREVIEW BOX (Podmienione ID na klasy, aby działało w obu miejscach) -->
+                <div class="chat-preview-container" onclick="togglePreviewTheme(this)">
                     <div class="chat-line">
                         <span class="chat-time">12:30</span>
-                        <span class="chat-badges" id="previewBadges"></span>
-                        <span class="chat-username" id="previewUser">TwójNick</span><span style="margin-right:4px;">:</span><span class="chat-msg">Gato.TV zmienia Twój czat! 🐱</span>
+                        <span class="chat-badges preview-badges"></span>
+                        <span class="chat-username preview-user">TwójNick</span><span style="margin-right:4px;">:</span><span class="chat-msg">Gato.TV zmienia Twój czat! 🐱</span>
                     </div>
-                    <button class="toggle-theme-btn" onclick="togglePreviewTheme()">🌗</button>
+                    <span style="font-size:10px; color:#64748b; margin-left:auto; cursor:pointer;">(Kliknij aby zmienić motyw)</span>
                 </div>
 
                 <div id="profileInventory" style="display:block;">
                     <div class="profile-section-title"><i class="fas fa-paint-brush"></i> Twoje Przedmioty</div>
                     <div id="profileInvGrid" class="inventory-grid"></div>
                 </div>
-                <div id="profileUploaded" style="display:none;">
-                    <div class="profile-section-title"><i class="fas fa-pen-nib"></i> Stworzone przez Ciebie</div>
-                    <div id="profileUploadedGrid" class="emotes-grid"></div>
-                </div>
+                <!-- Uploaded section removed form UI logic but div kept hidden to avoid errors if referenced -->
+                <div id="profileUploaded" style="display:none;"></div> 
                 <div id="profileChannel" style="display:none;">
                     <div class="profile-section-title"><i class="fas fa-hashtag"></i> Przypisane do Kanału</div>
                     <div id="profileChannelGrid" class="emotes-grid"></div>
@@ -455,6 +484,19 @@
                 <h2 style="margin:0; font-weight:900; letter-spacing:-1px; font-size:28px;">Sklep Gato.TV</h2>
                 <button id="btnDaily" class="btn-daily" onclick="claimDailyBonus()"><i class="fas fa-gift"></i> ODBIERZ +10</button>
             </div>
+            
+            <!-- ZMIANA 5: Dodany podgląd nicku w sklepie -->
+            <div style="margin-bottom:30px;">
+                <div class="chat-preview-container" onclick="togglePreviewTheme(this)">
+                    <div class="chat-line">
+                        <span class="chat-time">12:30</span>
+                        <span class="chat-badges preview-badges"></span>
+                        <span class="chat-username preview-user">TwójNick</span><span style="margin-right:4px;">:</span><span class="chat-msg">Podgląd na żywo! Wybierz coś dla siebie. ✨</span>
+                    </div>
+                     <span style="font-size:10px; color:#64748b; margin-left:auto; cursor:pointer;">(Kliknij aby zmienić motyw)</span>
+                </div>
+            </div>
+
             <div id="shopContent"></div>
         </div>
     </div>
@@ -592,12 +634,6 @@ const CATALOG = [
     { name: "Deep Sea", category:"paint", price: 25, type: "gradient", value: "linear-gradient(to right, #24c6dc, #514a9d)", previewStyle: "background: linear-gradient(to right, #24c6dc, #514a9d); -webkit-background-clip: text; color: transparent; font-weight:900;" },
     { name: "Star Badge", category:"badge", price: 20, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/1828/1828884.png", previewStyle: "" },
     { name: "King Crown", category:"badge", price: 50, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/2545/2545603.png", previewStyle: "" },
-    { name: "Golden Ink", category:"ink", price: 50, type: "ink", value: "#ffd700", previewStyle: "color:#ffd700" },
-    { name: "Hot Pink", category:"ink", price: 50, type: "ink", value: "#ff0066", previewStyle: "color:#ff0066" },
-    { name: "Retro Pixel", category:"font", price: 30, type: "font", value: "'Press Start 2P', cursive", previewStyle: "font-family:'Press Start 2P'" },
-    { name: "Marker", category:"font", price: 30, type: "font", value: "'Permanent Marker', cursive", previewStyle: "font-family:'Permanent Marker'" },
-    { name: "Golden Glow", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(255, 215, 0, 0.2), transparent)", previewStyle: "background:rgba(255,215,0,0.2)" },
-    { name: "Toxic Mist", category:"bg", price: 100, type: "bg", value: "linear-gradient(90deg, rgba(0, 255, 0, 0.2), transparent)", previewStyle: "background:rgba(0,255,0,0.2)" }
 ];
 
 // INIT
@@ -638,14 +674,9 @@ function showLoginScreen() {
     document.getElementById('coinDisplay').style.display='none';
     document.getElementById('searchContainer').style.display='none';
     document.getElementById('redeemBtn').style.display='none';
-    
-    // Hide bottom group
     document.getElementById('bottomLeftControls').style.display='none';
-    
     document.querySelectorAll('.login-blocker').forEach(e=>e.style.display='flex');
     document.querySelectorAll('.protected-content').forEach(e=>e.style.display='none');
-    
-    // Also hide inside badge if needed, though parent hide is enough
     document.getElementById('userRoleBadge').style.display='none';
     document.getElementById('btnConnections').style.display='none';
 }
@@ -663,13 +694,14 @@ function showDashboard(u) {
     document.getElementById('floaterName').innerText = u.display_name;
     document.getElementById('profileAvatarBig').src = u.profile_image_url;
     document.getElementById('profileNameBig').innerText = u.display_name;
-    document.getElementById('previewUser').innerText = u.display_name;
+    
+    // UPDATE PREVIEW USERNAMES (All instances)
+    document.querySelectorAll('.preview-user').forEach(el => el.innerText = u.display_name);
     
     if(AppState.kickNick) document.getElementById('kickNickInputModal').value = AppState.kickNick;
 
     const isAdm = ADMINS.includes(u.login.toLowerCase()); AppState.role = isAdm ? 'ADMIN' : 'USER';
     
-    // Show bottom group
     const group = document.getElementById('bottomLeftControls');
     group.style.display = 'flex';
     
@@ -776,15 +808,16 @@ window.switchTab = function(id) {
 }
 window.switchProfileSubTab = function(tab) {
     document.getElementById('profileInventory').style.display = tab==='inventory'?'block':'none';
-    document.getElementById('profileUploaded').style.display = tab==='uploaded'?'block':'none';
+    // Uploaded is now hidden from UI but logic remains
     document.getElementById('profileChannel').style.display = tab==='channel'?'block':'none';
+    
     document.getElementById('pTabInv').className = tab==='inventory'?'active':'';
-    document.getElementById('pTabUp').className = tab==='uploaded'?'active':'';
     document.getElementById('pTabCh').className = tab==='channel'?'active':'';
+    
     const target = AppState.viewingUser ? AppState.viewingUser.login.toLowerCase() : (AppState.user ? AppState.user.login.toLowerCase() : null);
     if(target) {
         if(tab === 'inventory') { if(AppState.viewingUser) fetchProfileDataFor(target); else renderProfileInventory(); }
-        if(tab === 'uploaded') renderProfileEmotes('uploaded', target);
+        // if(tab === 'uploaded') renderProfileEmotes('uploaded', target); // No button to trigger this
         if(tab === 'channel') renderProfileEmotes('channel', target);
     }
 }
@@ -797,7 +830,8 @@ function renderProfileInventory(overrideItems = null) {
     if(AppState.viewingUser || overrideItems) { mode='profile'; items=overrideItems||[]; }
     else items = CATALOG.filter(i => AppState.owned.includes(i.name));
     
-    if(items.length===0) grid.innerHTML='<div class="empty-state">Pusto</div>';
+    /* ZMIANA 3: Stylowy pusty stan */
+    if(items.length===0) grid.innerHTML='<div class="empty-state-styled"><i class="fas fa-box-open"></i><span>Twój ekwipunek jest pusty</span></div>';
     else items.forEach(i => grid.appendChild(createCard(i, mode)));
 }
 
@@ -811,18 +845,19 @@ function renderProfileEmotes(type, target) {
     if(type==='uploaded') keys = Object.keys(all).filter(k => all[k].author === author);
     else keys = Object.keys(all).filter(k => all[k].channel === login);
     
-    if(keys.length===0) { grid.innerHTML='<div class="empty-state">Brak emotek</div>'; return; }
+    if(keys.length===0) { grid.innerHTML='<div class="empty-state-styled" style="padding:20px;"><i class="fas fa-ghost"></i><span>Brak emotek</span></div>'; return; }
     grid.innerHTML = keys.map(k => `<div class="emote-card" onclick="openEmoteDetail('${k}')"><img src="${all[k].url}"><div class="name">${k}</div></div>`).join('');
 }
 
 function renderShop() {
     const div = document.getElementById('shopContent');
     if(!div) return; div.innerHTML='';
-    ['paint', 'badge', 'ink', 'font', 'bg'].forEach(cat => {
+    /* ZMIANA 4: Tylko Paint i Badge */
+    ['paint', 'badge'].forEach(cat => {
         const items = CATALOG.filter(i => i.category === cat && !AppState.owned.includes(i.name));
         if(items.length > 0) {
             const title = document.createElement('div'); title.className='shop-section-title'; title.innerText=cat.toUpperCase(); div.appendChild(title);
-            const grid = document.createElement('div'); grid.className='preset-grid'; // Use OLD big grid style
+            const grid = document.createElement('div'); grid.className='preset-grid'; 
             items.forEach(i => grid.appendChild(createCard(i, 'shop')));
             div.appendChild(grid);
         }
@@ -898,19 +933,48 @@ window.doUnequip = async function(cat) {
 }
 
 function updatePreview(d) {
-    const u=document.getElementById('previewUser'), m=document.querySelector('.chat-msg'), b=document.getElementById('previewBadges');
-    u.style=""; m.style=""; b.innerHTML=""; u.className="chat-username";
+    // ZMIANA 6: Aktualizacja wszystkich instancji podglądu (Profil + Shop)
+    const users = document.querySelectorAll('.preview-user');
+    const msgs = document.querySelectorAll('.chat-msg');
+    const badges = document.querySelectorAll('.preview-badges');
+
+    // Reset styles
+    users.forEach(u => { u.style=""; u.className="chat-username preview-user"; });
+    msgs.forEach(m => m.style="");
+    badges.forEach(b => b.innerHTML="");
+
     if(!d) return;
+
     if(d.paint) {
-        if(d.paint.type==='gradient') { u.style.backgroundImage=d.paint.value; u.style.webkitBackgroundClip='text'; u.style.color='transparent'; u.style.fontWeight='900'; }
-        else { u.style.color=d.paint.value; }
+        users.forEach(u => {
+            if(d.paint.type==='gradient') { 
+                u.style.backgroundImage=d.paint.value; 
+                u.style.webkitBackgroundClip='text'; 
+                u.style.color='transparent'; 
+                u.style.fontWeight='900'; 
+            } else { 
+                u.style.color=d.paint.value; 
+            }
+        });
     }
-    if(d.badge) b.innerHTML=`<img src="${d.badge}" class="gato-badge-preview">`;
+    if(d.badge) {
+        badges.forEach(b => {
+            b.innerHTML=`<img src="${d.badge}" class="gato-badge-preview">`;
+        });
+    }
 }
 
 function updatePreviewUI(item) {
-    if(item.category==='paint') document.getElementById('previewUser').style.cssText=item.previewStyle;
-    if(item.category==='badge') document.getElementById('previewBadges').innerHTML=`<img src="${item.value}" class="gato-badge-preview">`;
+    // ZMIANA 6: Hover update dla wszystkich instancji
+    const users = document.querySelectorAll('.preview-user');
+    const badges = document.querySelectorAll('.preview-badges');
+
+    if(item.category==='paint') {
+        users.forEach(u => u.style.cssText = item.previewStyle);
+    }
+    if(item.category==='badge') {
+        badges.forEach(b => b.innerHTML = `<img src="${item.value}" class="gato-badge-preview">`);
+    }
 }
 
 // EMOTES
@@ -985,7 +1049,7 @@ window.addModerator = async function() { const nick = document.getElementById('n
 // HELPERS
 function updateCoinDisplay() { document.getElementById('coinCount').innerText = AppState.coins; localStorage.setItem('gato_coins', AppState.coins); localStorage.setItem('gato_owned', JSON.stringify(AppState.owned)); }
 function fireConfetti(shop) { if(shop) confetti({particleCount:50,spread:60,origin:{x:0.5,y:0.5}}); }
-window.togglePreviewTheme = function() { document.getElementById('chatPreviewBox').classList.toggle('light'); }
+window.togglePreviewTheme = function(el) { el.classList.toggle('light'); }
 async function api(path, method="GET", body=null) { const opts={method}; if(body) opts.body=JSON.stringify(body); try{const r=await fetch(`${DB_URL}/${path}.json`, opts); return r.json();}catch(e){return null;} }
 
 // DAILY
