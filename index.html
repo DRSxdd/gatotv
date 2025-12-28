@@ -3,24 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gato.TV Panel</title>
+<title>Gato.TV</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Press+Start+2P&family=Permanent+Marker&family=Courier+Prime&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
-    /* NOWA PALETA PREMIUM (Deep Slate / Night Blue) */
     :root { 
-        --bg: #020617;        /* Bardzo ciemny granat/czerń, nie płaski #000 */
-        --panel: #0f172a;     /* Bogaty ciemny kolor paneli */
+        --bg: #020617;        
+        --panel: #0f172a;     
         --accent: #38bdf8; 
         --accent-glow: rgba(56, 189, 248, 0.6); 
         --twitch: #9146ff; 
         --yellow: #facc15; 
-        --text: #f8fafc;      /* Jasny biały/szary dla kontrastu */
-        --text-muted: #94a3b8; /* Szaroniebieski */
-        --border: #1e293b;    /* Subtelne obramowania */
+        --text: #f8fafc;      
+        --text-muted: #94a3b8; 
+        --border: #1e293b;    
         --border-hover: #334155;
         --danger: #ef4444; 
         --success: #22c55e; 
@@ -30,21 +29,20 @@
     body { 
         margin: 0; 
         font-family: 'Outfit', sans-serif; 
-        background: linear-gradient(to bottom, #0f172a, var(--bg)); /* Płynne przejście */
+        background: linear-gradient(to bottom, #0f172a, var(--bg)); 
         color: var(--text); 
         min-height: 100vh; 
         padding-bottom: 50px; 
         overflow-x: hidden; 
     }
     
-    /* HEADER: 60px height (+15%), Jednolity kolor (bez transparency bugów) */
     header { 
-        background: #0f172a; /* Solidny kolor pasujący do góry strony */
+        background: #0f172a; 
         height: 60px; 
         display: flex; 
         align-items: center; 
         justify-content: space-between; 
-        padding: 0 25px; 
+        padding: 0 30px; 
         border-bottom: 1px solid var(--border); 
         position: sticky; 
         top: 0; 
@@ -54,14 +52,13 @@
     
     .header-left { display: flex; align-items: center; gap: 20px; flex: 1; }
     
-    /* LOGO: Świeci zawsze, kursor pointer */
     .logo { 
         font-size: 22px; 
         font-weight: 900; 
         color: var(--accent); 
         letter-spacing: -0.5px; 
         text-transform: uppercase; 
-        text-shadow: 0 0 15px var(--accent-glow); /* Świeci stale */
+        text-shadow: 0 0 15px var(--accent-glow); 
         cursor: pointer; 
         display: flex; 
         align-items: center; 
@@ -90,7 +87,14 @@
     nav button.btn-purple.active { background: var(--twitch); color: white; border-color: var(--twitch); box-shadow: 0 0 20px rgba(145, 70, 255, 0.25); }
     nav button.btn-yellow.active { background: var(--yellow); color: black; border-color: var(--yellow); box-shadow: 0 0 20px rgba(250, 204, 21, 0.25); }
     
-    .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+    /* ZMIANA 1: Szerszy kontener, prawie od lewej do prawej */
+    .container { 
+        width: 100%; 
+        max-width: 96%; /* Prawie cała szerokość */
+        margin: 30px auto; 
+        padding: 0 15px; 
+    }
+
     .panel { display: none; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
     .panel.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
@@ -98,71 +102,101 @@
     .login-blocker { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 20px; margin-top: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; background-image: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%); }
     .login-blocker h2 { font-size: 32px; margin-bottom: 15px; color: white; letter-spacing: -1px; }
     
-    /* FLOATER */
-    .user-profile-floater { position: fixed; bottom: 20px; left: 20px; z-index: 900; display: none; align-items: center; gap: 12px; background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border); padding: 8px 15px 8px 8px; border-radius: 50px; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); transition: transform 0.2s; }
-    .user-profile-floater:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 10px 40px rgba(56, 189, 248, 0.15); }
-    .floater-avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--twitch); }
-    .floater-info { display: flex; flex-direction: column; line-height: 1.1; }
-    .floater-name { font-weight: 700; color: white; font-size: 13px; }
-    .btn-logout-mini { background: none; border: none; color: var(--text-muted); font-size: 10px; cursor: pointer; padding: 0; text-align: left; font-weight: 600; transition: color 0.2s; }
-    .btn-logout-mini:hover { color: var(--danger); }
-    
-    /* LEFT BOTTOM BUTTONS GROUP - POPRAWIONE */
-    .fixed-bottom-controls {
-        position: fixed;
-        bottom: 90px;
-        left: 25px;
-        display: none; /* Flex when active */
-        gap: 10px;
-        z-index: 999;
-        align-items: center;
+    /* ZMIANA 2: Nowy Layout Profile Header */
+    .profile-header { 
+        position: relative; 
+        margin-bottom: 20px; 
+        background: var(--panel); 
+        border: 1px solid var(--border); 
+        border-radius: 24px; 
+        overflow: hidden; 
+        margin-top: 10px; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.25); 
+    }
+    .profile-banner { 
+        height: 280px; /* Wyższy banner, aby pomieścić przyciski */
+        background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2072&auto=format&fit=crop') center/cover; 
+        position: relative; 
+    }
+    .profile-banner::after { 
+        content:''; position: absolute; bottom:0; left:0; width:100%; height:100%; 
+        background: linear-gradient(to top, var(--panel) 0%, rgba(15, 23, 42, 0.8) 20%, transparent 100%); 
     }
 
-    .role-badge, .connections-btn {
-        height: 28px;
+    .profile-meta-container { 
+        position: absolute; 
+        bottom: 20px; 
+        left: 40px; 
+        display: flex; 
+        align-items: center; 
+        gap: 20px;
+        z-index: 10;
+        width: auto;
+    }
+    
+    .profile-avatar-big { 
+        width: 100px; 
+        height: 100px; 
+        border-radius: 50%; 
+        border: 4px solid var(--panel); 
+        background: #000; 
+        box-shadow: 0 5px 25px rgba(0,0,0,0.5); 
+    }
+    
+    .profile-info-block { 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center;
+        margin: 0;
+    }
+    .profile-name-big { font-size: 32px; font-weight: 900; color: white; text-shadow: 0 2px 20px rgba(0,0,0,0.8); line-height: 1.1; display: flex; align-items: center; gap: 10px; letter-spacing: -1px; }
+    .profile-role-tag { font-size: 11px; color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; background: rgba(56, 189, 248, 0.15); padding: 4px 10px; border-radius: 6px; display: inline-block; margin-top: 6px; border: 1px solid rgba(56, 189, 248, 0.3); backdrop-filter: blur(4px); }
+    .viewing-badge { font-size: 10px; background: var(--yellow); color: black; padding: 2px 8px; border-radius: 20px; vertical-align: middle; font-weight: 800; }
+    
+    /* Przyciski na bannerze - ŚRODEK DÓŁ */
+    .profile-nav-centered {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        background: rgba(2, 6, 23, 0.6);
+        padding: 6px;
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.05);
+        z-index: 20;
+    }
+    .profile-nav-centered button {
+        background: transparent;
+        border: none;
+        color: #cbd5e1;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 8px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
         display: flex;
         align-items: center;
-        justify-content: center;
-        padding: 0 12px;
-        border-radius: 6px; /* Bardziej proste rogi = bardziej profesjonalny wygląd */
-        font-size: 11px;
+        gap: 8px;
+    }
+    .profile-nav-centered button:hover {
+        background: rgba(255,255,255,0.1);
+        color: white;
+    }
+    .profile-nav-centered button.active {
+        background: var(--twitch);
+        color: white;
+        box-shadow: 0 4px 15px rgba(145, 70, 255, 0.3);
         font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border: 1px solid var(--border);
-        background: #0f172a;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        transition: 0.2s;
     }
 
-    .role-user { border-color: rgba(34, 197, 94, 0.3); color: var(--success); }
-    .role-admin { border-color: rgba(239, 68, 68, 0.3); color: var(--danger); }
-    
-    .connections-btn { color: var(--text-muted); cursor: pointer; text-decoration: none; }
-    .connections-btn:hover { border-color: var(--accent); color: white; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(56, 189, 248, 0.2); }
-
-    .btn-login { background: var(--twitch); color: white; border: none; padding: 10px 24px; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 0 20px rgba(145, 70, 255, 0.2); font-size: 14px; }
-    .btn-login:hover { background: #772ce8; transform: translateY(-2px); box-shadow: 0 0 30px rgba(145, 70, 255, 0.4); }
-    
-    /* PROFILE STYLES */
-    .profile-header { position: relative; margin-bottom: 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-    .profile-banner { height: 200px; background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2072&auto=format&fit=crop') center/cover; position: relative; }
-    .profile-banner::after { content:''; position: absolute; bottom:0; left:0; width:100%; height:100%; background: linear-gradient(to top, var(--panel) 0%, transparent 90%); }
-    .profile-meta-container { display: flex; align-items: flex-end; padding: 0 40px 25px 40px; position: relative; top: -45px; margin-bottom: -45px; }
-    .profile-avatar-big { width: 120px; height: 120px; border-radius: 50%; border: 6px solid var(--panel); background: #000; box-shadow: 0 5px 25px rgba(0,0,0,0.5); z-index: 2; flex-shrink: 0; }
-    .profile-info-block { margin-left: 25px; margin-bottom: 50px; z-index: 2; flex: 1; }
-    .profile-name-big { font-size: 32px; font-weight: 900; color: white; text-shadow: 0 2px 20px rgba(0,0,0,0.5); line-height: 1.2; display: flex; align-items: center; gap: 10px; letter-spacing: -1px; }
-    .profile-role-tag { font-size: 11px; color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; background: rgba(56, 189, 248, 0.1); padding: 4px 10px; border-radius: 6px; display: inline-block; margin-top: 8px; border: 1px solid rgba(56, 189, 248, 0.2); }
-    .viewing-badge { font-size: 10px; background: var(--yellow); color: black; padding: 2px 8px; border-radius: 20px; vertical-align: middle; font-weight: 800; }
     .back-to-me-btn { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; backdrop-filter: blur(5px); transition: 0.2s; z-index: 10; display: none; }
     .back-to-me-btn:hover { background: var(--twitch); border-color: var(--twitch); }
 
-    .profile-nav { display: flex; gap: 10px; margin-bottom: 20px; margin-left: 10px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-    .profile-nav button { background: transparent; border: 1px solid transparent; color: var(--text-muted); font-size: 14px; font-weight: 700; cursor: pointer; padding: 10px 20px; border-radius: 10px; transition: 0.2s; }
-    .profile-nav button:hover { background: #1e293b; color: var(--text); }
-    .profile-nav button.active { background: #1e293b; color: white; border: 1px solid var(--border-hover); border-bottom: 2px solid var(--twitch); }
-    
-    .profile-content-area { padding: 20px 10px; }
+    .profile-content-area { padding: 30px; }
     .profile-section-title { font-size: 18px; font-weight: 800; color: white; margin-bottom: 20px; border-left: 4px solid var(--twitch); padding-left: 15px; display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; }
     
     .chat-preview-container { background: #020617; border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 30px; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 10; flex-wrap: wrap; gap: 10px; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
@@ -206,7 +240,6 @@
     .inventory-card .preset-name { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 6px; text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 90px; }
 
     .btn-action { width: 100%; padding: 10px; border-radius: 8px; border: none; font-weight: 800; cursor: pointer; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
-    /* Override for inventory buttons to fit */
     .inventory-card .btn-action { width: auto; padding: 5px 10px; font-size: 10px; border-radius: 6px; }
 
     .btn-buy { background: var(--yellow); color: #000; box-shadow: 0 4px 10px rgba(250, 204, 21, 0.2); }
@@ -252,15 +285,9 @@
     .redeem-btn { position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, #ef4444, #f43f5e); color: white; padding: 14px 28px; border-radius: 50px; font-weight: 800; cursor: pointer; box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3); z-index: 999; display: none; align-items: center; gap: 10px; transition: 0.2s; font-size: 14px; border: 2px solid rgba(255,255,255,0.1); }
     .redeem-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(239, 68, 68, 0.5); }
     
-    .pricing-grid { display: flex; justify-content: center; margin-top: 50px; }
-    .price-card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 50px; width: 100%; max-width: 420px; text-align: center; position: relative; transition: 0.2s; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
-    .price-card.featured { border: 2px solid var(--twitch); box-shadow: 0 0 50px rgba(145, 70, 255, 0.15); }
-    .price-title { font-size: 26px; font-weight: 900; text-transform: uppercase; color: var(--twitch); margin-bottom: 15px; letter-spacing: 1px; }
-    .price-amount { font-size: 48px; font-weight: 900; color: white; margin-bottom: 40px; }
-    .price-features { list-style: none; padding: 0; text-align: left; margin-bottom: 40px; color: var(--text-muted); font-size: 16px; }
-    .price-features li { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 15px; }
-    .btn-buy-plan { background: var(--twitch); color: white; border: none; padding: 18px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; box-shadow: 0 10px 30px rgba(145, 70, 255, 0.3); }
-    .btn-buy-plan:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(145, 70, 255, 0.5); background: #772ce8; }
+    .wip-container { display: flex; align-items: center; justify-content: center; min-height: 400px; }
+    .wip-icon { font-size: 80px; color: #1e293b; animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.1); opacity: 0.7; } 100% { transform: scale(1); opacity: 0.3; } }
     
     .hero-card { background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(0,0,0,0)); border: 1px solid var(--border); border-radius: 24px; padding: 80px 40px; text-align: center; margin-top: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
     .hero-card h1 { font-size: 42px; font-weight: 900; margin-bottom: 15px; background: linear-gradient(90deg, #fff, #94a3b8); -webkit-background-clip: text; color: transparent; letter-spacing: -1px; }
@@ -288,6 +315,52 @@
     .mod-item { display: flex; justify-content: space-between; align-items: center; background: #020617; padding: 15px; border-radius: 10px; border: 1px solid var(--border); font-size: 14px; font-weight: 600; }
     .btn-remove-mod { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; transition: 0.2s; }
     .btn-remove-mod:hover { background: rgba(239, 68, 68, 0.2); }
+    
+    /* LEFT BOTTOM BUTTONS GROUP */
+    .fixed-bottom-controls {
+        position: fixed;
+        bottom: 90px;
+        left: 25px;
+        display: none; /* Flex when active */
+        gap: 10px;
+        z-index: 999;
+        align-items: center;
+    }
+
+    .role-badge, .connections-btn {
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 12px;
+        border-radius: 6px; 
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: 1px solid var(--border);
+        background: #0f172a;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        transition: 0.2s;
+    }
+
+    .role-user { border-color: rgba(34, 197, 94, 0.3); color: var(--success); }
+    .role-admin { border-color: rgba(239, 68, 68, 0.3); color: var(--danger); }
+    
+    .connections-btn { color: var(--text-muted); cursor: pointer; text-decoration: none; }
+    .connections-btn:hover { border-color: var(--accent); color: white; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(56, 189, 248, 0.2); }
+
+    .btn-login { background: var(--twitch); color: white; border: none; padding: 10px 24px; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 0 20px rgba(145, 70, 255, 0.2); font-size: 14px; }
+    .btn-login:hover { background: #772ce8; transform: translateY(-2px); box-shadow: 0 0 30px rgba(145, 70, 255, 0.4); }
+
+    .user-profile-floater { position: fixed; bottom: 20px; left: 20px; z-index: 900; display: none; align-items: center; gap: 12px; background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border); padding: 8px 15px 8px 8px; border-radius: 50px; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); transition: transform 0.2s; }
+    .user-profile-floater:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 10px 40px rgba(56, 189, 248, 0.15); }
+    .floater-avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--twitch); }
+    .floater-info { display: flex; flex-direction: column; line-height: 1.1; }
+    .floater-name { font-weight: 700; color: white; font-size: 13px; }
+    .btn-logout-mini { background: none; border: none; color: var(--text-muted); font-size: 10px; cursor: pointer; padding: 0; text-align: left; font-weight: 600; transition: color 0.2s; }
+    .btn-logout-mini:hover { color: var(--danger); }
+
     .hidden { display: none !important; }
 </style>
 </head>
@@ -327,7 +400,14 @@
         <div class="protected-content">
             <div class="profile-header">
                 <button id="btnBackToMe" class="back-to-me-btn" onclick="returnToMyProfile()">WRÓĆ DO SIEBIE</button>
-                <div class="profile-banner"></div>
+                <div class="profile-banner">
+                    <!-- PRZYCISKI NA BANNERZE, WYŚRODKOWANE NA DOLE -->
+                    <div class="profile-nav-centered">
+                        <button id="pTabInv" class="active" onclick="switchProfileSubTab('inventory')"><i class="fas fa-backpack"></i> Ekwipunek</button>
+                        <button id="pTabUp" onclick="switchProfileSubTab('uploaded')"><i class="fas fa-cloud-upload-alt"></i> Uploaded</button>
+                        <button id="pTabCh" onclick="switchProfileSubTab('channel')"><i class="fas fa-tv"></i> Channel</button>
+                    </div>
+                </div>
                 <div class="profile-meta-container">
                     <img id="profileAvatarBig" class="profile-avatar-big" src="">
                     <div class="profile-info-block">
@@ -338,11 +418,6 @@
                         <div style="display:flex; align-items:center; gap:15px;">
                             <div id="profileRoleTag" class="profile-role-tag">USER</div>
                         </div>
-                    </div>
-                    <div class="profile-nav">
-                        <button id="pTabInv" class="active" onclick="switchProfileSubTab('inventory')"><i class="fas fa-backpack"></i> Ekwipunek</button>
-                        <button id="pTabUp" onclick="switchProfileSubTab('uploaded')"><i class="fas fa-cloud-upload-alt"></i> Uploaded</button>
-                        <button id="pTabCh" onclick="switchProfileSubTab('channel')"><i class="fas fa-tv"></i> Channel</button>
                     </div>
                 </div>
             </div>
@@ -442,14 +517,10 @@
         </div>
     </div>
 
-    <!-- PREMIUM -->
+    <!-- PREMIUM (WIP) -->
     <div id="premium" class="panel">
-        <div class="pricing-grid">
-            <div class="price-card featured">
-                <div class="price-title">Gato GOD</div><div class="price-amount">20 PLN</div>
-                <ul class="price-features"><li><i class="fas fa-coins" style="color:#ffd700"></i> <b>Mnożnik Coins x5</b></li><li><i class="fas fa-certificate" style="color:#38bdf8"></i> <b>Specjalna Odznaka</b></li><li><i class="fas fa-magic" style="color:#f43f5e"></i> <b>Animowany Kolor</b></li><li><i class="fas fa-check"></i> Priorytetowe wsparcie</li><li><i class="fas fa-check"></i> Wszystkie style</li></ul>
-                <button class="btn-buy-plan" onclick="alert('Płatności wkrótce!')">KUP TERAZ</button>
-            </div>
+        <div class="wip-container">
+            <i class="fas fa-hammer wip-icon"></i>
         </div>
     </div>
 
