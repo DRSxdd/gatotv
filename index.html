@@ -23,9 +23,9 @@
         --border-hover: #334155;
         --danger: #ef4444; 
         --success: #22c55e;
-        --common: #94a3b8;
-        --rare: #38bdf8;
-        --legendary: #facc15;
+        --tier1: #94a3b8;
+        --tier2: #38bdf8;
+        --tier3: #facc15;
     }
     * { box-sizing: border-box; }
     
@@ -39,6 +39,7 @@
         overflow-x: hidden; 
     }
     
+    /* HEADER */
     header { 
         background: #0f172a; 
         height: 60px; 
@@ -73,6 +74,25 @@
     
     .beta-tag { font-size: 9px; background: var(--danger); color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700; transform: translateY(-2px); box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
     
+    /* PLUGIN TOGGLE */
+    .plugin-status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #1e293b;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 800;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        transition: 0.2s;
+        margin-left: 15px;
+    }
+    .plugin-status.active { border-color: var(--success); color: var(--success); background: rgba(34, 197, 94, 0.1); }
+    .plugin-status.inactive { border-color: var(--danger); color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 5px currentColor; }
+
     .btn-login-header { background: var(--twitch); color: white; border: none; padding: 7px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 0 15px rgba(145, 70, 255, 0.15); }
     .btn-login-header:hover { background: #772ce8; transform: translateY(-1px); box-shadow: 0 0 20px rgba(145, 70, 255, 0.3); }
     
@@ -90,13 +110,7 @@
     nav button.btn-purple.active { background: var(--twitch); color: white; border-color: var(--twitch); box-shadow: 0 0 20px rgba(145, 70, 255, 0.25); }
     nav button.btn-yellow.active { background: var(--yellow); color: black; border-color: var(--yellow); box-shadow: 0 0 20px rgba(250, 204, 21, 0.25); }
     
-    .container { 
-        width: 100%; 
-        max-width: 96%;
-        margin: 30px auto; 
-        padding: 0 15px; 
-    }
-
+    .container { width: 100%; max-width: 96%; margin: 30px auto; padding: 0 15px; }
     .panel { display: none; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
     .panel.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
@@ -104,118 +118,27 @@
     .login-blocker { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 20px; margin-top: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; background-image: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%); }
     .login-blocker h2 { font-size: 32px; margin-bottom: 15px; color: white; letter-spacing: -1px; }
     
-    .profile-header { 
-        position: relative; 
-        margin-bottom: 20px; 
-        background: var(--panel); 
-        border: 1px solid var(--border); 
-        border-radius: 24px; 
-        overflow: hidden; 
-        margin-top: 10px; 
-        box-shadow: 0 10px 30px rgba(0,0,0,0.25); 
-    }
-    .profile-banner { 
-        height: 170px;
-        background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2072&auto=format&fit=crop') center/cover; 
-        position: relative; 
-    }
-    .profile-banner::after { 
-        content:''; position: absolute; bottom:0; left:0; width:100%; height:100%; 
-        background: linear-gradient(to top, var(--panel) 0%, rgba(15, 23, 42, 0.5) 50%, transparent 100%); 
-    }
-
-    .profile-meta-container { 
-        position: absolute; 
-        bottom: 20px; 
-        left: 40px; 
-        display: flex; 
-        align-items: center; 
-        gap: 20px;
-        z-index: 10;
-        width: auto;
-    }
-    
-    .profile-avatar-big { 
-        width: 80px; 
-        height: 80px; 
-        border-radius: 50%; 
-        border: 3px solid var(--panel); 
-        background: #000; 
-        box-shadow: 0 5px 20px rgba(0,0,0,0.5); 
-    }
-    
-    .profile-info-block { 
-        display: flex; 
-        flex-direction: column; 
-        justify-content: center;
-        margin: 0;
-    }
+    .profile-header { position: relative; margin-bottom: 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 24px; overflow: hidden; margin-top: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+    .profile-banner { height: 170px; background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2072&auto=format&fit=crop') center/cover; position: relative; }
+    .profile-banner::after { content:''; position: absolute; bottom:0; left:0; width:100%; height:100%; background: linear-gradient(to top, var(--panel) 0%, rgba(15, 23, 42, 0.5) 50%, transparent 100%); }
+    .profile-meta-container { position: absolute; bottom: 20px; left: 40px; display: flex; align-items: center; gap: 20px; z-index: 10; width: auto; }
+    .profile-avatar-big { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--panel); background: #000; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+    .profile-info-block { display: flex; flex-direction: column; justify-content: center; margin: 0; }
     .profile-name-big { font-size: 26px; font-weight: 900; color: white; text-shadow: 0 2px 20px rgba(0,0,0,0.8); line-height: 1.1; display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; }
     .profile-role-tag { font-size: 10px; color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; background: rgba(56, 189, 248, 0.15); padding: 3px 8px; border-radius: 6px; display: inline-block; margin-top: 4px; border: 1px solid rgba(56, 189, 248, 0.3); backdrop-filter: blur(4px); }
     .viewing-badge { font-size: 10px; background: var(--yellow); color: black; padding: 2px 8px; border-radius: 20px; vertical-align: middle; font-weight: 800; }
     
-    .profile-nav-centered {
-        position: absolute;
-        bottom: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 8px;
-        background: rgba(2, 6, 23, 0.7);
-        padding: 5px;
-        border-radius: 14px;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.05);
-        z-index: 20;
-    }
-    .profile-nav-centered button {
-        background: transparent;
-        border: none;
-        color: #cbd5e1;
-        font-size: 12px;
-        font-weight: 600;
-        padding: 6px 16px;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: 0.2s;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-    .profile-nav-centered button:hover {
-        background: rgba(255,255,255,0.1);
-        color: white;
-    }
-    .profile-nav-centered button.active {
-        background: var(--twitch);
-        color: white;
-        box-shadow: 0 4px 15px rgba(145, 70, 255, 0.3);
-        font-weight: 800;
-    }
-
+    .profile-nav-centered { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; background: rgba(2, 6, 23, 0.7); padding: 5px; border-radius: 14px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); z-index: 20; }
+    .profile-nav-centered button { background: transparent; border: none; color: #cbd5e1; font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 10px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+    .profile-nav-centered button:hover { background: rgba(255,255,255,0.1); color: white; }
+    .profile-nav-centered button.active { background: var(--twitch); color: white; box-shadow: 0 4px 15px rgba(145, 70, 255, 0.3); font-weight: 800; }
     .back-to-me-btn { position: absolute; top: 15px; right: 20px; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; backdrop-filter: blur(5px); transition: 0.2s; z-index: 10; display: none; font-size: 11px; }
     .back-to-me-btn:hover { background: var(--twitch); border-color: var(--twitch); }
 
     .profile-content-area { padding: 30px; }
     .profile-section-title { font-size: 18px; font-weight: 800; color: white; margin-bottom: 20px; border-left: 4px solid var(--twitch); padding-left: 15px; display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; }
     
-    .chat-preview-container { 
-        max-width: 600px;
-        margin: 0 auto 30px auto; 
-        background: #020617; 
-        border: 1px solid var(--border); 
-        border-radius: 12px; 
-        padding: 15px 25px; 
-        font-family: 'Inter', sans-serif; 
-        display: flex; 
-        align-items: center; 
-        justify-content: space-between; 
-        position: relative; 
-        z-index: 10; 
-        flex-wrap: wrap; 
-        gap: 10px; 
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
+    .chat-preview-container { max-width: 600px; margin: 0 auto 30px auto; background: #020617; border: 1px solid var(--border); border-radius: 12px; padding: 15px 25px; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 10; flex-wrap: wrap; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
     .chat-preview-container.light { background: #f8fafc; border-color: #cbd5e1; }
     .chat-preview-container.light .chat-msg { color: #0f172a; }
     .chat-preview-container.light .chat-time { color: #64748b; }
@@ -230,10 +153,8 @@
     .btn-primary { background: var(--twitch); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(145,70,255,0.25); }
     .btn-primary:hover { background: #772ce8; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(145,70,255,0.35); }
     .btn-primary.small { font-size: 12px; padding: 8px 16px; }
-    
     .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; }
     .btn-outline:hover { border-color: var(--accent); color: var(--accent); background: rgba(56,189,248,0.05); }
-    
     .btn-secondary { background: #334155; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; }
     .btn-secondary:hover { background: #475569; }
 
@@ -268,7 +189,6 @@
     .btn-unequip:hover { background: #f87171; }
 
     .category-badge { position: absolute; top:5px; left:5px; padding:3px 6px; border-radius:4px; font-size:9px; font-weight:bold; text-transform:uppercase; color:white; z-index: 2; pointer-events: none; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-    
     .cat-paint { background: #38bdf8; } .cat-badge { background: #9146ff; } .cat-ink { background: #f43f5e; } .cat-font { background: #10b981; } .cat-bg { background: #f59e0b; }
     .shop-section-title { width: 100%; font-size: 14px; font-weight: 800; color: var(--accent); margin: 35px 0 15px 0; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
     
@@ -351,18 +271,51 @@
     .btn-logout-mini { background: none; border: none; color: var(--text-muted); font-size: 10px; cursor: pointer; padding: 0; text-align: left; font-weight: 600; transition: color 0.2s; }
     .btn-logout-mini:hover { color: var(--danger); }
 
-    /* PET STYLES */
-    .pet-stage { background: radial-gradient(circle at center, #1e293b 0%, #020617 70%); border: 1px solid var(--border); border-radius: 20px; padding: 40px; text-align: center; margin-bottom: 30px; position: relative; overflow: hidden; height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 0 50px rgba(0,0,0,0.5); }
-    .pet-avatar { font-size: 80px; color: var(--accent); filter: drop-shadow(0 0 20px var(--accent-glow)); animation: floatPet 3s ease-in-out infinite; margin-bottom: 20px; }
-    @keyframes floatPet { 0% { transform: translateY(0); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0); } }
-    .pet-info { position: relative; z-index: 2; width: 100%; max-width: 300px; }
-    .pet-name { font-size: 24px; font-weight: 900; color: white; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-    .pet-level-badge { background: var(--yellow); color: black; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 800; vertical-align: middle; margin-left: 8px; }
-    .pet-stats-bar { height: 8px; background: #334155; border-radius: 4px; overflow: hidden; margin-top: 5px; position: relative; }
-    .pet-stats-fill { height: 100%; background: linear-gradient(90deg, #38bdf8, #22c55e); width: 0%; transition: width 0.5s; }
-    .pet-bonus-info { margin-top: 15px; font-size: 11px; color: var(--success); font-weight: 700; background: rgba(34, 197, 94, 0.1); padding: 5px 10px; border-radius: 20px; display: inline-block; border: 1px solid rgba(34, 197, 94, 0.2); }
+    /* PET SYSTEM STYLES */
+    .pet-slots-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+    .pet-slot-selector { width: 60px; height: 60px; border-radius: 50%; background: #1e293b; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; position: relative; }
+    .pet-slot-selector.active { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); transform: scale(1.1); background: #0f172a; }
+    .pet-slot-selector i { color: #555; font-size: 20px; }
+    .pet-slot-content { font-size: 24px; }
     
-    .egg-shop-section { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
+    .pet-stage-wrapper { position: relative; width: 100%; max-width: 500px; margin: 0 auto 30px auto; height: 320px; display: flex; align-items: center; justify-content: center; }
+    /* Equip slots around pet */
+    .equip-slot { width: 45px; height: 45px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; position: absolute; color: var(--text-muted); font-size: 18px; cursor: pointer; transition: 0.2s; }
+    .equip-slot:hover { border-color: var(--accent); color: white; }
+    .slot-head { top: 10px; left: 50%; transform: translateX(-50%); }
+    .slot-chest { top: 50%; left: 20px; transform: translateY(-50%); }
+    .slot-wep { top: 50%; right: 20px; transform: translateY(-50%); }
+    .slot-legs { bottom: 10px; left: 50%; transform: translateX(-50%); }
+
+    .pet-stage { width: 100%; height: 100%; background: radial-gradient(circle at center, #1e293b 0%, #020617 70%); border: 1px solid var(--border); border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 0 50px rgba(0,0,0,0.5); z-index: 1; }
+    .pet-avatar { font-size: 80px; filter: drop-shadow(0 0 20px var(--accent-glow)); animation: floatPet 3s ease-in-out infinite; margin-bottom: 10px; transition: color 0.3s; }
+    
+    .pet-tier-1 { color: var(--tier1); }
+    .pet-tier-2 { color: var(--tier2); filter: drop-shadow(0 0 15px var(--tier2)); }
+    .pet-tier-3 { color: var(--tier3); filter: drop-shadow(0 0 20px var(--tier3)); }
+
+    @keyframes floatPet { 0% { transform: translateY(0); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0); } }
+    .pet-info { position: relative; z-index: 2; width: 100%; max-width: 250px; text-align: center; }
+    .pet-name { font-size: 20px; font-weight: 900; color: white; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+    .pet-level-badge { background: var(--yellow); color: black; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 800; vertical-align: middle; margin-left: 8px; }
+    .pet-stats-bar { height: 6px; background: #334155; border-radius: 4px; overflow: hidden; margin-top: 5px; position: relative; }
+    .pet-stats-fill { height: 100%; background: linear-gradient(90deg, #38bdf8, #22c55e); width: 0%; transition: width 0.5s; }
+    
+    .btn-evolve { margin-top: 15px; background: linear-gradient(45deg, #8b5cf6, #d946ef); border: none; padding: 8px 20px; border-radius: 8px; color: white; font-weight: 800; font-size: 12px; cursor: pointer; box-shadow: 0 0 15px rgba(139, 92, 246, 0.4); animation: pulseBtn 2s infinite; }
+    @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+    .pets-inventory-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .inv-pet-item { background: #1e293b; border: 1px solid var(--border); border-radius: 10px; padding: 10px; text-align: center; cursor: pointer; transition: 0.2s; position: relative; }
+    .inv-pet-item:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .inv-pet-item.selected { border-color: var(--success); box-shadow: 0 0 10px rgba(34, 197, 94, 0.3); }
+    .inv-pet-icon { font-size: 24px; margin-bottom: 5px; }
+    .inv-pet-lvl { font-size: 9px; color: var(--text-muted); font-weight: 700; }
+    .inv-pet-tier { position: absolute; top: 2px; right: 4px; font-size: 8px; font-weight: 900; }
+
+    .btn-petsdex { width: 100%; background: #1e293b; border: 1px solid var(--border); padding: 15px; border-radius: 12px; color: var(--text-muted); font-weight: 800; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; margin-top: 20px; }
+    .btn-petsdex:hover { color: white; border-color: var(--accent); background: #0f172a; }
+
+    .egg-shop-section { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; margin-top: 20px; }
     .egg-card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 16px; text-align: center; width: 200px; transition: 0.2s; cursor: pointer; position: relative; }
     .egg-card:hover { transform: translateY(-5px); border-color: var(--yellow); box-shadow: 0 0 20px rgba(250, 204, 21, 0.2); }
     .egg-icon { font-size: 40px; color: var(--text-muted); margin-bottom: 15px; }
@@ -370,14 +323,14 @@
     .egg-price { color: var(--yellow); font-weight: 700; font-size: 12px; }
     .odds-display { font-size: 10px; color: var(--text-muted); margin-top: 10px; text-align: left; line-height: 1.4; }
     
-    .pokedex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
+    .pokedex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; margin-top: 15px; display: none; } /* Hidden by default */
     .pokedex-item { background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 8px; padding: 15px; text-align: center; opacity: 0.5; transition: 0.2s; }
     .pokedex-item.unlocked { opacity: 1; border-color: var(--accent); background: rgba(56, 189, 248, 0.05); }
     .pokedex-icon { font-size: 24px; margin-bottom: 5px; }
     .pokedex-name { font-size: 9px; font-weight: 700; text-transform: uppercase; }
-    .rarity-common { color: var(--common); }
-    .rarity-rare { color: var(--rare); }
-    .rarity-legendary { color: var(--legendary); text-shadow: 0 0 10px rgba(250, 204, 21, 0.5); }
+    .rarity-common { color: var(--tier1); }
+    .rarity-rare { color: var(--tier2); }
+    .rarity-legendary { color: var(--tier3); text-shadow: 0 0 10px rgba(250, 204, 21, 0.5); }
 
     .hidden { display: none !important; }
 </style>
@@ -390,6 +343,11 @@
         <div id="loginBtnContainer">
             <button class="btn-login-header" onclick="loginWithTwitch()">Zaloguj</button>
         </div>
+        <!-- PLUGIN TOGGLE -->
+        <div id="pluginToggle" class="plugin-status active" onclick="togglePluginStatus()">
+            <div class="status-dot"></div> <span id="pluginText">PLUGIN: ON</span>
+        </div>
+        
         <div class="search-container" id="searchContainer" style="display:none;">
             <i class="fas fa-search search-icon"></i>
             <input type="text" id="userSearchInput" class="search-input" placeholder="Szukaj profilu...">
@@ -463,34 +421,42 @@
     <!-- PETS TAB -->
     <div id="pets" class="panel">
         <div class="protected-content">
-            <div id="petActiveView">
+            <!-- 3 SLOTS SELECTOR -->
+            <div class="pet-slots-container">
+                <div id="slot0" class="pet-slot-selector active" onclick="selectPetSlot(0)"><i class="fas fa-plus"></i></div>
+                <div id="slot1" class="pet-slot-selector" onclick="selectPetSlot(1)"><i class="fas fa-plus"></i></div>
+                <div id="slot2" class="pet-slot-selector" onclick="selectPetSlot(2)"><i class="fas fa-plus"></i></div>
+            </div>
+
+            <!-- MAIN PET STAGE -->
+            <div class="pet-stage-wrapper">
+                <div class="equip-slot slot-head" title="Czapka"><i class="fas fa-hat-wizard"></i></div>
+                <div class="equip-slot slot-chest" title="Napiersnik"><i class="fas fa-tshirt"></i></div>
+                <div class="equip-slot slot-wep" title="Broń"><i class="fas fa-khanda"></i></div>
+                <div class="equip-slot slot-legs" title="Buty"><i class="fas fa-socks"></i></div>
+
                 <div class="pet-stage">
-                    <div id="activePetIcon" class="pet-avatar"><i class="fas fa-egg" style="color:#555"></i></div>
-                    <div id="petStatsBlock" class="pet-info" style="display:none;">
-                        <div class="pet-name"><span id="activePetName">No Pet</span><span id="activePetLvl" class="pet-level-badge">LVL 1</span></div>
-                        <div class="pet-stats-bar"><div id="activePetXpBar" class="pet-stats-fill"></div></div>
-                        <div style="font-size:10px; color:#94a3b8; margin-top:4px; display:flex; justify-content:space-between;"><span>XP</span><span id="activePetXpText">0/100</span></div>
-                        <div class="pet-bonus-info">LVL UP = +50 Coins</div>
+                    <div id="activePetView" style="display:none; width:100%; display:flex; flex-direction:column; align-items:center;">
+                        <div id="activePetIcon" class="pet-avatar"><i class="fas fa-cat"></i></div>
+                        <div class="pet-info">
+                            <div class="pet-name"><span id="activePetName">Name</span><span id="activePetLvl" class="pet-level-badge">LVL 1</span></div>
+                            <div style="font-size:10px; color:#aaa; margin-bottom:5px;" id="activePetTier">TIER I</div>
+                            <div class="pet-stats-bar"><div id="activePetXpBar" class="pet-stats-fill"></div></div>
+                            <div style="font-size:10px; color:#94a3b8; margin-top:4px; display:flex; justify-content:space-between;"><span>XP</span><span id="activePetXpText">0/100</span></div>
+                            <button id="btnEvolve" class="btn-evolve" style="display:none;" onclick="evolvePet()">✨ EWOLUUJ (TIER UP)</button>
+                        </div>
                     </div>
-                    <div id="noPetMsg" style="color:#94a3b8; font-weight:700; margin-top:20px;">Nie masz aktywnego zwierzaka. Kup jajko!</div>
+                    <div id="emptySlotMsg" style="color:#94a3b8; font-weight:700; display:none;">Wybierz zwierzaka z magazynu</div>
                 </div>
             </div>
 
-            <div class="profile-section-title"><i class="fas fa-store"></i> Sklep z Jajkami</div>
-            <div class="egg-shop-section">
-                <div class="egg-card" onclick="buyEgg()">
-                    <div class="egg-icon"><i class="fas fa-egg"></i></div>
-                    <div class="egg-title">STARTER EGG</div>
-                    <div class="egg-price"><i class="fas fa-coins"></i> 100</div>
-                    <div class="odds-display">
-                        <span style="color:var(--common)">● Kot / Pies (40%)</span><br>
-                        <span style="color:var(--rare)">● Królik (15%)</span><br>
-                        <span style="color:var(--legendary)">● Smok (5%)</span>
-                    </div>
-                </div>
-            </div>
+            <div class="profile-section-title"><i class="fas fa-warehouse"></i> Magazyn Zwierzaków</div>
+            <div id="petsInventoryList" class="pets-inventory-list"></div>
 
-            <div class="profile-section-title"><i class="fas fa-book"></i> Encyklopedia</div>
+            <div class="btn-petsdex" onclick="togglePetsdex()">
+                <span><i class="fas fa-book-open"></i> PETSDEX</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
             <div id="pokedexGrid" class="pokedex-grid"></div>
         </div>
     </div>
@@ -515,6 +481,20 @@
             </div>
 
             <div id="shopContent"></div>
+
+            <div class="profile-section-title"><i class="fas fa-egg"></i> Jajka i Pety</div>
+            <div class="egg-shop-section">
+                <div class="egg-card" onclick="buyEgg()">
+                    <div class="egg-icon"><i class="fas fa-egg"></i></div>
+                    <div class="egg-title">STARTER EGG</div>
+                    <div class="egg-price"><i class="fas fa-coins"></i> 100</div>
+                    <div class="odds-display">
+                        <span style="color:var(--tier1)">● Kot / Pies (40%)</span><br>
+                        <span style="color:var(--tier2)">● Królik (15%)</span><br>
+                        <span style="color:var(--tier3)">● Smok (5%)</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -637,14 +617,20 @@ const DB_URL = "https://testowa-157aa-default-rtdb.europe-west1.firebasedatabase
 const ADMINS = ["gatojestemformaostateczna"]; 
 
 // STATE
-let AppState = { user: null, token: null, coins: 100, owned: [], loadout: {}, emotes: {}, allowedChannels: [], role: "USER", emoteTab: 'global', emoteSort: 'new', currentEmoteKey: null, currentEmoteData: null, viewingUser: null, kickNick: null, 
-                 activePet: null, petCollection: [] }; // PETS
+let AppState = { 
+    user: null, token: null, coins: 100, owned: [], loadout: {}, emotes: {}, role: "USER", 
+    emoteTab: 'global', emoteSort: 'new', currentEmoteKey: null, currentEmoteData: null, viewingUser: null, kickNick: null,
+    // PET SYSTEM
+    pluginActive: true,
+    activeSlotIndex: 0,
+    equippedPets: [null, null, null], // Array of pet IDs or null
+    petsInventory: [] // Array of Pet Objects: {id, type, tier, xp, maxXp, level}
+};
 
-// PET DB
 const PETS_DB = {
     'cat': { name: 'Kot', icon: 'fa-cat', rarity: 'common' },
     'dog': { name: 'Pies', icon: 'fa-dog', rarity: 'common' },
-    'rabbit': { name: 'Królik', icon: 'fa-carrot', rarity: 'rare' }, // Using carrot/paw as placeholder, FontAwesome 5 free has limits
+    'rabbit': { name: 'Królik', icon: 'fa-carrot', rarity: 'rare' }, 
     'dragon': { name: 'Smok', icon: 'fa-dragon', rarity: 'legendary' }
 };
 
@@ -670,12 +656,12 @@ window.onload = async () => {
         const kn = localStorage.getItem('gato_kick_nick'); if(kn) AppState.kickNick = kn;
         
         // Load Pet Data
-        const p = localStorage.getItem('gato_active_pet'); AppState.activePet = p ? JSON.parse(p) : null;
-        const pc = localStorage.getItem('gato_pet_col'); AppState.petCollection = pc ? JSON.parse(pc) : [];
+        const pinv = localStorage.getItem('gato_pets_inv'); AppState.petsInventory = pinv ? JSON.parse(pinv) : [];
+        const peq = localStorage.getItem('gato_pets_eq'); AppState.equippedPets = peq ? JSON.parse(peq) : [null, null, null];
         
     } catch(e) {}
     updateCoinDisplay(); renderShop(); checkDailyBonus(); setInterval(checkDailyBonus, 60000);
-    renderPokedex(); updatePetUI(); setInterval(petLoop, 10000); // 10s loop for XP
+    renderPokedex(); updatePetUI(); setInterval(petLoop, 10000); 
 
     if (location.hash.includes('access_token')) {
         const t = new URLSearchParams(location.hash.substring(1)).get('access_token');
@@ -707,6 +693,7 @@ function showLoginScreen() {
     document.getElementById('searchContainer').style.display='none';
     document.getElementById('redeemBtn').style.display='none';
     document.getElementById('bottomLeftControls').style.display='none';
+    document.getElementById('pluginToggle').style.display='none';
     document.querySelectorAll('.login-blocker').forEach(e=>e.style.display='flex');
     document.querySelectorAll('.protected-content').forEach(e=>e.style.display='none');
     document.getElementById('userRoleBadge').style.display='none';
@@ -719,6 +706,7 @@ function showDashboard(u) {
     document.getElementById('coinDisplay').style.display='flex';
     document.getElementById('searchContainer').style.display='block';
     document.getElementById('redeemBtn').style.display='flex';
+    document.getElementById('pluginToggle').style.display='flex';
     document.querySelectorAll('.login-blocker').forEach(e=>e.setAttribute('style','display:none !important'));
     document.querySelectorAll('.protected-content').forEach(e=>e.setAttribute('style','display:block !important'));
 
@@ -753,25 +741,45 @@ function setProfileData(name, avatar, role) {
     document.getElementById('profileRoleTag').innerText = role;
 }
 
-// PET SYSTEM
+// TOGGLE PLUGIN
+window.togglePluginStatus = function() {
+    AppState.pluginActive = !AppState.pluginActive;
+    const btn = document.getElementById('pluginToggle');
+    const txt = document.getElementById('pluginText');
+    if(AppState.pluginActive) {
+        btn.classList.add('active'); btn.classList.remove('inactive');
+        txt.innerText = "PLUGIN: ON";
+    } else {
+        btn.classList.add('inactive'); btn.classList.remove('active');
+        txt.innerText = "PLUGIN: OFF";
+    }
+}
+
+// PET SYSTEM (UPDATED)
 window.buyEgg = function() {
     if(AppState.coins < 100) { alert("Brak monet (100)"); return; }
-    if(AppState.activePet) { if(!confirm("Masz już aktywnego zwierzaka. Czy chcesz go zastąpić? (Stracisz postęp obecnego)")) return; }
     
     AppState.coins -= 100;
     updateCoinDisplay();
     
     const rand = Math.random() * 100;
     let type = 'cat';
-    if(rand < 5) type = 'dragon'; // 5%
-    else if(rand < 20) type = 'rabbit'; // 15%
-    else if(rand < 60) type = 'dog'; // 40%
-    else type = 'cat'; // 40%
+    if(rand < 5) type = 'dragon';
+    else if(rand < 20) type = 'rabbit';
+    else if(rand < 60) type = 'dog';
+    else type = 'cat';
     
-    const newPet = { type: type, level: 1, xp: 0, maxXp: 100 };
-    AppState.activePet = newPet;
+    // Create new pet instance
+    const newPet = { 
+        id: Date.now() + Math.random(), 
+        type: type, 
+        tier: 1, 
+        level: 1, 
+        xp: 0, 
+        maxXp: 100 
+    };
     
-    if(!AppState.petCollection.includes(type)) AppState.petCollection.push(type);
+    AppState.petsInventory.push(newPet);
     
     savePetData();
     updatePetUI();
@@ -780,71 +788,206 @@ window.buyEgg = function() {
     alert(`Wykluł się: ${PETS_DB[type].name}!`);
 }
 
-function petLoop() {
-    if(!AppState.activePet) return;
-    // Add XP simply by watching
-    AppState.activePet.xp += 10;
-    if(AppState.activePet.xp >= AppState.activePet.maxXp) {
-        AppState.activePet.level++;
-        AppState.activePet.xp = 0;
-        AppState.activePet.maxXp = Math.floor(AppState.activePet.maxXp * 1.5);
-        AppState.coins += 50; // Reward
-        updateCoinDisplay();
-        fireConfetti(true);
-        // Visual feedback could be added here
+function selectPetSlot(index) {
+    AppState.activeSlotIndex = index;
+    // Update active class on slots
+    for(let i=0; i<3; i++) {
+        const el = document.getElementById(`slot${i}`);
+        if(i === index) el.classList.add('active');
+        else el.classList.remove('active');
     }
+    updatePetUI();
+}
+
+function equipPet(petId) {
+    // Equip to active slot
+    const slot = AppState.activeSlotIndex;
+    
+    // Check if pet is already equipped in ANOTHER slot
+    const existingIndex = AppState.equippedPets.indexOf(petId);
+    if(existingIndex !== -1 && existingIndex !== slot) {
+        // Remove from old slot
+        AppState.equippedPets[existingIndex] = null;
+    }
+    
+    AppState.equippedPets[slot] = petId;
     savePetData();
     updatePetUI();
 }
 
-function updatePetUI() {
-    const p = AppState.activePet;
-    if(!p) {
-        document.getElementById('activePetIcon').innerHTML = '<i class="fas fa-question" style="color:#333"></i>';
-        document.getElementById('petStatsBlock').style.display = 'none';
-        document.getElementById('noPetMsg').style.display = 'block';
-        return;
+function evolvePet() {
+    const activeId = AppState.equippedPets[AppState.activeSlotIndex];
+    if(!activeId) return;
+    
+    const mainPet = AppState.petsInventory.find(p => p.id === activeId);
+    if(!mainPet || mainPet.tier >= 3) return;
+    
+    // Find candidate to merge (same type, same tier, different ID)
+    const mate = AppState.petsInventory.find(p => p.type === mainPet.type && p.tier === mainPet.tier && p.id !== mainPet.id);
+    
+    if(mate) {
+        if(confirm(`Ewoluować ${PETS_DB[mainPet.type].name} na TIER ${mainPet.tier + 1}? Drugi pet zostanie zużyty.`)) {
+            // Remove mate
+            AppState.petsInventory = AppState.petsInventory.filter(p => p.id !== mate.id);
+            // Check if mate was equipped -> unequip it
+            const mateEqIdx = AppState.equippedPets.indexOf(mate.id);
+            if(mateEqIdx !== -1) AppState.equippedPets[mateEqIdx] = null;
+            
+            // Upgrade main
+            mainPet.tier++;
+            mainPet.maxXp = Math.floor(mainPet.maxXp * 1.2); // XP stays, limit grows
+            
+            savePetData();
+            updatePetUI();
+            fireConfetti(true);
+        }
     }
+}
+
+function petLoop() {
+    if(!AppState.pluginActive) return; // ONLY IF ON
     
-    const meta = PETS_DB[p.type];
-    document.getElementById('petStatsBlock').style.display = 'block';
-    document.getElementById('noPetMsg').style.display = 'none';
+    let xpGained = false;
     
-    document.getElementById('activePetIcon').innerHTML = `<i class="fas ${meta.icon}" style="color:${getColorForRarity(meta.rarity)}"></i>`;
-    document.getElementById('activePetName').innerText = meta.name;
-    document.getElementById('activePetLvl').innerText = `LVL ${p.level}`;
+    // Loop through all 3 slots
+    AppState.equippedPets.forEach(petId => {
+        if(!petId) return;
+        const pet = AppState.petsInventory.find(p => p.id === petId);
+        if(pet) {
+            pet.xp += 10;
+            if(pet.xp >= pet.maxXp) {
+                pet.level++;
+                pet.xp = 0;
+                pet.maxXp = Math.floor(pet.maxXp * 1.5);
+                AppState.coins += 50 * pet.tier; // Reward scales with tier
+                xpGained = true;
+            }
+        }
+    });
     
-    const pct = Math.min(100, (p.xp / p.maxXp) * 100);
-    document.getElementById('activePetXpBar').style.width = `${pct}%`;
-    document.getElementById('activePetXpText').innerText = `${p.xp}/${p.maxXp}`;
+    if(xpGained) {
+        updateCoinDisplay();
+        fireConfetti(false); // small confetti
+    }
+    savePetData();
+    updatePetUI(); // Update bars
+}
+
+function updatePetUI() {
+    // Render Inventory
+    const invDiv = document.getElementById('petsInventoryList');
+    invDiv.innerHTML = '';
+    AppState.petsInventory.forEach(p => {
+        const isEquipped = AppState.equippedPets.includes(p.id);
+        const div = document.createElement('div');
+        div.className = `inv-pet-item ${isEquipped ? 'selected' : ''}`;
+        const meta = PETS_DB[p.type];
+        const tierColor = p.tier === 1 ? 'var(--tier1)' : (p.tier === 2 ? 'var(--tier2)' : 'var(--tier3)');
+        
+        div.innerHTML = `
+            <div class="inv-pet-tier" style="color:${tierColor}">${"I".repeat(p.tier)}</div>
+            <div class="inv-pet-icon"><i class="fas ${meta.icon}" style="color:${tierColor}"></i></div>
+            <div class="inv-pet-lvl">Lvl ${p.level}</div>
+        `;
+        div.onclick = () => equipPet(p.id);
+        invDiv.appendChild(div);
+    });
+
+    // Update Slot Icons (top)
+    for(let i=0; i<3; i++) {
+        const pid = AppState.equippedPets[i];
+        const slotEl = document.getElementById(`slot${i}`);
+        if(pid) {
+            const p = AppState.petsInventory.find(x => x.id === pid);
+            if(p) {
+                const meta = PETS_DB[p.type];
+                const tierColor = p.tier === 1 ? '#94a3b8' : (p.tier === 2 ? '#38bdf8' : '#facc15');
+                slotEl.innerHTML = `<i class="fas ${meta.icon}" style="color:${tierColor}"></i>`;
+            } else slotEl.innerHTML = `<i class="fas fa-plus"></i>`;
+        } else {
+            slotEl.innerHTML = `<i class="fas fa-plus"></i>`;
+        }
+    }
+
+    // Update Main Stage (Active Slot)
+    const activeId = AppState.equippedPets[AppState.activeSlotIndex];
+    const activePet = activeId ? AppState.petsInventory.find(p => p.id === activeId) : null;
+    
+    if(activePet) {
+        document.getElementById('activePetView').style.display = 'flex';
+        document.getElementById('emptySlotMsg').style.display = 'none';
+        
+        const meta = PETS_DB[activePet.type];
+        const tierClass = `pet-tier-${activePet.tier}`;
+        
+        const iconContainer = document.getElementById('activePetIcon');
+        iconContainer.innerHTML = `<i class="fas ${meta.icon}"></i>`;
+        iconContainer.className = `pet-avatar ${tierClass}`;
+        
+        document.getElementById('activePetName').innerText = meta.name;
+        document.getElementById('activePetLvl').innerText = `LVL ${activePet.level}`;
+        document.getElementById('activePetTier').innerText = `TIER ${"I".repeat(activePet.tier)}`;
+        
+        const pct = Math.min(100, (activePet.xp / activePet.maxXp) * 100);
+        document.getElementById('activePetXpBar').style.width = `${pct}%`;
+        document.getElementById('activePetXpText').innerText = `${activePet.xp}/${activePet.maxXp}`;
+        
+        // Evolve Button Check
+        const mate = AppState.petsInventory.find(p => p.type === activePet.type && p.tier === activePet.tier && p.id !== activePet.id);
+        const evBtn = document.getElementById('btnEvolve');
+        if(mate && activePet.tier < 3) {
+            evBtn.style.display = 'block';
+        } else {
+            evBtn.style.display = 'none';
+        }
+        
+    } else {
+        document.getElementById('activePetView').style.display = 'none';
+        document.getElementById('emptySlotMsg').style.display = 'block';
+    }
+}
+
+window.togglePetsdex = function() {
+    const grid = document.getElementById('pokedexGrid');
+    const btnIcon = document.querySelector('.btn-petsdex i.fa-chevron-down');
+    if(grid.style.display === 'none' || grid.style.display === '') {
+        grid.style.display = 'grid';
+        if(btnIcon) btnIcon.className = 'fas fa-chevron-up';
+    } else {
+        grid.style.display = 'none';
+        if(btnIcon) btnIcon.className = 'fas fa-chevron-down';
+    }
 }
 
 function renderPokedex() {
     const grid = document.getElementById('pokedexGrid');
     if(!grid) return; grid.innerHTML = '';
     
+    // Determine highest tier owned for each type
+    const ownedTypes = {};
+    AppState.petsInventory.forEach(p => {
+        if(!ownedTypes[p.type] || p.tier > ownedTypes[p.type]) ownedTypes[p.type] = p.tier;
+    });
+    
     Object.keys(PETS_DB).forEach(key => {
         const meta = PETS_DB[key];
-        const owned = AppState.petCollection.includes(key);
+        const tier = ownedTypes[key] || 0;
+        const owned = tier > 0;
+        
         const div = document.createElement('div');
         div.className = `pokedex-item ${owned ? 'unlocked' : ''}`;
         div.innerHTML = `
             <div class="pokedex-icon"><i class="fas ${meta.icon} rarity-${meta.rarity}"></i></div>
             <div class="pokedex-name">${meta.name}</div>
+            ${owned ? `<div style="font-size:8px; color:white; margin-top:2px;">MAX TIER: ${"I".repeat(tier)}</div>` : ''}
         `;
         grid.appendChild(div);
     });
 }
 
-function getColorForRarity(r) {
-    if(r==='legendary') return '#facc15';
-    if(r==='rare') return '#38bdf8';
-    return '#94a3b8';
-}
-
 function savePetData() {
-    localStorage.setItem('gato_active_pet', JSON.stringify(AppState.activePet));
-    localStorage.setItem('gato_pet_col', JSON.stringify(AppState.petCollection));
+    localStorage.setItem('gato_pets_inv', JSON.stringify(AppState.petsInventory));
+    localStorage.setItem('gato_pets_eq', JSON.stringify(AppState.equippedPets));
 }
 
 
