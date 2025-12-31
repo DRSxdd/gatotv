@@ -100,9 +100,14 @@
     }
     
     .search-container { position: relative; width: 280px; margin-left: 15px; display: none; }
+    /* STYL INPUTOW */
     .search-input { width: 100%; background: #1e293b; border: 1px solid var(--border); color: white; padding: 8px 15px 8px 38px; border-radius: 50px; font-family: 'Outfit', sans-serif; font-size: 13px; transition: 0.2s; outline: none; }
     .search-input:focus { border-color: var(--accent); background: #0f172a; box-shadow: 0 0 15px rgba(56, 189, 248, 0.15); }
     .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 13px; pointer-events: none; }
+    
+    /* GŁÓWNE STYLE DLA FORMULARZY (Te zginęły wcześniej) */
+    input, select { padding: 16px; background: #020617; border: 1px solid var(--border); color: white; border-radius: 10px; font-size: 14px; width: 100%; outline: none; transition: 0.2s; }
+    input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1); }
     
     nav { display: flex; gap: 6px; background: transparent; padding: 0; }
     nav button { background: transparent; border: 1px solid transparent; color: var(--text-muted); font-size: 13px; font-weight: 600; padding: 7px 14px; cursor: pointer; border-radius: 8px; transition: 0.2s; }
@@ -219,7 +224,6 @@
 
     .profile-content-area { padding: 30px; }
     
-    /* PRZYWRÓCONO ORYGINALNY STYL NAGŁÓWKA SEKCJI */
     .profile-section-title { 
         font-size: 18px; 
         font-weight: 800; 
@@ -397,6 +401,17 @@
     .info-item { background: var(--panel); padding: 35px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
     .info-item h3 { color: white; margin-top: 0; font-size: 20px; }
     
+    /* GŁÓWNE STYLE FORMULARZY - PRZYWRÓCONE */
+    .emote-form-container { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .emote-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px; }
+    .form-group { display: flex; flex-direction: column; gap: 10px; }
+    .form-group.full-width { grid-column: span 2; }
+    label { font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-left: 2px; }
+    
+    .file-drop-zone { border: 2px dashed var(--border); background: rgba(2, 6, 23, 0.5); border-radius: 14px; padding: 30px; text-align: center; cursor: pointer; position: relative; transition: 0.2s; }
+    .file-drop-zone:hover { border-color: var(--accent); background: rgba(56, 189, 248, 0.05); }
+    .file-drop-zone input[type=file] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    
     .manage-section { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 30px; margin-bottom: 30px; }
     .manage-header { font-size: 20px; font-weight: 800; color: white; margin-bottom: 20px; display:flex; align-items:center; gap:10px; }
     .mod-item { display: flex; justify-content: space-between; align-items: center; background: #020617; padding: 15px; border-radius: 10px; border: 1px solid var(--border); font-size: 14px; font-weight: 600; }
@@ -422,7 +437,6 @@
 
     .dashboard-full-container { display: flex; flex-direction: column; gap: 30px; }
     
-    /* POPRAWKA: Sloty 50% szerokości i wyśrodkowane */
     .emote-slots-bar {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
@@ -467,6 +481,7 @@
     }
     .slot-box.filled:hover .slot-del-overlay { opacity: 1; }
 
+    /* POPRAWIONY STYL SEKCJI UPLOADU */
     .upload-area-styled {
         background: #0f172a;
         border: 1px solid var(--border);
@@ -583,7 +598,6 @@
                 </div>
 
                 <div id="profileInventory" style="display:block;">
-                    <!-- ZMODYFIKOWANY NAGŁÓWEK SEKCJI -->
                     <div class="profile-section-title">
                         <div style="display:flex; align-items:center; gap:10px;">
                             <i class="fas fa-paint-brush"></i> Twoje Przedmioty
@@ -895,6 +909,7 @@ function showDashboard(u) {
     if(isAdm) document.getElementById('adminScopeOption').style.display = 'block';
     
     document.getElementById('btnConnections').style.display = 'flex';
+    document.getElementById('collectionStats').style.display = 'flex';
 }
 
 function setProfileData(name, avatar, role) {
@@ -955,6 +970,7 @@ async function searchUserProfile(username) {
             document.getElementById('viewingBadge').style.display='inline-block';
             document.getElementById('btnBackToMe').style.display='block';
             document.getElementById('bottomLeftControls').style.display='none'; // Hide own controls when viewing
+            document.getElementById('collectionStats').style.display='none'; // Hide stats when viewing others
             await fetchProfileDataFor(t.login.toLowerCase());
         } else alert("Nie znaleziono");
     } catch(e) { console.log(e); }
@@ -976,6 +992,7 @@ function returnToMyProfile() {
     document.getElementById('viewingBadge').style.display='none';
     document.getElementById('btnBackToMe').style.display='none';
     document.getElementById('bottomLeftControls').style.display='flex'; // Show back
+    document.getElementById('collectionStats').style.display='flex'; 
     if(AppState.user) setProfileData(AppState.user.display_name, AppState.user.profile_image_url, AppState.role);
     renderProfileInventory(); renderProfileEmotes('uploaded'); renderProfileEmotes('channel');
 }
