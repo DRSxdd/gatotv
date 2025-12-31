@@ -384,17 +384,6 @@
     .info-item { background: var(--panel); padding: 35px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
     .info-item h3 { color: white; margin-top: 0; font-size: 20px; }
     
-    .emote-form-container { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
-    .emote-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px; }
-    .form-group { display: flex; flex-direction: column; gap: 10px; }
-    .form-group.full-width { grid-column: span 2; }
-    label { font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-left: 2px; }
-    input, select { padding: 16px; background: #020617; border: 1px solid var(--border); color: white; border-radius: 10px; font-size: 14px; width: 100%; outline: none; transition: 0.2s; }
-    input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1); }
-    .file-drop-zone { border: 2px dashed var(--border); background: rgba(2, 6, 23, 0.5); border-radius: 14px; padding: 30px; text-align: center; cursor: pointer; position: relative; transition: 0.2s; }
-    .file-drop-zone:hover { border-color: var(--accent); background: rgba(56, 189, 248, 0.05); }
-    .file-drop-zone input[type=file] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
-    
     .manage-section { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 30px; margin-bottom: 30px; }
     .manage-header { font-size: 20px; font-weight: 800; color: white; margin-bottom: 20px; display:flex; align-items:center; gap:10px; }
     .mod-item { display: flex; justify-content: space-between; align-items: center; background: #020617; padding: 15px; border-radius: 10px; border: 1px solid var(--border); font-size: 14px; font-weight: 600; }
@@ -484,6 +473,38 @@
     .vote-btn.active.down { color: var(--danger); border-color: var(--danger); background: rgba(239, 68, 68, 0.1); }
     .author-link { color: var(--accent); cursor: pointer; font-weight: bold; text-decoration: underline; }
 
+    /* NOWY: Licznik kolekcji i Encyklopedia */
+    .collection-stats-btn {
+        position: absolute;
+        bottom: 20px;
+        right: 40px;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid var(--border);
+        padding: 8px 16px;
+        border-radius: 12px;
+        cursor: pointer;
+        color: var(--text-muted);
+        font-weight: 800;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.2s;
+        z-index: 15;
+        backdrop-filter: blur(5px);
+    }
+    .collection-stats-btn:hover {
+        background: var(--panel);
+        color: white;
+        border-color: var(--accent);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .encyclo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; padding: 20px; max-height: 400px; overflow-y: auto; }
+    .encyclo-item { background: #020617; border: 1px solid var(--border); border-radius: 10px; padding: 15px; text-align: center; opacity: 0.3; filter: grayscale(1); transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100px; }
+    .encyclo-item.owned { opacity: 1; filter: grayscale(0); border-color: var(--success); box-shadow: 0 0 15px rgba(34, 197, 94, 0.1); background: rgba(34, 197, 94, 0.02); }
+    .encyclo-name { font-size: 10px; font-weight: 700; color: white; margin-top: 10px; text-transform: uppercase; }
+
     .hidden { display: none !important; }
 </style>
 </head>
@@ -528,6 +549,11 @@
                         <button id="pTabCh" onclick="switchProfileSubTab('channel')"><i class="fas fa-tv"></i> My Channel Emotes</button>
                     </div>
                 </div>
+                <!-- LICZNIK KOLEKCJI (NOWY) -->
+                <div id="collectionStats" class="collection-stats-btn" onclick="openEncyclopedia()" style="display:none;">
+                    <i class="fas fa-book"></i> <span id="collectionCount">0/0</span>
+                </div>
+
                 <div class="profile-meta-container">
                     <img id="profileAvatarBig" class="profile-avatar-big" src="">
                     <div class="profile-info-block">
@@ -717,6 +743,17 @@
     </div>
 </div>
 
+<!-- ENCYCLOPEDIA MODAL (NOWY) -->
+<div id="modalEncyclopedia" class="modal-wrap" style="display:none;">
+    <div class="modal-box" style="max-width: 600px;">
+        <div class="modal-head" style="padding: 20px;">
+            <button class="modal-close" onclick="document.getElementById('modalEncyclopedia').style.display='none'" style="top:15px; right:15px;">×</button>
+            <h2 style="margin:0; font-size:18px; color:white;">ENCYKLOPEDIA KOLEKCJI</h2>
+        </div>
+        <div id="encyclopediaGrid" class="encyclo-grid"></div>
+    </div>
+</div>
+
 <!-- CONNECTIONS MODAL -->
 <div id="modalConnections" class="modal-wrap" style="display:none;">
     <div class="modal-box" style="max-width: 350px;">
@@ -839,6 +876,7 @@ function showDashboard(u) {
     if(isAdm) document.getElementById('adminScopeOption').style.display = 'block';
     
     document.getElementById('btnConnections').style.display = 'flex';
+    document.getElementById('collectionStats').style.display = 'flex';
 }
 
 function setProfileData(name, avatar, role) {
@@ -899,6 +937,7 @@ async function searchUserProfile(username) {
             document.getElementById('viewingBadge').style.display='inline-block';
             document.getElementById('btnBackToMe').style.display='block';
             document.getElementById('bottomLeftControls').style.display='none'; // Hide own controls when viewing
+            document.getElementById('collectionStats').style.display='none'; // Hide stats when viewing others
             await fetchProfileDataFor(t.login.toLowerCase());
         } else alert("Nie znaleziono");
     } catch(e) { console.log(e); }
@@ -920,6 +959,7 @@ function returnToMyProfile() {
     document.getElementById('viewingBadge').style.display='none';
     document.getElementById('btnBackToMe').style.display='none';
     document.getElementById('bottomLeftControls').style.display='flex'; // Show back
+    document.getElementById('collectionStats').style.display='flex'; 
     if(AppState.user) setProfileData(AppState.user.display_name, AppState.user.profile_image_url, AppState.role);
     renderProfileInventory(); renderProfileEmotes('uploaded'); renderProfileEmotes('channel');
 }
@@ -972,7 +1012,7 @@ function renderProfileEmotes(type, target) {
     if(type === 'uploaded') {
          return keys; 
     } else {
-         // POPRAWKA: Jeśli to mój profil, dodaj przycisk usuwania z kanału
+         // Jeśli to mój profil, dodaj przycisk usuwania z kanału
          grid.innerHTML = keys.map(k => {
              let action = '';
              if(login === AppState.user.login) {
@@ -1315,11 +1355,43 @@ window.previewFile = function() { const f = document.getElementById('emoFile').f
 window.addModerator = async function() { const nick = document.getElementById('newModNick').value.trim().toLowerCase(); if(nick) { await api(`channels/${AppState.user.login.toLowerCase()}/mods/${nick}`, "PUT", true); fetchMyMods(); document.getElementById('newModNick').value=''; } }
 
 // HELPERS
-function updateCoinDisplay() { document.getElementById('coinCount').innerText = AppState.coins; localStorage.setItem('gato_coins', AppState.coins); localStorage.setItem('gato_owned', JSON.stringify(AppState.owned)); }
+function updateCoinDisplay() { 
+    document.getElementById('coinCount').innerText = AppState.coins; 
+    localStorage.setItem('gato_coins', AppState.coins); 
+    localStorage.setItem('gato_owned', JSON.stringify(AppState.owned));
+    
+    // Update collection stats
+    const paints = CATALOG.filter(i=>i.category==='paint').length; 
+    const myPaints = AppState.owned.filter(n => {
+        const item = CATALOG.find(i=>i.name===n);
+        return item && item.category === 'paint';
+    }).length;
+    
+    document.getElementById('collectionCount').innerText = `${myPaints}/${paints}`;
+}
 function fireDownloadConfetti() { confetti({particleCount:100,spread:70,origin:{y:0.6}}); }
 function fireConfetti(shop) { if(shop) confetti({particleCount:50,spread:60,origin:{x:0.5,y:0.5}}); }
 window.togglePreviewTheme = function(el) { el.classList.toggle('light'); }
 async function api(path, method="GET", body=null) { const opts={method}; if(body) opts.body=JSON.stringify(body); try{const r=await fetch(`${DB_URL}/${path}.json`, opts); return r.json();}catch(e){return null;} }
+
+// ENCYCLOPEDIA
+window.openEncyclopedia = function() {
+    const grid = document.getElementById('encyclopediaGrid');
+    grid.innerHTML = '';
+    
+    CATALOG.forEach(item => {
+        const owned = AppState.owned.includes(item.name);
+        const div = document.createElement('div');
+        div.className = `encyclo-item ${owned ? 'owned' : ''}`;
+        
+        let view = item.category === 'badge' ? `<img src="${item.value}" style="width:30px;">` : `<div style="${item.previewStyle}; font-size:20px;">Aa</div>`;
+        
+        div.innerHTML = `${view}<div class="encyclo-name">${item.name}</div>`;
+        grid.appendChild(div);
+    });
+    
+    document.getElementById('modalEncyclopedia').style.display = 'flex';
+}
 
 // DAILY
 const DC = 86400000; // 24h
@@ -1360,6 +1432,7 @@ async function fetchCloudData() {
         fetchMyMods();
     } catch(e) {}
     loadAllEmotes();
+    updateCoinDisplay(); // Trigger stats update
 }
 async function fetchMyMods() {
     try {
