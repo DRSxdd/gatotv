@@ -76,7 +76,28 @@
     .btn-login-header { background: var(--twitch); color: white; border: none; padding: 7px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 0 15px rgba(145, 70, 255, 0.15); }
     .btn-login-header:hover { background: #772ce8; transform: translateY(-1px); box-shadow: 0 0 20px rgba(145, 70, 255, 0.3); }
     
-    .coin-display { display: flex; align-items: center; gap: 8px; background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); color: var(--yellow); padding: 5px 12px; border-radius: 8px; font-weight: 800; font-size: 13px; margin-right: 15px; white-space: nowrap; box-shadow: inset 0 0 10px rgba(0,0,0,0.2); }
+    .coin-display { 
+        display: flex; 
+        align-items: center; 
+        gap: 8px; 
+        background: rgba(15, 23, 42, 0.8); 
+        border: 1px solid var(--yellow); 
+        color: var(--yellow); 
+        padding: 5px 12px; 
+        border-radius: 8px; 
+        font-weight: 800; 
+        font-size: 13px; 
+        margin-right: 15px; 
+        white-space: nowrap; 
+        box-shadow: 0 0 15px rgba(250, 204, 21, 0.4); 
+        cursor: pointer; 
+        transition: 0.2s;
+    }
+    .coin-display:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(250, 204, 21, 0.6);
+        background: rgba(250, 204, 21, 0.1);
+    }
     
     .search-container { position: relative; width: 280px; margin-left: 15px; display: none; }
     .search-input { width: 100%; background: #1e293b; border: 1px solid var(--border); color: white; padding: 8px 15px 8px 38px; border-radius: 50px; font-family: 'Outfit', sans-serif; font-size: 13px; transition: 0.2s; outline: none; }
@@ -224,8 +245,26 @@
     .chat-username { font-weight: 700; color: #22c55e; margin-right: 5px; white-space: nowrap; }
     .chat-msg { color: #e2e8f0; word-break: break-word; }
     .gato-badge-preview { width: 18px; height: 18px; border-radius: 3px; vertical-align: middle; margin-right: 4px; }
-    .toggle-theme-btn { background: var(--panel); border: 1px solid var(--border); color: var(--text-muted); padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
-    .toggle-theme-btn:hover { color: white; border-color: var(--text-muted); }
+    
+    .preview-theme-btn {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin-left: auto;
+        transition: 0.2s;
+    }
+    .preview-theme-btn:hover {
+        background: rgba(255,255,255,0.1);
+        color: white;
+        border-color: var(--text-muted);
+    }
 
     .btn-primary { background: var(--twitch); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(145,70,255,0.25); }
     .btn-primary:hover { background: #772ce8; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(145,70,255,0.35); }
@@ -253,7 +292,7 @@
     .inventory-card .card-info { background: transparent; padding: 0 0 0 12px; display: flex; flex-direction: column; justify-content: center; flex: 1; align-items: flex-start; height: 100%; }
     .inventory-card .preset-name { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 6px; text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 90px; }
 
-    .empty-state-styled { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; color: var(--text-muted); gap: 15px; border: 2px dashed var(--border); border-radius: 12px; background: rgba(15, 23, 42, 0.3); }
+    .empty-state-styled { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; color: var(--text-muted); gap: 15px; border: 2px dashed var(--border); border-radius: 12px; background: rgba(15, 23, 42, 0.3); width: 100%; }
     .empty-state-styled i { font-size: 32px; color: var(--border-hover); }
     .empty-state-styled span { font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
 
@@ -317,17 +356,6 @@
     .info-item { background: var(--panel); padding: 35px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
     .info-item h3 { color: white; margin-top: 0; font-size: 20px; }
     
-    .emote-form-container { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
-    .emote-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px; }
-    .form-group { display: flex; flex-direction: column; gap: 10px; }
-    .form-group.full-width { grid-column: span 2; }
-    label { font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-left: 2px; }
-    input, select { padding: 16px; background: #020617; border: 1px solid var(--border); color: white; border-radius: 10px; font-size: 14px; width: 100%; outline: none; transition: 0.2s; }
-    input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1); }
-    .file-drop-zone { border: 2px dashed var(--border); background: rgba(2, 6, 23, 0.5); border-radius: 14px; padding: 30px; text-align: center; cursor: pointer; position: relative; transition: 0.2s; }
-    .file-drop-zone:hover { border-color: var(--accent); background: rgba(56, 189, 248, 0.05); }
-    .file-drop-zone input[type=file] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
-    
     .manage-section { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 30px; margin-bottom: 30px; }
     .manage-header { font-size: 20px; font-weight: 800; color: white; margin-bottom: 20px; display:flex; align-items:center; gap:10px; }
     .mod-item { display: flex; justify-content: space-between; align-items: center; background: #020617; padding: 15px; border-radius: 10px; border: 1px solid var(--border); font-size: 14px; font-weight: 600; }
@@ -351,6 +379,16 @@
     .btn-logout-mini { background: none; border: none; color: var(--text-muted); font-size: 10px; cursor: pointer; padding: 0; text-align: left; font-weight: 600; transition: color 0.2s; }
     .btn-logout-mini:hover { color: var(--danger); }
 
+    /* New Dashboard Styles */
+    .dashboard-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; align-items: start; }
+    .dashboard-panel { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+    .dash-head { background: rgba(0,0,0,0.2); padding: 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; font-weight: 800; color: white; font-size: 16px; }
+    .dash-body { padding: 30px; }
+    .dash-scroll-list { max-height: 400px; overflow-y: auto; padding-right: 5px; }
+    .dash-scroll-list::-webkit-scrollbar { width: 6px; }
+    .dash-scroll-list::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 3px; }
+    @media (max-width: 900px) { .dashboard-layout { grid-template-columns: 1fr; } }
+
     .hidden { display: none !important; }
 </style>
 </head>
@@ -368,7 +406,7 @@
         </div>
     </div>
     <div style="display:flex; align-items:center;">
-        <div id="coinDisplay" class="coin-display" style="display:none;">
+        <div id="coinDisplay" class="coin-display" style="display:none;" onclick="switchTab('premium')">
             <i class="fas fa-coins"></i> <span id="coinCount">10</span>
         </div>
         <nav>
@@ -391,7 +429,7 @@
                 <button id="btnBackToMe" class="back-to-me-btn" onclick="returnToMyProfile()">WRÓĆ DO SIEBIE</button>
                 <div class="profile-banner">
                     <div class="profile-nav-centered">
-                        <button id="pTabInv" class="active" onclick="switchProfileSubTab('inventory')"><i class="fas fa-backpack"></i> Ekwipunek</button>
+                        <button id="pTabInv" class="active" onclick="switchProfileSubTab('inventory')"><i class="fas fa-briefcase"></i> Ekwipunek</button>
                         <button id="pTabCh" onclick="switchProfileSubTab('channel')"><i class="fas fa-tv"></i> My Channel Emotes</button>
                     </div>
                 </div>
@@ -410,13 +448,15 @@
             </div>
 
             <div class="profile-content-area">
-                <div class="chat-preview-container" onclick="togglePreviewTheme(this)">
+                <div class="chat-preview-container" id="previewContainer">
                     <div class="chat-line">
                         <span class="chat-time">12:30</span>
                         <span class="chat-badges preview-badges"></span>
                         <span class="chat-username preview-user">TwójNick</span><span style="margin-right:4px;">:</span><span class="chat-msg">Gato.TV zmienia Twój czat! 🐱</span>
                     </div>
-                    <span style="font-size:10px; color:#64748b; margin-left:auto; cursor:pointer;">(Kliknij aby zmienić motyw)</span>
+                    <button class="preview-theme-btn" onclick="togglePreviewTheme(this.parentElement)" title="Zmień motyw">
+                        <i class="fas fa-adjust"></i>
+                    </button>
                 </div>
 
                 <div id="profileInventory" style="display:block;">
@@ -440,13 +480,15 @@
             </div>
             
             <div style="margin-bottom:30px;">
-                <div class="chat-preview-container" onclick="togglePreviewTheme(this)">
+                <div class="chat-preview-container">
                     <div class="chat-line">
                         <span class="chat-time">12:30</span>
                         <span class="chat-badges preview-badges"></span>
                         <span class="chat-username preview-user">TwójNick</span><span style="margin-right:4px;">:</span><span class="chat-msg">Podgląd na żywo! Wybierz coś dla siebie. ✨</span>
                     </div>
-                     <span style="font-size:10px; color:#64748b; margin-left:auto; cursor:pointer;">(Kliknij aby zmienić motyw)</span>
+                    <button class="preview-theme-btn" onclick="togglePreviewTheme(this.parentElement)" title="Zmień motyw">
+                        <i class="fas fa-adjust"></i>
+                    </button>
                 </div>
             </div>
 
@@ -458,6 +500,7 @@
     <div id="emotes" class="panel">
         <div class="login-blocker"><h2>🔒 Wymagane Logowanie</h2><button class="btn-login" onclick="loginWithTwitch()">Zaloguj przez Twitch</button></div>
         <div class="protected-content">
+            <!-- GALLERY VIEW -->
             <div id="emotesGalleryView">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                     <div style="display:flex; gap: 20px; align-items:center;">
@@ -468,8 +511,7 @@
                         </div>
                     </div>
                     <div style="display:flex; gap:10px;">
-                        <button class="btn-outline" onclick="openManageView()"><i class="fas fa-user-cog"></i> MOJE EMOTKI</button>
-                        <button class="btn-primary small" style="width:auto;" onclick="openEmoteForm()">+ DODAJ SWOJĄ</button>
+                        <button class="btn-primary small" style="width:auto;" onclick="openEmoteDashboard()"><i class="fas fa-plus-circle"></i> DODAJ SWOJĄ</button>
                     </div>
                 </div>
                 <div id="userSortNav" class="emote-sub-nav" style="display:none; border-bottom:1px solid var(--border); padding-bottom:15px; margin-bottom:15px;">
@@ -479,34 +521,49 @@
                 <div id="emotesGrid" class="emotes-grid">Ładowanie...</div>
             </div>
 
-            <div id="emotesFormView" style="display:none;">
+            <!-- UNIFIED DASHBOARD VIEW -->
+            <div id="emotesDashboardView" style="display:none;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <h2>Dodaj Nową Emotkę</h2>
-                    <button class="btn-secondary" onclick="closeEmoteForm()">Powrót</button>
+                    <h2><i class="fas fa-layer-group"></i> Panel Twórcy</h2>
+                    <button class="btn-secondary" onclick="closeEmoteDashboard()">Powrót do Galerii</button>
                 </div>
-                <div class="emote-form-container">
-                    <div class="emote-form-grid">
-                        <div class="form-group"><label>Kod Emotki</label><input id="emoName" placeholder="Co wpisać na czacie?"></div>
-                        <div class="form-group"><label>Kanał</label><select id="emoChannel"><option value="" disabled selected>Ładowanie...</option></select></div>
-                        <div class="form-group full-width"><label>Obrazek</label><div class="file-drop-zone"><span class="file-info">📂 Przeciągnij plik lub kliknij</span><input type="file" id="emoFile" accept="image/*" onchange="previewFile()"></div></div>
-                        <div class="form-group full-width"><label>Obrazek (Link)</label><input id="emoUrl" placeholder="https://..."></div>
-                        <div id="adminScopeOption" class="form-group full-width" style="display:none;"><label style="color:var(--accent);">Opcja Admina: <input type="checkbox" id="chkGlobal"> GLOBAL</label></div>
+                
+                <div class="dashboard-layout">
+                    <!-- ADD FORM -->
+                    <div class="dashboard-panel">
+                        <div class="dash-head"><i class="fas fa-magic"></i> Dodaj Nową Emotkę</div>
+                        <div class="dash-body">
+                             <div class="emote-form-grid" style="grid-template-columns: 1fr; gap:15px; margin-bottom:15px;">
+                                <div class="form-group"><label>Kod Emotki</label><input id="emoName" placeholder="Np. GatoHype"></div>
+                                <div class="form-group"><label>Kanał</label><select id="emoChannel"><option value="" disabled selected>Ładowanie...</option></select></div>
+                                <div class="form-group"><label>Obrazek</label><div class="file-drop-zone"><span class="file-info">📂 Przeciągnij plik tutaj</span><input type="file" id="emoFile" accept="image/*" onchange="previewFile()"></div></div>
+                                <div class="form-group"><label>Lub Link Bezpośredni</label><input id="emoUrl" placeholder="https://imgur.com/..."></div>
+                                <div id="adminScopeOption" class="form-group" style="display:none;"><label style="color:var(--accent); display:flex; align-items:center; gap:8px;"><input type="checkbox" id="chkGlobal"> <span>OPCJA GLOBALNA (ADMIN)</span></label></div>
+                            </div>
+                            <img id="filePreview" src="" style="display:none; margin:10px auto; max-height:100px; border-radius:8px; border:2px solid var(--border);">
+                            <button class="btn-primary" style="width:100%; margin-top:10px;" onclick="addEmote()">💾 Opublikuj Emotkę</button>
+                        </div>
                     </div>
-                    <img id="filePreview" src="" style="display:none; margin-top:10px; max-height:80px;">
-                    <button class="btn-primary" style="margin-top:20px" onclick="addEmote()">💾 Zapisz Emotkę</button>
-                </div>
-            </div>
 
-            <div id="emotesManageView" style="display:none;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;"><h2>Zarządzanie</h2><button class="btn-secondary" onclick="closeManageView()">Powrót</button></div>
-                <div class="manage-section">
-                    <div class="manage-header"><i class="fas fa-users-cog"></i> Editorzy</div>
-                    <div style="display:flex; gap:10px; margin-bottom:15px;"><input id="newModNick" placeholder="Nick moderatora" style="flex:1;"><button class="btn-primary" style="width:auto;" onclick="addModerator()">Dodaj</button></div>
-                    <div id="modsList" class="mods-list-container"></div>
-                </div>
-                <div class="manage-section">
-                    <div class="manage-header"><i class="fas fa-images"></i> Twoje Emotki</div>
-                    <div id="myManageEmotesGrid" class="emotes-grid"></div>
+                    <!-- MANAGEMENT LIST -->
+                    <div class="dashboard-panel">
+                        <div class="dash-head"><i class="fas fa-tasks"></i> Twoje Emotki & Zarządzanie</div>
+                        <div class="dash-body">
+                            <div style="margin-bottom:20px;">
+                                <label style="display:block; margin-bottom:8px;">Dodaj Moderatora / Edytora</label>
+                                <div style="display:flex; gap:10px;">
+                                    <input id="newModNick" placeholder="Nick Twitch" style="flex:1;">
+                                    <button class="btn-secondary" onclick="addModerator()">Dodaj</button>
+                                </div>
+                                <div id="modsList" class="mods-list-container" style="margin-top:10px;"></div>
+                            </div>
+                            <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
+                            <label style="display:block; margin-bottom:10px;">Twoje Przesłane Emotki</label>
+                            <div class="dash-scroll-list">
+                                <div id="myManageEmotesGrid" class="emotes-grid" style="grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -785,7 +842,7 @@ function renderProfileInventory(overrideItems = null) {
 }
 
 function renderProfileEmotes(type, target) {
-    const grid = document.getElementById(type==='uploaded' ? 'profileUploadedGrid' : 'profileChannelGrid');
+    const grid = document.getElementById(type==='uploaded' ? 'myManageEmotesGrid' : 'profileChannelGrid');
     if(!grid) return;
     const login = target || (AppState.user ? AppState.user.login : '');
     const author = AppState.viewingUser ? AppState.viewingUser.display_name : (AppState.user ? AppState.user.display_name : '');
@@ -794,22 +851,36 @@ function renderProfileEmotes(type, target) {
     if(type==='uploaded') keys = Object.keys(all).filter(k => all[k].author === author);
     else keys = Object.keys(all).filter(k => all[k].channel === login);
     
-    if(keys.length===0) { grid.innerHTML='<div class="empty-state-styled" style="padding:20px;"><i class="fas fa-ghost"></i><span>Brak emotek</span></div>'; return; }
-    grid.innerHTML = keys.map(k => `<div class="emote-card" onclick="openEmoteDetail('${k}')"><img src="${all[k].url}"><div class="name">${k}</div></div>`).join('');
+    // Only show empty state for profile view, not management list (handled differently)
+    if(keys.length===0 && type !== 'uploaded') { grid.innerHTML='<div class="empty-state-styled" style="padding:20px;"><i class="fas fa-ghost"></i><span>Brak emotek</span></div>'; return; }
+    
+    if(type === 'uploaded') {
+         // Special card for management
+         grid.innerHTML = keys.reverse().map(k => `<div class="emote-card" style="min-height:100px; padding:10px;"><div class="action-overlay del-btn" onclick="delEmote('${k}')">✖</div><img src="${all[k].url}" style="height:40px;"><div class="name" style="font-size:11px;">${k}</div></div>`).join('');
+         if(keys.length === 0) grid.innerHTML = '<div style="color:#94a3b8; font-size:12px; font-style:italic;">Brak przesłanych emotek.</div>';
+    } else {
+         grid.innerHTML = keys.map(k => `<div class="emote-card" onclick="openEmoteDetail('${k}')"><img src="${all[k].url}"><div class="name">${k}</div></div>`).join('');
+    }
 }
 
 function renderShop() {
     const div = document.getElementById('shopContent');
     if(!div) return; div.innerHTML='';
+    let hasItems = false;
     ['paint', 'badge'].forEach(cat => {
         const items = CATALOG.filter(i => i.category === cat && !AppState.owned.includes(i.name));
         if(items.length > 0) {
+            hasItems = true;
             const title = document.createElement('div'); title.className='shop-section-title'; title.innerText=cat.toUpperCase(); div.appendChild(title);
             const grid = document.createElement('div'); grid.className='preset-grid'; 
             items.forEach(i => grid.appendChild(createCard(i, 'shop')));
             div.appendChild(grid);
         }
     });
+    
+    if(!hasItems) {
+        div.innerHTML = '<div class="empty-state-styled" style="padding: 60px;"><i class="fas fa-store-slash" style="font-size:48px; color:#ef4444;"></i><span style="font-size:18px; margin-top:10px; color:#fff;">SKLEP WYPRZEDANY</span><span style="font-weight:400; font-size:12px;">Wykupiłeś wszystko! Wróć później.</span></div>';
+    }
 }
 
 function createCard(item, mode) {
@@ -957,39 +1028,46 @@ window.assignEmote = async function() {
     alert("Przypisano!"); closeModal();
 }
 
-// MANAGE
-window.openManageView = function() { document.getElementById('emotesGalleryView').style.display='none'; document.getElementById('emotesFormView').style.display='none'; document.getElementById('emotesManageView').style.display='block'; renderMyManageEmotes(); }
-window.closeManageView = function() { document.getElementById('emotesManageView').style.display='none'; document.getElementById('emotesGalleryView').style.display='block'; loadAllEmotes(); }
-function renderMyManageEmotes() {
-    const grid = document.getElementById('myManageEmotesGrid');
-    const all = AppState.emotes;
-    const myKeys = Object.keys(all).filter(k => all[k].channel === AppState.user.login).reverse();
-    grid.innerHTML = myKeys.map(k => `<div class="emote-card"><div class="action-overlay del-btn" onclick="delEmote('${k}')">✖</div><img src="${all[k].url}"><div class="name">${k}</div></div>`).join('');
-}
-window.delEmote = async function(p) { if(confirm("Usunąć?")) { await api(`emotes/${p}`, "DELETE"); loadAllEmotes(); renderMyManageEmotes(); } }
-window.openEmoteForm = function() { 
+// MANAGE & NEW DASHBOARD
+window.openEmoteDashboard = function() { 
     if(!AppState.user) return; 
     const select = document.getElementById('emoChannel'); select.innerHTML = '';
     const myOpt = document.createElement('option'); myOpt.value = AppState.user.login; myOpt.text = AppState.user.display_name; select.appendChild(myOpt);
-    document.getElementById('emotesGalleryView').style.display='none'; document.getElementById('emotesFormView').style.display='block'; 
+    
+    document.getElementById('emotesGalleryView').style.display='none'; 
+    document.getElementById('emotesDashboardView').style.display='block';
+    
+    renderProfileEmotes('uploaded'); // Update the list in dashboard
 }
-window.closeEmoteForm = function() { document.getElementById('emotesFormView').style.display='none'; document.getElementById('emotesGalleryView').style.display='block'; loadAllEmotes(); }
+window.closeEmoteDashboard = function() { 
+    document.getElementById('emotesDashboardView').style.display='none'; 
+    document.getElementById('emotesGalleryView').style.display='block'; 
+    loadAllEmotes(); 
+}
+window.delEmote = async function(p) { if(confirm("Usunąć?")) { await api(`emotes/${p}`, "DELETE"); loadAllEmotes(); renderProfileEmotes('uploaded'); } }
+
 window.addEmote = async function() { 
     const name = document.getElementById('emoName').value.trim(); const url = document.getElementById('emoUrl').value.trim(); const target = document.getElementById('emoChannel').value;
     if(!name || !url) return alert("Brak danych");
     
-    // ADMIN CHECKBOX LOGIC
     const isGlobal = document.getElementById('chkGlobal').checked;
     const scope = (AppState.role === 'ADMIN' && isGlobal) ? 'global' : 'channel';
     
     await api(`emotes/${name}`, "PUT", { url: url, author: AppState.user.display_name, scope: scope, channel: (scope==='global'?'':target) });
-    closeEmoteForm();
+    
+    // Clear inputs
+    document.getElementById('emoName').value = ""; document.getElementById('emoUrl').value = ""; document.getElementById('filePreview').style.display='none';
+    
+    loadAllEmotes();
+    renderProfileEmotes('uploaded');
+    alert("Opublikowano!");
 }
 window.previewFile = function() { const f = document.getElementById('emoFile').files[0]; if(f) { const r=new FileReader(); r.onload=e=>{document.getElementById('filePreview').src=e.target.result; document.getElementById('filePreview').style.display='block'; document.getElementById('emoUrl').value = e.target.result;}; r.readAsDataURL(f); } }
-window.addModerator = async function() { const nick = document.getElementById('newModNick').value.trim().toLowerCase(); if(nick) { await api(`channels/${AppState.user.login.toLowerCase()}/mods/${nick}`, "PUT", true); fetchMyMods(); } }
+window.addModerator = async function() { const nick = document.getElementById('newModNick').value.trim().toLowerCase(); if(nick) { await api(`channels/${AppState.user.login.toLowerCase()}/mods/${nick}`, "PUT", true); fetchMyMods(); document.getElementById('newModNick').value=''; } }
 
 // HELPERS
 function updateCoinDisplay() { document.getElementById('coinCount').innerText = AppState.coins; localStorage.setItem('gato_coins', AppState.coins); localStorage.setItem('gato_owned', JSON.stringify(AppState.owned)); }
+function fireDownloadConfetti() { confetti({particleCount:100,spread:70,origin:{y:0.6}}); }
 function fireConfetti(shop) { if(shop) confetti({particleCount:50,spread:60,origin:{x:0.5,y:0.5}}); }
 window.togglePreviewTheme = function(el) { el.classList.toggle('light'); }
 async function api(path, method="GET", body=null) { const opts={method}; if(body) opts.body=JSON.stringify(body); try{const r=await fetch(`${DB_URL}/${path}.json`, opts); return r.json();}catch(e){return null;} }
