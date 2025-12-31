@@ -646,7 +646,7 @@
 const CLIENT_ID = 'l0agnxl8yeto7wda5wvblpg1mr55db';
 const REDIRECT_URI = window.location.origin + window.location.pathname;
 const DB_URL = "https://testowa-157aa-default-rtdb.europe-west1.firebasedatabase.app";
-const ADMINS = ["radzimix__"]; 
+const ADMINS = ["gatojestemformaostateczna"]; 
 
 // STATE
 let AppState = { 
@@ -1198,8 +1198,22 @@ window.closeEmoteDashboard = function() {
     document.getElementById('uploadFormArea').style.display='none';
     loadAllEmotes(); 
 }
+
+// UPDATED DELETE LOGIC
 window.delEmote = async function(p) { 
-    await api(`emotes/${p}`, "DELETE"); 
+    const e = AppState.emotes[p];
+    if(!e) return;
+    
+    // Allow Admin to force delete, or Author to delete
+    if(AppState.role === 'ADMIN' || e.author === AppState.user.display_name) {
+        if(confirm("USUNĄĆ CAŁKOWICIE Z BAZY DANYCH? (Dla Admina/Autora oznacza trwałe usunięcie)")) {
+            await api(`emotes/${p}`, "DELETE");
+        }
+    } else {
+        // Just a user removing an assigned emote from their channel
+        await api(`emotes/${p}`, "PATCH", { channel: "" });
+    }
+    
     loadAllEmotes(); 
     renderEmoteSlots(); 
     renderProfileEmotes('channel'); 
@@ -1228,7 +1242,7 @@ function renderEmoteSlots() {
             div.innerHTML = `
                 <img src="${data.url}" class="slot-content-img">
                 <span class="slot-status-tag">${isPending ? 'OCZEKUJE' : ''}</span>
-                <div class="slot-del-overlay" onclick="event.stopPropagation(); if(confirm('Usunąć?')) delEmote('${k}')">USUŃ</div>
+                <div class="slot-del-overlay" onclick="event.stopPropagation(); delEmote('${k}')">USUŃ</div>
             `;
         } else {
             div.className = 'slot-box';
@@ -1350,7 +1364,23 @@ function updateCoinDisplay() {
 function fireDownloadConfetti() { confetti({particleCount:100,spread:70,origin:{y:0.6}}); }
 function fireConfetti(shop) { if(shop) confetti({particleCount:50,spread:60,origin:{x:0.5,y:0.5}}); }
 window.togglePreviewTheme = function(el) { el.classList.toggle('light'); }
-async function api(path, method="GET", body=null) { const opts={method}; if(body) opts.body=JSON.stringify(body); try{const r=await fetch(`${DB_URL}/${path}.json`, opts); return r.json();}catch(e){return null;} }
+
+// API FIX: Added caching prevention
+async function api(path, method="GET", body=null) { 
+    const opts={ method, headers: {} }; 
+    if(method === "GET") {
+        opts.headers['Cache-Control'] = 'no-cache';
+    }
+    if(body) {
+        opts.body=JSON.stringify(body); 
+    }
+    try {
+        // Add timestamp to prevent caching on GET
+        const url = `${DB_URL}/${path}.json` + (method==="GET" ? `?t=${Date.now()}` : "");
+        const r = await fetch(url, opts); 
+        return r.json();
+    } catch(e) { return null; } 
+}
 
 // ENCYCLOPEDIA
 window.openEncyclopedia = function() {
@@ -1372,7 +1402,7 @@ window.openEncyclopedia = function() {
 }
 
 // DAILY
-const DC = 86400000; // 24h
+const DC = 30000; // 30 sec test
 function checkDailyBonus() {
     const btn = document.getElementById('btnDaily'); if(!btn) return;
     
@@ -1384,7 +1414,8 @@ function checkDailyBonus() {
         const diff = DC - (now - last);
         const hrs = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        btn.innerHTML = `<i class="fas fa-clock"></i> ${hrs}h ${mins}m`;
+        const secs = Math.floor((diff % (1000 * 60)) / 1000); // Added seconds for short timer
+        btn.innerHTML = `<i class="fas fa-clock"></i> ${hrs}h ${mins}m ${secs}s`;
     } else {
         btn.disabled = false;
         btn.innerHTML = `<i class="fas fa-gift"></i> ODBIERZ +10`;
@@ -1417,7 +1448,7 @@ async function fetchCloudData() {
     try {
         const login = AppState.user.login.toLowerCase();
         
-        const userRes = await fetch(`${DB_URL}/users/${login}.json`);
+        const userRes = await fetch(`${DB_URL}/users/${login}.json?t=${Date.now()}`); // Added timestamp
         const userData = userRes.ok ? (await userRes.json()) : null;
         
         if (userData) {
@@ -1431,7 +1462,7 @@ async function fetchCloudData() {
             await saveUserData();
         }
 
-        const loadoutRes = await fetch(`${DB_URL}/premium/${login}.json`);
+        const loadoutRes = await fetch(`${DB_URL}/premium/${login}.json?t=${Date.now()}`);
         const loadoutData = loadoutRes.ok ? (await loadoutRes.json() || {}) : {};
         AppState.loadout = loadoutData;
         
@@ -1444,6 +1475,9 @@ async function fetchCloudData() {
         
     } catch(e) { console.error("Cloud Error", e); }
     loadAllEmotes();
+    
+    // Update timer every second for visual feedback
+    setInterval(checkDailyBonus, 1000);
 }
 
 async function saveUserData() {
