@@ -474,32 +474,25 @@
     .author-link { color: var(--accent); cursor: pointer; font-weight: bold; text-decoration: underline; }
 
     /* NOWY: Licznik kolekcji i Encyklopedia */
-    .collection-stats-btn {
-        position: absolute;
-        bottom: 20px;
-        right: 40px;
-        background: rgba(15, 23, 42, 0.8);
+    .small-stats-btn {
+        background: rgba(15, 23, 42, 0.5);
         border: 1px solid var(--border);
-        padding: 8px 16px;
-        border-radius: 12px;
-        cursor: pointer;
         color: var(--text-muted);
+        font-size: 10px;
         font-weight: 800;
-        font-size: 13px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        cursor: pointer;
         transition: 0.2s;
-        z-index: 15;
-        backdrop-filter: blur(5px);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
-    .collection-stats-btn:hover {
+    .small-stats-btn:hover {
         background: var(--panel);
-        color: white;
         border-color: var(--accent);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        color: white;
     }
+
     .encyclo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; padding: 20px; max-height: 400px; overflow-y: auto; }
     .encyclo-item { background: #020617; border: 1px solid var(--border); border-radius: 10px; padding: 15px; text-align: center; opacity: 0.3; filter: grayscale(1); transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100px; }
     .encyclo-item.owned { opacity: 1; filter: grayscale(0); border-color: var(--success); box-shadow: 0 0 15px rgba(34, 197, 94, 0.1); background: rgba(34, 197, 94, 0.02); }
@@ -549,11 +542,7 @@
                         <button id="pTabCh" onclick="switchProfileSubTab('channel')"><i class="fas fa-tv"></i> My Channel Emotes</button>
                     </div>
                 </div>
-                <!-- LICZNIK KOLEKCJI (NOWY) -->
-                <div id="collectionStats" class="collection-stats-btn" onclick="openEncyclopedia()" style="display:none;">
-                    <i class="fas fa-book"></i> <span id="collectionCount">0/0</span>
-                </div>
-
+                
                 <div class="profile-meta-container">
                     <img id="profileAvatarBig" class="profile-avatar-big" src="">
                     <div class="profile-info-block">
@@ -581,7 +570,13 @@
                 </div>
 
                 <div id="profileInventory" style="display:block;">
-                    <div class="profile-section-title"><i class="fas fa-paint-brush"></i> Twoje Przedmioty</div>
+                    <div class="profile-section-title" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span><i class="fas fa-paint-brush"></i> Twoje Przedmioty</span>
+                        <div style="display:flex; gap:10px;">
+                            <button class="small-stats-btn" onclick="alert('Coming Soon...')">TRADE</button>
+                            <button class="small-stats-btn" onclick="openEncyclopedia()">PAINTS LIST <span id="collectionCount" style="margin-left:5px; color:var(--accent);">0/0</span></button>
+                        </div>
+                    </div>
                     <div id="profileInvGrid" class="inventory-grid"></div>
                 </div>
                 <div id="profileChannel" style="display:none;">
@@ -884,7 +879,6 @@ function showDashboard(u) {
     if(isAdm) document.getElementById('adminScopeOption').style.display = 'block';
     
     document.getElementById('btnConnections').style.display = 'flex';
-    document.getElementById('collectionStats').style.display = 'flex';
 }
 
 function setProfileData(name, avatar, role) {
@@ -945,7 +939,6 @@ async function searchUserProfile(username) {
             document.getElementById('viewingBadge').style.display='inline-block';
             document.getElementById('btnBackToMe').style.display='block';
             document.getElementById('bottomLeftControls').style.display='none'; // Hide own controls when viewing
-            document.getElementById('collectionStats').style.display='none'; // Hide stats when viewing others
             await fetchProfileDataFor(t.login.toLowerCase());
         } else alert("Nie znaleziono");
     } catch(e) { console.log(e); }
@@ -967,7 +960,6 @@ function returnToMyProfile() {
     document.getElementById('viewingBadge').style.display='none';
     document.getElementById('btnBackToMe').style.display='none';
     document.getElementById('bottomLeftControls').style.display='flex'; // Show back
-    document.getElementById('collectionStats').style.display='flex'; 
     if(AppState.user) setProfileData(AppState.user.display_name, AppState.user.profile_image_url, AppState.role);
     renderProfileInventory(); renderProfileEmotes('uploaded'); renderProfileEmotes('channel');
 }
