@@ -76,7 +76,6 @@
     .btn-login-header { background: var(--twitch); color: white; border: none; padding: 7px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 0 15px rgba(145, 70, 255, 0.15); }
     .btn-login-header:hover { background: #772ce8; transform: translateY(-1px); box-shadow: 0 0 20px rgba(145, 70, 255, 0.3); }
     
-    /* POPRAWKA: Mniejszy glow w spoczynku */
     .coin-display { 
         display: flex; 
         align-items: center; 
@@ -90,7 +89,6 @@
         font-size: 13px; 
         margin-right: 15px; 
         white-space: nowrap; 
-        /* Było 15px i 0.4, zmniejszamy o 40% -> ok 9px i mniejsza alpha */
         box-shadow: 0 0 9px rgba(250, 204, 21, 0.25); 
         cursor: pointer; 
         transition: 0.2s;
@@ -278,7 +276,6 @@
     .btn-secondary { background: #334155; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; }
     .btn-secondary:hover { background: #475569; }
 
-    /* NOWY: Wielki przycisk tylko dla sekcji Emotes */
     .btn-huge {
         background: var(--twitch);
         color: white;
@@ -421,20 +418,22 @@
     .btn-logout-mini { background: none; border: none; color: var(--text-muted); font-size: 10px; cursor: pointer; padding: 0; text-align: left; font-weight: 600; transition: color 0.2s; }
     .btn-logout-mini:hover { color: var(--danger); }
 
-    /* STYLE TYLKO DLA DASHBOARDU (NIE WPŁYWAJĄ NA INNE ELEMENTY) */
     .dashboard-full-container { display: flex; flex-direction: column; gap: 30px; }
     
+    /* POPRAWKA: Sloty 50% szerokości i wyśrodkowane */
     .emote-slots-bar {
         display: grid;
-        grid-template-columns: repeat(10, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         gap: 12px;
         background: var(--panel);
         padding: 20px;
         border-radius: 16px;
         border: 1px solid var(--border);
         box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        max-width: 50%;
+        margin: 0 auto;
     }
-    @media (max-width: 800px) { .emote-slots-bar { grid-template-columns: repeat(5, 1fr); } }
+    @media (max-width: 800px) { .emote-slots-bar { grid-template-columns: repeat(3, 1fr); max-width: 90%; } }
     
     .slot-box {
         aspect-ratio: 1/1;
@@ -476,6 +475,14 @@
         animation: slideDown 0.3s ease-out;
     }
     @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    /* GŁOSOWANIE */
+    .vote-controls { display: flex; gap: 15px; justify-content: center; margin-top: 15px; }
+    .vote-btn { background: #1e293b; border: 1px solid var(--border); color: #94a3b8; padding: 5px 12px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; font-size: 13px; font-weight: 600; }
+    .vote-btn:hover { background: #334155; color: white; }
+    .vote-btn.active.up { color: var(--success); border-color: var(--success); background: rgba(34, 197, 94, 0.1); }
+    .vote-btn.active.down { color: var(--danger); border-color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+    .author-link { color: var(--accent); cursor: pointer; font-weight: bold; text-decoration: underline; }
 
     .hidden { display: none !important; }
 </style>
@@ -588,7 +595,7 @@
     <div id="emotes" class="panel">
         <div class="login-blocker"><h2>🔒 Wymagane Logowanie</h2><button class="btn-login" onclick="loginWithTwitch()">Zaloguj przez Twitch</button></div>
         <div class="protected-content">
-            <!-- GALLERY VIEW (ORIGINAL LAYOUT WITH HUGE BUTTON ADDED) -->
+            <!-- GALLERY VIEW -->
             <div id="emotesGalleryView">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                     <div style="display:flex; gap: 20px; align-items:center;">
@@ -600,7 +607,6 @@
                     </div>
                 </div>
                 
-                <!-- NOWY WIELKI PRZYCISK -->
                 <div style="margin-bottom:30px;">
                     <button class="btn-huge" onclick="openEmoteDashboard()">
                         <i class="fas fa-plus-circle" style="font-size:32px;"></i>
@@ -616,7 +622,7 @@
                 <div id="emotesGrid" class="emotes-grid">Ładowanie...</div>
             </div>
 
-            <!-- UNIFIED DASHBOARD VIEW - REDESIGNED PER REQUEST -->
+            <!-- UNIFIED DASHBOARD VIEW -->
             <div id="emotesDashboardView" style="display:none;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                     <h2><i class="fas fa-layer-group"></i> Panel Twórcy</h2>
@@ -627,13 +633,13 @@
                     
                     <!-- 1. SLOTY -->
                     <div>
-                        <div style="font-size:12px; font-weight:800; color:#94a3b8; margin-bottom:10px; text-transform:uppercase; letter-spacing:1px;">Twoje Sloty (Max 10)</div>
+                        <div style="font-size:12px; font-weight:800; color:#94a3b8; margin-bottom:10px; text-transform:uppercase; letter-spacing:1px; text-align:center;">Twoje Sloty (Max 10)</div>
                         <div id="emoteSlotsContainer" class="emote-slots-bar">
                             <!-- JS generates slots here -->
                         </div>
                     </div>
 
-                    <!-- 2. UPLOAD FORM (Hidden until slot clicked) -->
+                    <!-- 2. UPLOAD FORM -->
                     <div id="uploadFormArea" style="display:none;">
                          <div class="upload-area-styled">
                             <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
@@ -654,7 +660,7 @@
                          </div>
                     </div>
 
-                    <!-- 3. ZARZĄDZANIE (NA DOLE) -->
+                    <!-- 3. ZARZĄDZANIE -->
                     <div class="manage-section">
                         <div class="manage-header"><i class="fas fa-user-shield"></i> Zarządzanie Uprawnieniami</div>
                         <div style="display:flex; gap:10px; margin-bottom:15px;">
@@ -697,7 +703,17 @@
 <div id="modalWrap" class="modal-wrap" style="display:none;">
     <div class="modal-box">
         <div class="modal-head"><button class="modal-close" onclick="closeModal()">×</button><img id="mImg" src="" style="height:80px;"></div>
-        <div class="modal-content"><h2 id="mCode" style="color:white; margin:0;">CODE</h2><p id="mAuth" style="color:#888; font-size:12px;">Author</p><button class="modal-btn" style="background:#22c55e; color:#fff;" onclick="assignEmote()">PRZYPISZ DO KANAŁU</button></div>
+        <div class="modal-content">
+            <h2 id="mCode" style="color:white; margin:0;">CODE</h2>
+            <p style="color:#888; font-size:12px; margin-top:5px;">Autor: <span id="mAuth" class="author-link" onclick="closeModal(); searchUserProfile(this.innerText)">Author</span></p>
+            
+            <div class="vote-controls">
+                <button id="btnVoteUp" class="vote-btn" onclick="voteEmote(1)"><i class="fas fa-thumbs-up"></i> <span id="voteCountUp">0</span></button>
+                <button id="btnVoteDown" class="vote-btn" onclick="voteEmote(-1)"><i class="fas fa-thumbs-down"></i> <span id="voteCountDown">0</span></button>
+            </div>
+
+            <button class="modal-btn" style="background:#22c55e; color:#fff;" onclick="assignEmote()">PRZYPISZ DO KANAŁU</button>
+        </div>
     </div>
 </div>
 
@@ -954,10 +970,16 @@ function renderProfileEmotes(type, target) {
     if(keys.length===0 && type !== 'uploaded') { grid.innerHTML='<div class="empty-state-styled" style="padding:20px;"><i class="fas fa-ghost"></i><span>Brak emotek</span></div>'; return; }
     
     if(type === 'uploaded') {
-         // Special card for management not needed here anymore, handled by slot logic mostly
          return keys; 
     } else {
-         grid.innerHTML = keys.map(k => `<div class="emote-card" onclick="openEmoteDetail('${k}')"><img src="${all[k].url}"><div class="name">${k}</div></div>`).join('');
+         // POPRAWKA: Jeśli to mój profil, dodaj przycisk usuwania z kanału
+         grid.innerHTML = keys.map(k => {
+             let action = '';
+             if(login === AppState.user.login) {
+                 action = `<div class="action-overlay del-btn" style="background:#ef4444;" onclick="event.stopPropagation(); if(confirm('Odpiąć z kanału?')) delEmote('${k}')">✖</div>`;
+             }
+             return `<div class="emote-card" onclick="openEmoteDetail('${k}')">${action}<img src="${all[k].url}"><div class="name">${k}</div></div>`;
+         }).join('');
     }
 }
 
@@ -1114,12 +1136,80 @@ function renderEmotes() {
 }
 
 // MODAL
-window.openEmoteDetail = function(k) {
+window.openEmoteDetail = async function(k) {
     const e = AppState.emotes[k]; AppState.currentEmoteKey=k; AppState.currentEmoteData=e;
-    document.getElementById('mImg').src=e.url; document.getElementById('mCode').innerText=k; document.getElementById('mAuth').innerText=`Autor: ${e.author}`;
+    document.getElementById('mImg').src=e.url; document.getElementById('mCode').innerText=k; document.getElementById('mAuth').innerText=e.author;
+    
+    // Reset votes UI
+    document.getElementById('btnVoteUp').className = 'vote-btn';
+    document.getElementById('btnVoteDown').className = 'vote-btn';
+    document.getElementById('voteCountUp').innerText = "0";
+    document.getElementById('voteCountDown').innerText = "0";
+    
+    // Fetch Votes
+    try {
+        const votes = await api(`emotes/${k}/votes`) || {};
+        AppState.currentEmoteVotes = votes;
+        
+        let up = 0, down = 0;
+        let myVote = 0;
+        
+        Object.keys(votes).forEach(user => {
+            if(votes[user] === 1) up++;
+            if(votes[user] === -1) down++;
+            if(user === AppState.user.login) myVote = votes[user];
+        });
+        
+        document.getElementById('voteCountUp').innerText = up;
+        document.getElementById('voteCountDown').innerText = down;
+        
+        if(myVote === 1) document.getElementById('btnVoteUp').classList.add('active', 'up');
+        if(myVote === -1) document.getElementById('btnVoteDown').classList.add('active', 'down');
+        
+    } catch(err) {}
+
     document.getElementById('modalWrap').style.display='flex';
 }
 window.closeModal = function() { document.getElementById('modalWrap').style.display='none'; }
+
+window.voteEmote = async function(val) {
+    if(!AppState.user) return;
+    const k = AppState.currentEmoteKey;
+    const login = AppState.user.login;
+    let currentVote = AppState.currentEmoteVotes ? (AppState.currentEmoteVotes[login] || 0) : 0;
+    
+    // Logic: Toggle off if same, otherwise set
+    let newVote = (currentVote === val) ? 0 : val;
+    
+    // Optimistic UI Update
+    const upBtn = document.getElementById('btnVoteUp');
+    const downBtn = document.getElementById('btnVoteDown');
+    let upCount = parseInt(document.getElementById('voteCountUp').innerText);
+    let downCount = parseInt(document.getElementById('voteCountDown').innerText);
+    
+    // Remove old vote effect
+    if(currentVote === 1) upCount--;
+    if(currentVote === -1) downCount--;
+    
+    // Add new vote effect
+    if(newVote === 1) upCount++;
+    if(newVote === -1) downCount++;
+    
+    document.getElementById('voteCountUp').innerText = upCount;
+    document.getElementById('voteCountDown').innerText = downCount;
+    
+    upBtn.className = 'vote-btn' + (newVote === 1 ? ' active up' : '');
+    downBtn.className = 'vote-btn' + (newVote === -1 ? ' active down' : '');
+    
+    // API Call
+    if(newVote === 0) await api(`emotes/${k}/votes/${login}`, "DELETE");
+    else await api(`emotes/${k}/votes/${login}`, "PUT", newVote);
+    
+    // Update local state
+    if(!AppState.currentEmoteVotes) AppState.currentEmoteVotes = {};
+    AppState.currentEmoteVotes[login] = newVote;
+}
+
 window.assignEmote = async function() {
     if(!AppState.user) return;
     await api(`emotes/${AppState.currentEmoteKey}`, "PUT", { url: AppState.currentEmoteData.url, author: AppState.currentEmoteData.author, scope: 'channel', channel: AppState.user.login });
@@ -1143,7 +1233,13 @@ window.closeEmoteDashboard = function() {
     document.getElementById('uploadFormArea').style.display='none';
     loadAllEmotes(); 
 }
-window.delEmote = async function(p) { if(confirm("Usunąć?")) { await api(`emotes/${p}`, "DELETE"); loadAllEmotes(); renderEmoteSlots(); } }
+window.delEmote = async function(p) { 
+    // Just delete, logic is simple
+    await api(`emotes/${p}`, "DELETE"); 
+    loadAllEmotes(); 
+    renderEmoteSlots(); 
+    renderProfileEmotes('channel'); // Refresh profile if open
+}
 
 function renderEmoteSlots() {
     const container = document.getElementById('emoteSlotsContainer');
@@ -1166,7 +1262,7 @@ function renderEmoteSlots() {
             div.className = 'slot-box filled';
             div.innerHTML = `
                 <img src="${data.url}" class="slot-content-img">
-                <div class="slot-del-overlay" onclick="event.stopPropagation(); delEmote('${k}')">USUŃ</div>
+                <div class="slot-del-overlay" onclick="event.stopPropagation(); if(confirm('Usunąć?')) delEmote('${k}')">USUŃ</div>
             `;
         } else {
             // Empty slot
