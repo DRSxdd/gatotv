@@ -351,34 +351,6 @@
     .btn-logout-mini { background: none; border: none; color: var(--text-muted); font-size: 10px; cursor: pointer; padding: 0; text-align: left; font-weight: 600; transition: color 0.2s; }
     .btn-logout-mini:hover { color: var(--danger); }
 
-    /* PET STYLES */
-    .pet-stage { background: radial-gradient(circle at center, #1e293b 0%, #020617 70%); border: 1px solid var(--border); border-radius: 20px; padding: 40px; text-align: center; margin-bottom: 30px; position: relative; overflow: hidden; height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 0 50px rgba(0,0,0,0.5); }
-    .pet-avatar { font-size: 80px; color: var(--accent); filter: drop-shadow(0 0 20px var(--accent-glow)); animation: floatPet 3s ease-in-out infinite; margin-bottom: 20px; }
-    @keyframes floatPet { 0% { transform: translateY(0); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0); } }
-    .pet-info { position: relative; z-index: 2; width: 100%; max-width: 300px; }
-    .pet-name { font-size: 24px; font-weight: 900; color: white; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-    .pet-level-badge { background: var(--yellow); color: black; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 800; vertical-align: middle; margin-left: 8px; }
-    .pet-stats-bar { height: 8px; background: #334155; border-radius: 4px; overflow: hidden; margin-top: 5px; position: relative; }
-    .pet-stats-fill { height: 100%; background: linear-gradient(90deg, #38bdf8, #22c55e); width: 0%; transition: width 0.5s; }
-    .pet-bonus-info { margin-top: 15px; font-size: 11px; color: var(--success); font-weight: 700; background: rgba(34, 197, 94, 0.1); padding: 5px 10px; border-radius: 20px; display: inline-block; border: 1px solid rgba(34, 197, 94, 0.2); }
-    
-    .egg-shop-section { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
-    .egg-card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 16px; text-align: center; width: 200px; transition: 0.2s; cursor: pointer; position: relative; }
-    .egg-card:hover { transform: translateY(-5px); border-color: var(--yellow); box-shadow: 0 0 20px rgba(250, 204, 21, 0.2); }
-    .egg-icon { font-size: 40px; color: var(--text-muted); margin-bottom: 15px; }
-    .egg-title { font-weight: 800; color: white; font-size: 14px; margin-bottom: 5px; }
-    .egg-price { color: var(--yellow); font-weight: 700; font-size: 12px; }
-    .odds-display { font-size: 10px; color: var(--text-muted); margin-top: 10px; text-align: left; line-height: 1.4; }
-    
-    .pokedex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
-    .pokedex-item { background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 8px; padding: 15px; text-align: center; opacity: 0.5; transition: 0.2s; }
-    .pokedex-item.unlocked { opacity: 1; border-color: var(--accent); background: rgba(56, 189, 248, 0.05); }
-    .pokedex-icon { font-size: 24px; margin-bottom: 5px; }
-    .pokedex-name { font-size: 9px; font-weight: 700; text-transform: uppercase; }
-    .rarity-common { color: var(--common); }
-    .rarity-rare { color: var(--rare); }
-    .rarity-legendary { color: var(--legendary); text-shadow: 0 0 10px rgba(250, 204, 21, 0.5); }
-
     .hidden { display: none !important; }
 </style>
 </head>
@@ -401,7 +373,6 @@
         </div>
         <nav>
             <button class="active" onclick="switchTab('profile')">Profile</button>
-            <button onclick="switchTab('pets')">Pets</button>
             <button onclick="switchTab('shop')">Shop</button>
             <button onclick="switchTab('emotes')">Emotes</button>
             <button class="btn-purple" onclick="switchTab('premium')">Premium</button>
@@ -457,41 +428,6 @@
                     <div id="profileChannelGrid" class="emotes-grid"></div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- PETS TAB -->
-    <div id="pets" class="panel">
-        <div class="protected-content">
-            <div id="petActiveView">
-                <div class="pet-stage">
-                    <div id="activePetIcon" class="pet-avatar"><i class="fas fa-egg" style="color:#555"></i></div>
-                    <div id="petStatsBlock" class="pet-info" style="display:none;">
-                        <div class="pet-name"><span id="activePetName">No Pet</span><span id="activePetLvl" class="pet-level-badge">LVL 1</span></div>
-                        <div class="pet-stats-bar"><div id="activePetXpBar" class="pet-stats-fill"></div></div>
-                        <div style="font-size:10px; color:#94a3b8; margin-top:4px; display:flex; justify-content:space-between;"><span>XP</span><span id="activePetXpText">0/100</span></div>
-                        <div class="pet-bonus-info">LVL UP = +50 Coins</div>
-                    </div>
-                    <div id="noPetMsg" style="color:#94a3b8; font-weight:700; margin-top:20px;">Nie masz aktywnego zwierzaka. Kup jajko!</div>
-                </div>
-            </div>
-
-            <div class="profile-section-title"><i class="fas fa-store"></i> Sklep z Jajkami</div>
-            <div class="egg-shop-section">
-                <div class="egg-card" onclick="buyEgg()">
-                    <div class="egg-icon"><i class="fas fa-egg"></i></div>
-                    <div class="egg-title">STARTER EGG</div>
-                    <div class="egg-price"><i class="fas fa-coins"></i> 100</div>
-                    <div class="odds-display">
-                        <span style="color:var(--common)">● Kot / Pies (40%)</span><br>
-                        <span style="color:var(--rare)">● Królik (15%)</span><br>
-                        <span style="color:var(--legendary)">● Smok (5%)</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="profile-section-title"><i class="fas fa-book"></i> Encyklopedia</div>
-            <div id="pokedexGrid" class="pokedex-grid"></div>
         </div>
     </div>
 
@@ -637,16 +573,7 @@ const DB_URL = "https://testowa-157aa-default-rtdb.europe-west1.firebasedatabase
 const ADMINS = ["gatojestemformaostateczna"]; 
 
 // STATE
-let AppState = { user: null, token: null, coins: 100, owned: [], loadout: {}, emotes: {}, allowedChannels: [], role: "USER", emoteTab: 'global', emoteSort: 'new', currentEmoteKey: null, currentEmoteData: null, viewingUser: null, kickNick: null, 
-                 activePet: null, petCollection: [] }; // PETS
-
-// PET DB
-const PETS_DB = {
-    'cat': { name: 'Kot', icon: 'fa-cat', rarity: 'common' },
-    'dog': { name: 'Pies', icon: 'fa-dog', rarity: 'common' },
-    'rabbit': { name: 'Królik', icon: 'fa-carrot', rarity: 'rare' }, // Using carrot/paw as placeholder, FontAwesome 5 free has limits
-    'dragon': { name: 'Smok', icon: 'fa-dragon', rarity: 'legendary' }
-};
+let AppState = { user: null, token: null, coins: 100, owned: [], loadout: {}, emotes: {}, allowedChannels: [], role: "USER", emoteTab: 'global', emoteSort: 'new', currentEmoteKey: null, currentEmoteData: null, viewingUser: null, kickNick: null };
 
 // CATALOG
 const CATALOG = [
@@ -668,14 +595,8 @@ window.onload = async () => {
         const c = localStorage.getItem('gato_coins'); AppState.coins = c ? parseInt(c) : 100;
         const o = localStorage.getItem('gato_owned'); AppState.owned = o ? JSON.parse(o) : [];
         const kn = localStorage.getItem('gato_kick_nick'); if(kn) AppState.kickNick = kn;
-        
-        // Load Pet Data
-        const p = localStorage.getItem('gato_active_pet'); AppState.activePet = p ? JSON.parse(p) : null;
-        const pc = localStorage.getItem('gato_pet_col'); AppState.petCollection = pc ? JSON.parse(pc) : [];
-        
     } catch(e) {}
     updateCoinDisplay(); renderShop(); checkDailyBonus(); setInterval(checkDailyBonus, 60000);
-    renderPokedex(); updatePetUI(); setInterval(petLoop, 10000); // 10s loop for XP
 
     if (location.hash.includes('access_token')) {
         const t = new URLSearchParams(location.hash.substring(1)).get('access_token');
@@ -752,101 +673,6 @@ function setProfileData(name, avatar, role) {
     document.getElementById('profileNameBig').innerText = name;
     document.getElementById('profileRoleTag').innerText = role;
 }
-
-// PET SYSTEM
-window.buyEgg = function() {
-    if(AppState.coins < 100) { alert("Brak monet (100)"); return; }
-    if(AppState.activePet) { if(!confirm("Masz już aktywnego zwierzaka. Czy chcesz go zastąpić? (Stracisz postęp obecnego)")) return; }
-    
-    AppState.coins -= 100;
-    updateCoinDisplay();
-    
-    const rand = Math.random() * 100;
-    let type = 'cat';
-    if(rand < 5) type = 'dragon'; // 5%
-    else if(rand < 20) type = 'rabbit'; // 15%
-    else if(rand < 60) type = 'dog'; // 40%
-    else type = 'cat'; // 40%
-    
-    const newPet = { type: type, level: 1, xp: 0, maxXp: 100 };
-    AppState.activePet = newPet;
-    
-    if(!AppState.petCollection.includes(type)) AppState.petCollection.push(type);
-    
-    savePetData();
-    updatePetUI();
-    renderPokedex();
-    fireConfetti(true);
-    alert(`Wykluł się: ${PETS_DB[type].name}!`);
-}
-
-function petLoop() {
-    if(!AppState.activePet) return;
-    // Add XP simply by watching
-    AppState.activePet.xp += 10;
-    if(AppState.activePet.xp >= AppState.activePet.maxXp) {
-        AppState.activePet.level++;
-        AppState.activePet.xp = 0;
-        AppState.activePet.maxXp = Math.floor(AppState.activePet.maxXp * 1.5);
-        AppState.coins += 50; // Reward
-        updateCoinDisplay();
-        fireConfetti(true);
-        // Visual feedback could be added here
-    }
-    savePetData();
-    updatePetUI();
-}
-
-function updatePetUI() {
-    const p = AppState.activePet;
-    if(!p) {
-        document.getElementById('activePetIcon').innerHTML = '<i class="fas fa-question" style="color:#333"></i>';
-        document.getElementById('petStatsBlock').style.display = 'none';
-        document.getElementById('noPetMsg').style.display = 'block';
-        return;
-    }
-    
-    const meta = PETS_DB[p.type];
-    document.getElementById('petStatsBlock').style.display = 'block';
-    document.getElementById('noPetMsg').style.display = 'none';
-    
-    document.getElementById('activePetIcon').innerHTML = `<i class="fas ${meta.icon}" style="color:${getColorForRarity(meta.rarity)}"></i>`;
-    document.getElementById('activePetName').innerText = meta.name;
-    document.getElementById('activePetLvl').innerText = `LVL ${p.level}`;
-    
-    const pct = Math.min(100, (p.xp / p.maxXp) * 100);
-    document.getElementById('activePetXpBar').style.width = `${pct}%`;
-    document.getElementById('activePetXpText').innerText = `${p.xp}/${p.maxXp}`;
-}
-
-function renderPokedex() {
-    const grid = document.getElementById('pokedexGrid');
-    if(!grid) return; grid.innerHTML = '';
-    
-    Object.keys(PETS_DB).forEach(key => {
-        const meta = PETS_DB[key];
-        const owned = AppState.petCollection.includes(key);
-        const div = document.createElement('div');
-        div.className = `pokedex-item ${owned ? 'unlocked' : ''}`;
-        div.innerHTML = `
-            <div class="pokedex-icon"><i class="fas ${meta.icon} rarity-${meta.rarity}"></i></div>
-            <div class="pokedex-name">${meta.name}</div>
-        `;
-        grid.appendChild(div);
-    });
-}
-
-function getColorForRarity(r) {
-    if(r==='legendary') return '#facc15';
-    if(r==='rare') return '#38bdf8';
-    return '#94a3b8';
-}
-
-function savePetData() {
-    localStorage.setItem('gato_active_pet', JSON.stringify(AppState.activePet));
-    localStorage.setItem('gato_pet_col', JSON.stringify(AppState.petCollection));
-}
-
 
 // CONNECTIONS & KICK INTEGRATION
 window.openConnectionsModal = function() {
