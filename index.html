@@ -100,7 +100,8 @@
     }
     
     .search-container { position: relative; width: 280px; margin-left: 15px; display: none; }
-    
+    .search-input { width: 100%; background: #1e293b; border: 1px solid var(--border); color: white; padding: 8px 15px 8px 38px; border-radius: 50px; font-family: 'Outfit', sans-serif; font-size: 13px; transition: 0.2s; outline: none; }
+    .search-input:focus { border-color: var(--accent); background: #0f172a; box-shadow: 0 0 15px rgba(56, 189, 248, 0.15); }
     .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 13px; pointer-events: none; }
     
     nav { display: flex; gap: 6px; background: transparent; padding: 0; }
@@ -217,19 +218,7 @@
     .back-to-me-btn:hover { background: var(--twitch); border-color: var(--twitch); }
 
     .profile-content-area { padding: 30px; }
-    
-    .profile-section-title { 
-        font-size: 18px; 
-        font-weight: 800; 
-        color: white; 
-        margin-bottom: 20px; 
-        border-left: 4px solid var(--twitch); 
-        padding-left: 15px; 
-        display: flex; 
-        align-items: center; 
-        gap: 10px; 
-        letter-spacing: -0.5px; 
-    }
+    .profile-section-title { font-size: 18px; font-weight: 800; color: white; margin-bottom: 20px; border-left: 4px solid var(--twitch); padding-left: 15px; display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; }
     
     .chat-preview-container { 
         max-width: 600px;
@@ -420,6 +409,7 @@
 
     .dashboard-full-container { display: flex; flex-direction: column; gap: 30px; }
     
+    /* POPRAWKA: Sloty 50% szerokości i wyśrodkowane */
     .emote-slots-bar {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
@@ -464,39 +454,17 @@
     }
     .slot-box.filled:hover .slot-del-overlay { opacity: 1; }
 
-    /* POPRAWIONY STYL SEKCJI UPLOADU */
     .upload-area-styled {
-        background: linear-gradient(145deg, #1e293b, #0f172a);
+        background: #0f172a;
         border: 1px solid var(--border);
-        border-radius: 24px;
-        padding: 40px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.4);
         position: relative;
         animation: slideDown 0.3s ease-out;
     }
     @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     
-    /* POPRAWIONY STYL INPUTÓW - CIEMNE TŁO I ZAOKRĄGLENIA */
-    input, select {
-        padding: 14px 18px;
-        background: #0f172a;
-        border: 1px solid var(--border);
-        color: #f8fafc;
-        border-radius: 12px;
-        font-family: 'Outfit', sans-serif;
-        font-size: 14px;
-        width: 100%;
-        outline: none;
-        transition: 0.2s;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-    }
-    input:focus, select:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
-        background: #1e293b;
-    }
-    input::placeholder { color: #64748b; }
-
     /* GŁOSOWANIE */
     .vote-controls { display: flex; gap: 15px; justify-content: center; margin-top: 15px; }
     .vote-btn { background: #1e293b; border: 1px solid var(--border); color: #94a3b8; padding: 5px 12px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; font-size: 13px; font-weight: 600; }
@@ -506,25 +474,32 @@
     .author-link { color: var(--accent); cursor: pointer; font-weight: bold; text-decoration: underline; }
 
     /* NOWY: Licznik kolekcji i Encyklopedia */
-    .small-stats-btn {
-        background: rgba(15, 23, 42, 0.5);
+    .collection-stats-btn {
+        position: absolute;
+        bottom: 20px;
+        right: 40px;
+        background: rgba(15, 23, 42, 0.8);
         border: 1px solid var(--border);
-        color: var(--text-muted);
-        font-size: 10px;
-        font-weight: 800;
-        padding: 4px 10px;
-        border-radius: 6px;
+        padding: 8px 16px;
+        border-radius: 12px;
         cursor: pointer;
+        color: var(--text-muted);
+        font-weight: 800;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
         transition: 0.2s;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        z-index: 15;
+        backdrop-filter: blur(5px);
     }
-    .small-stats-btn:hover {
+    .collection-stats-btn:hover {
         background: var(--panel);
-        border-color: var(--accent);
         color: white;
+        border-color: var(--accent);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
-
     .encyclo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; padding: 20px; max-height: 400px; overflow-y: auto; }
     .encyclo-item { background: #020617; border: 1px solid var(--border); border-radius: 10px; padding: 15px; text-align: center; opacity: 0.3; filter: grayscale(1); transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100px; }
     .encyclo-item.owned { opacity: 1; filter: grayscale(0); border-color: var(--success); box-shadow: 0 0 15px rgba(34, 197, 94, 0.1); background: rgba(34, 197, 94, 0.02); }
@@ -574,7 +549,11 @@
                         <button id="pTabCh" onclick="switchProfileSubTab('channel')"><i class="fas fa-tv"></i> My Channel Emotes</button>
                     </div>
                 </div>
-                
+                <!-- LICZNIK KOLEKCJI (NOWY) -->
+                <div id="collectionStats" class="collection-stats-btn" onclick="openEncyclopedia()" style="display:none;">
+                    <i class="fas fa-book"></i> <span id="collectionCount">0/0</span>
+                </div>
+
                 <div class="profile-meta-container">
                     <img id="profileAvatarBig" class="profile-avatar-big" src="">
                     <div class="profile-info-block">
@@ -602,15 +581,7 @@
                 </div>
 
                 <div id="profileInventory" style="display:block;">
-                    <div class="profile-section-title">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <i class="fas fa-paint-brush"></i> Twoje Przedmioty
-                        </div>
-                        <div style="margin-left: auto; display:flex; gap:10px;">
-                            <button class="small-stats-btn" onclick="alert('Coming Soon...')">TRADE</button>
-                            <button class="small-stats-btn" onclick="openEncyclopedia()">PAINTS LIST <span id="collectionCount" style="margin-left:5px; color:var(--accent);">0/0</span></button>
-                        </div>
-                    </div>
+                    <div class="profile-section-title"><i class="fas fa-paint-brush"></i> Twoje Przedmioty</div>
                     <div id="profileInvGrid" class="inventory-grid"></div>
                 </div>
                 <div id="profileChannel" style="display:none;">
@@ -826,14 +797,6 @@ const CATALOG = [
     { name: "Deep Sea", category:"paint", price: 25, type: "gradient", value: "linear-gradient(to right, #24c6dc, #514a9d)", previewStyle: "background: linear-gradient(to right, #24c6dc, #514a9d); -webkit-background-clip: text; color: transparent; font-weight:900;" },
     { name: "Star Badge", category:"badge", price: 20, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/1828/1828884.png", previewStyle: "" },
     { name: "King Crown", category:"badge", price: 50, type: "badge", value: "https://cdn-icons-png.flaticon.com/128/2545/2545603.png", previewStyle: "" },
-    {
-        name: "Christmass 2025",
-        category: "paint",
-        price: 200,
-        type: "gradient",
-        value: "radial-gradient(circle, rgba(155, 42, 42, 1) 0%, rgba(255, 255, 255, 1) 25%, rgba(199, 87, 87, 1) 50%, rgba(255, 255, 255, 1) 78%, rgba(255, 0, 0, 1) 100%)",
-        previewStyle: "background: radial-gradient(circle, rgba(155, 42, 42, 1) 0%, rgba(255, 255, 255, 1) 25%, rgba(199, 87, 87, 1) 50%, rgba(255, 255, 255, 1) 78%, rgba(255, 0, 0, 1) 100%); -webkit-background-clip: text; color: transparent; font-weight: 900;"
-    }
 ];
 
 // INIT
