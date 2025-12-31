@@ -10,6 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
+    /* STYLE BEZ ZMIAN */
     :root { 
         --bg: #020617;        
         --panel: #0f172a;     
@@ -614,7 +615,7 @@
     </div>
     <div style="display:flex; align-items:center;">
         <div id="coinDisplay" class="coin-display" style="display:none;" onclick="switchTab('premium')">
-            <i class="fas fa-coins"></i> <span id="coinCount">10</span>
+            <i class="fas fa-coins"></i> <span id="coinCount">...</span>
         </div>
         <nav>
             <button class="active" onclick="switchTab('profile')">Profile</button>
@@ -642,7 +643,7 @@
                 </div>
                 <!-- LICZNIK KOLEKCJI (NOWY) -->
                 <div id="collectionStats" class="collection-stats-btn" onclick="openEncyclopedia()" style="display:none;">
-                    <i class="fas fa-book"></i> <span id="collectionCount">0/0</span>
+                    <i class="fas fa-book"></i> <span id="collectionCount">...</span>
                 </div>
 
                 <div class="profile-meta-container">
@@ -688,7 +689,7 @@
         <div class="protected-content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h2 style="margin:0; font-weight:900; letter-spacing:-1px; font-size:28px;">Sklep Gato.TV</h2>
-                <button id="btnDaily" class="btn-daily" onclick="claimDailyBonus()"><i class="fas fa-gift"></i> ODBIERZ +10</button>
+                <button id="btnDaily" class="btn-daily" onclick="claimDailyBonus()"><i class="fas fa-gift"></i> ŁADOWANIE...</button>
             </div>
             
             <div style="margin-bottom:30px;">
@@ -902,7 +903,23 @@ const DB_URL = "https://testowa-157aa-default-rtdb.europe-west1.firebasedatabase
 const ADMINS = ["gatojestemformaostateczna"]; 
 
 // STATE
-let AppState = { user: null, token: null, coins: 100, owned: [], loadout: {}, emotes: {}, allowedChannels: [], role: "USER", emoteTab: 'global', emoteSort: 'new', currentEmoteKey: null, currentEmoteData: null, viewingUser: null, kickNick: null };
+let AppState = { 
+    user: null, 
+    token: null, 
+    coins: 0, // Init 0, wait for fetch
+    owned: [], 
+    loadout: {}, 
+    emotes: {}, 
+    allowedChannels: [], 
+    role: "USER", 
+    emoteTab: 'global', 
+    emoteSort: 'new', 
+    currentEmoteKey: null, 
+    currentEmoteData: null, 
+    viewingUser: null, 
+    kickNick: null,
+    lastDaily: 0
+};
 
 // CATALOG
 const CATALOG = [
@@ -928,12 +945,14 @@ const CATALOG = [
 
 // INIT
 window.onload = async () => {
+    // USUNIĘTO ODCZYT LOKALNY MONET I EKWIPUNKU
+    // Dane te zostaną pobrane z Firebase po zalogowaniu
     try {
-        const c = localStorage.getItem('gato_coins'); AppState.coins = c ? parseInt(c) : 100;
-        const o = localStorage.getItem('gato_owned'); AppState.owned = o ? JSON.parse(o) : [];
         const kn = localStorage.getItem('gato_kick_nick'); if(kn) AppState.kickNick = kn;
     } catch(e) {}
-    updateCoinDisplay(); renderShop(); checkDailyBonus(); setInterval(checkDailyBonus, 60000);
+    
+    // UI update placeholder
+    updateCoinDisplay(); 
 
     if (location.hash.includes('access_token')) {
         const t = new URLSearchParams(location.hash.substring(1)).get('access_token');
@@ -1201,11 +1220,22 @@ function createCard(item, mode) {
     return d;
 }
 
-window.doBuy = function(name) {
+window.doBuy = async function(name) {
+    if(!AppState.user) return;
     const item = CATALOG.find(i=>i.name===name);
+    
+    // Check against AppState (synced from server)
     if(AppState.coins >= item.price) {
-        AppState.coins -= item.price; AppState.owned.push(name);
-        updateCoinDisplay(); renderShop(); renderProfileInventory(); fireConfetti(true);
+        AppState.coins -= item.price; 
+        AppState.owned.push(name);
+        
+        updateCoinDisplay(); 
+        renderShop(); 
+        renderProfileInventory(); 
+        fireConfetti(true);
+        
+        // SAVE TO FIREBASE
+        await saveUserData();
     } else alert("Brak monet");
 }
 
@@ -1484,8 +1514,7 @@ window.addModerator = async function() { const nick = document.getElementById('n
 // HELPERS
 function updateCoinDisplay() { 
     document.getElementById('coinCount').innerText = AppState.coins; 
-    localStorage.setItem('gato_coins', AppState.coins); 
-    localStorage.setItem('gato_owned', JSON.stringify(AppState.owned));
+    // Removed localStorage writes here
     
     // Update collection stats
     const paints = CATALOG.filter(i=>i.category==='paint').length; 
@@ -1524,7 +1553,9 @@ window.openEncyclopedia = function() {
 const DC = 86400000; // 24h
 function checkDailyBonus() {
     const btn = document.getElementById('btnDaily'); if(!btn) return;
-    const last = localStorage.getItem('gato_last_daily');
+    
+    // Check server time if available
+    const last = AppState.lastDaily;
     const now = Date.now();
     
     if(last && now - last < DC) {
@@ -1538,29 +1569,83 @@ function checkDailyBonus() {
         btn.innerHTML = `<i class="fas fa-gift"></i> ODBIERZ +10`;
     }
 }
-window.claimDailyBonus = function() {
-    AppState.coins += 10; updateCoinDisplay(); fireConfetti(true);
-    localStorage.setItem('gato_last_daily', Date.now()); checkDailyBonus();
+window.claimDailyBonus = async function() {
+    if(!AppState.user) return;
+    
+    AppState.coins += 10; 
+    AppState.lastDaily = Date.now();
+    
+    updateCoinDisplay(); 
+    fireConfetti(true);
+    checkDailyBonus();
+    
+    // SAVE TO SERVER
+    await saveUserData();
 }
-window.redeemCode = function() {
+window.redeemCode = async function() {
+    if(!AppState.user) return;
     const c = prompt("Kod:");
-    if(c === 'GATO2025') { AppState.coins += 1000; updateCoinDisplay(); fireConfetti(true); alert("OK!"); }
+    if(c === 'GATO2025') { 
+        AppState.coins += 1000; 
+        updateCoinDisplay(); 
+        fireConfetti(true); 
+        alert("OK!");
+        // SAVE TO SERVER
+        await saveUserData();
+    }
 }
 
+// CLOUD SYNC
 async function fetchCloudData() {
     if(!AppState.user) return;
     try {
-        const res = await fetch(`${DB_URL}/premium/${AppState.user.login.toLowerCase()}.json`);
-        const data = res.ok ? (await res.json() || {}) : {};
-        AppState.loadout = data;
-        updatePreview(data);
+        const login = AppState.user.login.toLowerCase();
+        
+        // 1. Fetch User Data (Coins, Owned, LastDaily)
+        const userRes = await fetch(`${DB_URL}/users/${login}.json`);
+        const userData = userRes.ok ? (await userRes.json()) : null;
+        
+        if (userData) {
+            AppState.coins = userData.coins || 0;
+            AppState.owned = userData.owned || [];
+            AppState.lastDaily = userData.lastDaily || 0;
+        } else {
+            // First time user logic
+            AppState.coins = 100;
+            AppState.owned = [];
+            AppState.lastDaily = 0;
+            await saveUserData();
+        }
+
+        // 2. Fetch Loadout
+        const loadoutRes = await fetch(`${DB_URL}/premium/${login}.json`);
+        const loadoutData = loadoutRes.ok ? (await loadoutRes.json() || {}) : {};
+        AppState.loadout = loadoutData;
+        
+        // Updates
+        updateCoinDisplay();
+        checkDailyBonus();
+        updatePreview(loadoutData);
         renderShop();
         renderProfileInventory();
         fetchMyMods();
-    } catch(e) {}
+        
+    } catch(e) { console.error("Cloud Error", e); }
     loadAllEmotes();
-    updateCoinDisplay(); // Trigger stats update
 }
+
+async function saveUserData() {
+    if(!AppState.user) return;
+    const login = AppState.user.login.toLowerCase();
+    const payload = {
+        coins: AppState.coins,
+        owned: AppState.owned,
+        lastDaily: AppState.lastDaily
+    };
+    // PATCH allows updating partial fields in users/{login}
+    await api(`users/${login}`, "PATCH", payload);
+}
+
 async function fetchMyMods() {
     try {
         const res = await fetch(`${DB_URL}/channels/${AppState.user.login.toLowerCase()}/mods.json`);
