@@ -218,7 +218,20 @@
     .back-to-me-btn:hover { background: var(--twitch); border-color: var(--twitch); }
 
     .profile-content-area { padding: 30px; }
-    .profile-section-title { font-size: 18px; font-weight: 800; color: white; margin-bottom: 20px; border-left: 4px solid var(--twitch); padding-left: 15px; display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; }
+    
+    /* PRZYWRÓCONO ORYGINALNY STYL NAGŁÓWKA SEKCJI */
+    .profile-section-title { 
+        font-size: 18px; 
+        font-weight: 800; 
+        color: white; 
+        margin-bottom: 20px; 
+        border-left: 4px solid var(--twitch); 
+        padding-left: 15px; 
+        display: flex; 
+        align-items: center; 
+        gap: 10px; 
+        letter-spacing: -0.5px; 
+    }
     
     .chat-preview-container { 
         max-width: 600px;
@@ -570,9 +583,12 @@
                 </div>
 
                 <div id="profileInventory" style="display:block;">
-                    <div class="profile-section-title" style="display:flex; justify-content:space-between; align-items:center;">
-                        <span><i class="fas fa-paint-brush"></i> Twoje Przedmioty</span>
-                        <div style="display:flex; gap:10px;">
+                    <!-- ZMODYFIKOWANY NAGŁÓWEK SEKCJI -->
+                    <div class="profile-section-title">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <i class="fas fa-paint-brush"></i> Twoje Przedmioty
+                        </div>
+                        <div style="margin-left: auto; display:flex; gap:10px;">
                             <button class="small-stats-btn" onclick="alert('Coming Soon...')">TRADE</button>
                             <button class="small-stats-btn" onclick="openEncyclopedia()">PAINTS LIST <span id="collectionCount" style="margin-left:5px; color:var(--accent);">0/0</span></button>
                         </div>
