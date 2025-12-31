@@ -319,15 +319,18 @@
     .encyclo-item.owned { opacity: 1; filter: grayscale(0); border-color: var(--success); box-shadow: 0 0 15px rgba(34, 197, 94, 0.1); background: rgba(34, 197, 94, 0.02); }
     .encyclo-name { font-size: 10px; font-weight: 700; color: white; margin-top: 10px; text-transform: uppercase; }
 
-    /* ADMIN STYLES */
-    .admin-panel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; padding: 20px; max-height: 500px; overflow-y: auto; }
-    .admin-card { background: #020617; border: 1px solid var(--border); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 10px; position: relative; }
-    .admin-card img { width: 60px; height: 60px; object-fit: contain; filter: blur(8px); transition: 0.2s; cursor: help; }
-    .admin-card img:hover { filter: blur(0); }
-    .admin-actions { display: flex; gap: 8px; width: 100%; }
-    .btn-adm { flex: 1; border: none; padding: 8px; border-radius: 6px; font-weight: 800; cursor: pointer; color: black; font-size: 12px; }
-    .btn-approve { background: var(--success); }
-    .btn-reject { background: var(--danger); }
+    /* ADMIN STYLES - FULL PAGE */
+    .admin-grid-full { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; margin-top: 30px; }
+    .admin-card-full { background: #020617; border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px; position: relative; transition: 0.2s; }
+    .admin-card-full:hover { border-color: var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    .admin-card-full img { width: 100px; height: 100px; object-fit: contain; filter: blur(12px); transition: 0.3s; cursor: help; }
+    .admin-card-full img:hover { filter: blur(0); }
+    .admin-actions { display: flex; gap: 10px; width: 100%; margin-top: 10px; }
+    .btn-adm { flex: 1; border: none; padding: 10px; border-radius: 8px; font-weight: 800; cursor: pointer; color: #fff; font-size: 12px; transition: 0.2s; }
+    .btn-approve { background: var(--success); color: #000; box-shadow: 0 4px 15px rgba(34,197,94,0.3); }
+    .btn-approve:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(34,197,94,0.4); }
+    .btn-reject { background: var(--danger); box-shadow: 0 4px 15px rgba(239,68,68,0.3); }
+    .btn-reject:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239,68,68,0.4); }
     
     .hidden { display: none !important; }
 </style>
@@ -565,6 +568,17 @@
         <div class="hero-card download-style"><h1>Pobierz Wtyczkę</h1><p style="color:#94a3b8; margin: 10px 0 20px;">Wersja 1.0 Beta</p><button class="btn-download-big" onclick="fireDownloadConfetti()">POBIERZ WTYCZKĘ</button></div>
         <div class="info-block"><h2>Możliwości</h2><div class="info-grid-box"><div class="info-item"><h3><i class="fas fa-bolt"></i> Funkcje</h3><ul><li>Menu emotek Gato.TV</li><li>Historia wiadomości</li><li>Auto-Punkty</li><li>Wyszukiwarka emotek</li><li>Personalizacja</li></ul></div></div></div>
     </div>
+    
+    <!-- ADMIN PANEL (FULL PAGE) -->
+    <div id="admin" class="panel">
+        <div class="protected-content">
+            <h2 style="font-size:28px; font-weight:900; color:white; margin-bottom:30px;"><i class="fas fa-gavel"></i> Panel Moderacji</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Zatwierdzaj lub odrzucaj emotki zgłoszone przez użytkowników. Zdjęcia są domyślnie zamazane.</p>
+            <div id="adminQueueGrid" class="admin-grid-full">
+                <!-- Content injected by JS -->
+            </div>
+        </div>
+    </div>
 
 </div>
 
@@ -592,17 +606,6 @@
 
             <button class="modal-btn" style="background:#22c55e; color:#fff;" onclick="assignEmote()">PRZYPISZ DO KANAŁU</button>
         </div>
-    </div>
-</div>
-
-<!-- ADMIN MODAL -->
-<div id="modalAdmin" class="modal-wrap" style="display:none;">
-    <div class="modal-box" style="max-width: 600px;">
-        <div class="modal-head" style="padding: 20px;">
-            <button class="modal-close" onclick="document.getElementById('modalAdmin').style.display='none'" style="top:15px; right:15px;">×</button>
-            <h2 style="margin:0; font-size:18px; color:white; text-transform:uppercase;">Panel Moderacji</h2>
-        </div>
-        <div id="adminPanelContent" class="admin-panel-grid"></div>
     </div>
 </div>
 
@@ -856,7 +859,10 @@ window.switchTab = function(id) {
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
     document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    event.target.classList.add('active');
+    
+    // Only highlight nav if it's one of the main tabs (not admin)
+    const navBtn = document.querySelector(`nav button[onclick="switchTab('${id}')"]`);
+    if(navBtn) navBtn.classList.add('active');
 }
 window.switchProfileSubTab = function(tab) {
     document.getElementById('profileInventory').style.display = tab==='inventory'?'block':'none';
@@ -1067,10 +1073,10 @@ function renderEmotes() {
     const grid = document.getElementById('emotesGrid');
     const all = AppState.emotes;
     
-    // Filter out pending unless in special view (which is gallery - should only show approved)
+    // Filter logic: Exclude pending for everyone in the public gallery
     let keys = Object.keys(all).filter(k => {
         const e = all[k];
-        // Only show APPROVED emotes in gallery
+        // Only show APPROVED emotes in gallery (unless status is undefined which means old approved)
         if(e.status === 'pending') return false; 
         
         return AppState.emoteTab === 'global' ? e.scope === 'global' : e.scope !== 'global';
@@ -1162,7 +1168,16 @@ window.voteEmote = async function(val) {
 
 window.assignEmote = async function() {
     if(!AppState.user) return;
-    await api(`emotes/${AppState.currentEmoteKey}`, "PUT", { url: AppState.currentEmoteData.url, author: AppState.currentEmoteData.author, scope: 'channel', channel: AppState.user.login, status: 'approved' });
+    // When assigning existing emote to channel, keep original status/auth, or re-approve? 
+    // Here we just update reference. Actually this logic was flawed in original code (overwriting object).
+    // Let's assume assigning doesn't change global status.
+    await api(`emotes/${AppState.currentEmoteKey}`, "PUT", { 
+        url: AppState.currentEmoteData.url, 
+        author: AppState.currentEmoteData.author, 
+        scope: 'channel', 
+        channel: AppState.user.login, 
+        status: AppState.currentEmoteData.status || 'approved' 
+    });
     alert("Przypisano!"); closeModal();
 }
 
@@ -1253,7 +1268,7 @@ window.addEmote = async function() {
     const isGlobal = document.getElementById('chkGlobal').checked;
     const scope = (AppState.role === 'ADMIN' && isGlobal) ? 'global' : 'channel';
     
-    // Status Logic: Admin = Approved, User = Pending
+    // Logic: Admin = Approved immediately. User = Pending.
     const status = (AppState.role === 'ADMIN') ? 'approved' : 'pending';
     
     await api(`emotes/${name}`, "PUT", { 
@@ -1268,43 +1283,42 @@ window.addEmote = async function() {
     
     loadAllEmotes().then(() => {
         renderEmoteSlots();
-        alert(status === 'approved' ? "Opublikowano!" : "Przesłano do akceptacji!");
+        alert(status === 'approved' ? "Opublikowano!" : "Przesłano do akceptacji (oczekuje na admina).");
     });
 }
 window.previewFile = function() { const f = document.getElementById('emoFile').files[0]; if(f) { const r=new FileReader(); r.onload=e=>{document.getElementById('filePreview').src=e.target.result; document.getElementById('filePreview').style.display='block'; document.getElementById('emoUrl').value = e.target.result;}; r.readAsDataURL(f); } }
 window.addModerator = async function() { const nick = document.getElementById('newModNick').value.trim().toLowerCase(); if(nick) { await api(`channels/${AppState.user.login.toLowerCase()}/mods/${nick}`, "PUT", true); fetchMyMods(); document.getElementById('newModNick').value=''; } }
 
-// --- ADMIN PANEL FUNCTIONS ---
+// --- ADMIN PANEL FUNCTIONS (FULL PAGE) ---
 window.openAdminPanel = function() {
     if(AppState.role !== 'ADMIN') return;
+    switchTab('admin'); // Uses the standard panel switcher now
     
     const all = AppState.emotes || {};
     const pendingKeys = Object.keys(all).filter(k => all[k].status === 'pending');
     
-    const grid = document.getElementById('adminPanelContent');
+    const grid = document.getElementById('adminQueueGrid');
     grid.innerHTML = '';
     
     if(pendingKeys.length === 0) {
-        grid.innerHTML = '<div style="color:#aaa; text-align:center; grid-column:1/-1;">Brak oczekujących emotek 🎉</div>';
+        grid.innerHTML = '<div style="color:#aaa; text-align:center; grid-column:1/-1; padding:50px;">Brak oczekujących emotek 🎉</div>';
     } else {
         pendingKeys.forEach(k => {
             const e = all[k];
             const div = document.createElement('div');
-            div.className = 'admin-card';
+            div.className = 'admin-card-full';
             div.innerHTML = `
-                <div style="font-weight:bold; color:white; font-size:12px;">${k}</div>
+                <div style="font-weight:900; color:white; font-size:16px;">${k}</div>
                 <img src="${e.url}" onclick="window.open('${e.url}')">
-                <div style="font-size:10px; color:#888;">by ${e.author}</div>
+                <div style="font-size:11px; color:#94a3b8; font-weight:600;">Autor: <span style="color:#fff;">${e.author}</span></div>
                 <div class="admin-actions">
-                    <button class="btn-adm btn-approve" onclick="adminReview('${k}', true)">V</button>
-                    <button class="btn-adm btn-reject" onclick="adminReview('${k}', false)">X</button>
+                    <button class="btn-adm btn-approve" onclick="adminReview('${k}', true)">ZATWIERDŹ</button>
+                    <button class="btn-adm btn-reject" onclick="adminReview('${k}', false)">ODRZUĆ</button>
                 </div>
             `;
             grid.appendChild(div);
         });
     }
-    
-    document.getElementById('modalAdmin').style.display = 'flex';
 }
 
 window.adminReview = async function(key, approved) {
