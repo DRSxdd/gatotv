@@ -1393,18 +1393,15 @@ function fireDownloadConfetti() { confetti({particleCount:100,spread:70,origin:{
 function fireConfetti(shop) { if(shop) confetti({particleCount:50,spread:60,origin:{x:0.5,y:0.5}}); }
 window.togglePreviewTheme = function(el) { el.classList.toggle('light'); }
 
-// API FIX: Added caching prevention
+// API FIX: OPTIMIZED VERSION (NO TIMESTAMP)
 async function api(path, method="GET", body=null) { 
     const opts={ method, headers: {} }; 
-    if(method === "GET") {
-        opts.headers['Cache-Control'] = 'no-cache';
-    }
     if(body) {
         opts.body=JSON.stringify(body); 
     }
     try {
-        // Add timestamp to prevent caching on GET
-        const url = `${DB_URL}/${path}.json` + (method==="GET" ? `?t=${Date.now()}` : "");
+        // ZOPTYMALIZOWANO: Usunięto "?t=" - przeglądarka użyje cache
+        const url = `${DB_URL}/${path}.json`;
         const r = await fetch(url, opts); 
         return r.json();
     } catch(e) { return null; } 
@@ -1470,13 +1467,14 @@ window.redeemCode = async function() {
     }
 }
 
-// CLOUD SYNC
+// CLOUD SYNC - OPTIMIZED
 async function fetchCloudData() {
     if(!AppState.user) return;
     try {
         const login = AppState.user.login.toLowerCase();
         
-        const userRes = await fetch(`${DB_URL}/users/${login}.json?t=${Date.now()}`); // Added timestamp
+        // ZOPTYMALIZOWANO: Usunięto "?t=" - korzysta z cache
+        const userRes = await fetch(`${DB_URL}/users/${login}.json`); 
         const userData = userRes.ok ? (await userRes.json()) : null;
         
         if (userData) {
@@ -1490,7 +1488,8 @@ async function fetchCloudData() {
             await saveUserData();
         }
 
-        const loadoutRes = await fetch(`${DB_URL}/premium/${login}.json?t=${Date.now()}`);
+        // ZOPTYMALIZOWANO: Usunięto "?t="
+        const loadoutRes = await fetch(`${DB_URL}/premium/${login}.json`);
         const loadoutData = loadoutRes.ok ? (await loadoutRes.json() || {}) : {};
         AppState.loadout = loadoutData;
         
