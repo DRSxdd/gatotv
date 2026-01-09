@@ -114,9 +114,7 @@
     .login-blocker h2 { font-size: 32px; margin-bottom: 15px; color: white; letter-spacing: -1px; }
     
     .profile-header { position: relative; margin-bottom: 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 24px; overflow: hidden; margin-top: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
-    
-    /* MODIFIED: Reduced height by ~20% (170px -> 135px) */
-    .profile-banner { height: 135px; background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2072&auto=format&fit=crop') center/cover; position: relative; }
+    .profile-banner { height: 170px; background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2072&auto=format&fit=crop') center/cover; position: relative; }
     .profile-banner::after { content:''; position: absolute; bottom:0; left:0; width:100%; height:100%; background: linear-gradient(to top, var(--panel) 0%, rgba(15, 23, 42, 0.5) 50%, transparent 100%); }
 
     .profile-meta-container { position: absolute; bottom: 20px; left: 40px; display: flex; align-items: center; gap: 20px; z-index: 10; width: auto; }
@@ -126,26 +124,7 @@
     .profile-role-tag { font-size: 10px; color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; background: rgba(56, 189, 248, 0.15); padding: 3px 8px; border-radius: 6px; display: inline-block; margin-top: 4px; border: 1px solid rgba(56, 189, 248, 0.3); backdrop-filter: blur(4px); }
     .viewing-badge { font-size: 10px; background: var(--yellow); color: black; padding: 2px 8px; border-radius: 20px; vertical-align: middle; font-weight: 800; }
     
-    /* MODIFIED: Buttons moved under banner, aligned left */
-    .profile-nav-centered { 
-        position: relative; 
-        bottom: auto; 
-        left: auto; 
-        transform: none; 
-        
-        display: flex; 
-        gap: 8px; 
-        background: transparent; 
-        padding: 0; 
-        border-radius: 0; 
-        backdrop-filter: none; 
-        border: none; 
-        
-        margin-top: 10px;
-        margin-left: 30px;
-        z-index: 20; 
-    }
-    
+    .profile-nav-centered { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; background: rgba(2, 6, 23, 0.7); padding: 5px; border-radius: 14px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); z-index: 20; }
     .profile-nav-centered button { background: transparent; border: none; color: #cbd5e1; font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 10px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
     .profile-nav-centered button:hover { background: rgba(255,255,255,0.1); color: white; }
     .profile-nav-centered button.active { background: var(--twitch); color: white; box-shadow: 0 4px 15px rgba(145, 70, 255, 0.3); font-weight: 800; }
@@ -392,14 +371,11 @@
             <div class="profile-header">
                 <button id="btnBackToMe" class="back-to-me-btn" onclick="returnToMyProfile()">WRÓĆ DO SIEBIE</button>
                 <div class="profile-banner">
-                    <!-- Buttons were here, moved below -->
+                    <div class="profile-nav-centered">
+                        <button id="pTabInv" class="active" onclick="switchProfileSubTab('inventory')"><i class="fas fa-briefcase"></i> Ekwipunek</button>
+                        <button id="pTabCh" onclick="switchProfileSubTab('channel')"><i class="fas fa-tv"></i> My Channel Emotes</button>
+                    </div>
                 </div>
-                <!-- Buttons moved below the banner inside profile-header -->
-                <div class="profile-nav-centered">
-                    <button id="pTabInv" class="active" onclick="switchProfileSubTab('inventory')"><i class="fas fa-briefcase"></i> Ekwipunek</button>
-                    <button id="pTabCh" onclick="switchProfileSubTab('channel')"><i class="fas fa-tv"></i> My Channel Emotes</button>
-                </div>
-
                 <!-- LICZNIK KOLEKCJI -->
                 <div id="collectionStats" class="collection-stats-btn" onclick="openEncyclopedia()" style="display:none;">
                     <i class="fas fa-book"></i> <span id="collectionCount">...</span>
@@ -452,9 +428,6 @@
             </div>
             
             <div style="margin-bottom:30px;">
-                <!-- ADDED: Big nickname preview to match profile header dimensions -->
-                <div class="profile-name-big preview-user" style="text-align:center; justify-content:center; margin-bottom:20px;">TwójNick</div>
-                
                 <div class="chat-preview-container">
                     <div class="chat-line">
                         <span class="chat-time">12:30</span>
@@ -1055,28 +1028,7 @@ function updatePreview(d) {
     users.forEach(u => { 
         u.style=""; 
         u.className="chat-username preview-user"; 
-        
-        // RE-ADD profile-name-big if it was on the element (for Shop header)
-        if(u.parentElement && u.parentElement.classList.contains('profile-name-big')) {
-            // Wait, I used "profile-name-big preview-user" on the same element.
-            // resetting className removes profile-name-big. FIX:
-        }
-        // Better approach: Don't nuke className. Just remove styles and re-apply.
-        // Actually, let's restore profile-name-big class if it was there.
     });
-    // FIX: Re-adding specific classes after reset isn't clean. 
-    // Let's iterate and check.
-    document.querySelectorAll('.preview-user').forEach(u => {
-       // Just keep the class list, remove inline styles
-       u.style = "";
-       // Check if it's the big one
-       if(u.classList.contains('profile-name-big')) {
-            u.style.textAlign = "center";
-            u.style.justifyContent = "center";
-            u.style.marginBottom = "20px";
-       }
-    });
-
     badges.forEach(b => b.innerHTML="");
 
     if(!d) return;
@@ -1120,13 +1072,6 @@ function updatePreviewUI(item) {
         users.forEach(u => {
              u.style.cssText = item.previewStyle;
              if(item.filter) u.style.filter = item.filter;
-             
-             // Maintain layout styles for big preview
-             if(u.classList.contains('profile-name-big')) {
-                 u.style.textAlign = "center";
-                 u.style.justifyContent = "center";
-                 u.style.marginBottom = "20px";
-             }
         });
     }
     if(item.category==='badge') {
