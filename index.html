@@ -211,16 +211,17 @@
     .emote-sub-nav button:hover { background: #1e293b; color: white; }
     .emote-sub-nav button.active { background: var(--accent); color: #020617; border-color: var(--accent); font-weight: 800; box-shadow: 0 0 15px var(--accent-glow); }
 
-    /* NOWE STYLE DLA UKŁADU EMOTES (Header) */
-    .emotes-header-layout { display: flex; justify-content: space-between; align-items: center; width: 100%; border-bottom: 2px solid white; padding-bottom: 15px; margin-bottom: 20px; }
-    .emotes-header-left { display: flex; align-items: center; gap: 20px; }
-    .emote-sub-nav-inline { display: flex; gap: 10px; }
-    .emote-sub-nav-inline button { background: #22c55e; border: none; color: black; padding: 8px 18px; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 13px; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-    .emote-sub-nav-inline button:hover { transform: translateY(-2px); box-shadow: 0 5px 10px rgba(0,0,0,0.3); opacity: 0.9; }
-    .emote-sub-nav-inline button.active { border: 2px solid white; box-shadow: 0 0 15px rgba(34, 197, 94, 0.4); }
+    /* NOWE STYLE DLA UKŁADU EMOTES (Header) - SPÓJNE Z DESIGNEM */
+    .emotes-header-layout { display: flex; justify-content: space-between; align-items: center; width: 100%; border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 25px; }
+    .emotes-header-left { display: flex; align-items: center; gap: 25px; }
+    
+    .emote-sub-nav-inline { display: flex; gap: 10px; background: var(--panel); padding: 4px; border-radius: 10px; border: 1px solid var(--border); }
+    .emote-sub-nav-inline button { background: transparent; border: none; color: var(--text-muted); padding: 6px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 12px; transition: 0.2s; }
+    .emote-sub-nav-inline button:hover { color: white; background: rgba(255,255,255,0.05); }
+    .emote-sub-nav-inline button.active { background: var(--accent); color: #020617; font-weight: 800; box-shadow: 0 0 15px var(--accent-glow); }
 
-    .btn-add-header { background: #d946ef; color: white; border: none; padding: 10px 30px; border-radius: 12px; font-weight: 900; cursor: pointer; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; box-shadow: 0 4px 10px rgba(217, 70, 239, 0.3); }
-    .btn-add-header:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(217, 70, 239, 0.5); }
+    .btn-add-header { background: var(--twitch); color: white; border: none; padding: 10px 24px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 4px 15px rgba(145, 70, 255, 0.25); text-transform: uppercase; letter-spacing: 0.5px; }
+    .btn-add-header:hover { background: #772ce8; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(145, 70, 255, 0.4); }
     
     .modal-wrap { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: center; justify-content: center; }
     .modal-box { background: #0f172a; border: 1px solid var(--border); width: 90%; max-width: 420px; border-radius: 24px; overflow: hidden; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
@@ -459,7 +460,7 @@
     <div id="emotes" class="panel">
         <div class="login-blocker"><h2>🔒 Wymagane Logowanie</h2><button class="btn-login" onclick="loginWithTwitch()">Zaloguj przez Twitch</button></div>
         <div class="protected-content">
-            <!-- GALLERY VIEW (UPDATED LAYOUT) -->
+            <!-- GALLERY VIEW (LAYOUT UPDATED, STYLE FIXED) -->
             <div id="emotesGalleryView">
                 <div class="emotes-header-layout">
                     <div class="emotes-header-left">
@@ -469,7 +470,9 @@
                             <button id="tabUsers" onclick="setEmoteTab('users')">USERS</button>
                         </div>
                     </div>
-                    <button class="btn-add-header" onclick="openEmoteDashboard()">+ Dodaj Swoją</button>
+                    <button class="btn-add-header" onclick="openEmoteDashboard()">
+                        <i class="fas fa-plus"></i> DODAJ SWOJĄ
+                    </button>
                 </div>
 
                 <div id="userSortNav" class="emote-sub-nav" style="display:none; border-bottom:1px solid var(--border); padding-bottom:15px; margin-bottom:15px;">
