@@ -460,7 +460,7 @@
     <div id="emotes" class="panel">
         <div class="login-blocker"><h2>🔒 Wymagane Logowanie</h2><button class="btn-login" onclick="loginWithTwitch()">Zaloguj przez Twitch</button></div>
         <div class="protected-content">
-            <!-- GALLERY VIEW (LAYOUT UPDATED, STYLE FIXED) -->
+            <!-- GALLERY VIEW -->
             <div id="emotesGalleryView">
                 <div class="emotes-header-layout">
                     <div class="emotes-header-left">
@@ -517,20 +517,9 @@
                                 </div>
                                 
                                 <div class="form-group full-width">
-                                    <label>Plik Graficzny</label>
-                                    <div class="file-drop-zone">
-                                        <div class="file-info">
-                                            <i class="fas fa-image"></i>
-                                            <span>Przeciągnij plik lub kliknij tutaj</span>
-                                            <span style="font-size:10px; color:#64748b; font-weight:400;">(PNG, GIF, JPEG)</span>
-                                        </div>
-                                        <input type="file" id="emoFile" accept="image/*" onchange="previewFile()">
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group full-width">
-                                    <label>Lub Link URL</label>
+                                    <label>Link URL (Wymagany)</label>
                                     <input id="emoUrl" type="text" placeholder="https://...">
+                                    <p style="font-size:10px; color:#64748b; margin-top:5px;">Wklej bezpośredni link do obrazka (np. z imgur.com, catbox.moe). Max 50 znaków.</p>
                                 </div>
                                 
                                 <div id="adminScopeOption" class="form-group full-width" style="display:none;">
@@ -542,7 +531,6 @@
                             </div>
                             
                             <div style="display:flex; align-items:center; gap:20px; margin-top:25px;">
-                                <img id="filePreview" src="" style="display:none; height:60px; border-radius:10px; border:2px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,0.3);">
                                 <button class="btn-primary" style="flex:1; padding:14px; font-size:14px;" onclick="addEmote()">💾 Zapisz w Slocie</button>
                             </div>
                          </div>
@@ -1281,7 +1269,20 @@ window.assignEmote = async function() {
 window.openEmoteDashboard = function() { 
     if(!AppState.user) return; 
     const select = document.getElementById('emoChannel'); select.innerHTML = '';
-    const myOpt = document.createElement('option'); myOpt.value = AppState.user.login; myOpt.text = AppState.user.display_name; select.appendChild(myOpt);
+    
+    // Opcja 1: Twitch (zawsze dostępna)
+    const twOpt = document.createElement('option'); 
+    twOpt.value = AppState.user.login; 
+    twOpt.text = `Twitch: ${AppState.user.display_name}`; 
+    select.appendChild(twOpt);
+    
+    // Opcja 2: Kick (jeśli połączony)
+    if(AppState.kickNick) {
+        const kickOpt = document.createElement('option');
+        kickOpt.value = AppState.kickNick;
+        kickOpt.text = `Kick: ${AppState.kickNick}`;
+        select.appendChild(kickOpt);
+    }
     
     document.getElementById('emotesGalleryView').style.display='none'; 
     document.getElementById('emotesDashboardView').style.display='block';
@@ -1374,6 +1375,13 @@ window.addEmote = async function() {
     const target = document.getElementById('emoChannel').value;
     
     if(!name || !url) return alert("Brak danych");
+    
+    // --- ZABEZPIECZENIE PRZED BASE64 (To ratuje Twój transfer) ---
+    if (url.length > 50 || url.startsWith('data:image')) {
+        alert("⛔ STOP! Ten link jest za długi.\n\nNie wklejaj obrazków bezpośrednio (Base64).\nUżyj krótkiego linku z Catbox.moe lub Imgur (musi kończyć się na .png/.gif).");
+        return;
+    }
+    // -------------------------------------------------------------
     
     const isGlobal = document.getElementById('chkGlobal').checked;
     const scope = (AppState.role === 'ADMIN' && isGlobal) ? 'global' : 'channel';
