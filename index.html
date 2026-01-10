@@ -986,7 +986,13 @@ function renderShop() {
     if(!div) return; div.innerHTML='';
     let hasItems = false;
     ['paint', 'badge'].forEach(cat => {
-        const items = CATALOG.filter(i => i.category === cat && !AppState.owned.includes(i.name));
+        let items = CATALOG.filter(i => i.category === cat && !AppState.owned.includes(i.name));
+        
+        // LIMIT: Show max 5 items per category in shop
+        if(items.length > 5) {
+            items = items.slice(0, 5);
+        }
+
         if(items.length > 0) {
             hasItems = true;
             const title = document.createElement('div'); title.className='shop-section-title'; title.innerText=cat.toUpperCase(); div.appendChild(title);
@@ -1503,7 +1509,7 @@ window.openEncyclopedia = function() {
 }
 
 // DAILY
-const DC = 30000; // 30 sec test
+const DC = 86400000; // 24 hours
 function checkDailyBonus() {
     const btn = document.getElementById('btnDaily'); if(!btn) return;
     
@@ -1519,12 +1525,14 @@ function checkDailyBonus() {
         btn.innerHTML = `<i class="fas fa-clock"></i> ${hrs}h ${mins}m ${secs}s`;
     } else {
         btn.disabled = false;
-        btn.innerHTML = `<i class="fas fa-gift"></i> ODBIERZ +10`;
+        btn.innerHTML = `<i class="fas fa-gift"></i> ODBIERZ +25`;
     }
 }
 window.claimDailyBonus = async function() {
     if(!AppState.user) return;
-    AppState.coins += 10; 
+    if (Date.now() - AppState.lastDaily < DC) return alert("Musisz poczekać 24h!");
+    
+    AppState.coins += 25; 
     AppState.lastDaily = Date.now();
     updateCoinDisplay(); 
     fireConfetti(true);
