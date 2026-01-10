@@ -660,7 +660,8 @@ let AppState = {
     currentEmoteData: null, 
     viewingUser: null, 
     kickNick: null,
-    lastDaily: 0
+    lastDaily: 0,
+    shopActive: [] // NEW: Holds the list of active shop items from API
 };
 
 // CATALOG
@@ -985,14 +986,18 @@ function renderShop() {
     const div = document.getElementById('shopContent');
     if(!div) return; div.innerHTML='';
     let hasItems = false;
-    ['paint', 'badge'].forEach(cat => {
-        let items = CATALOG.filter(i => i.category === cat && !AppState.owned.includes(i.name));
-        
-        // LIMIT: Show max 5 items per category in shop
-        if(items.length > 5) {
-            items = items.slice(0, 5);
-        }
+    
+    // NEW LOGIC: Use AppState.shopActive from API
+    const activeNames = AppState.shopActive || [];
 
+    ['paint', 'badge'].forEach(cat => {
+        // Filter: Must be in CATALOG AND must be in Active API list AND not owned
+        let items = CATALOG.filter(i => 
+            i.category === cat && 
+            activeNames.includes(i.name) && 
+            !AppState.owned.includes(i.name)
+        );
+        
         if(items.length > 0) {
             hasItems = true;
             const title = document.createElement('div'); title.className='shop-section-title'; title.innerText=cat.toUpperCase(); div.appendChild(title);
@@ -1003,7 +1008,7 @@ function renderShop() {
     });
     
     if(!hasItems) {
-        div.innerHTML = '<div class="empty-state-styled" style="padding: 60px;"><i class="fas fa-store-slash" style="font-size:48px; color:#ef4444;"></i><span style="font-size:18px; margin-top:10px; color:#fff;">SKLEP WYPRZEDANY</span><span style="font-weight:400; font-size:12px;">Wykupiłeś wszystko! Wróć później.</span></div>';
+        div.innerHTML = '<div class="empty-state-styled" style="padding: 60px;"><i class="fas fa-store-slash" style="font-size:48px; color:#ef4444;"></i><span style="font-size:18px; margin-top:10px; color:#fff;">SKLEP WYPRZEDANY</span><span style="font-weight:400; font-size:12px;">Wykupiłeś wszystko z obecnej oferty!</span></div>';
     }
 }
 
@@ -1576,6 +1581,32 @@ async function fetchCloudData() {
         const loadoutRes = await fetch(`${DB_URL}/premium/${login}.json`);
         const loadoutData = loadoutRes.ok ? (await loadoutRes.json() || {}) : {};
         AppState.loadout = loadoutData;
+
+        // --- NEW SHOP LOGIC: FETCH ACTIVE SHOP FROM API ---
+        const shopRes = await fetch(`${DB_URL}/shop/active.json`);
+        const activeShop = shopRes.ok ? await shopRes.json() : null;
+
+        if (!activeShop) {
+            // INITIALIZATION: If API is empty, seed it with first 5 items of each category
+            // and put the rest in storage (conceptually, though we just need to set active here)
+            const paints = CATALOG.filter(i => i.category === 'paint');
+            const badges = CATALOG.filter(i => i.category === 'badge');
+            
+            const activePaints = paints.slice(0, 5).map(i => i.name);
+            const activeBadges = badges.slice(0, 5).map(i => i.name);
+            
+            const storagePaints = paints.slice(5).map(i => i.name);
+            const storageBadges = badges.slice(5).map(i => i.name);
+
+            AppState.shopActive = [...activePaints, ...activeBadges];
+            
+            // Save to API
+            await api('shop/active', 'PUT', AppState.shopActive);
+            await api('shop/storage', 'PUT', [...storagePaints, ...storageBadges]);
+        } else {
+            AppState.shopActive = activeShop;
+        }
+        // --------------------------------------------------
         
         updateCoinDisplay();
         checkDailyBonus();
