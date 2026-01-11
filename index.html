@@ -661,15 +661,15 @@ let AppState = {
     viewingUser: null, 
     kickNick: null,
     lastDaily: 0,
-    shopActive: [] // NEW: Holds the list of active shop items from API
+    shopActive: {} // NEW: Holds { "ItemName": Price } from API
 };
 
-// CATALOG
+// CATALOG (Visuals Only - Prices are now in API)
 const CATALOG = [
     {
         name: "Swag ponad Swag bratku",
         category: "paint",
-        price: 1000,
+        price: 1000, // Fallback/Initial price
         type: "gradient",
         value: "linear-gradient(90deg, rgb(208, 78, 78) 0%, rgb(151, 88, 202) 18%, rgb(73, 113, 208) 34%, rgb(0, 255, 251) 54%, rgb(0, 255, 4) 70%, rgb(251, 255, 0) 87%, rgb(255, 115, 0) 100%)",
         filter: "drop-shadow(rgb(255, 0, 0) 0px 0px 1px) drop-shadow(rgb(251, 0, 255) 0px 0px 1px) drop-shadow(rgb(43, 0, 255) 0px 0px 1px) drop-shadow(rgb(0, 255, 238) 0px 0px 1px) drop-shadow(rgb(0, 255, 51) 0px 0px 1px) drop-shadow(rgb(200, 255, 0) 0px 0px 1px) drop-shadow(rgb(255, 123, 0) 0px 0px 1px) drop-shadow(rgb(255, 0, 0) 0px 0px 1px)",
@@ -987,8 +987,9 @@ function renderShop() {
     if(!div) return; div.innerHTML='';
     let hasItems = false;
     
-    // NEW LOGIC: Use AppState.shopActive from API
-    const activeNames = AppState.shopActive || [];
+    // NEW LOGIC: Use AppState.shopActive from API (Object: Name -> Price)
+    const activeShopData = AppState.shopActive || {};
+    const activeNames = Object.keys(activeShopData);
 
     ['paint', 'badge'].forEach(cat => {
         // Filter: Must be in CATALOG AND must be in Active API list AND not owned
@@ -1002,7 +1003,15 @@ function renderShop() {
             hasItems = true;
             const title = document.createElement('div'); title.className='shop-section-title'; title.innerText=cat.toUpperCase(); div.appendChild(title);
             const grid = document.createElement('div'); grid.className='preset-grid'; 
-            items.forEach(i => grid.appendChild(createCard(i, 'shop')));
+            
+            items.forEach(i => {
+                // OVERRIDE PRICE FROM API
+                const apiPrice = activeShopData[i.name];
+                // Create a copy of item with new price for display
+                const itemWithApiPrice = { ...i, price: apiPrice };
+                grid.appendChild(createCard(itemWithApiPrice, 'shop'));
+            });
+            
             div.appendChild(grid);
         }
     });
@@ -1045,10 +1054,17 @@ function createCard(item, mode) {
 
 window.doBuy = async function(name) {
     if(!AppState.user) return;
-    const item = CATALOG.find(i=>i.name===name);
     
-    if(AppState.coins >= item.price) {
-        AppState.coins -= item.price; 
+    // SECURITY: Get price from API state, NOT from local catalog
+    const apiPrice = AppState.shopActive[name];
+    
+    if(apiPrice === undefined) {
+        alert("Błąd: Tego przedmiotu nie ma w aktywnym sklepie (API).");
+        return;
+    }
+    
+    if(AppState.coins >= apiPrice) {
+        AppState.coins -= apiPrice; 
         AppState.owned.push(name);
         
         updateCoinDisplay(); 
@@ -1592,17 +1608,21 @@ async function fetchCloudData() {
             const paints = CATALOG.filter(i => i.category === 'paint');
             const badges = CATALOG.filter(i => i.category === 'badge');
             
-            const activePaints = paints.slice(0, 5).map(i => i.name);
-            const activeBadges = badges.slice(0, 5).map(i => i.name);
-            
-            const storagePaints = paints.slice(5).map(i => i.name);
-            const storageBadges = badges.slice(5).map(i => i.name);
+            // Create Object { "Name": Price }
+            const activeObj = {};
+            const storageObj = {};
 
-            AppState.shopActive = [...activePaints, ...activeBadges];
+            paints.slice(0, 5).forEach(i => activeObj[i.name] = i.price);
+            badges.slice(0, 5).forEach(i => activeObj[i.name] = i.price);
+            
+            paints.slice(5).forEach(i => storageObj[i.name] = i.price);
+            badges.slice(5).forEach(i => storageObj[i.name] = i.price);
+
+            AppState.shopActive = activeObj;
             
             // Save to API
-            await api('shop/active', 'PUT', AppState.shopActive);
-            await api('shop/storage', 'PUT', [...storagePaints, ...storageBadges]);
+            await api('shop/active', 'PUT', activeObj);
+            await api('shop/storage', 'PUT', storageObj);
         } else {
             AppState.shopActive = activeShop;
         }
