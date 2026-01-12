@@ -305,102 +305,23 @@
         border-radius: 14px;
     }
     
-    .info-block { margin-top: 80px; border-top: 1px solid var(--border); padding-top: 50px; text-align: left; }
-    .info-grid-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
-    .info-item { background: var(--panel); padding: 35px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-    .info-item h3 { color: white; margin-top: 0; font-size: 20px; }
+    /* ADMIN SHOP MANAGER STYLES */
+    .admin-shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 20px; }
+    .admin-shop-card { background: #0f172a; border: 1px solid var(--border); padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 15px; }
+    .admin-shop-card img { width: 40px; height: 40px; object-fit: contain; }
+    .admin-shop-card .preview-box { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: #020617; border-radius: 8px; font-weight: 900; font-size: 16px; }
+    .admin-shop-info { flex: 1; }
+    .admin-shop-name { font-size: 12px; font-weight: 700; color: white; margin-bottom: 5px; }
+    .admin-shop-price-input { background: #1e293b; border: 1px solid var(--border); color: white; padding: 5px; border-radius: 6px; width: 80px; font-size: 11px; }
     
-    .manage-section { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 30px; margin-bottom: 30px; }
-    .manage-header { font-size: 20px; font-weight: 800; color: white; margin-bottom: 20px; display:flex; align-items:center; gap:10px; }
-    .mod-item { display: flex; justify-content: space-between; align-items: center; background: #020617; padding: 15px; border-radius: 10px; border: 1px solid var(--border); font-size: 14px; font-weight: 600; }
-    .btn-remove-mod { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; transition: 0.2s; }
-    .btn-remove-mod:hover { background: rgba(239, 68, 68, 0.2); }
-    
-    .fixed-bottom-controls { position: fixed; bottom: 90px; left: 25px; display: none; gap: 10px; z-index: 999; align-items: center; }
-    .role-badge, .connections-btn { height: 28px; display: flex; align-items: center; justify-content: center; padding: 0 12px; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid var(--border); background: #0f172a; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: 0.2s; }
-    .role-user { border-color: rgba(34, 197, 94, 0.3); color: var(--success); }
-    .role-admin { border-color: rgba(239, 68, 68, 0.3); color: var(--danger); cursor: pointer; }
-    .role-admin:hover { transform: scale(1.05); background: rgba(239, 68, 68, 0.1); }
-    .connections-btn { color: var(--text-muted); cursor: pointer; text-decoration: none; }
-    .connections-btn:hover { border-color: var(--accent); color: white; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(56, 189, 248, 0.2); }
-    .btn-login { background: var(--twitch); color: white; border: none; padding: 10px 24px; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 0 20px rgba(145, 70, 255, 0.2); font-size: 14px; }
-    .btn-login:hover { background: #772ce8; transform: translateY(-2px); box-shadow: 0 0 30px rgba(145, 70, 255, 0.4); }
+    /* TOGGLE SWITCH */
+    .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #334155; transition: .4s; border-radius: 20px; }
+    .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: var(--success); }
+    input:checked + .slider:before { transform: translateX(20px); }
 
-    .user-profile-floater { position: fixed; bottom: 20px; left: 20px; z-index: 900; display: none; align-items: center; gap: 12px; background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border); padding: 8px 15px 8px 8px; border-radius: 50px; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); transition: transform 0.2s; }
-    .user-profile-floater:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 10px 40px rgba(56, 189, 248, 0.15); }
-    .floater-avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--twitch); }
-    .floater-info { display: flex; flex-direction: column; line-height: 1.1; }
-    .floater-name { font-weight: 700; color: white; font-size: 13px; }
-    .btn-logout-mini { background: none; border: none; color: var(--text-muted); font-size: 10px; cursor: pointer; padding: 0; text-align: left; font-weight: 600; transition: color 0.2s; }
-    .btn-logout-mini:hover { color: var(--danger); }
-
-    .dashboard-full-container { display: flex; flex-direction: column; gap: 30px; }
-    
-    .emote-slots-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; background: var(--panel); padding: 20px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 50%; margin: 0 auto; }
-    @media (max-width: 800px) { .emote-slots-bar { grid-template-columns: repeat(3, 1fr); max-width: 90%; } }
-    
-    .slot-box { aspect-ratio: 1/1; background: #020617; border: 2px dashed var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: 0.2s; overflow: hidden; }
-    .slot-box:hover { border-color: var(--accent); background: rgba(56, 189, 248, 0.05); }
-    
-    .slot-box.pending { border-style: solid; border-color: var(--yellow); background: var(--panel); }
-    .slot-box.approved { border-style: solid; border-color: var(--success); background: var(--panel); }
-    
-    .slot-content-img { width: 60%; height: 60%; object-fit: contain; }
-    .slot-empty-icon { color: var(--border-hover); font-size: 24px; }
-    .slot-box:hover .slot-empty-icon { color: var(--accent); }
-    
-    .slot-status-tag { position: absolute; bottom: 5px; left:0; width:100%; text-align: center; font-size: 9px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); pointer-events: none; }
-    .pending .slot-status-tag { color: var(--yellow); }
-    .approved .slot-status-tag { color: var(--success); display: none; }
-
-    .slot-del-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(239, 68, 68, 0.8); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: white; font-weight: 900; font-size: 12px; }
-    .slot-box.filled:hover .slot-del-overlay { opacity: 1; }
-
-    .upload-area-styled { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 40px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); position: relative; animation: slideDown 0.3s ease-out; max-width: 600px; margin: 0 auto; }
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-    .form-group input, .form-group select, .modal-content input, .manage-section input { width: 100%; background: #020617; border: 1px solid var(--border-hover); padding: 14px 16px; border-radius: 12px; color: white; font-family: 'Outfit', sans-serif; font-size: 14px; transition: all 0.2s ease; outline: none; }
-    .form-group input:focus, .form-group select:focus, .modal-content input:focus { border-color: var(--accent); background: #0f172a; box-shadow: 0 0 0 3px var(--accent-glow); }
-    .form-group select { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; }
-    
-    .form-group { margin-bottom: 20px; }
-    .form-group label { display: block; color: var(--text-muted); font-size: 12px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 4px; }
-    .emote-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .form-group.full-width { grid-column: span 2; }
-
-    .file-drop-zone { border: 2px dashed var(--border-hover); border-radius: 16px; padding: 30px; text-align: center; background: rgba(15, 23, 42, 0.5); transition: 0.2s; cursor: pointer; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
-    .file-drop-zone:hover { border-color: var(--accent); background: rgba(56, 189, 248, 0.05); }
-    .file-drop-zone input[type="file"] { position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer; }
-    .file-info { font-weight: 600; color: var(--text); pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 13px; }
-    .file-info i { font-size: 24px; color: var(--accent); margin-bottom: 5px; }
-
-    .vote-controls { display: flex; gap: 15px; justify-content: center; margin-top: 15px; }
-    .vote-btn { background: #1e293b; border: 1px solid var(--border); color: #94a3b8; padding: 5px 12px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; font-size: 13px; font-weight: 600; }
-    .vote-btn:hover { background: #334155; color: white; }
-    .vote-btn.active.up { color: var(--success); border-color: var(--success); background: rgba(34, 197, 94, 0.1); }
-    .vote-btn.active.down { color: var(--danger); border-color: var(--danger); background: rgba(239, 68, 68, 0.1); }
-    .author-link { color: var(--accent); cursor: pointer; font-weight: bold; text-decoration: underline; }
-
-    .collection-stats-btn { position: absolute; bottom: 20px; right: 40px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); padding: 8px 16px; border-radius: 12px; cursor: pointer; color: var(--text-muted); font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 8px; transition: 0.2s; z-index: 15; backdrop-filter: blur(5px); }
-    .collection-stats-btn:hover { background: var(--panel); color: white; border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-    .encyclo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; padding: 20px; max-height: 400px; overflow-y: auto; }
-    .encyclo-item { background: #020617; border: 1px solid var(--border); border-radius: 10px; padding: 15px; text-align: center; opacity: 0.3; filter: grayscale(1); transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100px; }
-    .encyclo-item.owned { opacity: 1; filter: grayscale(0); border-color: var(--success); box-shadow: 0 0 15px rgba(34, 197, 94, 0.1); background: rgba(34, 197, 94, 0.02); }
-    .encyclo-name { font-size: 10px; font-weight: 700; color: white; margin-top: 10px; text-transform: uppercase; }
-
-    /* ADMIN STYLES - FULL PAGE */
-    .admin-grid-full { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; margin-top: 30px; }
-    .admin-card-full { background: #020617; border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px; position: relative; transition: 0.2s; }
-    .admin-card-full:hover { border-color: var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-    .admin-card-full img { width: 100px; height: 100px; object-fit: contain; filter: blur(12px); transition: 0.3s; cursor: help; }
-    .admin-card-full img:hover { filter: blur(0); }
-    .admin-actions { display: flex; gap: 10px; width: 100%; margin-top: 10px; }
-    .btn-adm { flex: 1; border: none; padding: 10px; border-radius: 8px; font-weight: 800; cursor: pointer; color: #fff; font-size: 12px; transition: 0.2s; }
-    .btn-approve { background: var(--success); color: #000; box-shadow: 0 4px 15px rgba(34,197,94,0.3); }
-    .btn-approve:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(34,197,94,0.4); }
-    .btn-reject { background: var(--danger); box-shadow: 0 4px 15px rgba(239,68,68,0.3); }
-    .btn-reject:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239,68,68,0.4); }
-    
     .hidden { display: none !important; }
 </style>
 </head>
@@ -651,6 +572,15 @@
             <p style="color:var(--text-muted); margin-bottom:20px;">Zatwierdzaj lub odrzucaj emotki zgłoszone przez użytkowników. Zdjęcia są domyślnie zamazane.</p>
             <div id="adminQueueGrid" class="admin-grid-full">
                 <!-- Content injected by JS -->
+            </div>
+            
+            <!-- NEW: SHOP MANAGEMENT SECTION -->
+            <div id="adminShopManage" style="margin-top: 50px; border-top: 1px solid var(--border); padding-top: 30px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h3 style="color:white; margin:0;"><i class="fas fa-store"></i> Zarządzanie Ofertą Sklepu</h3>
+                    <button class="btn-primary" onclick="saveShopConfig()">ZAPISZ ZMIANY</button>
+                </div>
+                <div id="adminShopGrid" class="admin-shop-grid"></div>
             </div>
         </div>
     </div>
@@ -1534,6 +1464,9 @@ window.openAdminPanel = function() {
             grid.appendChild(div);
         });
     }
+    
+    // NEW: RENDER SHOP MANAGER
+    renderAdminShop();
 }
 
 window.adminReview = async function(key, approved) {
@@ -1548,6 +1481,74 @@ window.adminReview = async function(key, approved) {
     // Refresh local data & UI
     await loadAllEmotes();
     openAdminPanel(); // Refresh list
+}
+
+// --- NEW: ADMIN SHOP MANAGER ---
+async function renderAdminShop() {
+    const grid = document.getElementById('adminShopGrid');
+    if(!grid) return;
+    grid.innerHTML = 'Ładowanie sklepu...';
+    
+    // Fetch both active and storage to know current state
+    const activeRes = await fetch(`${DB_URL}/shop/active.json`);
+    const storageRes = await fetch(`${DB_URL}/shop/storage.json`);
+    
+    const active = activeRes.ok ? await activeRes.json() || {} : {};
+    const storage = storageRes.ok ? await storageRes.json() || {} : {};
+    
+    grid.innerHTML = '';
+    
+    CATALOG.forEach(item => {
+        const isActive = active.hasOwnProperty(item.name);
+        // Price priority: Active > Storage > Default
+        const currentPrice = isActive ? active[item.name] : (storage[item.name] || item.price);
+        
+        const div = document.createElement('div');
+        div.className = 'admin-shop-card';
+        
+        let preview = item.category === 'badge' ? `<img src="${item.value}">` : `<div class="preview-box" style="${item.previewStyle}">Aa</div>`;
+        
+        div.innerHTML = `
+            ${preview}
+            <div class="admin-shop-info">
+                <div class="admin-shop-name">${item.name}</div>
+                <input type="number" id="price_${item.name.replace(/\s/g, '')}" class="admin-shop-price-input" value="${currentPrice}">
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="check_${item.name.replace(/\s/g, '')}" ${isActive ? 'checked' : ''}>
+                <span class="slider"></span>
+            </label>
+        `;
+        grid.appendChild(div);
+    });
+}
+
+window.saveShopConfig = async function() {
+    if(AppState.role !== 'ADMIN') return;
+    
+    const newActive = {};
+    const newStorage = {};
+    
+    CATALOG.forEach(item => {
+        const id = item.name.replace(/\s/g, '');
+        const isChecked = document.getElementById(`check_${id}`).checked;
+        const priceVal = parseInt(document.getElementById(`price_${id}`).value);
+        
+        if(isChecked) {
+            newActive[item.name] = priceVal;
+        } else {
+            newStorage[item.name] = priceVal;
+        }
+    });
+    
+    // Send to API
+    await api('shop/active', 'PUT', newActive);
+    await api('shop/storage', 'PUT', newStorage);
+    
+    alert("Sklep zaktualizowany!");
+    // Refresh local state
+    AppState.shopActive = newActive;
+    renderShop();
 }
 
 // HELPERS
