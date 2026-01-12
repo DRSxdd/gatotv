@@ -32,7 +32,7 @@
         background: linear-gradient(to bottom, #0f172a, var(--bg)); 
         color: var(--text); 
         min-height: 100vh; 
-        padding-bottom: 80px; /* Zwiększony padding na dole dla floaters */
+        padding-bottom: 80px; 
         overflow-x: hidden; 
     }
     
@@ -135,7 +135,17 @@
     .profile-content-area { padding: 30px; }
     .profile-section-title { font-size: 18px; font-weight: 800; color: white; margin-bottom: 20px; border-left: 4px solid var(--twitch); padding-left: 15px; display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; }
     
-    .chat-preview-container { max-width: 600px; margin: 0 auto 30px auto; background: #020617; border: 1px solid var(--border); border-radius: 12px; padding: 15px 25px; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 10; flex-wrap: wrap; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    /* STICKY PREVIEW FIX */
+    .chat-preview-container { 
+        max-width: 600px; margin: 0 auto 30px auto; 
+        background: #020617; border: 1px solid var(--border); 
+        border-radius: 12px; padding: 15px 25px; 
+        font-family: 'Inter', sans-serif; 
+        display: flex; align-items: center; justify-content: space-between; 
+        position: sticky; top: 80px; z-index: 90; /* STICKY FIX */
+        flex-wrap: wrap; gap: 10px; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+    }
     .chat-preview-container.light { background: #f8fafc; border-color: #cbd5e1; }
     .chat-preview-container.light .chat-msg { color: #0f172a; }
     .chat-preview-container.light .chat-time { color: #64748b; }
@@ -305,35 +315,6 @@
         border-radius: 14px;
     }
     
-    .info-block { margin-top: 80px; border-top: 1px solid var(--border); padding-top: 50px; text-align: left; }
-    .info-grid-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
-    .info-item { background: var(--panel); padding: 35px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-    .info-item h3 { color: white; margin-top: 0; font-size: 20px; }
-    
-    .manage-section { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 30px; margin-bottom: 30px; }
-    .manage-header { font-size: 20px; font-weight: 800; color: white; margin-bottom: 20px; display:flex; align-items:center; gap:10px; }
-    .mod-item { display: flex; justify-content: space-between; align-items: center; background: #020617; padding: 15px; border-radius: 10px; border: 1px solid var(--border); font-size: 14px; font-weight: 600; }
-    .btn-remove-mod { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; transition: 0.2s; }
-    .btn-remove-mod:hover { background: rgba(239, 68, 68, 0.2); }
-    
-    .fixed-bottom-controls { position: fixed; bottom: 90px; left: 25px; display: none; gap: 10px; z-index: 999; align-items: center; }
-    .role-badge, .connections-btn { height: 28px; display: flex; align-items: center; justify-content: center; padding: 0 12px; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid var(--border); background: #0f172a; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: 0.2s; }
-    .role-user { border-color: rgba(34, 197, 94, 0.3); color: var(--success); }
-    .role-admin { border-color: rgba(239, 68, 68, 0.3); color: var(--danger); cursor: pointer; }
-    .role-admin:hover { transform: scale(1.05); background: rgba(239, 68, 68, 0.1); }
-    .connections-btn { color: var(--text-muted); cursor: pointer; text-decoration: none; }
-    .connections-btn:hover { border-color: var(--accent); color: white; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(56, 189, 248, 0.2); }
-    .btn-login { background: var(--twitch); color: white; border: none; padding: 10px 24px; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 0 20px rgba(145, 70, 255, 0.2); font-size: 14px; }
-    .btn-login:hover { background: #772ce8; transform: translateY(-2px); box-shadow: 0 0 30px rgba(145, 70, 255, 0.4); }
-
-    .user-profile-floater { position: fixed; bottom: 20px; left: 20px; z-index: 900; display: none; align-items: center; gap: 12px; background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border); padding: 8px 15px 8px 8px; border-radius: 50px; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); transition: transform 0.2s; }
-    .user-profile-floater:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 10px 40px rgba(56, 189, 248, 0.15); }
-    .floater-avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--twitch); }
-    .floater-info { display: flex; flex-direction: column; line-height: 1.1; }
-    .floater-name { font-weight: 700; color: white; font-size: 13px; }
-    .btn-logout-mini { background: none; border: none; color: var(--text-muted); font-size: 10px; cursor: pointer; padding: 0; text-align: left; font-weight: 600; transition: color 0.2s; }
-    .btn-logout-mini:hover { color: var(--danger); }
-
     /* ADMIN SHOP MANAGER STYLES */
     .admin-shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 20px; }
     .admin-shop-card { background: #0f172a; border: 1px solid var(--border); padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 15px; }
@@ -351,6 +332,40 @@
     input:checked + .slider { background-color: var(--success); }
     input:checked + .slider:before { transform: translateX(20px); }
 
+    /* DESIGN FIXES FOR EMOTE SLOTS & UPLOAD */
+    .emote-slots-bar {
+        display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px;
+        background: var(--panel); padding: 25px; border-radius: 20px;
+        border: 1px solid var(--border); margin: 0 auto 30px auto;
+        max-width: 800px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .slot-box {
+        aspect-ratio: 1/1; background: rgba(0,0,0,0.3);
+        border: 2px dashed var(--border-hover); border-radius: 16px;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; transition: 0.2s; position: relative; overflow: hidden;
+    }
+    .slot-box:hover { border-color: var(--accent); background: rgba(56, 189, 248, 0.05); }
+    .slot-box.filled { border-style: solid; border-color: var(--border); background: var(--panel); }
+    .slot-box.pending { border-color: var(--yellow); }
+    .slot-box.approved { border-color: var(--success); }
+
+    .upload-area-styled {
+        background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(12px);
+        border: 1px solid var(--border); border-radius: 24px; padding: 30px;
+        max-width: 600px; margin: 0 auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .collection-stats-btn {
+        position: absolute; bottom: 20px; right: 40px;
+        background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border);
+        padding: 8px 16px; border-radius: 12px; cursor: pointer;
+        color: var(--text-muted); font-weight: 800; font-size: 13px;
+        display: flex; align-items: center; gap: 8px; transition: 0.2s;
+        z-index: 15; backdrop-filter: blur(5px);
+    }
+    .collection-stats-btn:hover { background: var(--panel); color: white; border-color: var(--accent); }
+
     .hidden { display: none !important; }
 </style>
 </head>
@@ -358,7 +373,7 @@
 
 <header>
     <div class="header-left">
-        <div class="logo" onclick="location.reload()">Gato.TV <span class="beta-tag">SECURE</span></div>
+        <div class="logo" onclick="location.reload()">Gato.TV <span class="beta-tag">BETA</span></div>
         <div id="loginBtnContainer">
             <button class="btn-login-header" onclick="loginWithTwitch()">Zaloguj</button>
         </div>
@@ -1237,7 +1252,9 @@ function createCard(item, mode) {
               `<button class="btn-action btn-equip" onclick="doEquip('${item.name}')">ZAŁÓŻ</button>`;
     } else btn = `<span style="font-size:10px; color:#aaa">POSIADASZ</span>`;
     
-    let view = item.category === 'badge' ? `<img src="${item.value}" class="gato-badge-preview">` : `<div style="${item.previewStyle}">Aa</div>`;
+    let view = item.category === 'badge' ? 
+        `<img src="${item.value}" class="gato-badge-preview">` : 
+        `<div style="${item.previewStyle}; font-size: 16px;">Nickname</div>`;
     
     d.innerHTML = `<span class="category-badge cat-${item.category}">${item.category}</span><div class="card-preview">${view}</div><div class="card-info"><div class="preset-name">${item.name}</div>${btn}</div>`;
     return d;
@@ -1707,7 +1724,9 @@ async function renderAdminShop() {
         const div = document.createElement('div');
         div.className = 'admin-shop-card';
         
-        let preview = item.category === 'badge' ? `<img src="${item.value}">` : `<div class="preview-box" style="${item.previewStyle}">Aa</div>`;
+        let preview = item.category === 'badge' ? 
+            `<img src="${item.value}">` : 
+            `<div class="preview-box" style="${item.previewStyle}; font-size: 10px;">Nickname</div>`;
         
         // FIX: Use index for ID to avoid issues with spaces/special chars
         div.innerHTML = `
