@@ -32,7 +32,7 @@
         background: linear-gradient(to bottom, #0f172a, var(--bg)); 
         color: var(--text); 
         min-height: 100vh; 
-        padding-bottom: 80px; 
+        padding-bottom: 100px; /* Miejsce na dolny panel */
         overflow-x: hidden; 
     }
     
@@ -46,7 +46,7 @@
         border-bottom: 1px solid var(--border); 
         position: sticky; 
         top: 0; 
-        z-index: 100; 
+        z-index: 1000; 
         box-shadow: 0 4px 20px rgba(0,0,0,0.4); 
     }
     
@@ -136,13 +136,20 @@
     .profile-section-title { font-size: 18px; font-weight: 800; color: white; margin-bottom: 20px; border-left: 4px solid var(--twitch); padding-left: 15px; display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; }
     
     /* STICKY PREVIEW FIX */
+    .sticky-preview-wrapper {
+        position: sticky;
+        top: 70px; /* Height of header + margin */
+        z-index: 90;
+        background: var(--bg); /* Cover content behind */
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
     .chat-preview-container { 
-        max-width: 600px; margin: 0 auto 30px auto; 
+        max-width: 600px; margin: 0 auto; 
         background: #020617; border: 1px solid var(--border); 
         border-radius: 12px; padding: 15px 25px; 
         font-family: 'Inter', sans-serif; 
         display: flex; align-items: center; justify-content: space-between; 
-        position: sticky; top: 80px; z-index: 90; /* STICKY FIX */
         flex-wrap: wrap; gap: 10px; 
         box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
     }
@@ -366,6 +373,26 @@
     }
     .collection-stats-btn:hover { background: var(--panel); color: white; border-color: var(--accent); }
 
+    /* FIXED BOTTOM LEFT PROFILE */
+    .user-profile-floater {
+        position: fixed; bottom: 20px; left: 20px; z-index: 900;
+        display: flex; align-items: center; gap: 12px;
+        background: rgba(15, 23, 42, 0.95); border: 1px solid var(--border);
+        padding: 8px 15px 8px 8px; border-radius: 50px;
+        backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        transition: transform 0.2s;
+    }
+    .user-profile-floater:hover { transform: translateY(-3px); border-color: var(--accent); }
+    .floater-avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--twitch); object-fit: cover; }
+    .floater-info { display: flex; flex-direction: column; line-height: 1.2; }
+    .floater-name { font-weight: 700; color: white; font-size: 13px; }
+    .btn-logout-mini {
+        background: none; border: none; color: var(--text-muted);
+        font-size: 10px; cursor: pointer; padding: 0;
+        text-align: left; font-weight: 700; transition: color 0.2s;
+    }
+    .btn-logout-mini:hover { color: var(--danger); }
+
     .hidden { display: none !important; }
 </style>
 </head>
@@ -461,7 +488,7 @@
                 <button id="btnDaily" class="btn-daily" onclick="claimDailyBonus()"><i class="fas fa-gift"></i> ŁADOWANIE...</button>
             </div>
             
-            <div style="margin-bottom:30px;">
+            <div class="sticky-preview-wrapper">
                 <div class="chat-preview-container">
                     <div class="chat-line">
                         <span class="chat-time">12:30</span>
