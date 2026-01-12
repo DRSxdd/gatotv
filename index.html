@@ -1339,17 +1339,22 @@ window.voteEmote = async function(val) {
 
 window.assignEmote = async function() {
     if(!AppState.user) return;
-    // When assigning existing emote to channel, keep original status/auth, or re-approve? 
-    // Here we just update reference. Actually this logic was flawed in original code (overwriting object).
-    // Let's assume assigning doesn't change global status.
-    await api(`emotes/${AppState.currentEmoteKey}`, "PUT", { 
-        url: AppState.currentEmoteData.url, 
-        author: AppState.currentEmoteData.author, 
+    
+    // FIX: Używamy PATCH, aby zmienić TYLKO pole 'channel' i 'scope'
+    // Nie ruszamy autora ani URL, dzięki czemu baza danych to zaakceptuje
+    await api(`emotes/${AppState.currentEmoteKey}`, "PATCH", { 
         scope: 'channel', 
-        channel: AppState.user.login, 
-        status: AppState.currentEmoteData.status || 'approved' 
+        channel: AppState.user.login
     });
-    alert("Przypisano!"); closeModal();
+    
+    alert("Przypisano emotkę do Twojego kanału!"); 
+    closeModal();
+    
+    // Odśwież widoki
+    loadAllEmotes();
+    if(document.getElementById('profile').classList.contains('active')) {
+        renderProfileEmotes('channel');
+    }
 }
 
 // MANAGE & NEW DASHBOARD
@@ -1388,17 +1393,21 @@ window.delEmote = async function(p) {
     const e = AppState.emotes[p];
     if(!e) return;
     
-    // Allow Admin to force delete, or Author to delete
+    // Logika usuwania
     if(AppState.role === 'ADMIN' || e.author === AppState.user.display_name) {
+        // Jeśli jesteś autorem lub adminem -> Usuwasz całkowicie z bazy
         if(confirm("USUNĄĆ CAŁKOWICIE Z BAZY DANYCH? (Dla Admina/Autora oznacza trwałe usunięcie)")) {
             await api(`emotes/${p}`, "DELETE");
         }
     } else {
-        // Just a user removing an assigned emote from their channel
-        await api(`emotes/${p}`, "PATCH", { channel: "" });
+        // Jeśli tylko masz ją przypisaną -> Odpinasz (czyścisz pole channel)
+        if(confirm("Odpiąć emotkę z kanału?")) {
+            await api(`emotes/${p}`, "PATCH", { channel: "" });
+        }
     }
     
-    loadAllEmotes(); 
+    // Odświeżanie
+    await loadAllEmotes(); 
     renderEmoteSlots(); 
     renderProfileEmotes('channel'); 
 }
