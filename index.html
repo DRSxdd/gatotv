@@ -243,11 +243,6 @@
     .wip-icon { font-size: 80px; color: #1e293b; animation: pulse 2s infinite; }
     @keyframes pulse { 0% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.1); opacity: 0.7; } 100% { transform: scale(1); opacity: 0.3; } }
     
-    .hero-card { background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(0,0,0,0)); border: 1px solid var(--border); border-radius: 24px; padding: 80px 40px; text-align: center; margin-top: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
-    .hero-card h1 { font-size: 42px; font-weight: 900; margin-bottom: 15px; background: linear-gradient(90deg, #fff, #94a3b8); -webkit-background-clip: text; color: transparent; letter-spacing: -1px; }
-    .btn-download-big { background: var(--yellow); color: #000; font-size: 18px; font-weight: 900; padding: 18px 45px; border: none; border-radius: 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin-top: 30px; box-shadow: 0 10px 30px rgba(250, 204, 21, 0.3); transition: 0.2s; }
-    .btn-download-big:hover { transform: translateY(-3px); box-shadow: 0 20px 50px rgba(250, 204, 21, 0.4); }
-    
     /* NEW DOWNLOAD SECTION STYLES (2026 Modern) */
     .download-hero {
         position: relative;
@@ -310,89 +305,6 @@
         border-radius: 14px;
     }
     
-    .info-block { margin-top: 80px; border-top: 1px solid var(--border); padding-top: 50px; text-align: left; }
-    .info-grid-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
-    .info-item { background: var(--panel); padding: 35px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-    .info-item h3 { color: white; margin-top: 0; font-size: 20px; }
-    
-    .manage-section { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 30px; margin-bottom: 30px; }
-    .manage-header { font-size: 20px; font-weight: 800; color: white; margin-bottom: 20px; display:flex; align-items:center; gap:10px; }
-    .mod-item { display: flex; justify-content: space-between; align-items: center; background: #020617; padding: 15px; border-radius: 10px; border: 1px solid var(--border); font-size: 14px; font-weight: 600; }
-    .btn-remove-mod { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; transition: 0.2s; }
-    .btn-remove-mod:hover { background: rgba(239, 68, 68, 0.2); }
-    
-    .fixed-bottom-controls { position: fixed; bottom: 90px; left: 25px; display: none; gap: 10px; z-index: 999; align-items: center; }
-    .role-badge, .connections-btn { height: 28px; display: flex; align-items: center; justify-content: center; padding: 0 12px; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid var(--border); background: #0f172a; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: 0.2s; }
-    .role-user { border-color: rgba(34, 197, 94, 0.3); color: var(--success); }
-    .role-admin { border-color: rgba(239, 68, 68, 0.3); color: var(--danger); cursor: pointer; }
-    .role-admin:hover { transform: scale(1.05); background: rgba(239, 68, 68, 0.1); }
-    .connections-btn { color: var(--text-muted); cursor: pointer; text-decoration: none; }
-    .connections-btn:hover { border-color: var(--accent); color: white; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(56, 189, 248, 0.2); }
-    .btn-login { background: var(--twitch); color: white; border: none; padding: 10px 24px; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 0 20px rgba(145, 70, 255, 0.2); font-size: 14px; }
-    .btn-login:hover { background: #772ce8; transform: translateY(-2px); box-shadow: 0 0 30px rgba(145, 70, 255, 0.4); }
-
-    .user-profile-floater { position: fixed; bottom: 20px; left: 20px; z-index: 900; display: none; align-items: center; gap: 12px; background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border); padding: 8px 15px 8px 8px; border-radius: 50px; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); transition: transform 0.2s; }
-    .user-profile-floater:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 10px 40px rgba(56, 189, 248, 0.15); }
-    .floater-avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--twitch); }
-    .floater-info { display: flex; flex-direction: column; line-height: 1.1; }
-    .floater-name { font-weight: 700; color: white; font-size: 13px; }
-    .btn-logout-mini { background: none; border: none; color: var(--text-muted); font-size: 10px; cursor: pointer; padding: 0; text-align: left; font-weight: 600; transition: color 0.2s; }
-    .btn-logout-mini:hover { color: var(--danger); }
-
-    .dashboard-full-container { display: flex; flex-direction: column; gap: 30px; }
-    
-    .emote-slots-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; background: var(--panel); padding: 20px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 50%; margin: 0 auto; }
-    @media (max-width: 800px) { .emote-slots-bar { grid-template-columns: repeat(3, 1fr); max-width: 90%; } }
-    
-    .slot-box { aspect-ratio: 1/1; background: #020617; border: 2px dashed var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: 0.2s; overflow: hidden; }
-    .slot-box:hover { border-color: var(--accent); background: rgba(56, 189, 248, 0.05); }
-    
-    .slot-box.pending { border-style: solid; border-color: var(--yellow); background: var(--panel); }
-    .slot-box.approved { border-style: solid; border-color: var(--success); background: var(--panel); }
-    
-    .slot-content-img { width: 60%; height: 60%; object-fit: contain; }
-    .slot-empty-icon { color: var(--border-hover); font-size: 24px; }
-    .slot-box:hover .slot-empty-icon { color: var(--accent); }
-    
-    .slot-status-tag { position: absolute; bottom: 5px; left:0; width:100%; text-align: center; font-size: 9px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); pointer-events: none; }
-    .pending .slot-status-tag { color: var(--yellow); }
-    .approved .slot-status-tag { color: var(--success); display: none; }
-
-    .slot-del-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(239, 68, 68, 0.8); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: white; font-weight: 900; font-size: 12px; }
-    .slot-box.filled:hover .slot-del-overlay { opacity: 1; }
-
-    .upload-area-styled { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 40px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); position: relative; animation: slideDown 0.3s ease-out; max-width: 600px; margin: 0 auto; }
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-    .form-group input, .form-group select, .modal-content input, .manage-section input { width: 100%; background: #020617; border: 1px solid var(--border-hover); padding: 14px 16px; border-radius: 12px; color: white; font-family: 'Outfit', sans-serif; font-size: 14px; transition: all 0.2s ease; outline: none; }
-    .form-group input:focus, .form-group select:focus, .modal-content input:focus { border-color: var(--accent); background: #0f172a; box-shadow: 0 0 0 3px var(--accent-glow); }
-    .form-group select { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; }
-    
-    .form-group { margin-bottom: 20px; }
-    .form-group label { display: block; color: var(--text-muted); font-size: 12px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 4px; }
-    .emote-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .form-group.full-width { grid-column: span 2; }
-
-    .file-drop-zone { border: 2px dashed var(--border-hover); border-radius: 16px; padding: 30px; text-align: center; background: rgba(15, 23, 42, 0.5); transition: 0.2s; cursor: pointer; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
-    .file-drop-zone:hover { border-color: var(--accent); background: rgba(56, 189, 248, 0.05); }
-    .file-drop-zone input[type="file"] { position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer; }
-    .file-info { font-weight: 600; color: var(--text); pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 13px; }
-    .file-info i { font-size: 24px; color: var(--accent); margin-bottom: 5px; }
-
-    .vote-controls { display: flex; gap: 15px; justify-content: center; margin-top: 15px; }
-    .vote-btn { background: #1e293b; border: 1px solid var(--border); color: #94a3b8; padding: 5px 12px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; font-size: 13px; font-weight: 600; }
-    .vote-btn:hover { background: #334155; color: white; }
-    .vote-btn.active.up { color: var(--success); border-color: var(--success); background: rgba(34, 197, 94, 0.1); }
-    .vote-btn.active.down { color: var(--danger); border-color: var(--danger); background: rgba(239, 68, 68, 0.1); }
-    .author-link { color: var(--accent); cursor: pointer; font-weight: bold; text-decoration: underline; }
-
-    .collection-stats-btn { position: absolute; bottom: 20px; right: 40px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); padding: 8px 16px; border-radius: 12px; cursor: pointer; color: var(--text-muted); font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 8px; transition: 0.2s; z-index: 15; backdrop-filter: blur(5px); }
-    .collection-stats-btn:hover { background: var(--panel); color: white; border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-    .encyclo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; padding: 20px; max-height: 400px; overflow-y: auto; }
-    .encyclo-item { background: #020617; border: 1px solid var(--border); border-radius: 10px; padding: 15px; text-align: center; opacity: 0.3; filter: grayscale(1); transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100px; }
-    .encyclo-item.owned { opacity: 1; filter: grayscale(0); border-color: var(--success); box-shadow: 0 0 15px rgba(34, 197, 94, 0.1); background: rgba(34, 197, 94, 0.02); }
-    .encyclo-name { font-size: 10px; font-weight: 700; color: white; margin-top: 10px; text-transform: uppercase; }
-
     /* ADMIN SHOP MANAGER STYLES */
     .admin-shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 20px; }
     .admin-shop-card { background: #0f172a; border: 1px solid var(--border); padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 15px; }
@@ -765,6 +677,7 @@ const CATALOG = [
     {
         name: "Swag ponad Swag bratku",
         category: "paint",
+        price: 1000,
         type: "gradient",
         value: "linear-gradient(90deg, rgb(208, 78, 78) 0%, rgb(151, 88, 202) 18%, rgb(73, 113, 208) 34%, rgb(0, 255, 251) 54%, rgb(0, 255, 4) 70%, rgb(251, 255, 0) 87%, rgb(255, 115, 0) 100%)",
         filter: "drop-shadow(rgb(255, 0, 0) 0px 0px 1px) drop-shadow(rgb(251, 0, 255) 0px 0px 1px) drop-shadow(rgb(43, 0, 255) 0px 0px 1px) drop-shadow(rgb(0, 255, 238) 0px 0px 1px) drop-shadow(rgb(0, 255, 51) 0px 0px 1px) drop-shadow(rgb(200, 255, 0) 0px 0px 1px) drop-shadow(rgb(255, 123, 0) 0px 0px 1px) drop-shadow(rgb(255, 0, 0) 0px 0px 1px)",
@@ -773,6 +686,7 @@ const CATALOG = [
     { 
         name: "King Crown", 
         category: "badge", 
+        price: 50,
         type: "badge", 
         value: "https://cdn-icons-png.flaticon.com/128/2545/2545603.png", 
         previewStyle: "" 
@@ -780,6 +694,7 @@ const CATALOG = [
     {
         name: "Lunar Lantern",
         category: "paint",
+        price: 100,
         type: "gradient",
         value: "linear-gradient(90deg, rgb(200, 35, 40) 1%, rgb(250, 170, 40) 20%, rgb(255, 215, 75) 40%, rgb(245, 135, 140) 60%, rgb(160, 40, 40) 80%, rgb(200, 150, 5) 99%)",
         filter: "drop-shadow(rgba(255, 40, 40, 0.255) 0.55px 0px 0.86px) drop-shadow(rgba(255, 40, 40, 0.255) -0.55px 0px 0.86px) drop-shadow(rgba(255, 40, 40, 0.255) 0px 0.55px 0.86px) drop-shadow(rgba(255, 40, 40, 0.255) 0px -0.55px 0.86px)",
@@ -788,6 +703,7 @@ const CATALOG = [
     {
         name: "Fairy Glow",
         category: "paint",
+        price: 100,
         type: "gradient",
         value: "linear-gradient(90deg, rgb(255, 164, 182) 0%, rgb(255, 255, 255) 20%, rgb(255, 164, 182) 40%, rgb(255, 255, 255) 60%, rgb(255, 164, 182) 80%, rgb(255, 255, 255) 100%)",
         filter: "drop-shadow(rgb(221, 90, 160) 0px 0px 8px)",
@@ -796,6 +712,7 @@ const CATALOG = [
     {
         name: "Summer",
         category: "paint",
+        price: 100,
         type: "gradient",
         value: "linear-gradient(150deg, rgb(92, 81, 217) 20%, rgb(227, 81, 151) 49%, rgb(253, 183, 27) 80%)",
         filter: "drop-shadow(rgb(255, 20, 224) 0px 0px 5px)",
@@ -804,6 +721,7 @@ const CATALOG = [
     {
         name: "Uranium",
         category: "paint",
+        price: 100,
         type: "gradient",
         value: "radial-gradient(circle, rgb(238, 255, 0) 0%, rgb(166, 255, 0) 50%, rgb(93, 195, 9) 100%)",
         filter: "drop-shadow(rgb(37, 50, 1) 0px 0px 0.5px) drop-shadow(rgb(189, 225, 9) 0px 0px 4px)",
@@ -812,6 +730,7 @@ const CATALOG = [
     {
         name: "Anodized old",
         category: "paint",
+        price: 100,
         type: "gradient",
         value: "radial-gradient(circle, rgb(255, 175, 77) 0%, rgb(255, 102, 102) 20%, rgb(246, 66, 255) 31%, rgb(51, 102, 255) 55%, rgb(66, 208, 255) 80%, rgb(88, 254, 151) 100%)",
         filter: "drop-shadow(rgb(211, 56, 220) 0px 0px 0.1px)",
@@ -820,6 +739,7 @@ const CATALOG = [
     {
         name: "Neon Pastel GB",
         category: "paint",
+        price: 100,
         type: "gradient",
         value: "url('https://cdn.7tv.app/paint/01GKMJA3WR00096MBH3JZ33RK9/layer/01JAMR24N93C229RFJFH0M53D5/1x.webp')",
         filter: "drop-shadow(rgb(77, 210, 255) 0px 0px 1px) drop-shadow(rgb(238, 0, 255) 0px 0px 2px) drop-shadow(rgb(59, 22, 146) 0px 0px 1px)",
@@ -828,6 +748,7 @@ const CATALOG = [
     {
         name: "Rastafari oA",
         category: "paint",
+        price: 100,
         type: "gradient",
         value: "linear-gradient(166deg, rgb(255, 15, 15) 30%, rgb(255, 237, 41) 55%, rgb(0, 194, 32) 75%)",
         filter: "drop-shadow(rgb(0, 148, 2) 0px 0px 4px)",
@@ -836,9 +757,172 @@ const CATALOG = [
     {
         name: "Classic",
         category: "badge",
+        price: 10,
         type: "badge",
         value: "https://i.postimg.cc/0y9k3HQD/1.png",
         previewStyle: ""
+    },
+    {
+        name: "Celebration oA",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "radial-gradient(rgb(254, 62, 219) 25%, rgb(90, 31, 255) 45%, rgb(48, 20, 255) 55%, rgb(72, 36, 255) 69%, rgb(102, 0, 255) 100%)",
+        filter: "drop-shadow(rgb(115, 0, 255) 0px 1px 0.1px) drop-shadow(rgb(43, 0, 255) 0.01px 0.01px 4.01px)",
+        previewStyle: "background-image: radial-gradient(rgb(254, 62, 219) 25%, rgb(90, 31, 255) 45%, rgb(48, 20, 255) 55%, rgb(72, 36, 255) 69%, rgb(102, 0, 255) 100%); filter: drop-shadow(rgb(115, 0, 255) 0px 1px 0.1px) drop-shadow(rgb(43, 0, 255) 0.01px 0.01px 4.01px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
+    },
+    {
+        name: "Honey Lemon",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "radial-gradient(circle, rgb(255, 243, 112) 0%, rgb(255, 243, 112) 25%, rgb(255, 213, 0) 25%, rgb(255, 213, 0) 50%, rgb(230, 111, 0) 50%, rgb(230, 111, 0) 75%, rgb(88, 55, 45) 75%, rgb(88, 55, 45) 100%)",
+        filter: "drop-shadow(rgb(219, 127, 24) 0px 0px 0.1px)",
+        previewStyle: "background-image: radial-gradient(circle, rgb(255, 243, 112) 0%, rgb(255, 243, 112) 25%, rgb(255, 213, 0) 25%, rgb(255, 213, 0) 50%, rgb(230, 111, 0) 50%, rgb(230, 111, 0) 75%, rgb(88, 55, 45) 75%, rgb(88, 55, 45) 100%); filter: drop-shadow(rgb(219, 127, 24) 0px 0px 0.1px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
+    },
+    {
+        name: "Northern Light",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "linear-gradient(45deg, rgb(156, 40, 169) 0%, rgb(239, 92, 255) 20%, rgb(92, 255, 154) 40%, rgb(77, 255, 237) 60%, rgb(34, 89, 109) 80%, rgb(34, 89, 109) 100%)",
+        filter: "drop-shadow(rgb(124, 251, 237) 0px 0px 0.1px)",
+        previewStyle: "background-image: linear-gradient(45deg, rgb(156, 40, 169) 0%, rgb(239, 92, 255) 20%, rgb(92, 255, 154) 40%, rgb(77, 255, 237) 60%, rgb(34, 89, 109) 80%, rgb(34, 89, 109) 100%); filter: drop-shadow(rgb(124, 251, 237) 0px 0px 0.1px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
+    },
+    {
+        name: "Pretty in Pink oA",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "linear-gradient(0deg, rgb(255, 0, 208) 0%, rgb(255, 255, 255) 38%, rgb(255, 0, 208) 71%)",
+        filter: "drop-shadow(rgb(255, 0, 174) 0px 0px 1px) drop-shadow(rgb(140, 0, 255) 0px 0px 1px)",
+        previewStyle: "background-image: linear-gradient(0deg, rgb(255, 0, 208) 0%, rgb(255, 255, 255) 38%, rgb(255, 0, 208) 71%); filter: drop-shadow(rgb(255, 0, 174) 0px 0px 1px) drop-shadow(rgb(140, 0, 255) 0px 0px 1px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
+    },
+    {
+        name: "North Star oA",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "radial-gradient(circle, rgb(56, 106, 255) 15%, rgb(23, 43, 146) 25%, rgb(239, 255, 117) 45%, rgb(28, 89, 212) 80%, rgb(42, 60, 79) 100%)",
+        filter: "drop-shadow(rgb(99, 119, 217) 0px 1px 0.1px)",
+        previewStyle: "background-image: radial-gradient(circle, rgb(56, 106, 255) 15%, rgb(23, 43, 146) 25%, rgb(239, 255, 117) 45%, rgb(28, 89, 212) 80%, rgb(42, 60, 79) 100%); filter: drop-shadow(rgb(99, 119, 217) 0px 1px 0.1px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
+    },
+    {
+        name: "Bittercold oA",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "radial-gradient(circle, rgb(255, 0, 204) 15%, rgb(179, 102, 255) 35%, rgb(0, 123, 255) 55%, rgb(0, 42, 255) 75%, rgb(0, 47, 255) 100%)",
+        filter: "drop-shadow(rgb(0, 47, 158) 0px 0px 0.1px)",
+        previewStyle: "background-image: radial-gradient(circle, rgb(255, 0, 204) 15%, rgb(179, 102, 255) 35%, rgb(0, 123, 255) 55%, rgb(0, 42, 255) 75%, rgb(0, 47, 255) 100%); filter: drop-shadow(rgb(0, 47, 158) 0px 0px 0.1px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
+    },
+    {
+        name: "Porcelain Doll",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "linear-gradient(rgb(255, 190, 237) 0%, rgb(255, 122, 228) 35%, rgb(249, 229, 245) 45%, rgb(251, 229, 245) 57%, rgb(0, 255, 238) 82%)",
+        filter: "drop-shadow(rgb(242, 132, 227) 0px 0px 0.1px) drop-shadow(rgb(206, 115, 194) 0px 0px 3px)",
+        previewStyle: "background-image: linear-gradient(rgb(255, 190, 237) 0%, rgb(255, 122, 228) 35%, rgb(249, 229, 245) 45%, rgb(251, 229, 245) 57%, rgb(0, 255, 238) 82%); filter: drop-shadow(rgb(242, 132, 227) 0px 0px 0.1px) drop-shadow(rgb(206, 115, 194) 0px 0px 3px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
+    },
+    {
+        name: "Haunting oA",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "linear-gradient(0deg, rgb(79, 79, 79) 0%, rgb(75, 63, 63) 35%, rgb(255, 0, 0) 48%, rgb(255, 64, 0) 74%)",
+        filter: "drop-shadow(rgb(143, 0, 0) 0px 0px 4.1px)",
+        previewStyle: "background-image: linear-gradient(0deg, rgb(79, 79, 79) 0%, rgb(75, 63, 63) 35%, rgb(255, 0, 0) 48%, rgb(255, 64, 0) 74%); filter: drop-shadow(rgb(143, 0, 0) 0px 0px 4.1px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
+    },
+    {
+        name: "Everglade oA",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "repeating-linear-gradient(48deg, rgb(4, 255, 0) 0%, rgb(5, 134, 255) 4%, rgb(4, 0, 255) 15%, rgb(0, 255, 76) 18%, rgb(255, 255, 255) 33%)",
+        filter: "drop-shadow(rgb(43, 111, 120) 0px 0px 0.1px) drop-shadow(rgb(0, 64, 255) 0px 0px 4.1px)",
+        previewStyle: "background-image: repeating-linear-gradient(48deg, rgb(4, 255, 0) 0%, rgb(5, 134, 255) 4%, rgb(4, 0, 255) 15%, rgb(0, 255, 76) 18%, rgb(255, 255, 255) 33%); filter: drop-shadow(rgb(43, 111, 120) 0px 0px 0.1px) drop-shadow(rgb(0, 64, 255) 0px 0px 4.1px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
+    },
+    {
+        name: "Octopus",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "repeating-radial-gradient(circle, rgb(65, 222, 238) 0%, rgb(65, 222, 238) 20%, rgb(246, 238, 0) 20%, rgb(246, 238, 0) 40%, rgb(148, 148, 148) 40%, rgb(148, 148, 148) 60%)",
+        filter: "drop-shadow(rgb(117, 117, 117) 0px 0px 0.1px)",
+        previewStyle: "background-image: repeating-radial-gradient(circle, rgb(65, 222, 238) 0%, rgb(65, 222, 238) 20%, rgb(246, 238, 0) 20%, rgb(246, 238, 0) 40%, rgb(148, 148, 148) 40%, rgb(148, 148, 148) 60%); filter: drop-shadow(rgb(117, 117, 117) 0px 0px 0.1px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
+    },
+    {
+        name: "Coder Socks",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "repeating-linear-gradient(143deg, rgb(255, 168, 168) 0%, rgb(255, 168, 168) 10%, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 20%, rgb(255, 168, 168) 0%, rgb(255, 168, 168) 30%, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 40%, rgb(255, 168, 168) 0%, rgb(255, 168, 168) 0%)",
+        filter: "drop-shadow(rgb(246, 172, 169) 0px 0px 0.1px)",
+        previewStyle: "background-image: repeating-linear-gradient(143deg, rgb(255, 168, 168) 0%, rgb(255, 168, 168) 10%, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 20%, rgb(255, 168, 168) 0%, rgb(255, 168, 168) 30%, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 40%, rgb(255, 168, 168) 0%, rgb(255, 168, 168) 0%); filter: drop-shadow(rgb(246, 172, 169) 0px 0px 0.1px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
+    },
+    {
+        name: "Devotion",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "radial-gradient(rgb(255, 255, 255) 0%, rgb(255, 246, 189) 15%, rgb(253, 255, 148) 35%, rgb(229, 36, 255) 84%)",
+        filter: "drop-shadow(rgb(255, 0, 208) 0px 1px 0.1px)",
+        previewStyle: "background-image: radial-gradient(rgb(255, 255, 255) 0%, rgb(255, 246, 189) 15%, rgb(253, 255, 148) 35%, rgb(229, 36, 255) 84%); filter: drop-shadow(rgb(255, 0, 208) 0px 1px 0.1px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
+    },
+    {
+        name: "Ragey K",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "linear-gradient(159deg, rgb(117, 0, 0) 37%, rgb(255, 196, 148) 72%, rgb(254, 241, 205) 0%)",
+        filter: "drop-shadow(rgb(153, 38, 0) 0px 0px 1px)",
+        previewStyle: "background-image: linear-gradient(159deg, rgb(117, 0, 0) 37%, rgb(255, 196, 148) 72%, rgb(254, 241, 205) 0%); filter: drop-shadow(rgb(153, 38, 0) 0px 0px 1px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
+    },
+    {
+        name: "Tropica",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "linear-gradient(rgb(255, 15, 179) 30%, rgb(255, 213, 0) 60%, rgb(102, 224, 255) 75%)",
+        filter: "drop-shadow(rgb(205, 19, 118) 0px 0px 4px)",
+        previewStyle: "background-image: linear-gradient(rgb(255, 15, 179) 30%, rgb(255, 213, 0) 60%, rgb(102, 224, 255) 75%); filter: drop-shadow(rgb(205, 19, 118) 0px 0px 4px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
+    },
+    {
+        name: "Enchanted",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "radial-gradient(circle, rgb(140, 34, 247) 5%, rgb(226, 88, 254) 25%, rgb(255, 221, 0) 50%, rgb(238, 255, 0) 65%, rgb(255, 255, 255) 76%)",
+        filter: "drop-shadow(rgb(194, 58, 251) 0px 0px 0.1px)",
+        previewStyle: "background-image: radial-gradient(circle, rgb(140, 34, 247) 5%, rgb(226, 88, 254) 25%, rgb(255, 221, 0) 50%, rgb(238, 255, 0) 65%, rgb(255, 255, 255) 76%); filter: drop-shadow(rgb(194, 58, 251) 0px 0px 0.1px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
+    },
+    {
+        name: "Unicorn",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "repeating-linear-gradient(51deg, rgb(239, 146, 130) 0%, rgb(255, 239, 82) 10%, rgb(11, 255, 30) 20%, rgb(24, 143, 255) 30%, rgb(235, 16, 231) 40%, rgb(250, 34, 139) 50%)",
+        filter: "drop-shadow(rgb(60, 143, 253) 0px 0px 0.1px)",
+        previewStyle: "background-image: repeating-linear-gradient(51deg, rgb(239, 146, 130) 0%, rgb(255, 239, 82) 10%, rgb(11, 255, 30) 20%, rgb(24, 143, 255) 30%, rgb(235, 16, 231) 40%, rgb(250, 34, 139) 50%); filter: drop-shadow(rgb(60, 143, 253) 0px 0px 0.1px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
+    },
+    {
+        name: "ftk789",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "url('https://cdn.7tv.app/paint/01JM8F9NQPFQEF9GQMT5RB9BAG/layer/01JM8G5NZJN36FF9137NCVGV2R/1x.webp')",
+        filter: "drop-shadow(rgb(255, 0, 0) 0px 0px 0.5px) drop-shadow(rgb(255, 0, 0) 0px 0px 0.5px) drop-shadow(rgb(255, 0, 0) 0px 0px 0.5px) drop-shadow(rgb(141, 0, 255) 0px 0px 3px)",
+        previewStyle: "background-image: url('https://cdn.7tv.app/paint/01JM8F9NQPFQEF9GQMT5RB9BAG/layer/01JM8G5NZJN36FF9137NCVGV2R/1x.webp'); filter: drop-shadow(rgb(255, 0, 0) 0px 0px 0.5px) drop-shadow(rgb(255, 0, 0) 0px 0px 0.5px) drop-shadow(rgb(255, 0, 0) 0px 0px 0.5px) drop-shadow(rgb(141, 0, 255) 0px 0px 3px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
+    },
+    {
+        name: "Sixties",
+        category: "paint",
+        price: 100,
+        type: "gradient",
+        value: "linear-gradient(rgb(255, 200, 0) 45%, rgb(255, 77, 0) 77%)",
+        filter: "drop-shadow(rgb(0, 0, 0) 0px 0px 1px) drop-shadow(rgb(100, 40, 7) -0.5px 0.5px 0.5px) drop-shadow(rgb(89, 50, 29) 0.5px -0.5px 1px)",
+        previewStyle: "background-image: linear-gradient(rgb(255, 200, 0) 45%, rgb(255, 77, 0) 77%); filter: drop-shadow(rgb(0, 0, 0) 0px 0px 1px) drop-shadow(rgb(100, 40, 7) -0.5px 0.5px 0.5px) drop-shadow(rgb(89, 50, 29) 0.5px -0.5px 1px); -webkit-background-clip: text; color: transparent; font-weight: 900;"
     }
 ];
 
@@ -1586,7 +1670,7 @@ async function renderAdminShop() {
     
     grid.innerHTML = '';
     
-    CATALOG.forEach(item => {
+    CATALOG.forEach((item, index) => {
         const isActive = active.hasOwnProperty(item.name);
         // Price priority: Active > Storage > Default
         const currentPrice = isActive ? active[item.name] : (storage[item.name] || item.price);
@@ -1596,14 +1680,15 @@ async function renderAdminShop() {
         
         let preview = item.category === 'badge' ? `<img src="${item.value}">` : `<div class="preview-box" style="${item.previewStyle}">Aa</div>`;
         
+        // FIX: Use index for ID to avoid issues with spaces/special chars
         div.innerHTML = `
             ${preview}
             <div class="admin-shop-info">
                 <div class="admin-shop-name">${item.name}</div>
-                <input type="number" id="price_${item.name.replace(/\s/g, '')}" class="admin-shop-price-input" value="${currentPrice}">
+                <input type="number" id="price_${index}" class="admin-shop-price-input" value="${currentPrice}">
             </div>
             <label class="switch">
-                <input type="checkbox" id="check_${item.name.replace(/\s/g, '')}" ${isActive ? 'checked' : ''}>
+                <input type="checkbox" id="check_${index}" ${isActive ? 'checked' : ''}>
                 <span class="slider"></span>
             </label>
         `;
@@ -1617,10 +1702,10 @@ window.saveShopConfig = async function() {
     const newActive = {};
     const newStorage = {};
     
-    CATALOG.forEach(item => {
-        const id = item.name.replace(/\s/g, '');
-        const isChecked = document.getElementById(`check_${id}`).checked;
-        const priceVal = parseInt(document.getElementById(`price_${id}`).value);
+    CATALOG.forEach((item, index) => {
+        // FIX: Use index for ID
+        const isChecked = document.getElementById(`check_${index}`).checked;
+        const priceVal = parseInt(document.getElementById(`price_${index}`).value);
         
         if(isChecked) {
             newActive[item.name] = priceVal;
@@ -1666,8 +1751,19 @@ async function api(path, method="GET", body=null) {
         // ZOPTYMALIZOWANO: Usunięto "?t=" - przeglądarka użyje cache
         const url = `${DB_URL}/${path}.json`;
         const r = await fetch(url, opts); 
+        
+        // FIX: Check for errors (like Permission Denied)
+        if (!r.ok) {
+            console.error("API Error:", r.status, r.statusText);
+            alert("Błąd API: " + r.status + " (Prawdopodobnie brak uprawnień w bazie danych)");
+            return null;
+        }
+        
         return r.json();
-    } catch(e) { return null; } 
+    } catch(e) { 
+        console.error("Fetch Error:", e);
+        return null; 
+    } 
 }
 
 // ENCYCLOPEDIA
