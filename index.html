@@ -1069,7 +1069,11 @@ function renderProfileEmotes(type, target) {
     const all = AppState.emotes;
     let keys = [];
     if(type==='uploaded') keys = Object.keys(all).filter(k => all[k].author === author);
-    else keys = Object.keys(all).filter(k => all[k].channel === login && all[k].status !== 'pending'); // Don't show pending in public profile
+    else keys = Object.keys(all).filter(k => {
+        // FIX: Sprawdzamy czy kanał zawiera login (obsługa wielu nicków po przecinku)
+        const channelList = (all[k].channel || "").toLowerCase();
+        return channelList.includes(login.toLowerCase()) && all[k].status !== 'pending';
+    });
     
     if(keys.length===0 && type !== 'uploaded') { grid.innerHTML='<div class="empty-state-styled" style="padding:20px;"><i class="fas fa-ghost"></i><span>Brak emotek</span></div>'; return; }
     
@@ -1385,14 +1389,18 @@ window.voteEmote = async function(val) {
 window.assignEmote = async function() {
     if(!AppState.user) return;
     
-    // FIX: Używamy PATCH, aby zmienić TYLKO pole 'channel' i 'scope'
-    // Nie ruszamy autora ani URL, dzięki czemu baza danych to zaakceptuje
+    // NOWE: Obsługa Kick Nicka
+    let channels = AppState.user.login;
+    if(AppState.kickNick) {
+        channels += "," + AppState.kickNick;
+    }
+    
     await api(`emotes/${AppState.currentEmoteKey}`, "PATCH", { 
         scope: 'channel', 
-        channel: AppState.user.login
+        channel: channels // Zapisuje np. "gato,gatokick"
     });
     
-    alert("Przypisano emotkę do Twojego kanału!"); 
+    alert("Przypisano emotkę do Twojego kanału (Twitch + Kick)!"); 
     closeModal();
     
     // Odśwież widoki
