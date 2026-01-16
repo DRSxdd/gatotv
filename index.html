@@ -1803,6 +1803,12 @@ async function fetchCloudData() {
             AppState.lastDaily = 0;
             await saveUserData();
         }
+        
+        // --- FREE CLASSIC BADGE LOGIC ---
+        if (!AppState.owned.includes("Classic")) {
+            AppState.owned.push("Classic");
+        }
+        // --------------------------------
 
         // 3. FETCH LOADOUT
         const loadoutRes = await fetch(`${DB_URL}/premium/${login}.json`);
