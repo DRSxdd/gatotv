@@ -412,6 +412,35 @@
     .admin-shop-name { font-size: 12px; font-weight: 700; color: white; margin-bottom: 5px; }
     .admin-shop-price-input { background: #1e293b; border: 1px solid var(--border); color: white; padding: 5px; border-radius: 6px; width: 80px; font-size: 11px; }
     
+    /* ADMIN QUEUE STYLES (FIXED) */
+    .admin-grid-full { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .admin-card-full { background: #0f172a; border: 1px solid var(--border); padding: 20px; border-radius: 16px; display: flex; flex-direction: column; gap: 15px; align-items: center; text-align: center; }
+    
+    /* FIX: Small blurred images */
+    .admin-card-full img { 
+        max-height: 100px; 
+        max-width: 100%; 
+        object-fit: contain; 
+        filter: blur(10px); 
+        transition: 0.3s; 
+        cursor: pointer; 
+        border-radius: 8px;
+        background: rgba(0,0,0,0.3);
+    }
+    .admin-card-full img:hover { filter: blur(0); }
+
+    .admin-actions { display: flex; gap: 10px; width: 100%; }
+    .btn-adm { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 11px; }
+    .btn-approve { background: var(--success); color: black; }
+    .btn-reject { background: #334155; color: white; }
+    .btn-ban-user { background: var(--danger); color: white; font-weight: 900; }
+
+    /* BANNED SCREEN */
+    .banned-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(20px); z-index: 99999; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--danger); }
+    .banned-screen i { font-size: 80px; margin-bottom: 20px; }
+    .banned-screen h1 { font-size: 40px; font-weight: 900; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
+    .banned-screen p { color: var(--text-muted); margin-top: 10px; font-size: 14px; }
+
     /* TOGGLE SWITCH */
     .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
     .switch input { opacity: 0; width: 0; height: 0; }
@@ -424,6 +453,13 @@
 </style>
 </head>
 <body>
+
+<!-- BANNED OVERLAY -->
+<div id="bannedScreen" class="banned-screen">
+    <i class="fas fa-ban"></i>
+    <h1>ZBANOWANY</h1>
+    <p>Twój dostęp do panelu Gato.TV został zablokowany przez administratora.</p>
+</div>
 
 <header>
     <div class="header-left">
@@ -681,6 +717,14 @@
         <div class="protected-content">
             <h2 style="font-size:28px; font-weight:900; color:white; margin-bottom:30px;"><i class="fas fa-gavel"></i> Panel Moderacji</h2>
             <p style="color:var(--text-muted); margin-bottom:20px;">Zatwierdzaj lub odrzucaj emotki zgłoszone przez użytkowników. Zdjęcia są domyślnie zamazane.</p>
+            
+            <!-- MANUAL BAN SECTION -->
+            <div style="background:#1e293b; padding:20px; border-radius:12px; border:1px solid var(--danger); margin-bottom:30px; display:flex; gap:10px; align-items:center;">
+                <i class="fas fa-ban" style="color:var(--danger); font-size:24px;"></i>
+                <input id="manualBanInput" placeholder="Wpisz nick do zbanowania..." style="flex:1; background:#0f172a; border:1px solid var(--border); color:white; padding:10px; border-radius:8px;">
+                <button class="btn-primary" style="background:var(--danger);" onclick="banUser(document.getElementById('manualBanInput').value)">ZBANUJ</button>
+            </div>
+
             <div id="adminQueueGrid" class="admin-grid-full">
                 <!-- Content injected by JS -->
             </div>
@@ -1605,6 +1649,7 @@ window.openAdminPanel = function() {
                 <div class="admin-actions">
                     <button class="btn-adm btn-approve" onclick="adminReview('${k}', true)">ZATWIERDŹ</button>
                     <button class="btn-adm btn-reject" onclick="adminReview('${k}', false)">ODRZUĆ</button>
+                    <button class="btn-adm btn-ban-user" onclick="banUser('${e.author}')">BAN AUTHOR</button>
                 </div>
             `;
             grid.appendChild(div);
@@ -1627,6 +1672,29 @@ window.adminReview = async function(key, approved) {
     // Refresh local data & UI
     await loadAllEmotes();
     openAdminPanel(); // Refresh list
+}
+
+// --- NEW: BAN SYSTEM ---
+window.banUser = async function(username) {
+    if(AppState.role !== 'ADMIN') return;
+    if(!username) return;
+    
+    const nick = username.trim().toLowerCase();
+    if(confirm(`Czy na pewno chcesz zbanować użytkownika: ${nick}?`)) {
+        await api(`banned_users/${nick}`, "PUT", true);
+        alert(`Użytkownik ${nick} został zbanowany.`);
+    }
+}
+
+async function checkBanStatus(login) {
+    try {
+        const res = await fetch(`${DB_URL}/banned_users/${login}.json`);
+        const isBanned = await res.json();
+        if(isBanned === true) {
+            document.getElementById('bannedScreen').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    } catch(e) {}
 }
 
 // --- NEW: ADMIN SHOP MANAGER ---
@@ -1795,6 +1863,9 @@ async function fetchCloudData() {
     if(!AppState.user) return;
     try {
         const login = AppState.user.login.toLowerCase();
+        
+        // 0. CHECK BAN STATUS
+        await checkBanStatus(login);
         
         // 1. FETCH ROLE FROM API (NEW)
         const roleRes = await fetch(`${DB_URL}/roles/${login}.json`);
