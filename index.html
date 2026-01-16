@@ -205,6 +205,7 @@
     .action-overlay { position: absolute; top: 6px; right: 6px; width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; opacity: 0; transition: 0.2s; font-size: 12px; color: white; z-index: 2; }
     .emote-card:hover .action-overlay { opacity: 1; }
     .del-btn { background: var(--danger); box-shadow: 0 2px 8px rgba(239,68,68,0.4); }
+    .edit-btn { background: var(--yellow); color: black; right: 34px; box-shadow: 0 2px 8px rgba(250, 204, 21, 0.4); }
     
     .emote-sub-nav { display:flex; gap:10px; margin-bottom:20px; }
     .emote-sub-nav button { background: var(--panel); border: 1px solid var(--border); color: var(--text-muted); padding: 8px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; transition: 0.2s; }
@@ -1321,7 +1322,10 @@ function renderProfileEmotes(type, target) {
          grid.innerHTML = keys.map(k => {
              let action = '';
              if(login === AppState.user.login) {
-                 action = `<div class="action-overlay del-btn" style="background:#ef4444;" onclick="event.stopPropagation(); if(confirm('Odpiąć z kanału?')) delEmote('${k}')">✖</div>`;
+                 action = `
+                    <div class="action-overlay del-btn" style="background:#ef4444;" onclick="event.stopPropagation(); if(confirm('Odpiąć/Usunąć?')) delEmote('${k}')">✖</div>
+                    <div class="action-overlay edit-btn" onclick="event.stopPropagation(); renameEmote('${k}')"><i class="fas fa-pen"></i></div>
+                 `;
              }
              return `<div class="emote-card" onclick="openEmoteDetail('${k}')">${action}<img src="${all[k].url}"><div class="name">${k}</div></div>`;
          }).join('');
@@ -1627,16 +1631,34 @@ window.voteEmote = async function(val) {
 window.assignEmote = async function() {
     if(!AppState.user) return;
     
-    // NOWE: Obsługa Kick Nicka
-    let channels = AppState.user.login;
-    if(AppState.kickNick) {
-        channels += "," + AppState.kickNick;
+    // 1. Get current data to check scope
+    const currentEmote = AppState.emotes[AppState.currentEmoteKey];
+    const isGlobal = currentEmote.scope === 'global';
+
+    // 2. Prepare channels string
+    let newChannels = AppState.user.login;
+    if(AppState.kickNick) newChannels += "," + AppState.kickNick;
+
+    // If it already has channels, append (don't overwrite if global, though usually global has empty channel)
+    if (currentEmote.channel) {
+        // Avoid duplicates
+        const existing = currentEmote.channel.split(',');
+        const toAdd = newChannels.split(',');
+        const combined = [...new Set([...existing, ...toAdd])].join(',');
+        newChannels = combined;
     }
-    
-    await api(`emotes/${AppState.currentEmoteKey}`, "PATCH", { 
-        scope: 'channel', 
-        channel: channels // Zapisuje np. "gato,gatokick"
-    });
+
+    // 3. Payload
+    const payload = {
+        channel: newChannels
+    };
+
+    // CRITICAL FIX: Only change scope to 'channel' if it's NOT global
+    if (!isGlobal) {
+        payload.scope = 'channel';
+    }
+
+    await api(`emotes/${AppState.currentEmoteKey}`, "PATCH", payload);
     
     alert("Przypisano emotkę do Twojego kanału (Twitch + Kick)!"); 
     closeModal();
@@ -1701,6 +1723,23 @@ window.delEmote = async function(p) {
     await loadAllEmotes(); 
     renderEmoteSlots(); 
     renderProfileEmotes('channel'); 
+}
+
+window.renameEmote = async function(oldName) {
+    const newName = prompt("Nowa nazwa emotki:", oldName);
+    if (!newName || newName === oldName) return;
+    if (AppState.emotes[newName]) return alert("Ta nazwa jest już zajęta!");
+
+    const data = AppState.emotes[oldName];
+
+    // 1. Create new
+    await api(`emotes/${newName}`, "PUT", data);
+    // 2. Delete old
+    await api(`emotes/${oldName}`, "DELETE");
+
+    alert("Zmieniono nazwę!");
+    loadAllEmotes();
+    renderProfileEmotes('channel');
 }
 
 function renderEmoteSlots() {
