@@ -1681,8 +1681,9 @@ window.banUser = async function(username) {
     
     const nick = username.trim().toLowerCase();
     if(confirm(`Czy na pewno chcesz zbanować użytkownika: ${nick}?`)) {
-        await api(`banned_users/${nick}`, "PUT", true);
-        alert(`Użytkownik ${nick} został zbanowany.`);
+        const res = await api(`banned_users/${nick}`, "PUT", true);
+        if(res !== null) alert(`Użytkownik ${nick} został zbanowany.`);
+        else alert("Błąd API: Sprawdź czy zaktualizowałeś Firebase Rules!");
     }
 }
 
@@ -1785,7 +1786,7 @@ window.togglePreviewTheme = function(el) { el.classList.toggle('light'); }
 // API FIX: OPTIMIZED VERSION (NO TIMESTAMP)
 async function api(path, method="GET", body=null) { 
     const opts={ method, headers: {} }; 
-    if(body) {
+    if(body !== null) { // FIX: Allow false/0
         opts.body=JSON.stringify(body); 
     }
     try {
