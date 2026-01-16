@@ -1708,7 +1708,9 @@ function renderEmoteSlots() {
     if(!container || !AppState.user) return;
     
     const all = AppState.emotes || {};
-    const myEmotes = Object.keys(all).filter(k => all[k].author === AppState.user.display_name).reverse();
+    // ZMIANA: Dodano warunek && all[k].scope !== 'global'
+    // Dzięki temu emotki globalne nie są liczone do osobistych slotów w panelu
+    const myEmotes = Object.keys(all).filter(k => all[k].author === AppState.user.display_name && all[k].scope !== 'global').reverse();
     
     container.innerHTML = '';
     
@@ -1750,7 +1752,8 @@ window.closeUploadForm = function() {
 
 window.addEmote = async function() { 
     const all = AppState.emotes || {};
-    const myCount = Object.keys(all).filter(k => all[k].author === AppState.user.display_name).length;
+    // ZMIANA: Dodano warunek && all[k].scope !== 'global' do licznika
+    const myCount = Object.keys(all).filter(k => all[k].author === AppState.user.display_name && all[k].scope !== 'global').length;
     
     if(myCount >= 10 && AppState.role !== 'ADMIN') {
         alert("Osiągnięto limit 10 emotek! Usuń jakąś, aby dodać nową.");
