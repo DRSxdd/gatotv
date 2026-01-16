@@ -417,7 +417,7 @@
 
 <header>
     <div class="header-left">
-        <div class="logo" onclick="location.reload()">Gato.TV <span class="beta-tag">SECURE</span></div>
+        <div class="logo" onclick="location.reload()">Gato.TV <span class="beta-tag">BETA</span></div>
         <div id="loginBtnContainer">
             <button class="btn-login-header" onclick="loginWithTwitch()">Zaloguj</button>
         </div>
@@ -456,7 +456,7 @@
                 </div>
                 <!-- LICZNIK KOLEKCJI -->
                 <div id="collectionStats" class="collection-stats-btn" onclick="openEncyclopedia()" style="display:none;">
-                    <i class="fas fa-book"></i> Collection <span id="collectionCount" style="margin-left:5px;">...</span>
+                    <i class="fas fa-book"></i> Collection <span id="collectionCount" style="margin-left:2px;">...</span>
                 </div>
 
                 <div class="profile-meta-container">
@@ -1745,18 +1745,18 @@ window.claimDailyBonus = async function() {
     updateCoinDisplay(); 
     fireConfetti(true);
     checkDailyBonus();
+    
+    // EXPLICIT SAVE TO ENSURE PERSISTENCE
+    const login = AppState.user.login.toLowerCase();
+    await api(`users/${login}/coins`, "PUT", AppState.coins);
+    await api(`users/${login}/lastDaily`, "PUT", AppState.lastDaily);
+    
     await saveUserData();
 }
 window.redeemCode = async function() {
     if(!AppState.user) return;
     const c = prompt("Kod:");
-    if(c === 'GATO2025') { 
-        AppState.coins += 1000; 
-        updateCoinDisplay(); 
-        fireConfetti(true); 
-        alert("OK!");
-        await saveUserData();
-    }
+    alert("Brak aktywnych kodów.");
 }
 
 // CLOUD SYNC - OPTIMIZED
